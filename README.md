@@ -1,7 +1,7 @@
 TekDAQC_Firmware
 ===============
 
-The source code and its supporting library for the Tekdaqc firmware.
+This repository contains the source code and its supporting library for the Tekdaqc firmware. We are actively working to improve the code which operates the Tekdaqc and will update this repository with our progress, as well as field bug reports and pull requests. Additionally, feature requests may be made in our issues page and we will happily discuss them with you. 
 
 Join [Intelligent Automation, Computer Interface, & DAQ Community](https://plus.google.com/u/0/communities/109351353187504550254) on [![DAQ Community on Google Plus](https://ssl.gstatic.com/images/icons/gplus-16.png)](https://plus.google.com/u/0/communities/109351353187504550254) to stay up-to-date on the latest news.
 
@@ -25,6 +25,9 @@ If you plan to debug or flash the Tekdaqc, you will need a JTAG probe compatible
 4. You should be ready to go at this point.
 
 ## More Information
+
+### Tekdaqc Firmware Wiki
+* Please see our wiki for more detailed documetnation and information about the source code and its design. 
 
 ### Tekdaqc Manual
 * Download the [Tekdaqc Manual here](http://www.tenkiv.com/tekdaqc_manual_pdf_v3.pdf)
