@@ -27,7 +27,7 @@ If you plan to debug or flash the Tekdaqc, you will need a JTAG probe compatible
 ## More Information
 
 ### Tekdaqc Firmware Wiki
-* Please see our wiki for more detailed documetnation and information about the source code and its design. 
+* Please see our [wiki](https://github.com/Tenkiv/Tekdaqc-Firmware/wiki) for more detailed documetnation and information about the source code and its design. 
 
 ### Tekdaqc Manual
 * Download the [Tekdaqc Manual here](http://www.tenkiv.com/tekdaqc_manual_pdf_v3.pdf)
