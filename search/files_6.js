@@ -10,7 +10,7 @@ var searchData=
   ['tekdaqc_5fcommandinterpreter_2ec',['Tekdaqc_CommandInterpreter.c',['../_tekdaqc___command_interpreter_8c.html',1,'']]],
   ['tekdaqc_5fcommandinterpreter_2eh',['Tekdaqc_CommandInterpreter.h',['../_tekdaqc___command_interpreter_8h.html',1,'']]],
   ['tekdaqc_5fconfig_2ec',['Tekdaqc_Config.c',['../_tekdaqc___config_8c.html',1,'']]],
-  ['tekdaqc_5fconfig_2eh',['Tekdaqc_config.h',['../_tekdaqc__config_8h.html',1,'']]],
+  ['tekdaqc_5fconfig_2eh',['Tekdaqc_Config.h',['../_tekdaqc___config_8h.html',1,'']]],
   ['tekdaqc_5fdebug_2eh',['Tekdaqc_Debug.h',['../_tekdaqc___debug_8h.html',1,'']]],
   ['tekdaqc_5ferror_2ec',['Tekdaqc_Error.c',['../_tekdaqc___error_8c.html',1,'']]],
   ['tekdaqc_5ferror_2eh',['Tekdaqc_Error.h',['../_tekdaqc___error_8h.html',1,'']]],

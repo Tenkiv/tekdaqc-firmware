@@ -29,7 +29,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="signature_logo_100x100.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Tekdaqc Firmware
    &#160;<span id="projectnumber">1.0.0.0</span>
@@ -124,7 +123,7 @@ $(document).ready(function(){initNavTree('main_8c_source.html','');});
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">/* Includes ------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc__config_8h.html">Tekdaqc_Config.h</a>&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc___config_8h.html">Tekdaqc_Config.h</a>&quot;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;stm32f4x7_eth.h&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;netconf.h&quot;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_telnet_server_8h.html">TelnetServer.h</a>&quot;</span></div>
@@ -349,11 +348,11 @@ $(document).ready(function(){initNavTree('main_8c_source.html','');});
 <div class="ttc" id="_tekdaqc___command_interpreter_8h_html"><div class="ttname"><a href="_tekdaqc___command_interpreter_8h.html">Tekdaqc_CommandInterpreter.h</a></div><div class="ttdoc">Header file for the Tekdaqc_CommandInterpreter algorithm. </div></div>
 <div class="ttc" id="group__telnet__server_html_gab6653d6c1bd1261ebfcb4d667f848716"><div class="ttname"><a href="group__telnet__server.html#gab6653d6c1bd1261ebfcb4d667f848716">TelnetStatus_t</a></div><div class="ttdeci">TelnetStatus_t</div><div class="ttdoc">Telnet status enumeration. The possible success/error causes for the Telnet server&#39;s operation...</div><div class="ttdef"><b>Definition:</b> <a href="_telnet_server_8h_source.html#l00145">TelnetServer.h:145</a></div></div>
 <div class="ttc" id="group__telnet__server_html_ga579198334cf97874ecc89e3b29351066"><div class="ttname"><a href="group__telnet__server.html#ga579198334cf97874ecc89e3b29351066">TelnetWriteString</a></div><div class="ttdeci">void TelnetWriteString(char *string)</div><div class="ttdoc">Writes a string to the telnet interface. </div><div class="ttdef"><b>Definition:</b> <a href="_telnet_server_8c_source.html#l00588">TelnetServer.c:588</a></div></div>
-<div class="ttc" id="_tekdaqc__config_8h_html"><div class="ttname"><a href="_tekdaqc__config_8h.html">Tekdaqc_config.h</a></div><div class="ttdoc">Header file for the configuring the Tekdaqc. </div></div>
 <div class="ttc" id="group__command__state_html_gabab5afe3159f634f822ad1bccd70209a"><div class="ttname"><a href="group__command__state.html#gabab5afe3159f634f822ad1bccd70209a">InitCommandStateHandler</a></div><div class="ttdeci">void InitCommandStateHandler(void)</div><div class="ttdoc">Initialize the state machine. </div><div class="ttdef"><b>Definition:</b> <a href="_command_state_8c_source.html#l00067">CommandState.c:67</a></div></div>
 <div class="ttc" id="group__telnet__server_html_gaff55b8914481cb32d621a855a69a5635"><div class="ttname"><a href="group__telnet__server.html#gaff55b8914481cb32d621a855a69a5635">TelnetRead</a></div><div class="ttdeci">char TelnetRead(void)</div><div class="ttdoc">Reads a character from the telnet interface. </div><div class="ttdef"><b>Definition:</b> <a href="_telnet_server_8c_source.html#l00544">TelnetServer.c:544</a></div></div>
 <div class="ttc" id="group__tekdaqc__configuration_html_ga38dfe3d6b1f6f3da8b74612f51b0f479"><div class="ttname"><a href="group__tekdaqc__configuration.html#ga38dfe3d6b1f6f3da8b74612f51b0f479">FlashDiskInit</a></div><div class="ttdeci">void FlashDiskInit(void)</div><div class="ttdoc">Initializes the Tekdaqc&#39;s FLASH disk. </div><div class="ttdef"><b>Definition:</b> <a href="_tekdaqc___config_8c_source.html#l00264">Tekdaqc_Config.c:264</a></div></div>
 <div class="ttc" id="_tekdaqc___error_8h_html"><div class="ttname"><a href="_tekdaqc___error_8h.html">Tekdaqc_Error.h</a></div><div class="ttdoc">Public definitions for the Tekdaqc error type. </div></div>
+<div class="ttc" id="_tekdaqc___config_8h_html"><div class="ttname"><a href="_tekdaqc___config_8h.html">Tekdaqc_Config.h</a></div><div class="ttdoc">Header file for the configuring the Tekdaqc. </div></div>
 <div class="ttc" id="group__tekdaqc__locator_html_ga99090049c7556abdcff2bad0dfdf78af"><div class="ttname"><a href="group__tekdaqc__locator.html#ga99090049c7556abdcff2bad0dfdf78af">Tekdaqc_LocatorInit</a></div><div class="ttdeci">void Tekdaqc_LocatorInit(void)</div><div class="ttdoc">Initializes the Tekdaqc locator service. </div><div class="ttdef"><b>Definition:</b> <a href="_tekdaqc___locator_8c_source.html#l00192">Tekdaqc_Locator.c:192</a></div></div>
 <div class="ttc" id="_tekdaqc___calibration_8h_html"><div class="ttname"><a href="_tekdaqc___calibration_8h.html">Tekdaqc_Calibration.h</a></div><div class="ttdoc">Header file for the Tekdaqc&#39;s calibration functions. </div></div>
 <div class="ttc" id="group__analog__input_html_ga8230666b0182b4ce633c20860b5146ff"><div class="ttname"><a href="group__analog__input.html#ga8230666b0182b4ce633c20860b5146ff">SetAnalogInputWriteFunction</a></div><div class="ttdeci">void SetAnalogInputWriteFunction(WriteFunction writeFunction)</div><div class="ttdoc">Sets the function to use for writing strings to the data connection. </div><div class="ttdef"><b>Definition:</b> <a href="_analog___input_8c_source.html#l00519">Analog_Input.c:519</a></div></div>
@@ -372,8 +371,8 @@ $(document).ready(function(){initNavTree('main_8c_source.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_3064f85384775ce8243c1155863b24bb.html">TekDAQC_Firmware</a></li><li class="navelem"><a class="el" href="dir_acf99f10769f17008113d8a6e12822a7.html">src</a></li><li class="navelem"><b>main.c</b></li>
-    <li class="footer">Generated on Wed Mar 19 2014 15:21:52 for Tekdaqc Firmware by
+    <li class="navelem"><a class="el" href="dir_2ee1bcc70ffbdd9fa2e6058af4d56b44.html">TekDAQC_Firmware</a></li><li class="navelem"><a class="el" href="dir_487e5c767aeaee42821fd912e2f2cba6.html">src</a></li><li class="navelem"><b>main.c</b></li>
+    <li class="footer">Generated on Wed Mar 19 2014 22:55:51 for Tekdaqc Firmware by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

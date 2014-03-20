@@ -31,7 +31,7 @@ var NAVTREEINDEX =
 "_a_d_s1256___driver_8h.html#ggab0437f81aad031aadf3e05dd5fe0a731a0f9109a1a40838123ccd55e1af90a3e6",
 "_digital___output_8h.html#ga514fc5ac6ead9d3aee8ae8fc8188a1d3",
 "_tekdaqc___calibration_table_8h.html#a180d881a8974f106b80ea5c1a88e2ae0",
-"_tekdaqc___locator_8c.html#gaf8eaedaeca86f0d5c7af113faebe16a0",
+"_tekdaqc___locator_8c.html#ga03c9656c9876829e12f617d4e4abef04",
 "group__ads1256__driver.html#ga612ca0b8927aa0580401813ee278348b",
 "group__command__interpreter.html#gade511743b3ecf569a2e74c1b14291a5b",
 "group__telnet__server.html#ga8b600918f84783490fd791ce773175ab"

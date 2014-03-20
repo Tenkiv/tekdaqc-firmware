@@ -18,7 +18,7 @@ var searchData=
   ['tekdaqc_5fcommandinterpreter_5ft',['Tekdaqc_CommandInterpreter_t',['../struct_tekdaqc___command_interpreter__t.html',1,'']]],
   ['tekdaqc_20communication',['Tekdaqc Communication',['../group__tekdaqc__communication.html',1,'']]],
   ['tekdaqc_5fconfig_2ec',['Tekdaqc_Config.c',['../_tekdaqc___config_8c.html',1,'']]],
-  ['tekdaqc_5fconfig_2eh',['Tekdaqc_config.h',['../_tekdaqc__config_8h.html',1,'']]],
+  ['tekdaqc_5fconfig_2eh',['Tekdaqc_Config.h',['../_tekdaqc___config_8h.html',1,'']]],
   ['tekdaqc_20configuration',['Tekdaqc Configuration',['../group__tekdaqc__configuration.html',1,'']]],
   ['tekdaqc_5fdebug_2eh',['Tekdaqc_Debug.h',['../_tekdaqc___debug_8h.html',1,'']]],
   ['tekdaqc_5fendcalibrationmode',['Tekdaqc_EndCalibrationMode',['../_tekdaqc___calibration_table_8c.html#a0c1fa5f649f31632cfa62a1b59b5ae17',1,'Tekdaqc_EndCalibrationMode(void):&#160;Tekdaqc_CalibrationTable.c'],['../_tekdaqc___calibration_table_8h.html#a0c1fa5f649f31632cfa62a1b59b5ae17',1,'Tekdaqc_EndCalibrationMode(void):&#160;Tekdaqc_CalibrationTable.c']]],
@@ -147,5 +147,5 @@ var searchData=
   ['tle7232_5fwriteregister',['TLE7232_WriteRegister',['../group__tle7232__driver.html#gabf56c66110adfb8658cff9c2f6fc5cd6',1,'TLE7232_WriteRegister(TLE7232_Register_t reg, uint8_t data, uint8_t chip_index):&#160;TLE7232_RelayDriver.c'],['../group__tle7232__driver.html#gabf56c66110adfb8658cff9c2f6fc5cd6',1,'TLE7232_WriteRegister(TLE7232_Register_t reg, uint8_t data, uint8_t chip_index):&#160;TLE7232_RelayDriver.c']]],
   ['tle7232_5fwriteregisterall',['TLE7232_WriteRegisterAll',['../group__tle7232__driver.html#ga082ee2578c277c689e4ce6c0647cdcf5',1,'TLE7232_WriteRegisterAll(TLE7232_Register_t reg, uint8_t data[NUMBER_TLE7232_CHIPS]):&#160;TLE7232_RelayDriver.c'],['../group__tle7232__driver.html#ga082ee2578c277c689e4ce6c0647cdcf5',1,'TLE7232_WriteRegisterAll(TLE7232_Register_t reg, uint8_t data[NUMBER_TLE7232_CHIPS]):&#160;TLE7232_RelayDriver.c']]],
   ['tmpcc4',['tmpCC4',['../stm32f4xx__it_8c.html#a7b6e354242fbed46e6358d2267041e58',1,'stm32f4xx_it.c']]],
-  ['true',['TRUE',['../group__data__types.html#gaa8cecfc5c5c054d2875c03e77b7be15d',1,'TRUE():&#160;boolean.h'],['../group__data__types.html#ga41f9c5fb8b08eb5dc3edce4dcb37fee7',1,'true():&#160;boolean.h']]]
+  ['true',['true',['../group__data__types.html#ga41f9c5fb8b08eb5dc3edce4dcb37fee7',1,'true():&#160;boolean.h'],['../group__data__types.html#gaa8cecfc5c5c054d2875c03e77b7be15d',1,'TRUE():&#160;boolean.h']]]
 ];

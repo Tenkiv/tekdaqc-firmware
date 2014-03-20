@@ -6,5 +6,5 @@ var searchData=
   ['writeanaloginput',['WriteAnalogInput',['../group__analog__input.html#ga3d7d6daf5f4b4a4c455dd9b9aec6053b',1,'WriteAnalogInput(Analog_Input_t *input):&#160;Analog_Input.c'],['../group__analog__input.html#ga3d7d6daf5f4b4a4c455dd9b9aec6053b',1,'WriteAnalogInput(Analog_Input_t *input):&#160;Analog_Input.c']]],
   ['writedigitalinput',['WriteDigitalInput',['../group__digital__input.html#ga007c56810797c98a6c03ac2836ad9328',1,'WriteDigitalInput(Digital_Input_t *input):&#160;Digital_Input.c'],['../group__digital__input.html#ga007c56810797c98a6c03ac2836ad9328',1,'WriteDigitalInput(Digital_Input_t *input):&#160;Digital_Input.c']]],
   ['writedigitaloutput',['WriteDigitalOutput',['../group__digital__output.html#gaa10fe33be14ef4d8e16e6345f57938c5',1,'WriteDigitalOutput(Digital_Output_t *output):&#160;Digital_Output.c'],['../group__digital__output.html#gaa10fe33be14ef4d8e16e6345f57938c5',1,'WriteDigitalOutput(Digital_Output_t *output):&#160;Digital_Output.c']]],
-  ['writefunction',['WriteFunction',['../group__tekdaqc__configuration.html#ga163b2a4cc55a569e988df48908631967',1,'Tekdaqc_config.h']]]
+  ['writefunction',['WriteFunction',['../group__tekdaqc__configuration.html#ga163b2a4cc55a569e988df48908631967',1,'Tekdaqc_Config.h']]]
 ];
