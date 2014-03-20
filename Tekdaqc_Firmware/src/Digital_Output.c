@@ -81,6 +81,12 @@ static bool isExternalOutput(uint8_t id);
  */
 static void InitializeOutput(Digital_Output_t* output);
 
+/**
+ * @internal
+ * @brief Sets the state of the specified Digital_Output_t.
+ */
+static void SetDigitalOutputState(Digital_Output_t* output, DigitalLevel_t level);
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -133,6 +139,30 @@ static void InitializeOutput(Digital_Output_t* output) {
 	output->fault_timestamp = 0U;
 }
 
+/**
+ * Sets the state of the specified Digital_Output_t. This will first read the existing
+ * states and construct its set request such that all other output states are unchanged.
+ *
+ * @param output Digital_Output_t* The output to set the state of.
+ * @param level DigitalLevel_t The state to set the output to.
+ * @retval none
+ */
+static void SetDigitalOutputState(Digital_Output_t* output, DigitalLevel_t level) {
+	/* Set the state */
+	uint8_t control = TLE7232_ReadRegister(TLE7232_REG_CTL, output->output % 8U);
+	uint8_t channel = output->output;
+	if (channel >= 8) { /* Convert the channel to a single chip index */
+		channel -= 8;
+	}
+	uint8_t mask = 0x01 << channel; /* Move the bit flag to the correct position */
+	if (level == OUTPUT_ON) {
+		control |= mask; /* Set the appropriate bit */
+	} else {
+		control ^= mask;	/* Clear the appropriate bit */
+	}
+	TLE7232_WriteRegister(TLE7232_REG_CTL, control, output->output % 8U); /* Update the register */
+}
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -149,8 +179,8 @@ void DigitalOutputsInit(void) {
 		InitializeOutput(&Ext_DOutputs[i]);
 	}
 
-	uint8_t data[NUMBER_TLE7232_CHIPS] = {0xFF, 0xFF};
-	TLE7232_WriteRegisterAll(TLE7232_REG_CTL, data);
+	/*uint8_t data[NUMBER_TLE7232_CHIPS] = {0xFF, 0xFF};
+	TLE7232_WriteRegisterAll(TLE7232_REG_CTL, data);*/
 }
 
 /**
@@ -206,8 +236,10 @@ Tekdaqc_Function_Error_t ListDigitalOutputs(void) {
 Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], int count) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
 	char* param;
+	char* testPtr = NULL;
 	int8_t index = -1;
 	uint8_t output = NULL_CHANNEL; /* The physical input */
+	uint8_t out = NULL_CHANNEL;
 	char name[MAX_DIGITAL_OUTPUT_NAME_LENGTH]; /* The name */
 	strcpy(name, "NONE");
 	for (int i = 0; i < NUM_ADD_DIGITAL_OUTPUT_PARAMS; ++i) {
@@ -215,14 +247,13 @@ Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH]
 		if (index >= 0) { /* We found the key in the list */
 			param = values[index]; /* We use the discovered index for this key */
 			switch (i) { /* Switch on the key not position in arguments list */
-			case 0: { /* OUTPUT key */
-				char* testPtr = NULL;
-				uint8_t out = (uint8_t) strtol(param, &testPtr, 10);
+			case 0U: /* OUTPUT key */
+				out = (uint8_t) strtol(param, &testPtr, 10);
 				if (testPtr == param) {
 					retval = ERR_DOUT_PARSE_ERROR;
 				} else {
 					if (out >= 0U && out <= NUM_DIGITAL_OUTPUTS) {
-						/* A valid input number */
+						/* A valid output number */
 						output = out;
 					} else {
 						/* Input number out of range */
@@ -233,15 +264,14 @@ Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH]
 					}
 				}
 				break;
-			}
-			case 1: /* NAME key */
+			case 1U: /* NAME key */
 				strcpy(name, param);
 				break;
 			default:
 				/* Return an error */
 				retval = ERR_DOUT_PARSE_ERROR;
 			}
-		} else if (i == 1) {
+		} else if (i == 1U) {
 			/* The NAME key is not strictly required, apply the defaults */
 			continue;
 		} else {
@@ -259,12 +289,12 @@ Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH]
 		if (output != NULL_CHANNEL) {
 			Digital_Output_t* dig_output = GetDigitalOutputByNumber(output);
 			if (dig_output != NULL) {
-				if (dig_output->added != CHANNEL_NOTADDED) {
+				if (dig_output->added != CHANNEL_ADDED) {
 					dig_output->output = output;
 					strcpy(dig_output->name, name);
 					dig_output->level = LOGIC_LOW;
 					dig_output->timestamp = 0U;
-					AddDigitalOutput(dig_output);
+					retval = AddDigitalOutput(dig_output);
 				} else {
 					retval = ERR_DOUT_OUTPUT_EXISTS;
 				}
@@ -292,6 +322,7 @@ Tekdaqc_Function_Error_t AddDigitalOutput(Digital_Output_t* output) {
 	if (index < NUM_DIGITAL_OUTPUTS) {
 		/* This is a valid digital input */
 		output->added = CHANNEL_ADDED;
+		SetDigitalOutputState(output, LOGIC_LOW);
 	} else {
 		/* This is out of range */
 #ifdef DIGITALOUTPUT_DEBUG
@@ -427,19 +458,7 @@ Tekdaqc_Function_Error_t SetDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], c
 			Digital_Output_t* dig_output = GetDigitalOutputByNumber(output);
 			if (dig_output != NULL) {
 				if (dig_output->added == CHANNEL_ADDED) {
-					/* Set the state */
-					uint8_t control = TLE7232_ReadRegister(TLE7232_REG_CTL, dig_output->output % 8U);
-					uint8_t channel = dig_output->output;
-					if (channel >= 8) { /* Convert the channel to a single chip index */
-						channel -= 8;
-					}
-					uint8_t mask = 0x01 << channel; /* Move the bit flag to the correct position */
-					if (level == OUTPUT_ON) {
-						control |= mask; /* Set the appropriate bit */
-					} else {
-						control ^= mask;	/* Clear the appropriate bit */
-					}
-					TLE7232_WriteRegister(TLE7232_REG_CTL, control, dig_output->output %8U); /* Update the register */
+					SetDigitalOutputState(dig_output, level);
 				} else {
 #ifdef DIGITALOUTPUT_DEBUG
 					printf("[Digital Output] Tried to change the state of an output which has not been added.\n\r");
@@ -548,7 +567,7 @@ bool CheckDigitalOutputStatus(void) {
 	Digital_Output_t output;
 	for (uint_fast8_t i = 0U; i < NUM_DIGITAL_OUTPUTS; ++i) {
 		output = Ext_DOutputs[i];
-		if (output.fault_status != TLE7232_Normal_Operation) {
+		if ((output.added == CHANNEL_ADDED) && (output.fault_status != TLE7232_Normal_Operation)) {
 			/* A fault has occurred on this channel */
 			retval = true;
 			break;

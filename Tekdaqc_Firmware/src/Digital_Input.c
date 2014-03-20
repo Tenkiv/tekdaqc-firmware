@@ -357,7 +357,7 @@ Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 	char* testPtr = NULL;
 	int8_t index = -1;
 	uint8_t input = NULL_CHANNEL; /* The physical input */
-	uint8_t in = 255U;
+	uint8_t in = NULL_CHANNEL;
 	char name[MAX_DIGITAL_INPUT_NAME_LENGTH]; /* The name */
 	strcpy(name, "NONE");
 	for (int i = 0; i < NUM_ADD_DIGITAL_INPUT_PARAMS; ++i) {
@@ -386,6 +386,7 @@ Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 				strcpy(name, param);
 				break;
 			default:
+				/* Return an error */
 				retval = ERR_DIN_PARSE_ERROR;
 			}
 		} else if (i == 1U) {
@@ -411,7 +412,7 @@ Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 					strcpy(dig_input->name, name);
 					dig_input->level = LOGIC_LOW;
 					dig_input->timestamp = 0U;
-					AddDigitalInput(dig_input);
+					retval = AddDigitalInput(dig_input);
 				} else {
 					retval = ERR_DIN_INPUT_EXISTS;
 				}
@@ -431,9 +432,10 @@ Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
  * Adds a digital input structure to the board's appropriate list of inputs.
  *
  * @param input Digital_Input_t* The digital input structure to add.
- * @retval none
+ * @retval Tekdaqc_Function_Error_t The error status code.
  */
-void AddDigitalInput(Digital_Input_t* input) {
+Tekdaqc_Function_Error_t AddDigitalInput(Digital_Input_t* input) {
+	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
 	uint8_t index = input->input;
 	if (index < NUM_DIGITAL_INPUTS) {
 		/* This is a valid digital input */
@@ -446,7 +448,9 @@ void AddDigitalInput(Digital_Input_t* input) {
 #ifdef DIGITALINPUT_DEBUG
 		printf("[Digital Input] Cannot add the provided digital input structure. Input field is out of range.\n\r");
 #endif
+		retval = ERR_DIN_INPUT_OUTOFRANGE;
 	}
+	return retval;
 }
 
 /**
@@ -455,7 +459,7 @@ void AddDigitalInput(Digital_Input_t* input) {
  * @param keys char** Array of strings containing the command line keys. Indexed with values.
  * @param values char** Array of strings containing the command line values. Indexed with keys.
  * @param count uint8_t The number of parameters passed on the command line.
- * @retval int The error status code.
+ * @retval Tekdaqc_Function_Error_t The error status code.
  */
 Tekdaqc_Function_Error_t RemoveDigitalInput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], int count) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;

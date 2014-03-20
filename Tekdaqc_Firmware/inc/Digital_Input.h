@@ -97,7 +97,7 @@ Digital_Input_t* GetDigitalInputByNumber(uint8_t number);
 /**
  * @brief Adds a digital input, marking it for inclusion in the state machine.
  */
-void AddDigitalInput(Digital_Input_t* input);
+Tekdaqc_Function_Error_t AddDigitalInput(Digital_Input_t* input);
 
 /**
  * @brief Removes a digital input, marking it for exclusion from the state machine.
