@@ -293,7 +293,7 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 
 	if (CALIBRATION_VALID != TRUE) {
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] The calibration table is not valid, returning ADC calibration only (0x%" PRIu32 ").\n\r");
+		printf("[Calibration Table] The calibration table is not valid, returning ADC calibration only (0x%" PRIu32 ").\n\r", baseGain);
 #endif
 		return baseGain;
 	}
