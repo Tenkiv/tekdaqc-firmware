@@ -18,7 +18,7 @@ var searchData=
   ['tekdaqc_5fcommandinterpreter_5ft',['Tekdaqc_CommandInterpreter_t',['../struct_tekdaqc___command_interpreter__t.html',1,'']]],
   ['tekdaqc_20communication',['Tekdaqc Communication',['../group__tekdaqc__communication.html',1,'']]],
   ['tekdaqc_5fconfig_2ec',['Tekdaqc_Config.c',['../_tekdaqc___config_8c.html',1,'']]],
-  ['tekdaqc_5fconfig_2eh',['Tekdaqc_Config.h',['../_tekdaqc___config_8h.html',1,'']]],
+  ['tekdaqc_5fconfig_2eh',['Tekdaqc_config.h',['../_tekdaqc__config_8h.html',1,'']]],
   ['tekdaqc_20configuration',['Tekdaqc Configuration',['../group__tekdaqc__configuration.html',1,'']]],
   ['tekdaqc_5fdebug_2eh',['Tekdaqc_Debug.h',['../_tekdaqc___debug_8h.html',1,'']]],
   ['tekdaqc_5fendcalibrationmode',['Tekdaqc_EndCalibrationMode',['../_tekdaqc___calibration_table_8c.html#a0c1fa5f649f31632cfa62a1b59b5ae17',1,'Tekdaqc_EndCalibrationMode(void):&#160;Tekdaqc_CalibrationTable.c'],['../_tekdaqc___calibration_table_8h.html#a0c1fa5f649f31632cfa62a1b59b5ae17',1,'Tekdaqc_EndCalibrationMode(void):&#160;Tekdaqc_CalibrationTable.c']]],

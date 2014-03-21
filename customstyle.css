@@ -914,11 +914,12 @@ table.fieldtable {
     background-position: 0 -5px;
     height:30px;
     line-height:30px;
-    color:#fefefe;
+    color:#fff;
     border:solid 1px #999;
     overflow:hidden;
     margin:0px;
     padding:0px;
+    background-color: #202020;
 }
 
 .navpath li
@@ -957,10 +958,13 @@ table.fieldtable {
     padding-left:10px;
     padding-right:15px;
     background-image:none;
+    background-color: #202020;
     background-repeat:no-repeat;
     background-position:right;
-    color:#364D7C;
+    color:#fff;
     font-size: 8pt;
+    font-family: Colaborate, sans-serif;
+    text-transform: uppercase;
 }
 
 
@@ -1556,6 +1560,9 @@ tr.heading h2 {
     background-repeat:repeat-x;
     background-color: #F9FAFC;
     -webkit-overflow-scrolling : touch; /* iOS 5+ */
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 #nav-sync {
@@ -1622,6 +1629,7 @@ tr.heading h2 {
     text-shadow: none;
     text-decoration: none;
     outline: none;
+    font-family: Colaborate, sans-serif;
 }
 
 .tabs3 .tablist a {
@@ -1634,6 +1642,8 @@ tr.heading h2 {
     color: #26a5d9;
     text-shadow: none;
     text-decoration: none;
+    font-family: Colaborate, sans-serif;
+    font-weight: bold;
 }
 
 .tablist li.current a {
@@ -1642,8 +1652,12 @@ tr.heading h2 {
     background-repeat: no-repeat;
     color: #fff;
     text-shadow: none;
+    font-family: Colaborate, sans-serif;
+    font-weight: bold;
 }
 
 .tablist li.current a:hover {
     color: #00c9ff;
+    font-weight: bold;
+    font-family: Colaborate, sans-serif;
 }

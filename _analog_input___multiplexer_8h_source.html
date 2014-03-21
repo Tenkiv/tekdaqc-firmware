@@ -29,9 +29,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="signature_logo_100x100.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Tekdaqc Firmware
-   &#160;<span id="projectnumber">1.0.0.0</span>
+   &#160;<span id="projectnumber">1.0.1.0</span>
    </div>
    <div id="projectbrief">The firmware of the Tekdaqc.</div>
   </td>
@@ -135,7 +136,7 @@ $(document).ready(function(){initNavTree('_analog_input___multiplexer_8h_source.
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">/*--------------------------------------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc___debug_8h.html">Tekdaqc_Debug.h</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc___config_8h.html">Tekdaqc_Config.h</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc__config_8h.html">Tekdaqc_Config.h</a>&quot;</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_analog___input_8h.html">Analog_Input.h</a>&quot;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="boolean_8h.html">boolean.h</a>&quot;</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
@@ -186,7 +187,7 @@ $(document).ready(function(){initNavTree('_analog_input___multiplexer_8h_source.
 <div class="ttc" id="_analog___input_8h_html"><div class="ttname"><a href="_analog___input_8h.html">Analog_Input.h</a></div><div class="ttdoc">Header file for the Tekdaqc_Input data structure. </div></div>
 <div class="ttc" id="_tekdaqc___debug_8h_html"><div class="ttname"><a href="_tekdaqc___debug_8h.html">Tekdaqc_Debug.h</a></div><div class="ttdoc">Header file to define precompiler variables for debugging sections of code. </div></div>
 <div class="ttc" id="struct_analog___input__t_html"><div class="ttname"><a href="struct_analog___input__t.html">Analog_Input_t</a></div><div class="ttdoc">Data structure used to store the state and requirements of an analog input to the Tekdaqc...</div><div class="ttdef"><b>Definition:</b> <a href="_analog___input_8h_source.html#l00089">Analog_Input.h:89</a></div></div>
-<div class="ttc" id="_tekdaqc___config_8h_html"><div class="ttname"><a href="_tekdaqc___config_8h.html">Tekdaqc_Config.h</a></div><div class="ttdoc">Header file for the configuring the Tekdaqc. </div></div>
+<div class="ttc" id="_tekdaqc__config_8h_html"><div class="ttname"><a href="_tekdaqc__config_8h.html">Tekdaqc_config.h</a></div><div class="ttdoc">Header file for the configuring the Tekdaqc. </div></div>
 <div class="ttc" id="group__analog__input__multiplexer_html_gae6210a53610863d94bea3968f43b4e88"><div class="ttname"><a href="group__analog__input__multiplexer.html#gae6210a53610863d94bea3968f43b4e88">SelectColdJunctionInput</a></div><div class="ttdeci">void SelectColdJunctionInput(void)</div><div class="ttdoc">Selects the designated cold junction sensor input. </div><div class="ttdef"><b>Definition:</b> <a href="_analog_input___multiplexer_8c_source.html#l00299">AnalogInput_Multiplexer.c:299</a></div></div>
 <div class="ttc" id="group__analog__input__multiplexer_html_ga03f66c16ea15a425062a4b09c0bceba1"><div class="ttname"><a href="group__analog__input__multiplexer.html#ga03f66c16ea15a425062a4b09c0bceba1">GetExternalMuxedInputByNumber</a></div><div class="ttdeci">ExternalMuxedInput_t GetExternalMuxedInputByNumber(uint8_t input)</div><div class="ttdoc">Determines the external input for the specified input index. </div><div class="ttdef"><b>Definition:</b> <a href="_analog_input___multiplexer_8c_source.html#l00322">AnalogInput_Multiplexer.c:322</a></div></div>
 <div class="ttc" id="group__analog__input__multiplexer_html_ga9452ba5ad241ec1be905a8683f3aa893"><div class="ttname"><a href="group__analog__input__multiplexer.html#ga9452ba5ad241ec1be905a8683f3aa893">isInternalInput</a></div><div class="ttdeci">bool isInternalInput(PhysicalAnalogInput_t input)</div><div class="ttdoc">Determines if the specified input is an internal analog input. </div><div class="ttdef"><b>Definition:</b> <a href="_analog_input___multiplexer_8c_source.html#l00172">AnalogInput_Multiplexer.c:172</a></div></div>
@@ -197,7 +198,7 @@ $(document).ready(function(){initNavTree('_analog_input___multiplexer_8h_source.
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_2ee1bcc70ffbdd9fa2e6058af4d56b44.html">TekDAQC_Firmware</a></li><li class="navelem"><a class="el" href="dir_4c1963c2cd69a04d7b5a824496e256d8.html">inc</a></li><li class="navelem"><a class="el" href="_analog_input___multiplexer_8h.html">AnalogInput_Multiplexer.h</a></li>
-    <li class="footer">Generated on Wed Mar 19 2014 22:55:51 for Tekdaqc Firmware by
+    <li class="footer">Generated on Fri Mar 21 2014 16:31:01 for Tekdaqc Firmware by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

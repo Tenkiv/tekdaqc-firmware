@@ -29,9 +29,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="signature_logo_100x100.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Tekdaqc Firmware
-   &#160;<span id="projectnumber">1.0.0.0</span>
+   &#160;<span id="projectnumber">1.0.1.0</span>
    </div>
    <div id="projectbrief">The firmware of the Tekdaqc.</div>
   </td>
@@ -127,7 +128,7 @@ $(document).ready(function(){initNavTree('_t_l_e7232___relay_driver_8c_source.ht
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc___debug_8h.html">Tekdaqc_Debug.h</a>&quot;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_t_l_e7232___relay_driver_8h.html">TLE7232_RelayDriver.h</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc___config_8h.html">Tekdaqc_Config.h</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc__config_8h.html">Tekdaqc_Config.h</a>&quot;</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tekdaqc___timers_8h.html">Tekdaqc_Timers.h</a>&quot;</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
@@ -556,9 +557,9 @@ $(document).ready(function(){initNavTree('_t_l_e7232___relay_driver_8c_source.ht
 <div class="ttc" id="group__tle7232__driver_html_ga5d2ff3c331e9b1bd5d1d4522ffc92b5d"><div class="ttname"><a href="group__tle7232__driver.html#ga5d2ff3c331e9b1bd5d1d4522ffc92b5d">TLE7232_ReadRegister</a></div><div class="ttdeci">uint8_t TLE7232_ReadRegister(TLE7232_Register_t reg, uint8_t chip_index)</div><div class="ttdoc">Read the specified register of a specific device. </div><div class="ttdef"><b>Definition:</b> <a href="_t_l_e7232___relay_driver_8c_source.html#l00474">TLE7232_RelayDriver.c:474</a></div></div>
 <div class="ttc" id="_tekdaqc___debug_8h_html"><div class="ttname"><a href="_tekdaqc___debug_8h.html">Tekdaqc_Debug.h</a></div><div class="ttdoc">Header file to define precompiler variables for debugging sections of code. </div></div>
 <div class="ttc" id="group__tle7232__driver_html_ga082ee2578c277c689e4ce6c0647cdcf5"><div class="ttname"><a href="group__tle7232__driver.html#ga082ee2578c277c689e4ce6c0647cdcf5">TLE7232_WriteRegisterAll</a></div><div class="ttdeci">void TLE7232_WriteRegisterAll(TLE7232_Register_t reg, uint8_t data[NUMBER_TLE7232_CHIPS])</div><div class="ttdoc">Write the specified data to the specified register of all devices. Data can be different for each dev...</div><div class="ttdef"><b>Definition:</b> <a href="_t_l_e7232___relay_driver_8c_source.html#l00414">TLE7232_RelayDriver.c:414</a></div></div>
+<div class="ttc" id="_tekdaqc__config_8h_html"><div class="ttname"><a href="_tekdaqc__config_8h.html">Tekdaqc_config.h</a></div><div class="ttdoc">Header file for the configuring the Tekdaqc. </div></div>
 <div class="ttc" id="group__tle7232__driver_html_ga84bb3f68b575c6add1c27f053b87746a"><div class="ttname"><a href="group__tle7232__driver.html#ga84bb3f68b575c6add1c27f053b87746a">TLE7232_Status_t</a></div><div class="ttdeci">TLE7232_Status_t</div><div class="ttdoc">TLE7232 Status enumeration. Defines the possible status states of the TLE7232. </div><div class="ttdef"><b>Definition:</b> <a href="_t_l_e7232___relay_driver_8h_source.html#l00170">TLE7232_RelayDriver.h:170</a></div></div>
 <div class="ttc" id="group__tle7232__driver_html_gabd1d28f92015db8d6a418c8346f4b4ff"><div class="ttname"><a href="group__tle7232__driver.html#gabd1d28f92015db8d6a418c8346f4b4ff">TLE7232_Register_t</a></div><div class="ttdeci">TLE7232_Register_t</div><div class="ttdoc">Register enumeration. Defines the registers and their addresses for the TLE7232. They are defined suc...</div><div class="ttdef"><b>Definition:</b> <a href="_t_l_e7232___relay_driver_8h_source.html#l00156">TLE7232_RelayDriver.h:156</a></div></div>
-<div class="ttc" id="_tekdaqc___config_8h_html"><div class="ttname"><a href="_tekdaqc___config_8h.html">Tekdaqc_Config.h</a></div><div class="ttdoc">Header file for the configuring the Tekdaqc. </div></div>
 <div class="ttc" id="group__tle7232__driver_html_gaa9b9a934fcc689bc16f7dbf4ba70feb1"><div class="ttname"><a href="group__tle7232__driver.html#gaa9b9a934fcc689bc16f7dbf4ba70feb1">SetOutputFaultStatus</a></div><div class="ttdeci">bool(* SetOutputFaultStatus)(TLE7232_Status_t status, uint8_t chip_id, uint8_t channel)</div><div class="ttdoc">Function pointer definition for setting the fault status of a channel. Defines a function pointer whi...</div><div class="ttdef"><b>Definition:</b> <a href="_t_l_e7232___relay_driver_8h_source.html#l00181">TLE7232_RelayDriver.h:181</a></div></div>
 <div class="ttc" id="group__tle7232__driver_html_gac27a30e4da66392e2a53b1414aa3c9cb"><div class="ttname"><a href="group__tle7232__driver.html#gac27a30e4da66392e2a53b1414aa3c9cb">TLE7232_ResetAllRegisters</a></div><div class="ttdeci">void TLE7232_ResetAllRegisters(void)</div><div class="ttdoc">Reset the diagnosis registers of all devices. </div><div class="ttdef"><b>Definition:</b> <a href="_t_l_e7232___relay_driver_8c_source.html#l00354">TLE7232_RelayDriver.c:354</a></div></div>
 <div class="ttc" id="group__tle7232__driver_html_gaf3e85d7d9a54143703684223ac382b9e"><div class="ttname"><a href="group__tle7232__driver.html#gaf3e85d7d9a54143703684223ac382b9e">TLE7232_WriteArbitraryRegisterAll</a></div><div class="ttdeci">void TLE7232_WriteArbitraryRegisterAll(TLE7232_Register_t reg[NUMBER_TLE7232_CHIPS], uint8_t data[NUMBER_TLE7232_CHIPS])</div><div class="ttdoc">Write the specified data to the specified register of all devices. Register and data can be different...</div><div class="ttdef"><b>Definition:</b> <a href="_t_l_e7232___relay_driver_8c_source.html#l00444">TLE7232_RelayDriver.c:444</a></div></div>
@@ -581,7 +582,7 @@ $(document).ready(function(){initNavTree('_t_l_e7232___relay_driver_8c_source.ht
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_da411aab950102a7c87084f4501853eb.html">TekDAQC_Libraries_Firmware</a></li><li class="navelem"><a class="el" href="dir_802ae1d07bfa9b99d65804b276995b48.html">src</a></li><li class="navelem"><a class="el" href="_t_l_e7232___relay_driver_8c.html">TLE7232_RelayDriver.c</a></li>
-    <li class="footer">Generated on Wed Mar 19 2014 22:55:51 for Tekdaqc Firmware by
+    <li class="footer">Generated on Fri Mar 21 2014 16:31:02 for Tekdaqc Firmware by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

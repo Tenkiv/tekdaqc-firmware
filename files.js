@@ -40,7 +40,7 @@ var files =
     [ "Tekdaqc_CommandInterpreter.c", "_tekdaqc___command_interpreter_8c.html", "_tekdaqc___command_interpreter_8c" ],
     [ "Tekdaqc_CommandInterpreter.h", "_tekdaqc___command_interpreter_8h.html", "_tekdaqc___command_interpreter_8h" ],
     [ "Tekdaqc_Config.c", "_tekdaqc___config_8c.html", "_tekdaqc___config_8c" ],
-    [ "Tekdaqc_Config.h", "_tekdaqc___config_8h.html", "_tekdaqc___config_8h" ],
+    [ "Tekdaqc_config.h", "_tekdaqc__config_8h.html", "_tekdaqc__config_8h" ],
     [ "Tekdaqc_Debug.h", "_tekdaqc___debug_8h.html", "_tekdaqc___debug_8h" ],
     [ "Tekdaqc_Error.c", "_tekdaqc___error_8c.html", "_tekdaqc___error_8c" ],
     [ "Tekdaqc_Error.h", "_tekdaqc___error_8h.html", "_tekdaqc___error_8h" ],
