@@ -1,4 +1,4 @@
-TekDAQC_Firmware
+Tekdaqc Firmware
 ===============
 
 This repository contains the source code and its supporting library for the Tekdaqc firmware. We are actively working to improve the code which operates the Tekdaqc and will update this repository with our progress, as well as field bug reports and pull requests. Additionally, feature requests may be made in our issues page and we will happily discuss them with you. 
