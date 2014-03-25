@@ -81,6 +81,12 @@ static bool isExternalOutput(uint8_t id);
  */
 static void InitializeOutput(Digital_Output_t* output);
 
+/**
+ * @internal
+ * @brief Sets the state of the specified Digital_Output_t.
+ */
+static void SetDigitalOutputState(Digital_Output_t* output, DigitalLevel_t level);
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -133,6 +139,30 @@ static void InitializeOutput(Digital_Output_t* output) {
 	output->fault_timestamp = 0U;
 }
 
+/**
+ * Sets the state of the specified Digital_Output_t. This will first read the existing
+ * states and construct its set request such that all other output states are unchanged.
+ *
+ * @param output Digital_Output_t* The output to set the state of.
+ * @param level DigitalLevel_t The state to set the output to.
+ * @retval none
+ */
+static void SetDigitalOutputState(Digital_Output_t* output, DigitalLevel_t level) {
+	/* Set the state */
+	uint8_t control = TLE7232_ReadRegister(TLE7232_REG_CTL, output->output % 8U);
+	uint8_t channel = output->output;
+	if (channel >= 8) { /* Convert the channel to a single chip index */
+		channel -= 8;
+	}
+	uint8_t mask = 0x01 << channel; /* Move the bit flag to the correct position */
+	if (level == OUTPUT_ON) {
+		control |= mask; /* Set the appropriate bit */
+	} else {
+		control ^= mask;	/* Clear the appropriate bit */
+	}
+	TLE7232_WriteRegister(TLE7232_REG_CTL, control, output->output % 8U); /* Update the register */
+}
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -149,8 +179,8 @@ void DigitalOutputsInit(void) {
 		InitializeOutput(&Ext_DOutputs[i]);
 	}
 
-	uint8_t data[NUMBER_TLE7232_CHIPS] = {0xFF, 0xFF};
-	TLE7232_WriteRegisterAll(TLE7232_REG_CTL, data);
+	/*uint8_t data[NUMBER_TLE7232_CHIPS] = {0xFF, 0xFF};
+	TLE7232_WriteRegisterAll(TLE7232_REG_CTL, data);*/
 }
 
 /**
@@ -292,6 +322,7 @@ Tekdaqc_Function_Error_t AddDigitalOutput(Digital_Output_t* output) {
 	if (index < NUM_DIGITAL_OUTPUTS) {
 		/* This is a valid digital input */
 		output->added = CHANNEL_ADDED;
+		SetDigitalOutputState(output, LOGIC_LOW);
 	} else {
 		/* This is out of range */
 #ifdef DIGITALOUTPUT_DEBUG
@@ -427,19 +458,7 @@ Tekdaqc_Function_Error_t SetDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], c
 			Digital_Output_t* dig_output = GetDigitalOutputByNumber(output);
 			if (dig_output != NULL) {
 				if (dig_output->added == CHANNEL_ADDED) {
-					/* Set the state */
-					uint8_t control = TLE7232_ReadRegister(TLE7232_REG_CTL, dig_output->output % 8U);
-					uint8_t channel = dig_output->output;
-					if (channel >= 8) { /* Convert the channel to a single chip index */
-						channel -= 8;
-					}
-					uint8_t mask = 0x01 << channel; /* Move the bit flag to the correct position */
-					if (level == OUTPUT_ON) {
-						control |= mask; /* Set the appropriate bit */
-					} else {
-						control ^= mask;	/* Clear the appropriate bit */
-					}
-					TLE7232_WriteRegister(TLE7232_REG_CTL, control, dig_output->output %8U); /* Update the register */
+					SetDigitalOutputState(dig_output, level);
 				} else {
 #ifdef DIGITALOUTPUT_DEBUG
 					printf("[Digital Output] Tried to change the state of an output which has not been added.\n\r");
@@ -548,7 +567,7 @@ bool CheckDigitalOutputStatus(void) {
 	Digital_Output_t output;
 	for (uint_fast8_t i = 0U; i < NUM_DIGITAL_OUTPUTS; ++i) {
 		output = Ext_DOutputs[i];
-		if (output.fault_status != TLE7232_Normal_Operation) {
+		if ((output.added == CHANNEL_ADDED) && (output.fault_status != TLE7232_Normal_Operation)) {
 			/* A fault has occurred on this channel */
 			retval = true;
 			break;
