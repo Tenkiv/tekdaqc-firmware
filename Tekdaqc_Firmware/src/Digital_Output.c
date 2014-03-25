@@ -206,8 +206,10 @@ Tekdaqc_Function_Error_t ListDigitalOutputs(void) {
 Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], int count) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
 	char* param;
+	char* testPtr = NULL;
 	int8_t index = -1;
 	uint8_t output = NULL_CHANNEL; /* The physical input */
+	uint8_t out = NULL_CHANNEL;
 	char name[MAX_DIGITAL_OUTPUT_NAME_LENGTH]; /* The name */
 	strcpy(name, "NONE");
 	for (int i = 0; i < NUM_ADD_DIGITAL_OUTPUT_PARAMS; ++i) {
@@ -215,14 +217,13 @@ Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH]
 		if (index >= 0) { /* We found the key in the list */
 			param = values[index]; /* We use the discovered index for this key */
 			switch (i) { /* Switch on the key not position in arguments list */
-			case 0: { /* OUTPUT key */
-				char* testPtr = NULL;
-				uint8_t out = (uint8_t) strtol(param, &testPtr, 10);
+			case 0U: /* OUTPUT key */
+				out = (uint8_t) strtol(param, &testPtr, 10);
 				if (testPtr == param) {
 					retval = ERR_DOUT_PARSE_ERROR;
 				} else {
 					if (out >= 0U && out <= NUM_DIGITAL_OUTPUTS) {
-						/* A valid input number */
+						/* A valid output number */
 						output = out;
 					} else {
 						/* Input number out of range */
@@ -233,15 +234,14 @@ Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH]
 					}
 				}
 				break;
-			}
-			case 1: /* NAME key */
+			case 1U: /* NAME key */
 				strcpy(name, param);
 				break;
 			default:
 				/* Return an error */
 				retval = ERR_DOUT_PARSE_ERROR;
 			}
-		} else if (i == 1) {
+		} else if (i == 1U) {
 			/* The NAME key is not strictly required, apply the defaults */
 			continue;
 		} else {
@@ -259,12 +259,12 @@ Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH]
 		if (output != NULL_CHANNEL) {
 			Digital_Output_t* dig_output = GetDigitalOutputByNumber(output);
 			if (dig_output != NULL) {
-				if (dig_output->added != CHANNEL_NOTADDED) {
+				if (dig_output->added != CHANNEL_ADDED) {
 					dig_output->output = output;
 					strcpy(dig_output->name, name);
 					dig_output->level = LOGIC_LOW;
 					dig_output->timestamp = 0U;
-					AddDigitalOutput(dig_output);
+					retval = AddDigitalOutput(dig_output);
 				} else {
 					retval = ERR_DOUT_OUTPUT_EXISTS;
 				}
