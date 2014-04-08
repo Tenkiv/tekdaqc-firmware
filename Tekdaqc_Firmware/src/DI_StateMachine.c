@@ -158,7 +158,7 @@ void DI_Machine_Service(void) {
 			} else {
 				for (uint_fast8_t i = 0; i < NUM_DIGITAL_INPUTS; ++i) {
 					input = samplingInputs[i];
-					if (input != NULL ) {
+					if ((input != NULL) & (input->added == CHANNEL_ADDED)) {
 						SampleDigitalInput(input);
 						WriteDigitalInput(input);
 					}
