@@ -167,8 +167,8 @@ static void ApplyCalibrationParameters(Analog_Input_t* input);
  * @retval const char* The human readable string representation.
  */
 static inline const char* ADCMachine_StringFromState(ADC_State_t machine_state) {
-	static const char* strings[] = { "ADC_UNINITIALIZED", "ADC_INITIALIZED", "ADC_CALIBRATING", "ADC_GAIN_CALIBRATING", "ADC_IDLE", "ADC_CHANNEL_SAMPLING",
-			"ADC_RESET", "ADC_EXTERNAL_MUXING" };
+	static const char* strings[] = { "ADC_UNINITIALIZED", "ADC_INITIALIZED", "ADC_CALIBRATING", "ADC_GAIN_CALIBRATING", "ADC_IDLE",
+			"ADC_CHANNEL_SAMPLING", "ADC_RESET", "ADC_EXTERNAL_MUXING" };
 	return strings[machine_state];
 }
 
@@ -228,7 +228,9 @@ static void ADC_Machine_Service_Calibrating(void) {
 		}
 #ifdef ADC_STATE_MACHINE_DEBUG
 		static uint32_t total = NUM_PGA_SETTINGS * NUM_SAMPLE_RATES * NUM_BUFFER_SETTINGS;
-		printf("[ADC STATE MACHINE] Calibration progress: %f%.\n\r", ((float) calibrationState.finished_count/total)*100.0f);
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %f%.\n\r", ((float) calibrationState.finished_count / total) * 100.0f);
+		//printf("[ADC STATE MACHINE] Calibration progress: %f%.\n\r", ((float) calibrationState.finished_count / total) * 100.0f);
+		TelnetWriteDebugMessage(TOSTRING_BUFFER);
 #endif
 	} else {
 		/* The calibration is complete */
@@ -247,7 +249,7 @@ static void ADC_Machine_Service_GainCalibrating(void) {
 	ADS1256_SPS_t rate = ADS1256_GetDataRate();
 	ADS1256_PGA_t gain = ADS1256_GetPGASetting();
 	ADS1256_BUFFER_t buffer = ADS1256_GetInputBufferSetting();
-	Tekdaqc_Calibration_SetBaseGainValue(calibration, rate, gain, buffer);
+	Tekdaqc_SetBaseGainCalibration(calibration, rate, gain, buffer);
 }
 
 /**
@@ -304,7 +306,8 @@ static void ADC_Machine_Service_Sampling(void) {
 #endif
 			TelnetWriteErrorMessage("Analog sampling overwrote data before it could be read.");
 			/* Buffer is full, overwrite */
-			samplingInputs[currentSamplingInput]->bufferReadIdx = (samplingInputs[currentSamplingInput]->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
+			samplingInputs[currentSamplingInput]->bufferReadIdx = (samplingInputs[currentSamplingInput]->bufferReadIdx + 1)
+					% ANALOG_INPUT_BUFFER_SIZE;
 		}
 
 		ADS1256_Sync(true); /*Halt conversion */
@@ -326,7 +329,7 @@ static void ADC_Machine_Service_Sampling(void) {
 				input = samplingInputs[currentSamplingInput];
 			}
 			if (input != current) { /* Prevent unnecessary external muxings */
-				SelectAnalogInput(input); /* Select the input */
+				SelectAnalogInput(input, true); /* Select the input */
 			} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
 				printf("[ADC STATE MACHINE] Multi-channel sampling tried to select the currently selected input. Ignoring...\n\r");
@@ -397,10 +400,10 @@ static void ADC_Machine_Service_Muxing(void) {
 			input->bufferWriteIdx = (writeIndex + 1) % ANALOG_INPUT_BUFFER_SIZE;
 			if (input->bufferWriteIdx == input->bufferReadIdx) {
 				/* Check the buffer positions for errors/roll over */
-/*#ifdef ADC_STATE_MACHINE_DEBUG
-				printf("[ADC STATE MACHINE] Analog sampling overwrote data before it could be read.\n\r");
-#endif
-				TelnetWriteErrorMessage("Analog sampling overwrote data before it could be read.");*/
+				/*#ifdef ADC_STATE_MACHINE_DEBUG
+				 printf("[ADC STATE MACHINE] Analog sampling overwrote data before it could be read.\n\r");
+				 #endif
+				 TelnetWriteErrorMessage("Analog sampling overwrote data before it could be read.");*/
 				/* Buffer is full, overwrite */
 				input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
 			}
@@ -417,7 +420,8 @@ static void ADC_Machine_Service_Muxing(void) {
 			BeginNextConversion(samplingInputs[currentSamplingInput]);
 			CurrentState = PreviousState; /* Return the state to its previous value */
 		} else if (((PreviousState == ADC_IDLE) || (PreviousState == ADC_CALIBRATING) || (PreviousState == ADC_GAIN_CALIBRATING))
-			&& (isExternalMuxingComplete() == true)) {
+				&& (isExternalMuxingComplete() == true)) {
+			ResetSelectedInput();
 			CurrentState = PreviousState;
 		}
 	}
@@ -511,6 +515,9 @@ void ADC_Calibrate(void) {
 		/* Update the finished state */
 		calibrationState.finished = false;
 		calibrationState.finished_count = 0U;
+		calibrationState.buffer_index = 0U;
+		calibrationState.rate_index = 0U;
+		calibrationState.gain_index = 0U;
 
 		/* Select the calibration input */
 		SelectCalibrationInput();
@@ -542,7 +549,7 @@ void ADC_GainCalibrate(PhysicalAnalogInput_t input) {
 		calibrationState.finished_count = 0U;
 
 		/* Select the calibration input */
-		SelectPhysicalInput(input);
+		SelectPhysicalInput(input, true);
 	}
 }
 
@@ -640,7 +647,7 @@ void ADC_Machine_Idle(void) {
 		CurrentState = ADC_IDLE;
 		ADS1256_Sync(true);
 		Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-		SelectAnalogInput(cold);
+		SelectAnalogInput(cold, false);
 		BeginNextConversion(cold);
 	}
 }
@@ -657,8 +664,7 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 	/* We use explicit checking here in case other state are added later */
 	if ((CurrentState != ADC_IDLE)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state from %s\n\r",
-				ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
 #endif
 		return;
 	}
@@ -713,7 +719,7 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 	samplingInputs = inputs;
 	Analog_Input_t* input = samplingInputs[currentSamplingInput];
 	CurrentState = ADC_CHANNEL_SAMPLING;
-	SelectAnalogInput(input);
+	SelectAnalogInput(input, true);
 
 	if (CurrentState == ADC_CHANNEL_SAMPLING) {
 		/* Set sampling parameters */
@@ -761,8 +767,7 @@ void ADC_External_Muxing(void) {
 	if ((CurrentState != ADC_RESET) && (CurrentState != ADC_IDLE) && (CurrentState != ADC_CHANNEL_SAMPLING)
 			&& (CurrentState != ADC_CALIBRATING) && (CurrentState != ADC_GAIN_CALIBRATING)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_EXTERNAL_MUXING state from %s\n\r",
-				ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_EXTERNAL_MUXING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG

@@ -42,11 +42,6 @@ extern "C" {
 /* PUBLIC METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
 
-/**
- * @brief Sets the base gain value to apply the calibration table to.
- */
-void Tekdaqc_Calibration_SetBaseGainValue(uint32_t val, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer);
-
 /*
  * @brief Initializes the Tekdaqc's calibration table for read access.
  */

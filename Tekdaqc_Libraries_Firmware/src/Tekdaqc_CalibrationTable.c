@@ -241,25 +241,6 @@ static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_
 /*--------------------------------------------------------------------------------------------------------*/
 
 /**
- * Sets the base gain calibration value. This value is added to the value retrieved from the table and allows
- * the board to adjust its gain to remove thermal EMF and other environmental errors.
- *
- * @param val uint32_t The gain calibration value.
- * @param rate ADS1256_SPS_t The sample rate to lookup for.
- * @param gain ADS1256_PGA_t The gain to lookup for.
- * @param buffer ADS1256_BUFFER_t The buffer setting to lookup for.
- * @retval none
- */
-void Tekdaqc_Calibration_SetBaseGainValue(uint32_t val, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer) {
-	uint8_t rate_index;
-	uint8_t gain_index;
-	uint8_t buffer_index;
-
-	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, rate, gain, buffer);
-	baseGainCalibrations[rate_index][gain_index][buffer_index] = val;
-}
-
-/**
  * Initializes the calibration table for read operations.
  *
  * @param none
@@ -293,7 +274,7 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 
 	if (CALIBRATION_VALID != TRUE) {
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] The calibration table is not valid, returning ADC calibration only (0x%" PRIu32 ").\n\r", baseGain);
+		printf("[Calibration Table] The calibration table is not valid, returning ADC calibration only (0x%" PRIX32 ").\n\r", baseGain);
 #endif
 		return baseGain;
 	}

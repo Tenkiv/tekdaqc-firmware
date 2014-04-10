@@ -322,6 +322,7 @@ static inline const char* ADS1256_StringFromRegister(ADS1256_Register_t reg) {
  * @retval none
  */
 void ADS1256_PrintRegs(void) {
+	ADS1256_ReadRegisters(ADS1256_STATUS, ADS1256_NREGS); /* Read out all the registers */
 	for (uint_fast8_t i = 0; i < ADS1256_NREGS; ++i) {
 		printf(ADS1256_REGISTERS_DEBUG_FORMATTER, i, ADS1256_StringFromRegister(i), ADS1256_Registers[i]);
 	}
@@ -1643,7 +1644,6 @@ uint32_t ADS1256_GetOffsetCalSetting(void) {
  */
 void ADS1256_SetOffsetCalSetting(uint8_t* value) {
 	ADS1256_SetRegisters(ADS1256_OFC0, 3, value);
-
 }
 
 

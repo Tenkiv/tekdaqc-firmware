@@ -82,12 +82,12 @@ void InputMultiplexerInit(void);
 /**
  * @brief Selects the specified analog input.
  */
-void SelectAnalogInput(Analog_Input_t* input);
+void SelectAnalogInput(Analog_Input_t* input, bool doMuxDelay);
 
 /**
  * @brief Selects the specified physical input.
  */
-void SelectPhysicalInput(PhysicalAnalogInput_t input);
+void SelectPhysicalInput(PhysicalAnalogInput_t input, bool doMuxDelay);
 
 /**
  * @brief Selects the designated offset calibration input.
