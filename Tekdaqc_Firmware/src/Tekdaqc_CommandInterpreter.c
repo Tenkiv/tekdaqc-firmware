@@ -148,7 +148,7 @@ const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS] = { PARAMETER_BUFFER, PAR
 /**
  * List of all parameters for the SYSTEM_CAL command.
  */
-const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS] = { PARAMETER_BUFFER, PARAMETER_RATE, PARAMETER_GAIN };
+const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS] = { };
 
 /**
  * List of all the parameters for the LIST_DIGITAL_INPUT command.

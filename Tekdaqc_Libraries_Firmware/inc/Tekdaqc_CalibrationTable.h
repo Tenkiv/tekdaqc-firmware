@@ -58,6 +58,16 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 uint32_t Tekdaqc_GetOffsetCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer);
 
 /**
+ * @brief Retrieves the offset calibration value for the cold junction.
+ */
+uint32_t Tekdaqc_GetColdJunctionOffsetCalibration(void);
+
+/**
+ * @brief Retrieves a gain calibration value for the cold junction.
+ */
+uint32_t Tekdaqc_GetColdJunctionGainCalibration(void);
+
+/**
  * @brief Enters calibration mode, enabling write access to the calibration table.
  */
 FLASH_Status Tekdaqc_SetCalibrationMode(void);
@@ -91,6 +101,16 @@ FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp);
  * @brief Sets the gain calibration value for the specified parameters.
  */
 FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
+
+/**
+ * @brief Sets the offset calibration value to be used for the cold junction sensor.
+ */
+FLASH_Status Tekdaqc_SetColdJunctionOffsetCalibration(uint32_t cal);
+
+/**
+ * @brief Sets the gain calibration value to be used for the cold junction sensor.
+ */
+FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal);
 
 /**
  * @brief Sets the offset calibration value for the specified parameters.

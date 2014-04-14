@@ -235,7 +235,7 @@ extern const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS];
  * @def NUM_SYSTEM_CAL_PARAMS
  * @brief The number of parameters for the SYSTEM_CAL command.
  */
-#define NUM_SYSTEM_CAL_PARAMS 3
+#define NUM_SYSTEM_CAL_PARAMS 0
 /* Prototype the SYSTEM_CAL command params array */
 extern const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS];
 

@@ -434,9 +434,18 @@ static void ConvertCalibrationToBytes(uint8_t bytes[], uint32_t cal) {
 }
 
 static void ApplyCalibrationParameters(Analog_Input_t* input) {
-	ConvertCalibrationToBytes(scratch_bytes, Tekdaqc_GetOffsetCalibration(input->rate, input->gain, input->buffer));
+	uint32_t offset_cal;
+	uint32_t gain_cal;
+	if (input->physicalInput == IN_COLD_JUNCTION) {
+		offset_cal = Tekdaqc_GetColdJunctionOffsetCalibration();
+		gain_cal = Tekdaqc_GetColdJunctionGainCalibration();
+	} else {
+		offset_cal = Tekdaqc_GetOffsetCalibration(input->rate, input->gain, input->buffer);
+		gain_cal = Tekdaqc_GetGainCalibration(input->rate, input->gain, input->buffer, getBoardTemperature());
+	}
+	ConvertCalibrationToBytes(scratch_bytes, offset_cal);
 	ADS1256_SetOffsetCalSetting(scratch_bytes);
-	ConvertCalibrationToBytes(scratch_bytes, Tekdaqc_GetGainCalibration(input->rate, input->gain, input->buffer, getBoardTemperature()));
+	ConvertCalibrationToBytes(scratch_bytes, gain_cal);
 	ADS1256_SetGainCalSetting(scratch_bytes);
 }
 

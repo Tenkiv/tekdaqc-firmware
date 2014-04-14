@@ -73,6 +73,12 @@ static uint32_t offsetCalibrations[NUM_SAMPLE_RATES][NUM_PGA_SETTINGS][NUM_BUFFE
 /* RAM table of base gain calibrations */
 static uint32_t baseGainCalibrations[NUM_SAMPLE_RATES][NUM_PGA_SETTINGS][NUM_BUFFER_SETTINGS];
 
+/* The cold junction offset calibration value. Cached in RAM to prevent lookup delays */
+static uint32_t COLD_JUNCTION_OFFSET_CAL = 0xFFFFFFFFU;
+
+/* The cold junction gain calibration value. Cached in RAM to prevent lookup delays */
+static uint32_t COLD_JUNCTION_GAIN_CAL = 0xFFFFFFFFU;
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -247,11 +253,13 @@ static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_
  * @retval bool Always TRUE.
  */
 bool Tekdaqc_CalibrationInit(void) {
-	FLASH_SetLatency(CALIBRATION_LATENCY );
+	FLASH_SetLatency(CALIBRATION_LATENCY);
 	CAL_TEMP_LOW = (*(__IO float*) CAL_TEMP_LOW_ADDR);
 	CAL_TEMP_HIGH = (*(__IO float*) CAL_TEMP_HIGH_ADDR);
 	CAL_TEMP_STEP = (*(__IO float*) CAL_TEMP_STEP_ADDR);
 	CAL_TEMP_CNT = (*(__IO uint32_t*) CAL_TEMP_CNT_ADDR);
+	COLD_JUNCTION_OFFSET_CAL = (*(__IO uint32_t*) COLD_JUNCTION_OFFSET_ADDR);
+	COLD_JUNCTION_GAIN_CAL = (*(__IO uint32_t*) COLD_JUNCTION_GAIN_CAL);
 	CALIBRATION_VALID = (*(__IO uint8_t*) CAL_VALID_ADDR) != 0xFF;
 	return TRUE;
 }
@@ -330,6 +338,40 @@ uint32_t Tekdaqc_GetOffsetCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, AD
 }
 
 /**
+ * Retrieves the offset calibration value for the cold junction.
+ *
+ * @param none
+ * @retval The calibration value.
+ */
+uint32_t Tekdaqc_GetColdJunctionOffsetCalibration(void) {
+	uint32_t cal;
+	if (COLD_JUNCTION_OFFSET_CAL == 0xFFFFFFFFU) {
+		cal = Tekdaqc_GetOffsetCalibration(ADS1256_SPS_30000, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED);
+	} else {
+		cal = COLD_JUNCTION_OFFSET_CAL;
+	}
+
+	return cal;
+}
+
+/**
+ * Retrieves the gain calibration value for the cold junction.
+ *
+ * @param none
+ * @retval The calibration value.
+ */
+uint32_t Tekdaqc_GetColdJunctionGainCalibration(void) {
+	uint32_t cal;
+	if (COLD_JUNCTION_GAIN_CAL == 0xFFFFFFFFU) {
+		cal = Tekdaqc_GetGainCalibration(ADS1256_SPS_30000, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED, 25.0f);
+	} else {
+		cal = COLD_JUNCTION_GAIN_CAL;
+	}
+
+	return cal;
+}
+
+/**
  * Enter calibration mode. NOTE: Calling this method will erase the calibration table.
  *
  * @param none
@@ -340,7 +382,7 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 	FLASH_Unlock();
 
 	/* Clear pending flags (if any) */
-	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR );
+	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
 	FLASH_Status status = FLASH_COMPLETE;
 
@@ -349,10 +391,10 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 	/* Disable write protection for this sector */
 	/*FLASH_OB_WRPConfig(CALIBRATION_WPSECTOR, DISABLE);
 
-	FLASH_OB_Launch(); */
+	 FLASH_OB_Launch(); */
 
 	/* Erase the calibration sector */
-	status = FLASH_EraseSector(CALIBRATION_SECTOR, FLASH_VOLTAGE_RANGE );
+	status = FLASH_EraseSector(CALIBRATION_SECTOR, FLASH_VOLTAGE_RANGE);
 	if (status != FLASH_COMPLETE) {
 		return status;
 	}
@@ -360,8 +402,8 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 	/* Program the user Flash area word by word area defined by FLASH_USER_START_ADDR and FLASH_USER_END_ADDR */
 	uint32_t Address = ADDR_CALIBRATION_BASE;
 
-	while (Address < ADDR_CALIBRATION_END ) {
-		status = FLASH_ProgramWord(Address, CALIBRATION_ERASE_DATA );
+	while (Address < ADDR_CALIBRATION_END) {
+		status = FLASH_ProgramWord(Address, CALIBRATION_ERASE_DATA);
 		if (status == FLASH_COMPLETE) {
 			Address = Address + 4;
 		} else {
@@ -372,7 +414,7 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 	/* Enable write protection for this sector */
 	/*FLASH_OB_WRPConfig(CALIBRATION_WPSECTOR, ENABLE);
 
-	FLASH_OB_Launch();*/
+	 FLASH_OB_Launch();*/
 
 	/* FLASH_OB_Lock(); */
 	/* Disable the flash control register access */
@@ -495,6 +537,38 @@ FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS125
 
 	uint32_t addr = ComputeOffset(rate, gain, buffer, temperature);
 	FLASH_Status status = FLASH_ProgramWord(addr, cal);
+	return status;
+}
+
+/**
+ * Writes the offset calibration value to be used for the cold junction sensor into the flash calibration table.
+ * This method requires that the board be in calibration mode and will return FLASH_ERROR_WRP if it is not.
+ *
+ * @param cal uint32 The calibration value to write.
+ * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
+ */
+FLASH_Status Tekdaqc_SetColdJunctionOffsetCalibration(uint32_t cal) {
+	if (CalibrationModeEnabled == false) {
+		return FLASH_ERROR_WRP;
+	}
+
+	FLASH_Status status = FLASH_ProgramWord(COLD_JUNCTION_OFFSET_ADDR, cal);
+	return status;
+}
+
+/**
+ * Writes the gain calibration value to be used for the cold junction sensor into the flash calibration table.
+ * This method requires that the board be in calibration mode and will return FLASH_ERROR_WRP if it is not.
+ *
+ * @param cal uint32 The calibration value to write.
+ * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
+ */
+FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal) {
+	if (CalibrationModeEnabled == false) {
+		return FLASH_ERROR_WRP;
+	}
+
+	FLASH_Status status = FLASH_ProgramWord(COLD_JUNCTION_GAIN_ADDR, cal);
 	return status;
 }
 
