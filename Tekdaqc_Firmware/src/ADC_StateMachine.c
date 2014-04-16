@@ -228,9 +228,10 @@ static void ADC_Machine_Service_Calibrating(void) {
 		}
 #ifdef ADC_STATE_MACHINE_DEBUG
 		static uint32_t total = NUM_PGA_SETTINGS * NUM_SAMPLE_RATES * NUM_BUFFER_SETTINGS;
-		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %f%.\n\r", ((float) calibrationState.finished_count / total) * 100.0f);
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %f%.\n\r",
+				((float) calibrationState.finished_count / total) * 100.0f);
 		//printf("[ADC STATE MACHINE] Calibration progress: %f%.\n\r", ((float) calibrationState.finished_count / total) * 100.0f);
-		TelnetWriteDebugMessage(TOSTRING_BUFFER);
+		TelnetWriteStatusMessage(TOSTRING_BUFFER);
 #endif
 	} else {
 		/* The calibration is complete */
@@ -276,8 +277,8 @@ static void ADC_Machine_Service_Idle(void) {
 			/* This means we wrote over some data */
 #ifdef BOARD_TEMPERATURE_DEBUG
 			printf("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
-#endif
 			TelnetWriteErrorMessage("Cold junction sampling overwrote data before it could be read.");
+#endif
 		}
 		if (input->bufferWriteIdx == ANALOG_INPUT_BUFFER_SIZE) {
 			/* We have reached the end of the buffer and need to start writing to the beginning */
@@ -330,6 +331,8 @@ static void ADC_Machine_Service_Sampling(void) {
 			}
 			if (input != current) { /* Prevent unnecessary external muxings */
 				SelectAnalogInput(input, true); /* Select the input */
+				/* We are done sampling this input, write out any remaining data */
+				WriteAnalogInput(current);
 			} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
 				printf("[ADC STATE MACHINE] Multi-channel sampling tried to select the currently selected input. Ignoring...\n\r");
@@ -341,7 +344,9 @@ static void ADC_Machine_Service_Sampling(void) {
 		} else {
 			/* We are single channel sampling */
 #ifdef ADC_STATE_MACHINE_DEBUG
-			printf("[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r", SampleCurrent + 1, SampleTotal);
+			snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r",
+					SampleCurrent + 1, SampleTotal);
+			TelnetWriteStatusMessage(TOSTRING_BUFFER);
 #endif
 			++SampleCurrent; /* Increment the sample count */
 			ADS1256_Wakeup(); /* Begin the next sample */
@@ -678,7 +683,7 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 		return;
 	}
 	/* Validate the inputs list */
-	if (inputs == NULL ) {
+	if (inputs == NULL) {
 #ifdef ADC_STATE_MACHINE_DEBUG
 		printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with a NULL analog input list. Ignoring...\n\r");
 #endif
@@ -691,7 +696,7 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 
 	if (singleChannel == true) {
 		/* Validate the input(s) */
-		if (inputs[0] == NULL ) {
+		if (inputs[0] == NULL) {
 #ifdef ADC_STATE_MACHINE_DEBUG
 			printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with a NULL analog input. Ignoring...\n\r");
 #endif
