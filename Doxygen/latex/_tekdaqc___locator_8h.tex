@@ -1,0 +1,53 @@
+\hypertarget{_tekdaqc___locator_8h}{\section{Tekdaqc\-\_\-\-Locator.\-h File Reference}
+\label{_tekdaqc___locator_8h}\index{Tekdaqc\-\_\-\-Locator.\-h@{Tekdaqc\-\_\-\-Locator.\-h}}
+}
+
+
+Header file for the Tekdaqc Locator service.  
+
+
+{\ttfamily \#include \char`\"{}stm32f4xx.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tekdaqc__locator_ga99090049c7556abdcff2bad0dfdf78af}{Tekdaqc\-\_\-\-Locator\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc locator service. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga668d2bf16094e0046055c231a3c2174c}{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set} (uint8\-\_\-t type)
+\begin{DoxyCompactList}\small\item\em Sets the board type in the locator response packet. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}{void \hyperlink{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}{Tekdaqc\-\_\-\-Locator\-Board\-I\-D\-Set} (const unsigned char $\ast$id)}\label{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}
+
+\begin{DoxyCompactList}\small\item\em Sets the board I\-D in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga841da02fec8e79caad0f1d3db9a7af73}{Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set} (uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em Sets the client I\-P address in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_gaedcc9e5e10826ca40b253bdc274e65cf}{Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set} (const unsigned char M\-A\-C\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Sets the M\-A\-C address in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga852fe5c43e378a8621913254a3e00bd1}{Tekdaqc\-\_\-\-Locator\-Version\-Set} (uint32\-\_\-t version)
+\begin{DoxyCompactList}\small\item\em Sets the firmware version in the locator response packet. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}{void \hyperlink{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}{Tekdaqc\-\_\-\-Locator\-App\-Title\-Set} (const unsigned char $\ast$title)}\label{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}
+
+\begin{DoxyCompactList}\small\item\em Sets the application title in the locator response packet. \end{DoxyCompactList}\item 
+uint8\-\_\-t \hyperlink{group__tekdaqc__locator_ga573f8960093dc2ab0cc4c88b8f8c6ff9}{Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board type from the locator packet data. \end{DoxyCompactList}\item 
+unsigned char $\ast$ \hyperlink{group__tekdaqc__locator_gae38557024fc843c693d4b6f2cdb5d097}{Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board I\-D from the locator packet data. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{group__tekdaqc__locator_gaf8eaedaeca86f0d5c7af113faebe16a0}{Tekdaqc\-\_\-\-Get\-Locator\-Ip} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board I\-P address from the locator packet data. \end{DoxyCompactList}\item 
+unsigned char $\ast$ \hyperlink{group__tekdaqc__locator_ga03c9656c9876829e12f617d4e4abef04}{Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board M\-A\-C address from the locator packet data. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{group__tekdaqc__locator_ga502ebd4cceffc0fa3a7abefc7f79b42a}{Tekdaqc\-\_\-\-Get\-Locator\-Version} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board firmware version from the locator packet data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public definitions and data types for the Tekdaqc Locator service.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_tekdaqc___locator_8h_source}{Tekdaqc\-\_\-\-Locator.\-h}.
+

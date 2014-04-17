@@ -1,0 +1,66 @@
+\hypertarget{_command_state_8h}{\section{Command\-State.\-h File Reference}
+\label{_command_state_8h}\index{Command\-State.\-h@{Command\-State.\-h}}
+}
+
+
+Header file for the command state machine.  
+
+
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__command__state_ga3a4df4a38f022d20e1627e722433ecc2}{Command\-State\-\_\-t} \{ \\*
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2af096820742c38363e9d6c33e7c932780}{U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}, 
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2aaade5e53e88cf231292cd1142cce2afe}{S\-T\-A\-T\-E\-\_\-\-I\-D\-L\-E}, 
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a3b9c0d3ed012502e9177064ee2b10303}{S\-T\-A\-T\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}, 
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a77acfb8a3554dce5cfe02ec58362f5e7}{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}, 
+\\*
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a428ac7286cbe23bb37c57c78fe7c967e}{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}, 
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2aff11f1f959f0aabd852f15b8a63982b7}{S\-T\-A\-T\-E\-\_\-\-G\-E\-N\-E\-R\-A\-L\-\_\-\-S\-A\-M\-P\-L\-E}
+ \}
+\begin{DoxyCompactList}\small\item\em Command state machine state definitions. Defines all the possible states for the command state machine to be in. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__command__state_gabab5afe3159f634f822ad1bccd70209a}{Init\-Command\-State\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_gabe3abf44cdbfe8382df3906f5e192626}{Service\-Tasks} (void)
+\begin{DoxyCompactList}\small\item\em Service any tasks which need to be serviced based on the current state. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga7ffd79ad6c6165445ae5f0f29bd92d83}{Halt\-Tasks} (void)
+\begin{DoxyCompactList}\small\item\em Halt all in progress tasks, returning to the idle state. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga517067b49452b8a3e1e87831720b573b}{Command\-State\-Move\-To\-Analog\-Input\-Sample} (void)
+\begin{DoxyCompactList}\small\item\em Move the state machine to analog input sampling. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga95ad2a64f10746852d523bed46b0d328}{Command\-State\-Move\-To\-Digital\-Input\-Sample} (void)
+\begin{DoxyCompactList}\small\item\em Move the state machine to digital input sampling. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_gae7be822d5262fbf48e51ffae98733aec}{Command\-State\-Move\-To\-Digital\-Output\-Sample} (void)
+\begin{DoxyCompactList}\small\item\em Move the state machine to digital output sampling. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga62da533cf3e918233a8245c42959d0e5}{Command\-State\-Move\-To\-General\-Sample} (void)
+\begin{DoxyCompactList}\small\item\em Move the state machine to general sampling. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_gaeef6d80f456cb6f79363946c49723bea}{Completed\-A\-D\-C\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Notifies the command state machine that the analog input sampling process has completed. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga6e3eb8b0a37d7aebb88e1667f3c222d2}{Completed\-D\-I\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Notifies the command state machine that the digital input sampling process has completed. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga1255ba36b41923ad73e72f1464412852}{Completed\-D\-O\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Notifies the command state machine that the digital output sampling process has completed. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__command__state_ga7dc77fb2cb66a1b11d987bdc8c75c060}{is\-A\-D\-C\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Accessor function to check the analog input sampling status. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__command__state_gab0e295861dce43803feb4bf235dedf71}{is\-D\-I\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Accessor function to check the digital input sampling status. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__command__state_gaf69a154f2311c13883ebbe0c1de90d44}{is\-D\-O\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Accessor function to check the digital output sampling status. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public definitions and data types for the command state machine.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_command_state_8h_source}{Command\-State.\-h}.
+

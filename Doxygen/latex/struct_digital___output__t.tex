@@ -1,0 +1,93 @@
+\hypertarget{struct_digital___output__t}{\section{Digital\-\_\-\-Output\-\_\-t Struct Reference}
+\label{struct_digital___output__t}\index{Digital\-\_\-\-Output\-\_\-t@{Digital\-\_\-\-Output\-\_\-t}}
+}
+
+
+Data structure used to store the state and requirements of a digital output of the Tekdaqc. This data structure contains all the information related to a particular input to the Tekdaqc. Please note that while there is nothing to stop you from manipulating the values of the structure directly, it is not recommended as it could put the structure in an indeterminate state. Instead, manipulation functions are provided which will ensure that all state related implications are addressed.  
+
+
+
+
+{\ttfamily \#include $<$Digital\-\_\-\-Output.\-h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__board__channel__constants_gab0f30599ceb99e5ba3b2908d8e9bd131}{Channel\-Added\-\_\-t} \hyperlink{struct_digital___output__t_a6f1a4402ff8651dfc5e453b5e3154c2d}{added}
+\item 
+G\-P\-O\-\_\-\-Type\-Def \hyperlink{struct_digital___output__t_ac7a7d7f3d154ec3152de97d06a7870f1}{output}
+\item 
+char \hyperlink{struct_digital___output__t_af161017167d4afb064b9c104877041e9}{name} \mbox{[}\hyperlink{group__digital__output_ga95c04964ce488ee74ca3f32a39a88cb7}{M\-A\-X\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}
+\item 
+\hyperlink{group__board__channel__constants_gaee574a0d48c41a3e5426ffbf8ac4c5c4}{Digital\-Level\-\_\-t} \hyperlink{struct_digital___output__t_a077d2fbd9f466d58856071f5314b9c09}{level}
+\item 
+uint64\-\_\-t \hyperlink{struct_digital___output__t_a465bef81f6478756e5443025b1f2ddfa}{timestamp}
+\item 
+uint64\-\_\-t \hyperlink{struct_digital___output__t_ada3dca6ca3d8c61b00b0a2a65055c21e}{fault\-\_\-timestamp}
+\item 
+\hyperlink{group__tle7232__driver_ga84bb3f68b575c6add1c27f053b87746a}{T\-L\-E7232\-\_\-\-Status\-\_\-t} \hyperlink{struct_digital___output__t_a13ee06338665fcdab36b11e8c7b7df0e}{fault\-\_\-status}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 87 of file Digital\-\_\-\-Output.\-h.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{struct_digital___output__t_a6f1a4402ff8651dfc5e453b5e3154c2d}{\index{Digital\-\_\-\-Output\-\_\-t@{Digital\-\_\-\-Output\-\_\-t}!added@{added}}
+\index{added@{added}!Digital_Output_t@{Digital\-\_\-\-Output\-\_\-t}}
+\subsubsection[{added}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Channel\-Added\-\_\-t} added}}\label{struct_digital___output__t_a6f1a4402ff8651dfc5e453b5e3154c2d}
+Addition status of the input. 
+
+Definition at line 88 of file Digital\-\_\-\-Output.\-h.
+
+\hypertarget{struct_digital___output__t_a13ee06338665fcdab36b11e8c7b7df0e}{\index{Digital\-\_\-\-Output\-\_\-t@{Digital\-\_\-\-Output\-\_\-t}!fault\-\_\-status@{fault\-\_\-status}}
+\index{fault\-\_\-status@{fault\-\_\-status}!Digital_Output_t@{Digital\-\_\-\-Output\-\_\-t}}
+\subsubsection[{fault\-\_\-status}]{\setlength{\rightskip}{0pt plus 5cm}{\bf T\-L\-E7232\-\_\-\-Status\-\_\-t} fault\-\_\-status}}\label{struct_digital___output__t_a13ee06338665fcdab36b11e8c7b7df0e}
+The current fault status of the output. 
+
+Definition at line 94 of file Digital\-\_\-\-Output.\-h.
+
+\hypertarget{struct_digital___output__t_ada3dca6ca3d8c61b00b0a2a65055c21e}{\index{Digital\-\_\-\-Output\-\_\-t@{Digital\-\_\-\-Output\-\_\-t}!fault\-\_\-timestamp@{fault\-\_\-timestamp}}
+\index{fault\-\_\-timestamp@{fault\-\_\-timestamp}!Digital_Output_t@{Digital\-\_\-\-Output\-\_\-t}}
+\subsubsection[{fault\-\_\-timestamp}]{\setlength{\rightskip}{0pt plus 5cm}uint64\-\_\-t fault\-\_\-timestamp}}\label{struct_digital___output__t_ada3dca6ca3d8c61b00b0a2a65055c21e}
+The timestamp of the first occurrence of a fault. 
+
+Definition at line 93 of file Digital\-\_\-\-Output.\-h.
+
+\hypertarget{struct_digital___output__t_a077d2fbd9f466d58856071f5314b9c09}{\index{Digital\-\_\-\-Output\-\_\-t@{Digital\-\_\-\-Output\-\_\-t}!level@{level}}
+\index{level@{level}!Digital_Output_t@{Digital\-\_\-\-Output\-\_\-t}}
+\subsubsection[{level}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Digital\-Level\-\_\-t} level}}\label{struct_digital___output__t_a077d2fbd9f466d58856071f5314b9c09}
+The recorded status of this input. 
+
+Definition at line 91 of file Digital\-\_\-\-Output.\-h.
+
+\hypertarget{struct_digital___output__t_af161017167d4afb064b9c104877041e9}{\index{Digital\-\_\-\-Output\-\_\-t@{Digital\-\_\-\-Output\-\_\-t}!name@{name}}
+\index{name@{name}!Digital_Output_t@{Digital\-\_\-\-Output\-\_\-t}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}char name\mbox{[}{\bf M\-A\-X\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}}}\label{struct_digital___output__t_af161017167d4afb064b9c104877041e9}
+Pointer to a C string name for this input. 
+
+Definition at line 90 of file Digital\-\_\-\-Output.\-h.
+
+\hypertarget{struct_digital___output__t_ac7a7d7f3d154ec3152de97d06a7870f1}{\index{Digital\-\_\-\-Output\-\_\-t@{Digital\-\_\-\-Output\-\_\-t}!output@{output}}
+\index{output@{output}!Digital_Output_t@{Digital\-\_\-\-Output\-\_\-t}}
+\subsubsection[{output}]{\setlength{\rightskip}{0pt plus 5cm}G\-P\-O\-\_\-\-Type\-Def output}}\label{struct_digital___output__t_ac7a7d7f3d154ec3152de97d06a7870f1}
+An integer id for this input. 
+
+Definition at line 89 of file Digital\-\_\-\-Output.\-h.
+
+\hypertarget{struct_digital___output__t_a465bef81f6478756e5443025b1f2ddfa}{\index{Digital\-\_\-\-Output\-\_\-t@{Digital\-\_\-\-Output\-\_\-t}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!Digital_Output_t@{Digital\-\_\-\-Output\-\_\-t}}
+\subsubsection[{timestamp}]{\setlength{\rightskip}{0pt plus 5cm}uint64\-\_\-t timestamp}}\label{struct_digital___output__t_a465bef81f6478756e5443025b1f2ddfa}
+The timestamp of the measurement in U\-N\-I\-X epoch format. 
+
+Definition at line 92 of file Digital\-\_\-\-Output.\-h.
+
+
+
+The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_digital___output_8h}{Digital\-\_\-\-Output.\-h}\end{DoxyCompactItemize}

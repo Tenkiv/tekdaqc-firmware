@@ -290,10 +290,13 @@ const char* DigitalLevelToString(DigitalLevel_t level) {
 	switch (level) {
 	case LOGIC_HIGH:
 		ret_index = 0;
+		break;
 	case LOGIC_LOW:
 		ret_index = 1;
+		break;
 	default:
 		ret_index = 2;
+		break;
 	}
 	return strings[ret_index];
 }

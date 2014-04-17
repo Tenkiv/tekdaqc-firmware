@@ -1,0 +1,377 @@
+\hypertarget{group__command__state}{\section{Command State Machine}
+\label{group__command__state}\index{Command State Machine@{Command State Machine}}
+}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__command__state_ga3a4df4a38f022d20e1627e722433ecc2}{Command\-State\-\_\-t} \{ \\*
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2af096820742c38363e9d6c33e7c932780}{U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}, 
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2aaade5e53e88cf231292cd1142cce2afe}{S\-T\-A\-T\-E\-\_\-\-I\-D\-L\-E}, 
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a3b9c0d3ed012502e9177064ee2b10303}{S\-T\-A\-T\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}, 
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a77acfb8a3554dce5cfe02ec58362f5e7}{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}, 
+\\*
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a428ac7286cbe23bb37c57c78fe7c967e}{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}, 
+\hyperlink{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2aff11f1f959f0aabd852f15b8a63982b7}{S\-T\-A\-T\-E\-\_\-\-G\-E\-N\-E\-R\-A\-L\-\_\-\-S\-A\-M\-P\-L\-E}
+ \}
+\begin{DoxyCompactList}\small\item\em Command state machine state definitions. Defines all the possible states for the command state machine to be in. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__command__state_gabab5afe3159f634f822ad1bccd70209a}{Init\-Command\-State\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_gabe3abf44cdbfe8382df3906f5e192626}{Service\-Tasks} (void)
+\begin{DoxyCompactList}\small\item\em Service any tasks which need to be serviced based on the current state. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga7ffd79ad6c6165445ae5f0f29bd92d83}{Halt\-Tasks} (void)
+\begin{DoxyCompactList}\small\item\em Halt all in progress tasks, returning to the idle state. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga517067b49452b8a3e1e87831720b573b}{Command\-State\-Move\-To\-Analog\-Input\-Sample} (void)
+\begin{DoxyCompactList}\small\item\em Move the state machine to analog input sampling. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga95ad2a64f10746852d523bed46b0d328}{Command\-State\-Move\-To\-Digital\-Input\-Sample} (void)
+\begin{DoxyCompactList}\small\item\em Move the state machine to digital input sampling. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_gae7be822d5262fbf48e51ffae98733aec}{Command\-State\-Move\-To\-Digital\-Output\-Sample} (void)
+\begin{DoxyCompactList}\small\item\em Move the state machine to digital output sampling. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga62da533cf3e918233a8245c42959d0e5}{Command\-State\-Move\-To\-General\-Sample} (void)
+\begin{DoxyCompactList}\small\item\em Move the state machine to general sampling. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_gaeef6d80f456cb6f79363946c49723bea}{Completed\-A\-D\-C\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Notifies the command state machine that the analog input sampling process has completed. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga6e3eb8b0a37d7aebb88e1667f3c222d2}{Completed\-D\-I\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Notifies the command state machine that the digital input sampling process has completed. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__state_ga1255ba36b41923ad73e72f1464412852}{Completed\-D\-O\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Notifies the command state machine that the digital output sampling process has completed. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__command__state_ga7dc77fb2cb66a1b11d987bdc8c75c060}{is\-A\-D\-C\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Accessor function to check the analog input sampling status. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__command__state_gab0e295861dce43803feb4bf235dedf71}{is\-D\-I\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Accessor function to check the digital input sampling status. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__command__state_gaf69a154f2311c13883ebbe0c1de90d44}{is\-D\-O\-Sampling} (void)
+\begin{DoxyCompactList}\small\item\em Accessor function to check the digital output sampling status. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__command__state_ga3a4df4a38f022d20e1627e722433ecc2}{\index{Command State Machine@{Command State Machine}!Command\-State\-\_\-t@{Command\-State\-\_\-t}}
+\index{Command\-State\-\_\-t@{Command\-State\-\_\-t}!Command State Machine@{Command State Machine}}
+\subsubsection[{Command\-State\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Command\-State\-\_\-t}}}\label{group__command__state_ga3a4df4a38f022d20e1627e722433ecc2}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}!Command State Machine@{Command State Machine}}\index{Command State Machine@{Command State Machine}!U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}}\item[{\em 
+\hypertarget{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2af096820742c38363e9d6c33e7c932780}{U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}\label{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2af096820742c38363e9d6c33e7c932780}
+}]The state machine is in an invalid, uninitialized state. \index{S\-T\-A\-T\-E\-\_\-\-I\-D\-L\-E@{S\-T\-A\-T\-E\-\_\-\-I\-D\-L\-E}!Command State Machine@{Command State Machine}}\index{Command State Machine@{Command State Machine}!S\-T\-A\-T\-E\-\_\-\-I\-D\-L\-E@{S\-T\-A\-T\-E\-\_\-\-I\-D\-L\-E}}\item[{\em 
+\hypertarget{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2aaade5e53e88cf231292cd1142cce2afe}{S\-T\-A\-T\-E\-\_\-\-I\-D\-L\-E}\label{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2aaade5e53e88cf231292cd1142cce2afe}
+}]The state machine is idling. \index{S\-T\-A\-T\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E@{S\-T\-A\-T\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}!Command State Machine@{Command State Machine}}\index{Command State Machine@{Command State Machine}!S\-T\-A\-T\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E@{S\-T\-A\-T\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}}\item[{\em 
+\hypertarget{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a3b9c0d3ed012502e9177064ee2b10303}{S\-T\-A\-T\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}\label{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a3b9c0d3ed012502e9177064ee2b10303}
+}]The state machine is configured for sampling analog inputs only. \index{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E@{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}!Command State Machine@{Command State Machine}}\index{Command State Machine@{Command State Machine}!S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E@{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}}\item[{\em 
+\hypertarget{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a77acfb8a3554dce5cfe02ec58362f5e7}{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}\label{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a77acfb8a3554dce5cfe02ec58362f5e7}
+}]The state machine is configured for sampling digital inputs only. \index{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E@{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}!Command State Machine@{Command State Machine}}\index{Command State Machine@{Command State Machine}!S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E@{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}}\item[{\em 
+\hypertarget{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a428ac7286cbe23bb37c57c78fe7c967e}{S\-T\-A\-T\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-S\-A\-M\-P\-L\-E}\label{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2a428ac7286cbe23bb37c57c78fe7c967e}
+}]The state machine is configured for sampling digital outputs only. \index{S\-T\-A\-T\-E\-\_\-\-G\-E\-N\-E\-R\-A\-L\-\_\-\-S\-A\-M\-P\-L\-E@{S\-T\-A\-T\-E\-\_\-\-G\-E\-N\-E\-R\-A\-L\-\_\-\-S\-A\-M\-P\-L\-E}!Command State Machine@{Command State Machine}}\index{Command State Machine@{Command State Machine}!S\-T\-A\-T\-E\-\_\-\-G\-E\-N\-E\-R\-A\-L\-\_\-\-S\-A\-M\-P\-L\-E@{S\-T\-A\-T\-E\-\_\-\-G\-E\-N\-E\-R\-A\-L\-\_\-\-S\-A\-M\-P\-L\-E}}\item[{\em 
+\hypertarget{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2aff11f1f959f0aabd852f15b8a63982b7}{S\-T\-A\-T\-E\-\_\-\-G\-E\-N\-E\-R\-A\-L\-\_\-\-S\-A\-M\-P\-L\-E}\label{group__command__state_gga3a4df4a38f022d20e1627e722433ecc2aff11f1f959f0aabd852f15b8a63982b7}
+}]The state machine is configured for sampling everything. \end{description}
+\end{Desc}
+
+
+Definition at line 59 of file Command\-State.\-h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__command__state_ga517067b49452b8a3e1e87831720b573b}{\index{Command State Machine@{Command State Machine}!Command\-State\-Move\-To\-Analog\-Input\-Sample@{Command\-State\-Move\-To\-Analog\-Input\-Sample}}
+\index{Command\-State\-Move\-To\-Analog\-Input\-Sample@{Command\-State\-Move\-To\-Analog\-Input\-Sample}!Command State Machine@{Command State Machine}}
+\subsubsection[{Command\-State\-Move\-To\-Analog\-Input\-Sample}]{\setlength{\rightskip}{0pt plus 5cm}void Command\-State\-Move\-To\-Analog\-Input\-Sample (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_ga517067b49452b8a3e1e87831720b573b}
+Enter the analog input sampling state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 191 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_ga95ad2a64f10746852d523bed46b0d328}{\index{Command State Machine@{Command State Machine}!Command\-State\-Move\-To\-Digital\-Input\-Sample@{Command\-State\-Move\-To\-Digital\-Input\-Sample}}
+\index{Command\-State\-Move\-To\-Digital\-Input\-Sample@{Command\-State\-Move\-To\-Digital\-Input\-Sample}!Command State Machine@{Command State Machine}}
+\subsubsection[{Command\-State\-Move\-To\-Digital\-Input\-Sample}]{\setlength{\rightskip}{0pt plus 5cm}void Command\-State\-Move\-To\-Digital\-Input\-Sample (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_ga95ad2a64f10746852d523bed46b0d328}
+Enter the digital input sampling state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 202 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_gae7be822d5262fbf48e51ffae98733aec}{\index{Command State Machine@{Command State Machine}!Command\-State\-Move\-To\-Digital\-Output\-Sample@{Command\-State\-Move\-To\-Digital\-Output\-Sample}}
+\index{Command\-State\-Move\-To\-Digital\-Output\-Sample@{Command\-State\-Move\-To\-Digital\-Output\-Sample}!Command State Machine@{Command State Machine}}
+\subsubsection[{Command\-State\-Move\-To\-Digital\-Output\-Sample}]{\setlength{\rightskip}{0pt plus 5cm}void Command\-State\-Move\-To\-Digital\-Output\-Sample (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_gae7be822d5262fbf48e51ffae98733aec}
+Enter the digital output sampling state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 213 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_ga62da533cf3e918233a8245c42959d0e5}{\index{Command State Machine@{Command State Machine}!Command\-State\-Move\-To\-General\-Sample@{Command\-State\-Move\-To\-General\-Sample}}
+\index{Command\-State\-Move\-To\-General\-Sample@{Command\-State\-Move\-To\-General\-Sample}!Command State Machine@{Command State Machine}}
+\subsubsection[{Command\-State\-Move\-To\-General\-Sample}]{\setlength{\rightskip}{0pt plus 5cm}void Command\-State\-Move\-To\-General\-Sample (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_ga62da533cf3e918233a8245c42959d0e5}
+Enter the general (analog input, digital input and digital output) sampling state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 224 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_gaeef6d80f456cb6f79363946c49723bea}{\index{Command State Machine@{Command State Machine}!Completed\-A\-D\-C\-Sampling@{Completed\-A\-D\-C\-Sampling}}
+\index{Completed\-A\-D\-C\-Sampling@{Completed\-A\-D\-C\-Sampling}!Command State Machine@{Command State Machine}}
+\subsubsection[{Completed\-A\-D\-C\-Sampling}]{\setlength{\rightskip}{0pt plus 5cm}void Completed\-A\-D\-C\-Sampling (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_gaeef6d80f456cb6f79363946c49723bea}
+Signal that analog input sampling process has completed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 237 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_ga6e3eb8b0a37d7aebb88e1667f3c222d2}{\index{Command State Machine@{Command State Machine}!Completed\-D\-I\-Sampling@{Completed\-D\-I\-Sampling}}
+\index{Completed\-D\-I\-Sampling@{Completed\-D\-I\-Sampling}!Command State Machine@{Command State Machine}}
+\subsubsection[{Completed\-D\-I\-Sampling}]{\setlength{\rightskip}{0pt plus 5cm}void Completed\-D\-I\-Sampling (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_ga6e3eb8b0a37d7aebb88e1667f3c222d2}
+Signal that the digital input sampling process has completed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 247 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_ga1255ba36b41923ad73e72f1464412852}{\index{Command State Machine@{Command State Machine}!Completed\-D\-O\-Sampling@{Completed\-D\-O\-Sampling}}
+\index{Completed\-D\-O\-Sampling@{Completed\-D\-O\-Sampling}!Command State Machine@{Command State Machine}}
+\subsubsection[{Completed\-D\-O\-Sampling}]{\setlength{\rightskip}{0pt plus 5cm}void Completed\-D\-O\-Sampling (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_ga1255ba36b41923ad73e72f1464412852}
+Signal that the digital output sampling process has completed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 257 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_ga7ffd79ad6c6165445ae5f0f29bd92d83}{\index{Command State Machine@{Command State Machine}!Halt\-Tasks@{Halt\-Tasks}}
+\index{Halt\-Tasks@{Halt\-Tasks}!Command State Machine@{Command State Machine}}
+\subsubsection[{Halt\-Tasks}]{\setlength{\rightskip}{0pt plus 5cm}void Halt\-Tasks (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_ga7ffd79ad6c6165445ae5f0f29bd92d83}
+Halt the current activity of the command state machine and return to the idle state. This can be used to interrupt long term or continuous tasks.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 147 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_gabab5afe3159f634f822ad1bccd70209a}{\index{Command State Machine@{Command State Machine}!Init\-Command\-State\-Handler@{Init\-Command\-State\-Handler}}
+\index{Init\-Command\-State\-Handler@{Init\-Command\-State\-Handler}!Command State Machine@{Command State Machine}}
+\subsubsection[{Init\-Command\-State\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void Init\-Command\-State\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_gabab5afe3159f634f822ad1bccd70209a}
+Initializes the command state machine to a valid state and performs all necessary setup of the command machine.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 67 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_ga7dc77fb2cb66a1b11d987bdc8c75c060}{\index{Command State Machine@{Command State Machine}!is\-A\-D\-C\-Sampling@{is\-A\-D\-C\-Sampling}}
+\index{is\-A\-D\-C\-Sampling@{is\-A\-D\-C\-Sampling}!Command State Machine@{Command State Machine}}
+\subsubsection[{is\-A\-D\-C\-Sampling}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} is\-A\-D\-C\-Sampling (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_ga7dc77fb2cb66a1b11d987bdc8c75c060}
+Checks if analog input sampling is in progress.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & T\-R\-U\-E if analog input sampling is in progress. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 267 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_gab0e295861dce43803feb4bf235dedf71}{\index{Command State Machine@{Command State Machine}!is\-D\-I\-Sampling@{is\-D\-I\-Sampling}}
+\index{is\-D\-I\-Sampling@{is\-D\-I\-Sampling}!Command State Machine@{Command State Machine}}
+\subsubsection[{is\-D\-I\-Sampling}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} is\-D\-I\-Sampling (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_gab0e295861dce43803feb4bf235dedf71}
+Checks if digital input sampling is in progress.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & T\-R\-U\-E if digital input sampling is in progress. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 277 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_gaf69a154f2311c13883ebbe0c1de90d44}{\index{Command State Machine@{Command State Machine}!is\-D\-O\-Sampling@{is\-D\-O\-Sampling}}
+\index{is\-D\-O\-Sampling@{is\-D\-O\-Sampling}!Command State Machine@{Command State Machine}}
+\subsubsection[{is\-D\-O\-Sampling}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} is\-D\-O\-Sampling (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_gaf69a154f2311c13883ebbe0c1de90d44}
+Checks if digital output sampling is in progress.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & T\-R\-U\-E if digital output sampling is in progress. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 287 of file Command\-State.\-c.
+
+\hypertarget{group__command__state_gabe3abf44cdbfe8382df3906f5e192626}{\index{Command State Machine@{Command State Machine}!Service\-Tasks@{Service\-Tasks}}
+\index{Service\-Tasks@{Service\-Tasks}!Command State Machine@{Command State Machine}}
+\subsubsection[{Service\-Tasks}]{\setlength{\rightskip}{0pt plus 5cm}void Service\-Tasks (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__state_gabe3abf44cdbfe8382df3906f5e192626}
+Perform a periodic service of the state machine. This will subsequently call the relevant state handler.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 85 of file Command\-State.\-c.
+

@@ -1,0 +1,50 @@
+\hypertarget{_analog_input___multiplexer_8h}{\section{Analog\-Input\-\_\-\-Multiplexer.\-h File Reference}
+\label{_analog_input___multiplexer_8h}\index{Analog\-Input\-\_\-\-Multiplexer.\-h@{Analog\-Input\-\_\-\-Multiplexer.\-h}}
+}
+
+
+Header file for the analog input multiplexer.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Config.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Analog\-\_\-\-Input.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__analog__input__multiplexer_ga82dce77857c1a4197599b5e53d4c4baf}{is\-External\-Input} (Physical\-Analog\-Input\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Determines if the specified input is an external analog input. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__analog__input__multiplexer_ga9452ba5ad241ec1be905a8683f3aa893}{is\-Internal\-Input} (Physical\-Analog\-Input\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Determines if the specified input is an internal analog input. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__analog__input__multiplexer_ga5b4aed86c91b3b4bbdc4c7e03f6923ef}{is\-External\-Muxing\-Complete} (void)
+\begin{DoxyCompactList}\small\item\em Checks to see if the external input muxing process has completed. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_ga7f67e83c34a57a26b88716b132d78c9f}{Input\-Multiplexer\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the analog input multiplexer. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_ga03ab9244c4f082f5fec2ab96b319db65}{Select\-Analog\-Input} (\hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t} $\ast$input, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} do\-Mux\-Delay)
+\begin{DoxyCompactList}\small\item\em Selects the specified analog input. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_gab5cea2fc9723db50fa8b7c18c0ec0679}{Select\-Physical\-Input} (Physical\-Analog\-Input\-\_\-t input, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} do\-Mux\-Delay)
+\begin{DoxyCompactList}\small\item\em Selects the specified physical input. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_gade4a88985454a90749affb88214a817e}{Select\-Calibration\-Input} (void)
+\begin{DoxyCompactList}\small\item\em Selects the designated offset calibration input. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_gae6210a53610863d94bea3968f43b4e88}{Select\-Cold\-Junction\-Input} (void)
+\begin{DoxyCompactList}\small\item\em Selects the designated cold junction sensor input. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_ga719b0357a9dca76e01dcc6a511cd8b7f}{Reset\-Selected\-Input} (void)
+\begin{DoxyCompactList}\small\item\em Reselects the selected input if we swithced away from it. \end{DoxyCompactList}\item 
+External\-Muxed\-Input\-\_\-t \hyperlink{group__analog__input__multiplexer_ga03f66c16ea15a425062a4b09c0bceba1}{Get\-External\-Muxed\-Input\-By\-Number} (uint8\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Determines the external input for the specified input index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains the public function prototypes for driving the input multiplexer.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_analog_input___multiplexer_8h_source}{Analog\-Input\-\_\-\-Multiplexer.\-h}.
+

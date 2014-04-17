@@ -1,0 +1,54 @@
+\hypertarget{_d_o___state_machine_8h}{\section{D\-O\-\_\-\-State\-Machine.\-h File Reference}
+\label{_d_o___state_machine_8h}\index{D\-O\-\_\-\-State\-Machine.\-h@{D\-O\-\_\-\-State\-Machine.\-h}}
+}
+
+
+Header file for the Tekdaqc digital output state machine.  
+
+
+{\ttfamily \#include \char`\"{}Digital\-\_\-\-Output.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__do__statemachine_ga88f6f2ae56f37cde9afdfcd93591e119}{D\-O\-\_\-\-State\-\_\-t} \{ \\*
+\hyperlink{group__do__statemachine_gga88f6f2ae56f37cde9afdfcd93591e119adcb9d080c1c9c327c8146eb5e691e6ee}{D\-O\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}, 
+\hyperlink{group__do__statemachine_gga88f6f2ae56f37cde9afdfcd93591e119a8986f42023508bfe1fb3ed8a3ce57645}{D\-O\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}, 
+\hyperlink{group__do__statemachine_gga88f6f2ae56f37cde9afdfcd93591e119a4dde3b6c7080f7f723c3127b79e53e1e}{D\-O\-\_\-\-I\-D\-L\-E}, 
+\hyperlink{group__do__statemachine_gga88f6f2ae56f37cde9afdfcd93591e119a3265a3094198820b0360abb5dd57508b}{D\-O\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}, 
+\\*
+\hyperlink{group__do__statemachine_gga88f6f2ae56f37cde9afdfcd93591e119a4165bc81d865b678b2f9b7410eed6018}{D\-O\-\_\-\-R\-E\-S\-E\-T}
+ \}
+\begin{DoxyCompactList}\small\item\em Digital output state machine state definitions. Defines all the possible states for the digital output state machine to be in. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__do__statemachine_gaa65e663980860e8c565c42c90b0fc520}{D\-O\-\_\-\-Machine\-\_\-\-Create} (void)
+\begin{DoxyCompactList}\small\item\em Create the digital output state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__do__statemachine_ga989482cb42c01d19188c2551ac69abd2}{D\-O\-\_\-\-Machine\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the digital output state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__do__statemachine_ga9b716c10660b0b05539ac2223c533f93}{D\-O\-\_\-\-Machine\-\_\-\-Service} (void)
+\begin{DoxyCompactList}\small\item\em Perform a periodic service of the state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__do__statemachine_ga9e56e4b7770bc82d5cd41fdd01bd4f7b}{D\-O\-\_\-\-Machine\-\_\-\-Halt} (void)
+\begin{DoxyCompactList}\small\item\em Halt any current operations and return the idle state. \end{DoxyCompactList}\item 
+void \hyperlink{group__do__statemachine_ga343b1742c0f79f1aa637f718ba61f6d5}{D\-O\-\_\-\-Machine\-\_\-\-Idle} (void)
+\begin{DoxyCompactList}\small\item\em Idle state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__do__statemachine_ga2314b594125edbaaac497a4466ac478a}{D\-O\-\_\-\-Machine\-\_\-\-Output\-\_\-\-Sample} (\hyperlink{struct_digital___output__t}{Digital\-\_\-\-Output\-\_\-t} $\ast$$\ast$outputs, uint32\-\_\-t count, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} single\-Channel)
+\begin{DoxyCompactList}\small\item\em Output sampling state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__do__statemachine_ga3279edae8dde5bd486d1cfdd131de75c}{D\-O\-\_\-\-Machine\-\_\-\-Reset} (void)
+\begin{DoxyCompactList}\small\item\em Reset state handler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public definitions and data types for the digital output state machine.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_d_o___state_machine_8h_source}{D\-O\-\_\-\-State\-Machine.\-h}.
+

@@ -1,0 +1,249 @@
+\hypertarget{_tekdaqc___command_interpreter_8c}{\section{Tekdaqc\-\_\-\-Command\-Interpreter.\-c File Reference}
+\label{_tekdaqc___command_interpreter_8c}\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+}
+
+
+Source file for the Tekdaqc\-\_\-\-Command\-Interpreter.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Command\-Interpreter.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\-D\-C\-\_\-\-State\-Machine.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}D\-I\-\_\-\-State\-Machine.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}D\-O\-\_\-\-State\-Machine.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Analog\-\_\-\-Input.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Digital\-\_\-\-Input.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Digital\-\_\-\-Output.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Telnet\-Server.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\-D\-S1256\-\_\-\-Driver.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Calibration.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Command\-State.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-B\-S\-P.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Error.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Locator.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_tekdaqc___command_interpreter_8c_a92a0c7db7d0fa06d4a7b5607b58b8e22}{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S\-\_\-\-S\-T\-R\-I\-N\-G}~\char`\"{}A\-L\-L\char`\"{}
+\begin{DoxyCompactList}\small\item\em The keyword string to specify all added channels should be used. \end{DoxyCompactList}\item 
+\#define \hyperlink{_tekdaqc___command_interpreter_8c_a417605542fbbdc39d9efb5fbdc15ecce}{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-F\-L\-A\-G}~\char`\"{}-\/-\/\char`\"{}
+\begin{DoxyCompactList}\small\item\em The character sequence which prefixes a key/value pair. \end{DoxyCompactList}\item 
+\#define \hyperlink{_tekdaqc___command_interpreter_8c_aab062553184015b4b1b1d7f2280f60ff}{R\-A\-N\-G\-E\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}~'-\/'
+\begin{DoxyCompactList}\small\item\em The character which indicates that a range of channels should be used, delimiting the low and high values of the range. \end{DoxyCompactList}\item 
+\#define \hyperlink{_tekdaqc___command_interpreter_8c_a822883911d1571e6b8b772d62a68cc7f}{S\-E\-T\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}~','
+\begin{DoxyCompactList}\small\item\em The character which indicates that a set of characters are being used, delimiting them. \end{DoxyCompactList}\item 
+\#define \hyperlink{_tekdaqc___command_interpreter_8c_a0e6c06793de5eedf6ca83f03ba746cb7}{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}~\char`\"{}=\char`\"{}
+\begin{DoxyCompactList}\small\item\em The character which separates the key and value in a key/value pair. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101}{Channel\-\_\-\-List\-\_\-t} \{ \hyperlink{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101acc7a59b80da7cc7d68564c07272e1dfc}{S\-I\-N\-G\-L\-E\-\_\-\-C\-H\-A\-N\-N\-E\-L}, 
+\hyperlink{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101afa15903947556e5292832afc03d72da8}{C\-H\-A\-N\-N\-E\-L\-\_\-\-R\-A\-N\-G\-E}, 
+\hyperlink{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101a56c6700e1684a629dabbbb18f0a9e1eb}{C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-E\-T}, 
+\hyperlink{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101a49cd14c9993578300a077e57cbc31982}{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of the different channel selection types. Defines the possible channel selection set types. \end{DoxyCompactList}\item 
+enum \hyperlink{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404}{Multisampling\-\_\-t} \{ \hyperlink{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404a95427ee9707b4540232a478b58ba2ecd}{M\-U\-L\-T\-I\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T}, 
+\hyperlink{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404aa6a7b3a3d860f8adbe2b2f35dd41a648}{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T}, 
+\hyperlink{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404a60962acf6c77e7c2d1a88009bf23a556}{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of the different multi-\/channel sampling types. Enumeration of the different multi-\/channel sampling types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__command__interpreter_ga8a32c543f87d40b158c3007b8ab8b525}{Create\-Command\-Interpreter} (void)
+\begin{DoxyCompactList}\small\item\em Instantiates and allocates the command interpreter. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__interpreter_ga1958dfed537e8e071b08b488b5911575}{Clear\-Command\-Buffer} (void)
+\begin{DoxyCompactList}\small\item\em Clears the entire contents of the command parser's buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__interpreter_gae17b8153644216734412b48e52b760d3}{Command\-\_\-\-Add\-Char} (const char character)
+\begin{DoxyCompactList}\small\item\em Adds a character to the command parser's buffer. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__command__interpreter_ga507d74a3df649ff693df84ae46e9b696}{Get\-Last\-Function\-Error} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the last set function error. \end{DoxyCompactList}\item 
+int8\-\_\-t \hyperlink{group__command__interpreter_ga40f7ab5c778b33671146878fe6bd8191}{Get\-Index\-Of\-Argument} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, const char $\ast$target, uint8\-\_\-t total)
+\begin{DoxyCompactList}\small\item\em Gets the index of the specified argument from the list of parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga05294e7317989e4fa34c8b51c703fc70}{L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga89c4eb6445082c988990fe2be2f441b5}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gab349c2970503a44eb4e57436974a2bf9}{R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gae7b1842582f0a314801b97783767e609}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gadb61b1d6d360af240f9a0ef5d83c25cf}{R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gac419882cd49159e3078f1fedfe7f1d9d}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-I\-N\-P\-U\-T}, \hyperlink{group__command__interpreter_gadc1cbfe3c96811afe874d8fe8a76b967}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-N\-U\-M\-B\-E\-R} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga436d10e43feb396c9f5e4d3ef5d510f5}{A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaf0d093bb26c186189433bbd8007cf0c0}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga9bb48c8ce63d89ea1aab20833fbd9691}{R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gac7fdbccfbee444562e69bbdc64b3d92d}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-I\-N\-P\-U\-T} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga80461ab1e8d28de20ba44ff93e90c174}{C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga06548395b7cce1059cd7eff8f5bfb433}{N\-U\-M\-\_\-\-C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-I\-N\-P\-U\-T} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga12cbb3a7ff1264641a75db037130c062}{S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga5ee0ee8ce38b367ad3e68b77020ddc66}{N\-U\-M\-\_\-\-S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_ga943938961217e5b466d15306bd5504b9}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-B\-U\-F\-F\-E\-R}, \hyperlink{group__command__interpreter_ga0edc411fe5766dfbe192e22155fb0020}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-R\-A\-T\-E}, \hyperlink{group__command__interpreter_gaf97c884c75bad1017220b24ccff04016}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-G\-A\-I\-N}, \hyperlink{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-I\-N\-P\-U\-T} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga012ad2ab047f56ee2f1bbe24441f46d3}{S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gab61f2dda81ab965fb510863070474767}{N\-U\-M\-\_\-\-S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga37e4457ed0cb0dabb34ffcd740d59ed7}{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga5ad550260c3e06471bddb5c3a8aaba04}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga26d009205a856ee4c4c6e6c3b363f188}{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gae9468d3d4d92a32a998fa97c0075db48}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-I\-N\-P\-U\-T}, \hyperlink{group__command__interpreter_gadc1cbfe3c96811afe874d8fe8a76b967}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-N\-U\-M\-B\-E\-R} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga02032c0b60b605fe89dc910a27e12582}{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga9c5c1af739a3a4edde8cdb7af7df1ec5}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-I\-N\-P\-U\-T}, \hyperlink{group__command__interpreter_gacd4917419f347a3210e7b468c47188f0}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-N\-A\-M\-E} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga26930165286ff4adccafca5650b4b4cf}{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga6096182153b5f1ed0b7c7f02337c1782}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-I\-N\-P\-U\-T} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gad3444869609f37e2fcb9ca55ac0b53ef}{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga3d5083d6431df96a397de8cfad75d3b4}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gade511743b3ecf569a2e74c1b14291a5b}{S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaac55dd13b66c6ed14773e930596be11e}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gae845277b8fe01a11cfad1732696507d3}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-O\-U\-T\-P\-U\-T}, \hyperlink{group__command__interpreter_gaa4e33f1b6e384ab8abcb41c12924896c}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-S\-T\-A\-T\-E} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga4f49602cd24e42a37f7509d5fc24ff34}{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga8e7fef9c50e4a2992d7ac233d7e65510}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gae845277b8fe01a11cfad1732696507d3}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-O\-U\-T\-P\-U\-T}, \hyperlink{group__command__interpreter_gadc1cbfe3c96811afe874d8fe8a76b967}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-N\-U\-M\-B\-E\-R} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gaf583eedd117e9397b34163b0ed4791c3}{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gadea8918a215685b1576f95e1fb754778}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gae845277b8fe01a11cfad1732696507d3}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-O\-U\-T\-P\-U\-T}, \hyperlink{group__command__interpreter_gacd4917419f347a3210e7b468c47188f0}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-N\-A\-M\-E} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gab8e88e0e75930f03474e1ff9e232ef63}{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaab1534ae5702e990bfdc0f8c85094df0}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gae845277b8fe01a11cfad1732696507d3}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-O\-U\-T\-P\-U\-T} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gae3e466b9002fbb2a3b72a14091736c14}{C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaebf261e1faa9877050475c6a01c2f698}{N\-U\-M\-\_\-\-C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gae845277b8fe01a11cfad1732696507d3}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-O\-U\-T\-P\-U\-T} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga4c2b766d3384cd7cb0ed759dab8fc4ac}{D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gab5824d68d182fb33e2aebc616288f06a}{N\-U\-M\-\_\-\-D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gaf4f7b3cf35167e36d202bb65a02f0b71}{U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga42bcbf56d92ed56e8a88c69e5d4cb4c0}{N\-U\-M\-\_\-\-U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gab114f1bb247754ff4bbc705b92f53222}{I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga6162173d76eb84687f453450c6973ed5}{N\-U\-M\-\_\-\-I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga7008aaf205ddd844e0a5affd12a08775}{S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga1fc6732ec779877a349a53c180c22c29}{N\-U\-M\-\_\-\-S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_gadc1cbfe3c96811afe874d8fe8a76b967}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-N\-U\-M\-B\-E\-R} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gafc7b206c3c05fcf1ac21ddd5108f690a}{H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga9998ef3c02f0f85f3f984b04ab30663d}{N\-U\-M\-\_\-\-H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga37a6030d18afb1719e8b674ac3e649ec}{S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga36e8fbb263e5a9243d52f56202b5e3ce}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_ga5a03812b6ac732c91bbca5149d3e14bd}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-V\-A\-L\-U\-E} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gac5a3a40f966d23af1d572909c1d8e952}{S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaafcaaef444e34052e8d96c863c90543f}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_ga5a03812b6ac732c91bbca5149d3e14bd}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-V\-A\-L\-U\-E} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga27977b5ae6f92883015ee0cb83d54617}{S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga4e0199c558a2061732f2e8a1245cb4a2}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \hyperlink{group__command__interpreter_ga5a03812b6ac732c91bbca5149d3e14bd}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-V\-A\-L\-U\-E} \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gaea50720799ad68731b7672c1974aae1a}{G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga4fc716dc88ef0cbdbc503e78eab47df4}{N\-U\-M\-\_\-\-G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gae6bcf7679336081f08e81ef76a680c81}{N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga6581408fc45ede8a8c643b4700e4113b}{N\-U\-M\-\_\-\-N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]} = \{ \}
+\item 
+\hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t} $\ast$ \hyperlink{_tekdaqc___command_interpreter_8c_a814b15b88a6c05e2c3cae8b1f821f451}{a\-Inputs} \mbox{[}N\-U\-M\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\mbox{]}
+\item 
+\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$ \hyperlink{_tekdaqc___command_interpreter_8c_a03e63fe115385116dc7c4a1ac39f5a8b}{d\-Inputs} \mbox{[}N\-U\-M\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\mbox{]}
+\item 
+\hyperlink{struct_digital___output__t}{Digital\-\_\-\-Output\-\_\-t} $\ast$ \hyperlink{_tekdaqc___command_interpreter_8c_aeb4bcb3edcf6d5ba906e4f48e3315f4e}{d\-Outputs} \mbox{[}N\-U\-M\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This is an interpreter for the commands sent from the controlling device. It executes the commands and responds by calling the write function (pointer), which is specified when initialized. A command string is parsed in by calling the parse function. The command string can consists of multiple commands, delimited by '\par
+', and are executed in F\-I\-F\-O order. When any error occurs, it will give up execution and generate error message and responds, may corrupt the result strings received by controlling device.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_tekdaqc___command_interpreter_8c_source}{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}.
+
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{_tekdaqc___command_interpreter_8c_a92a0c7db7d0fa06d4a7b5607b58b8e22}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S\-\_\-\-S\-T\-R\-I\-N\-G@{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S\-\_\-\-S\-T\-R\-I\-N\-G}}
+\index{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S\-\_\-\-S\-T\-R\-I\-N\-G@{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S\-\_\-\-S\-T\-R\-I\-N\-G}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S\-\_\-\-S\-T\-R\-I\-N\-G}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S\-\_\-\-S\-T\-R\-I\-N\-G~\char`\"{}A\-L\-L\char`\"{}}}\label{_tekdaqc___command_interpreter_8c_a92a0c7db7d0fa06d4a7b5607b58b8e22}
+
+
+Definition at line 63 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{_tekdaqc___command_interpreter_8c_a0e6c06793de5eedf6ca83f03ba746cb7}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R@{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}}
+\index{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R@{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R~\char`\"{}=\char`\"{}}}\label{_tekdaqc___command_interpreter_8c_a0e6c06793de5eedf6ca83f03ba746cb7}
+
+
+Definition at line 91 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{_tekdaqc___command_interpreter_8c_a417605542fbbdc39d9efb5fbdc15ecce}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-F\-L\-A\-G@{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-F\-L\-A\-G}}
+\index{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-F\-L\-A\-G@{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-F\-L\-A\-G}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-F\-L\-A\-G}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\-E\-Y\-\_\-\-V\-A\-L\-U\-E\-\_\-\-P\-A\-I\-R\-\_\-\-F\-L\-A\-G~\char`\"{}-\/-\/\char`\"{}}}\label{_tekdaqc___command_interpreter_8c_a417605542fbbdc39d9efb5fbdc15ecce}
+
+
+Definition at line 70 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{_tekdaqc___command_interpreter_8c_aab062553184015b4b1b1d7f2280f60ff}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!R\-A\-N\-G\-E\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R@{R\-A\-N\-G\-E\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}}
+\index{R\-A\-N\-G\-E\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R@{R\-A\-N\-G\-E\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{R\-A\-N\-G\-E\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-N\-G\-E\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R~'-\/'}}\label{_tekdaqc___command_interpreter_8c_aab062553184015b4b1b1d7f2280f60ff}
+
+
+Definition at line 77 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{_tekdaqc___command_interpreter_8c_a822883911d1571e6b8b772d62a68cc7f}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!S\-E\-T\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R@{S\-E\-T\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}}
+\index{S\-E\-T\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R@{S\-E\-T\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{S\-E\-T\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\-E\-T\-\_\-\-D\-E\-L\-I\-M\-E\-T\-E\-R~','}}\label{_tekdaqc___command_interpreter_8c_a822883911d1571e6b8b772d62a68cc7f}
+
+
+Definition at line 84 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!Channel\-\_\-\-List\-\_\-t@{Channel\-\_\-\-List\-\_\-t}}
+\index{Channel\-\_\-\-List\-\_\-t@{Channel\-\_\-\-List\-\_\-t}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{Channel\-\_\-\-List\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Channel\-\_\-\-List\-\_\-t}}}\label{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{S\-I\-N\-G\-L\-E\-\_\-\-C\-H\-A\-N\-N\-E\-L@{S\-I\-N\-G\-L\-E\-\_\-\-C\-H\-A\-N\-N\-E\-L}!Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!S\-I\-N\-G\-L\-E\-\_\-\-C\-H\-A\-N\-N\-E\-L@{S\-I\-N\-G\-L\-E\-\_\-\-C\-H\-A\-N\-N\-E\-L}}\item[{\em 
+\hypertarget{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101acc7a59b80da7cc7d68564c07272e1dfc}{S\-I\-N\-G\-L\-E\-\_\-\-C\-H\-A\-N\-N\-E\-L}\label{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101acc7a59b80da7cc7d68564c07272e1dfc}
+}]A single channel is selected. \index{C\-H\-A\-N\-N\-E\-L\-\_\-\-R\-A\-N\-G\-E@{C\-H\-A\-N\-N\-E\-L\-\_\-\-R\-A\-N\-G\-E}!Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!C\-H\-A\-N\-N\-E\-L\-\_\-\-R\-A\-N\-G\-E@{C\-H\-A\-N\-N\-E\-L\-\_\-\-R\-A\-N\-G\-E}}\item[{\em 
+\hypertarget{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101afa15903947556e5292832afc03d72da8}{C\-H\-A\-N\-N\-E\-L\-\_\-\-R\-A\-N\-G\-E}\label{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101afa15903947556e5292832afc03d72da8}
+}]A range of channels is selected. \index{C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-E\-T@{C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-E\-T}!Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-E\-T@{C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-E\-T}}\item[{\em 
+\hypertarget{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101a56c6700e1684a629dabbbb18f0a9e1eb}{C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-E\-T}\label{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101a56c6700e1684a629dabbbb18f0a9e1eb}
+}]A set of channels is selected. \index{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S@{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S}!Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S@{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S}}\item[{\em 
+\hypertarget{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101a49cd14c9993578300a077e57cbc31982}{A\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L\-S}\label{_tekdaqc___command_interpreter_8c_ac2735d4b7f35032961d6e2684fe24101a49cd14c9993578300a077e57cbc31982}
+}]All added channels are selected. \end{description}
+\end{Desc}
+
+
+Definition at line 286 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!Multisampling\-\_\-t@{Multisampling\-\_\-t}}
+\index{Multisampling\-\_\-t@{Multisampling\-\_\-t}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{Multisampling\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Multisampling\-\_\-t}}}\label{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{M\-U\-L\-T\-I\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T@{M\-U\-L\-T\-I\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T}!Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!M\-U\-L\-T\-I\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T@{M\-U\-L\-T\-I\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T}}\item[{\em 
+\hypertarget{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404a95427ee9707b4540232a478b58ba2ecd}{M\-U\-L\-T\-I\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T}\label{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404a95427ee9707b4540232a478b58ba2ecd}
+}]Multi-\/sampling analog inputs. \index{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T@{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T}!Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T@{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T}}\item[{\em 
+\hypertarget{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404aa6a7b3a3d860f8adbe2b2f35dd41a648}{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T}\label{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404aa6a7b3a3d860f8adbe2b2f35dd41a648}
+}]Multi-\/sampling digital inputs. \index{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T@{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T}!Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T@{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T}}\item[{\em 
+\hypertarget{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404a60962acf6c77e7c2d1a88009bf23a556}{M\-U\-L\-T\-I\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T}\label{_tekdaqc___command_interpreter_8c_aea1419158fcfc7a488c6ef00d908d404a60962acf6c77e7c2d1a88009bf23a556}
+}]Multi-\/sampling digital outputs. \end{description}
+\end{Desc}
+
+
+Definition at line 298 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{_tekdaqc___command_interpreter_8c_a814b15b88a6c05e2c3cae8b1f821f451}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!a\-Inputs@{a\-Inputs}}
+\index{a\-Inputs@{a\-Inputs}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{a\-Inputs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Analog\-\_\-\-Input\-\_\-t}$\ast$ a\-Inputs\mbox{[}N\-U\-M\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\mbox{]}}}\label{_tekdaqc___command_interpreter_8c_a814b15b88a6c05e2c3cae8b1f821f451}
+List of analog inputs referenced for use by a command. 
+
+Definition at line 260 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{_tekdaqc___command_interpreter_8c_a03e63fe115385116dc7c4a1ac39f5a8b}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!d\-Inputs@{d\-Inputs}}
+\index{d\-Inputs@{d\-Inputs}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{d\-Inputs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Digital\-\_\-\-Input\-\_\-t}$\ast$ d\-Inputs\mbox{[}N\-U\-M\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\mbox{]}}}\label{_tekdaqc___command_interpreter_8c_a03e63fe115385116dc7c4a1ac39f5a8b}
+List of digital inputs referenced for use by a command. 
+
+Definition at line 265 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{_tekdaqc___command_interpreter_8c_aeb4bcb3edcf6d5ba906e4f48e3315f4e}{\index{Tekdaqc\-\_\-\-Command\-Interpreter.\-c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}!d\-Outputs@{d\-Outputs}}
+\index{d\-Outputs@{d\-Outputs}!Tekdaqc_CommandInterpreter.c@{Tekdaqc\-\_\-\-Command\-Interpreter.\-c}}
+\subsubsection[{d\-Outputs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Digital\-\_\-\-Output\-\_\-t}$\ast$ d\-Outputs\mbox{[}N\-U\-M\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\mbox{]}}}\label{_tekdaqc___command_interpreter_8c_aeb4bcb3edcf6d5ba906e4f48e3315f4e}
+List of digital outputs referenced for use by a command. 
+
+Definition at line 270 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+

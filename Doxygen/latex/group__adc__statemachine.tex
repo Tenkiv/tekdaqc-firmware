@@ -1,0 +1,314 @@
+\hypertarget{group__adc__statemachine}{\section{A\-D\-C State Machine}
+\label{group__adc__statemachine}\index{A\-D\-C State Machine@{A\-D\-C State Machine}}
+}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__adc__statemachine_gae8acd7c093ba943ff020756662d8e282}{A\-D\-C\-\_\-\-State\-\_\-t} \{ \\*
+\hyperlink{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ac1bd0f71a88c6a0448812f5c9bfabc82}{A\-D\-C\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}, 
+\hyperlink{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a3dd35159e362e102ff3857defd2ee5ec}{A\-D\-C\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}, 
+\hyperlink{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ad44134e74eaafda748b36b62b64b3ffb}{A\-D\-C\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G}, 
+\hyperlink{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a1ce1ead9375dee706ff6e8df4012e845}{A\-D\-C\-\_\-\-G\-A\-I\-N\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G}, 
+\\*
+\hyperlink{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282aa37cde1dabf7658cc9bb359dc7ad7ce8}{A\-D\-C\-\_\-\-I\-D\-L\-E}, 
+\hyperlink{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ac39ce4086e8ea9dbbbe721d237b0e58d}{A\-D\-C\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}, 
+\hyperlink{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a49f30e17bd4e0529efe8855e9dc163bc}{A\-D\-C\-\_\-\-R\-E\-S\-E\-T}, 
+\hyperlink{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a09bb7081acebf276c0dd4ada41696612}{A\-D\-C\-\_\-\-E\-X\-T\-E\-R\-N\-A\-L\-\_\-\-M\-U\-X\-I\-N\-G}
+ \}
+\begin{DoxyCompactList}\small\item\em A\-D\-C state machine state definitions. Defines all the possible states for the A\-D\-C state machine to be in. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__adc__statemachine_gaf9ab485b0fb6ddf69c8bfb43597ab06b}{A\-D\-C\-\_\-\-Machine\-\_\-\-Create} (void)
+\begin{DoxyCompactList}\small\item\em Create the A\-D\-C state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_gaabf53da7a14f298b049ed2ad432b0ed6}{A\-D\-C\-\_\-\-Machine\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the A\-D\-C state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga7eb6744d5738bf35b1cb86b44cdc99ad}{A\-D\-C\-\_\-\-Calibrate} (void)
+\begin{DoxyCompactList}\small\item\em Perform a self zero calibration. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga91d632b5c373982d2554840a65e89758}{A\-D\-C\-\_\-\-Gain\-Calibrate} (Physical\-Analog\-Input\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Perform a system gain calibration on the specified input. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga89889fc7c9dba41da2ab451fe5e06d68}{A\-D\-C\-\_\-\-Machine\-\_\-\-Service} (void)
+\begin{DoxyCompactList}\small\item\em Perform a periodic service of the state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga6424732e3475cc653a8e7cd3598555f5}{A\-D\-C\-\_\-\-Machine\-\_\-\-Halt} (void)
+\begin{DoxyCompactList}\small\item\em Halt any current operations and return the idle state. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_gac1ea03f0a36d3488bfb5c728b118942c}{A\-D\-C\-\_\-\-Machine\-\_\-\-Idle} (void)
+\begin{DoxyCompactList}\small\item\em Idle state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga979620e2e4743c8f5d1f053a90705841}{A\-D\-C\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample} (\hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t} $\ast$$\ast$inputs, uint32\-\_\-t count, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} single\-Channel)
+\begin{DoxyCompactList}\small\item\em Input sampling state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga82e1537e4763ba13d894276ab9de1cd7}{A\-D\-C\-\_\-\-Machine\-\_\-\-Reset} (void)
+\begin{DoxyCompactList}\small\item\em Reset state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_gafdb90e36c49985480868585799f00b22}{A\-D\-C\-\_\-\-External\-\_\-\-Muxing} (void)
+\begin{DoxyCompactList}\small\item\em External multiplexer switch handler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__adc__statemachine_gae8acd7c093ba943ff020756662d8e282}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-State\-\_\-t@{A\-D\-C\-\_\-\-State\-\_\-t}}
+\index{A\-D\-C\-\_\-\-State\-\_\-t@{A\-D\-C\-\_\-\-State\-\_\-t}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-State\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf A\-D\-C\-\_\-\-State\-\_\-t}}}\label{group__adc__statemachine_gae8acd7c093ba943ff020756662d8e282}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{A\-D\-C\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{A\-D\-C\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}!A\-D\-C State Machine@{A\-D\-C State Machine}}\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{A\-D\-C\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}}\item[{\em 
+\hypertarget{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ac1bd0f71a88c6a0448812f5c9bfabc82}{A\-D\-C\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}\label{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ac1bd0f71a88c6a0448812f5c9bfabc82}
+}]The state machine is in an invalid, uninitialized state. \index{A\-D\-C\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{A\-D\-C\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}!A\-D\-C State Machine@{A\-D\-C State Machine}}\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{A\-D\-C\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}}\item[{\em 
+\hypertarget{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a3dd35159e362e102ff3857defd2ee5ec}{A\-D\-C\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}\label{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a3dd35159e362e102ff3857defd2ee5ec}
+}]The state machine is in a valid, initialized state. \index{A\-D\-C\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G@{A\-D\-C\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G}!A\-D\-C State Machine@{A\-D\-C State Machine}}\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G@{A\-D\-C\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G}}\item[{\em 
+\hypertarget{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ad44134e74eaafda748b36b62b64b3ffb}{A\-D\-C\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G}\label{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ad44134e74eaafda748b36b62b64b3ffb}
+}]The state machine is calibrating itself. \index{A\-D\-C\-\_\-\-G\-A\-I\-N\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G@{A\-D\-C\-\_\-\-G\-A\-I\-N\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G}!A\-D\-C State Machine@{A\-D\-C State Machine}}\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-G\-A\-I\-N\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G@{A\-D\-C\-\_\-\-G\-A\-I\-N\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G}}\item[{\em 
+\hypertarget{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a1ce1ead9375dee706ff6e8df4012e845}{A\-D\-C\-\_\-\-G\-A\-I\-N\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-N\-G}\label{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a1ce1ead9375dee706ff6e8df4012e845}
+}]The state machine is gain calibrating. \index{A\-D\-C\-\_\-\-I\-D\-L\-E@{A\-D\-C\-\_\-\-I\-D\-L\-E}!A\-D\-C State Machine@{A\-D\-C State Machine}}\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-I\-D\-L\-E@{A\-D\-C\-\_\-\-I\-D\-L\-E}}\item[{\em 
+\hypertarget{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282aa37cde1dabf7658cc9bb359dc7ad7ce8}{A\-D\-C\-\_\-\-I\-D\-L\-E}\label{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282aa37cde1dabf7658cc9bb359dc7ad7ce8}
+}]The state machine is idling, keeping the A\-D\-C warm. \index{A\-D\-C\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G@{A\-D\-C\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}!A\-D\-C State Machine@{A\-D\-C State Machine}}\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G@{A\-D\-C\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}}\item[{\em 
+\hypertarget{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ac39ce4086e8ea9dbbbe721d237b0e58d}{A\-D\-C\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}\label{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282ac39ce4086e8ea9dbbbe721d237b0e58d}
+}]The state machine is configured for sampling analog inputs. \index{A\-D\-C\-\_\-\-R\-E\-S\-E\-T@{A\-D\-C\-\_\-\-R\-E\-S\-E\-T}!A\-D\-C State Machine@{A\-D\-C State Machine}}\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-R\-E\-S\-E\-T@{A\-D\-C\-\_\-\-R\-E\-S\-E\-T}}\item[{\em 
+\hypertarget{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a49f30e17bd4e0529efe8855e9dc163bc}{A\-D\-C\-\_\-\-R\-E\-S\-E\-T}\label{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a49f30e17bd4e0529efe8855e9dc163bc}
+}]The state machine is resetting. It will return to I\-D\-L\-E after reset completes. \index{A\-D\-C\-\_\-\-E\-X\-T\-E\-R\-N\-A\-L\-\_\-\-M\-U\-X\-I\-N\-G@{A\-D\-C\-\_\-\-E\-X\-T\-E\-R\-N\-A\-L\-\_\-\-M\-U\-X\-I\-N\-G}!A\-D\-C State Machine@{A\-D\-C State Machine}}\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-E\-X\-T\-E\-R\-N\-A\-L\-\_\-\-M\-U\-X\-I\-N\-G@{A\-D\-C\-\_\-\-E\-X\-T\-E\-R\-N\-A\-L\-\_\-\-M\-U\-X\-I\-N\-G}}\item[{\em 
+\hypertarget{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a09bb7081acebf276c0dd4ada41696612}{A\-D\-C\-\_\-\-E\-X\-T\-E\-R\-N\-A\-L\-\_\-\-M\-U\-X\-I\-N\-G}\label{group__adc__statemachine_ggae8acd7c093ba943ff020756662d8e282a09bb7081acebf276c0dd4ada41696612}
+}]The external multiplexer is switching inputs. Sample the cold junction temperature. \end{description}
+\end{Desc}
+
+
+Definition at line 60 of file A\-D\-C\-\_\-\-State\-Machine.\-h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__adc__statemachine_ga7eb6744d5738bf35b1cb86b44cdc99ad}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Calibrate@{A\-D\-C\-\_\-\-Calibrate}}
+\index{A\-D\-C\-\_\-\-Calibrate@{A\-D\-C\-\_\-\-Calibrate}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Calibrate}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Calibrate (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_ga7eb6744d5738bf35b1cb86b44cdc99ad}
+Calibrates the A\-D\-C, calculating the correct values to make the calibration table valid. This can not be performed while sampling is active (the state machine must be in the state A\-D\-C\-\_\-\-I\-D\-L\-E).
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 517 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_gafdb90e36c49985480868585799f00b22}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-External\-\_\-\-Muxing@{A\-D\-C\-\_\-\-External\-\_\-\-Muxing}}
+\index{A\-D\-C\-\_\-\-External\-\_\-\-Muxing@{A\-D\-C\-\_\-\-External\-\_\-\-Muxing}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-External\-\_\-\-Muxing}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-External\-\_\-\-Muxing (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_gafdb90e36c49985480868585799f00b22}
+External multiplexer switch handler.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 779 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_ga91d632b5c373982d2554840a65e89758}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Gain\-Calibrate@{A\-D\-C\-\_\-\-Gain\-Calibrate}}
+\index{A\-D\-C\-\_\-\-Gain\-Calibrate@{A\-D\-C\-\_\-\-Gain\-Calibrate}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Gain\-Calibrate}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Gain\-Calibrate (
+\begin{DoxyParamCaption}
+\item[{Physical\-Analog\-Input\-\_\-t}]{input}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_ga91d632b5c373982d2554840a65e89758}
+Performs a system gain calibration on the specified physical input. This process can not be performed while sampling is active (the state machine must be in the state A\-D\-C\-\_\-\-I\-D\-L\-E). Additionally, the parameters for the calibration must have already been set.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Physical\-Analog\-Input\-\_\-t The physical analog input to switch to for calibration. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 549 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_gaf9ab485b0fb6ddf69c8bfb43597ab06b}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Machine\-\_\-\-Create@{A\-D\-C\-\_\-\-Machine\-\_\-\-Create}}
+\index{A\-D\-C\-\_\-\-Machine\-\_\-\-Create@{A\-D\-C\-\_\-\-Machine\-\_\-\-Create}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Machine\-\_\-\-Create}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Machine\-\_\-\-Create (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_gaf9ab485b0fb6ddf69c8bfb43597ab06b}
+Creates the A\-D\-C state machine. Note that no initialization is done here.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 467 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_ga6424732e3475cc653a8e7cd3598555f5}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Machine\-\_\-\-Halt@{A\-D\-C\-\_\-\-Machine\-\_\-\-Halt}}
+\index{A\-D\-C\-\_\-\-Machine\-\_\-\-Halt@{A\-D\-C\-\_\-\-Machine\-\_\-\-Halt}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Machine\-\_\-\-Halt}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Machine\-\_\-\-Halt (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_ga6424732e3475cc653a8e7cd3598555f5}
+Halt the current sampling activity of the A\-D\-C state machine and return to the idle state. This can be used to interrupt long term or continuous sampling.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 631 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_gac1ea03f0a36d3488bfb5c728b118942c}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Machine\-\_\-\-Idle@{A\-D\-C\-\_\-\-Machine\-\_\-\-Idle}}
+\index{A\-D\-C\-\_\-\-Machine\-\_\-\-Idle@{A\-D\-C\-\_\-\-Machine\-\_\-\-Idle}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Machine\-\_\-\-Idle}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Machine\-\_\-\-Idle (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_gac1ea03f0a36d3488bfb5c728b118942c}
+Enter the idle state. In this state the A\-D\-C will be made to sample arbitrarily to keep the input path warmed up.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 649 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_gaabf53da7a14f298b049ed2ad432b0ed6}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Machine\-\_\-\-Init@{A\-D\-C\-\_\-\-Machine\-\_\-\-Init}}
+\index{A\-D\-C\-\_\-\-Machine\-\_\-\-Init@{A\-D\-C\-\_\-\-Machine\-\_\-\-Init}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Machine\-\_\-\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Machine\-\_\-\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_gaabf53da7a14f298b049ed2ad432b0ed6}
+Initializes the A\-D\-C state machine to a valid state and performs all necessary setup of the A\-D\-C.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 480 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_ga979620e2e4743c8f5d1f053a90705841}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample@{A\-D\-C\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample}}
+\index{A\-D\-C\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample@{A\-D\-C\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample (
+\begin{DoxyParamCaption}
+\item[{{\bf Analog\-\_\-\-Input\-\_\-t} $\ast$$\ast$}]{inputs, }
+\item[{uint32\-\_\-t}]{count, }
+\item[{{\bf bool}}]{single\-Channel}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_ga979620e2e4743c8f5d1f053a90705841}
+Enter the input sampling state. In this state the A\-D\-C will be made to sample a set of inputs each the specified number of times.
+
+
+\begin{DoxyParams}{Parameters}
+{\em inputs} & Analog\-\_\-\-Input\-\_\-t$\ast$$\ast$ Pointer to array of input data structures holding the configurations of the sampling. \\
+\hline
+{\em count} & uint32\-\_\-t The number of samples of each input to take. 0 results in continuous sampling. \\
+\hline
+{\em single\-Channel} & bool True if the sampling is for a single channel only. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 677 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_ga82e1537e4763ba13d894276ab9de1cd7}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Machine\-\_\-\-Reset@{A\-D\-C\-\_\-\-Machine\-\_\-\-Reset}}
+\index{A\-D\-C\-\_\-\-Machine\-\_\-\-Reset@{A\-D\-C\-\_\-\-Machine\-\_\-\-Reset}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Machine\-\_\-\-Reset}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Machine\-\_\-\-Reset (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_ga82e1537e4763ba13d894276ab9de1cd7}
+Enter the reset state. In this state the A\-D\-C will be reset and returned to the idle state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 761 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__adc__statemachine_ga89889fc7c9dba41da2ab451fe5e06d68}{\index{A\-D\-C State Machine@{A\-D\-C State Machine}!A\-D\-C\-\_\-\-Machine\-\_\-\-Service@{A\-D\-C\-\_\-\-Machine\-\_\-\-Service}}
+\index{A\-D\-C\-\_\-\-Machine\-\_\-\-Service@{A\-D\-C\-\_\-\-Machine\-\_\-\-Service}!ADC State Machine@{A\-D\-C State Machine}}
+\subsubsection[{A\-D\-C\-\_\-\-Machine\-\_\-\-Service}]{\setlength{\rightskip}{0pt plus 5cm}void A\-D\-C\-\_\-\-Machine\-\_\-\-Service (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__adc__statemachine_ga89889fc7c9dba41da2ab451fe5e06d68}
+Perform a periodic service of the state machine. This will subsequently call the relevant state handler.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 580 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+

@@ -40,7 +40,7 @@
 /*--------------------------------------------------------------------------------------------------------*/
 
 /* The current state of the machine. */
-static DI_State_t state;
+static DI_State_t CurrentState;
 
 /* The total number of samples to take */
 static uint32_t SampleTotal;
@@ -77,8 +77,7 @@ static inline const char* DIMachine_StringFromState(DI_State_t state);
  * @retval const char* The human readable string representation.
  */
 static inline const char* DIMachine_StringFromState(DI_State_t state) {
-	static const char* strings[] = { "DI_UNINITIALIZED", "DI_INITIALIZED", "DI_IDLE",
-			"DI_CHANNEL_SAMPLING", "DI_RESET" };
+	static const char* strings[] = { "DI_UNINITIALIZED", "DI_INITIALIZED", "DI_IDLE", "DI_CHANNEL_SAMPLING", "DI_RESET" };
 	return strings[state];
 }
 
@@ -96,7 +95,7 @@ void DI_Machine_Create(void) {
 #ifdef DI_STATE_MACHINE_DEBUG
 	printf("[DI STATE MACHINE] Creating DI state machine.\n\r");
 #endif
-	state = DI_UNINITIALIZED;
+	CurrentState = DI_UNINITIALIZED;
 }
 
 /**
@@ -107,9 +106,9 @@ void DI_Machine_Create(void) {
  */
 void DI_Machine_Init(void) {
 	/* TODO: Can this be merged into DI_Machine_Create()? */
-	if ((state != DI_UNINITIALIZED)) {
+	if ((CurrentState != DI_UNINITIALIZED)) {
 #ifdef DI_STATE_MACHINE_DEBUG
-		printf("[DI STATE MACHINE] Attempted to enter DI_INITIALIZED state from %s\n\r", DIMachine_StringFromState(state));
+		printf("[DI STATE MACHINE] Attempted to enter DI_INITIALIZED state from %s\n\r", DIMachine_StringFromState(CurrentState));
 #endif
 		return;
 	}
@@ -124,7 +123,7 @@ void DI_Machine_Init(void) {
 	numberSamplingInputs = 0U;
 
 	/* Update the state */
-	state = DI_INITIALIZED;
+	CurrentState = DI_INITIALIZED;
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -139,7 +138,7 @@ void DI_Machine_Init(void) {
  */
 void DI_Machine_Service(void) {
 	/* Determine the state */
-	switch (state) {
+	switch (CurrentState) {
 	case DI_UNINITIALIZED:
 		DI_Machine_Init();
 		break;
@@ -150,8 +149,8 @@ void DI_Machine_Service(void) {
 		/* We don't need to do anything, just let it run */
 		break;
 	case DI_CHANNEL_SAMPLING: {
-		Digital_Input_t* input = NULL;
-		if (SampleCurrent < SampleTotal) {
+		Digital_Input_t* input = samplingInputs[currentSamplingInput];
+		if ((SampleCurrent < SampleTotal) || (SampleTotal == 0)) {
 			if (numberSamplingInputs == 1) {
 				SampleDigitalInput(samplingInputs[0]);
 				WriteDigitalInput(samplingInputs[0]);
@@ -159,7 +158,7 @@ void DI_Machine_Service(void) {
 			} else {
 				for (uint_fast8_t i = 0; i < NUM_DIGITAL_INPUTS; ++i) {
 					input = samplingInputs[i];
-					if (input != NULL) {
+					if ((input != NULL) & (input->added == CHANNEL_ADDED)) {
 						SampleDigitalInput(input);
 						WriteDigitalInput(input);
 					}
@@ -217,17 +216,17 @@ void DI_Machine_Halt(void) {
  */
 void DI_Machine_Idle(void) {
 	/* We use explicit checking here in case other state are added later */
-	if ((state != DI_INITIALIZED) && (state != DI_CHANNEL_SAMPLING)) {
+	if ((CurrentState != DI_INITIALIZED) && (CurrentState != DI_CHANNEL_SAMPLING)) {
 		/* We can only enter this state from these states */
 #ifdef DI_STATE_MACHINE_DEBUG
-		printf("[DI STATE MACHINE] Attempted to enter DI_IDLE state from %s\n\r", DIMachine_StringFromState(state));
+		printf("[DI STATE MACHINE] Attempted to enter DI_IDLE state from %s\n\r", DIMachine_StringFromState(CurrentState));
 #endif
 		return;
 	}
 #ifdef DI_STATE_MACHINE_DEBUG
 	printf("[DI STATE MACHINE] Moving to state DI_IDLE.\n\r");
 #endif
-	state = DI_IDLE;
+	CurrentState = DI_IDLE;
 }
 
 /**
@@ -240,35 +239,46 @@ void DI_Machine_Idle(void) {
  */
 void DI_Machine_Input_Sample(Digital_Input_t** inputs, uint32_t count, bool singleChannel) {
 	/* We use explicit checking here in case other state are added later */
-	if ((state != DI_IDLE)) {
+	if ((CurrentState != DI_IDLE)) {
 #ifdef DI_STATE_MACHINE_DEBUG
-		printf("[DI STATE MACHINE] Attempted to enter DI_CHANNEL_SAMPLING state from %s\n\r", DIMachine_StringFromState(state));
+		printf("[DI STATE MACHINE] Attempted to enter DI_CHANNEL_SAMPLING state from %s\n\r", DIMachine_StringFromState(CurrentState));
 #endif
 		return;
 	}
 	/* Validate the inputs list */
-	if (inputs == NULL) {
+	if (inputs == NULL ) {
 #ifdef DI_STATE_MACHINE_DEBUG
 		printf("[DI STATE MACHINE] Attempted to enter DI_CHANNEL_SAMPLING state with a NULL digital input list. Ignoring...\n\r");
 #endif
 		return;
 	}
+
+	/* Save sample count */
+	SampleCurrent = 0U;
+	SampleTotal = count;
+
 	if (singleChannel == true) {
 		/* Validate the input(s) */
-		if (inputs[0] == NULL) {
+		if (inputs[0] == NULL ) {
 #ifdef DI_STATE_MACHINE_DEBUG
 			printf("[DI STATE MACHINE] Attempted to enter DI_CHANNEL_SAMPLING state with a NULL digital input. Ignoring...\n\r");
 #endif
 			return;
 		}
+		if (inputs[0]->added == CHANNEL_NOTADDED) {
+#ifdef ADC_STATE_MACHINE_DEBUG
+			printf("[DI STATE MACHINE] Attempted to enter DI_CHANNEL_SAMPLING state with an un-added digital input. Ignoring...\n\r");
+#endif
+			return;
+		}
 		/* Select input */
-		currentSamplingInput = 0; /* Use i here so we don't loose any work from the search earlier */
+		currentSamplingInput = 0;
 		numberSamplingInputs = 1;
 	} else {
 		/* Validate the input(s) */
 		uint8_t i = 0U;
 		for (; i < NUM_DIGITAL_INPUTS; ++i) {
-			if (inputs[i] != NULL) {
+			if (inputs[i] != NULL && inputs[i]->added == CHANNEL_ADDED) {
 				break;
 			}
 		}
@@ -283,22 +293,25 @@ void DI_Machine_Input_Sample(Digital_Input_t** inputs, uint32_t count, bool sing
 		numberSamplingInputs = NUM_DIGITAL_INPUTS;
 	}
 
-	/* Select input */
 	samplingInputs = inputs;
-	uint8_t i = 0U;
 	Digital_Input_t* input = samplingInputs[currentSamplingInput];
-	while (input == NULL) { /* Keep searching until we find a non-null input */
-		input = samplingInputs[++i];
-		if (i == NUM_DIGITAL_INPUTS) {
-			/* We have reached the end of a set */
-			/* There is nothing to sample */
-			return;
+
+	if (input == NULL) {
+		uint8_t i = 0U;
+		while (input == NULL ) { /* Keep searching until we find a non-null input */
+			input = samplingInputs[++i];
+			if (i == NUM_DIGITAL_INPUTS) {
+				/* We have reached the end of a set */
+				/* There is nothing to sample */
+				return;
+			}
 		}
+		currentSamplingInput = i;
 	}
 	/* Save current time and sample count */
 	SampleCurrent = 0U;
 	SampleTotal = count;
-	state = DI_CHANNEL_SAMPLING;
+	CurrentState = DI_CHANNEL_SAMPLING;
 }
 
 /**
@@ -309,12 +322,11 @@ void DI_Machine_Input_Sample(Digital_Input_t** inputs, uint32_t count, bool sing
  */
 void DI_Machine_Reset(void) {
 	/* We use explicit checking here in case other state are added later */
-	if ((state != DI_IDLE) && (state != DI_INITIALIZED) && (state != DI_CHANNEL_SAMPLING)
-			&& (state != DI_RESET)) {
+	if ((CurrentState != DI_IDLE) && (CurrentState != DI_INITIALIZED) && (CurrentState != DI_CHANNEL_SAMPLING) && (CurrentState != DI_RESET)) {
 #ifdef DI_STATE_MACHINE_DEBUG
-		printf("[DI STATE MACHINE] Attempted to enter DI_RESET state from %s\n\r", DIMachine_StringFromState(state));
+		printf("[DI STATE MACHINE] Attempted to enter DI_RESET state from %s\n\r", DIMachine_StringFromState(CurrentState));
 #endif
 		return;
 	}
-	state = DI_RESET;
+	CurrentState = DI_RESET;
 }

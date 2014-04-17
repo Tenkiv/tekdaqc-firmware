@@ -57,7 +57,7 @@ static Analog_Input_t* CurrentInput = NULL;
  * @internal
  * @brief Selects the specified external input.
  */
-static void SelectExternalInput(ExternalMuxedInput_t input);
+static void SelectExternalInput(ExternalMuxedInput_t input,  bool doMuxDelay);
 
 /**
  * @internal
@@ -75,9 +75,10 @@ static void SelectInternalInput(InternalAnalogInput_t input);
  * sampling will be held up by the state machine until the muxing process is completed.
  *
  * @param input ExternalMuxedInput_t The external input to select.
+ * @param doMuxDelay bool If true, the ADC_MUXING state should be used while waiting for the external multiplexers.
  * @retval none
  */
-static void SelectExternalInput(ExternalMuxedInput_t input) {
+static void SelectExternalInput(ExternalMuxedInput_t input, bool doMuxDelay) {
 	/* Verify that the internal input parameter is set */
 	if (input == NULL_CHANNEL ) {
 #ifdef INPUT_MULTIPLEXER_DEBUG
@@ -88,10 +89,13 @@ static void SelectExternalInput(ExternalMuxedInput_t input) {
 	/* Make the switch */
 	SelectInternalInput(EXTERNAL_ANALOG_IN);
 	GPIO_Write(EXT_ANALOG_IN_MUX_PORT, (input | (GPIO_ReadOutputData(EXT_ANALOG_IN_MUX_PORT ) & EXT_ANALOG_IN_BITMASK )));
-	/* Wait for the external multiplexing relays to conduct */
-	MuxCompleteTime = GetLocalTime() + EXTERNAL_MUX_DELAY;
-	/* Change ADC state machine to ADC_MUXING state */
-	ADC_External_Muxing();
+
+	if (doMuxDelay == true) {
+		/* Wait for the external multiplexing relays to conduct */
+		MuxCompleteTime = GetLocalTime() + EXTERNAL_MUX_DELAY;
+		/* Change ADC state machine to ADC_MUXING state */
+		ADC_External_Muxing();
+	}
 }
 
 /**
@@ -222,12 +226,13 @@ void InputMultiplexerInit(void) {
  * Selects the specified analog input, automatically handling any multiplexing and timing needs.
  *
  * @param input Analog_Input_t* The analog input to select.
+ * @param doMuxDelay bool If true, the ADC_MUXING state should be used while waiting for the external multiplexers.
  * @retval none
  */
-void SelectAnalogInput(Analog_Input_t* input) {
+void SelectAnalogInput(Analog_Input_t* input, bool doMuxDelay) {
 	if (input != NULL ) {
 		if (isExternalInput(input->physicalInput)) {
-			SelectExternalInput(input->externalInput);
+			SelectExternalInput(input->externalInput, doMuxDelay);
 			CurrentInput = input;
 		} else if (isInternalInput(input->physicalInput)) {
 			SelectInternalInput(input->internalInput);
@@ -255,11 +260,12 @@ void SelectAnalogInput(Analog_Input_t* input) {
  * Selects the specified physical input on the board, automatically handling any multiplexing and timing needs.
  *
  * @param input PhysicalAnalogInput_t The physical input to select.
+ * @param doMuxDelay bool If true, the ADC_MUXING state should be used while waiting for the external multiplexers.
  * @retval none
  */
-void SelectPhysicalInput(PhysicalAnalogInput_t input) {
+void SelectPhysicalInput(PhysicalAnalogInput_t input, bool doMuxDelay) {
 	if (isExternalInput(input)) {
-		SelectExternalInput(input);
+		SelectExternalInput(input, doMuxDelay);
 		CurrentInput = NULL;
 	} else if (isInternalInput(input)) {
 		SelectInternalInput(input);
@@ -286,7 +292,7 @@ void SelectPhysicalInput(PhysicalAnalogInput_t input) {
  * @retval none
  */
 void SelectCalibrationInput(void) {
-	SelectExternalInput(EXTERN_0);
+	SelectExternalInput(EXTERN_0, true);
 }
 
 /**
@@ -308,9 +314,14 @@ void SelectColdJunctionInput(void) {
  * @retval none
  */
 void ResetSelectedInput(void) {
-	if (CurrentInput != NULL ) {
-		SelectAnalogInput(CurrentInput);
-	}
+	/*if (CurrentInput != NULL ) {
+		if (CurrentInput->physicalInput == IN_COLD_JUNCTION) {
+			SelectAnalogInput(CurrentInput, false);
+		} else {
+			SelectAnalogInput(CurrentInput, true);
+		}
+	}*/
+	SelectInternalInput(EXTERNAL_ANALOG_IN);
 }
 
 /**

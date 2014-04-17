@@ -1,0 +1,368 @@
+\hypertarget{group__digital__output}{\section{Digital Output}
+\label{group__digital__output}\index{Digital Output@{Digital Output}}
+}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_digital___output__t}{Digital\-\_\-\-Output\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Data structure used to store the state and requirements of a digital output of the Tekdaqc. This data structure contains all the information related to a particular input to the Tekdaqc. Please note that while there is nothing to stop you from manipulating the values of the structure directly, it is not recommended as it could put the structure in an indeterminate state. Instead, manipulation functions are provided which will ensure that all state related implications are addressed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__digital__output_ga95c04964ce488ee74ca3f32a39a88cb7}{\#define \hyperlink{group__digital__output_ga95c04964ce488ee74ca3f32a39a88cb7}{M\-A\-X\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}~24}\label{group__digital__output_ga95c04964ce488ee74ca3f32a39a88cb7}
+
+\begin{DoxyCompactList}\small\item\em The maximum number of characters for the name of an digital output. \end{DoxyCompactList}\item 
+\hypertarget{group__digital__output_ga43583966bde63db2887f604cf5787741}{\#define \hyperlink{group__digital__output_ga43583966bde63db2887f604cf5787741}{O\-U\-T\-P\-U\-T\-\_\-\-O\-N}~(\hyperlink{group__board__channel__constants_ggaee574a0d48c41a3e5426ffbf8ac4c5c4ab4d04526d504d52286c0125def0faef4}{L\-O\-G\-I\-C\-\_\-\-L\-O\-W})}\label{group__digital__output_ga43583966bde63db2887f604cf5787741}
+
+\begin{DoxyCompactList}\small\item\em Redefinition of the L\-O\-G\-I\-C\-\_\-\-L\-O\-W definition. Used as a code readability convenience. \end{DoxyCompactList}\item 
+\hypertarget{group__digital__output_ga514fc5ac6ead9d3aee8ae8fc8188a1d3}{\#define \hyperlink{group__digital__output_ga514fc5ac6ead9d3aee8ae8fc8188a1d3}{O\-U\-T\-P\-U\-T\-\_\-\-O\-F\-F}~(\hyperlink{group__board__channel__constants_ggaee574a0d48c41a3e5426ffbf8ac4c5c4ad49fd7cec8a5997c9347759048470fc9}{L\-O\-G\-I\-C\-\_\-\-H\-I\-G\-H})}\label{group__digital__output_ga514fc5ac6ead9d3aee8ae8fc8188a1d3}
+
+\begin{DoxyCompactList}\small\item\em Redefinition of the L\-O\-G\-I\-C\-\_\-\-H\-I\-G\-H definition. Used as a code readability convenience. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__digital__output_gaf266fa3481b0804611eb19719346b172}{Digital\-Outputs\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the boards digital output data structures. \end{DoxyCompactList}\item 
+\hyperlink{struct_digital___output__t}{Digital\-\_\-\-Output\-\_\-t} $\ast$ \hyperlink{group__digital__output_ga392c891d1dfd4610ea0e1ef67f76872b}{Get\-Digital\-Output\-By\-Number} (uint8\-\_\-t number)
+\begin{DoxyCompactList}\small\item\em Retrieves the requested digital output. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__output_gaeac54f24092eff564148db6cd346f153}{Add\-Digital\-Output} (\hyperlink{struct_digital___output__t}{Digital\-\_\-\-Output\-\_\-t} $\ast$output)
+\begin{DoxyCompactList}\small\item\em Adds a digital output, marking it for inclusion in the state machine. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__output_ga3ae9f85352ddfe3c29046f9d3b068d64}{Remove\-Digital\-Output} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, int count)
+\begin{DoxyCompactList}\small\item\em Removes a digital output, marking it for exclusion from the state machine. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__output_ga3310818e215cffd25126906b9215e46b}{List\-Digital\-Outputs} (void)
+\begin{DoxyCompactList}\small\item\em Prints a representation of all the added digital outputs. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__output_gad98544b3d86d168290b487808e58142f}{Create\-Digital\-Output} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, int count)
+\begin{DoxyCompactList}\small\item\em Configures a digital output with the specified parameters. \end{DoxyCompactList}\item 
+\hypertarget{group__digital__output_ga7f6d7f4a8ed42dfa380728cad94dbc28}{\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__output_ga7f6d7f4a8ed42dfa380728cad94dbc28}{Set\-Digital\-Output} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, uint8\-\_\-t count)}\label{group__digital__output_ga7f6d7f4a8ed42dfa380728cad94dbc28}
+
+\begin{DoxyCompactList}\small\item\em Sets a digital output to the specified state. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__output_ga3853c412989dc241c2c9157e5102673b}{Set\-Digital\-Output\-Write\-Function} (\hyperlink{group__tekdaqc__configuration_ga163b2a4cc55a569e988df48908631967}{Write\-Function} write\-Function)
+\begin{DoxyCompactList}\small\item\em Sets the pointer to the function to invoke when digital output data needs to be written. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__output_ga51fe681dd6e8e9f84a03b8c71af0b71d}{Sample\-Digital\-Output} (\hyperlink{struct_digital___output__t}{Digital\-\_\-\-Output\-\_\-t} $\ast$output)
+\begin{DoxyCompactList}\small\item\em Samples the specified digital output's level and writes out the result. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__output_gacc8cec336fbe7c0aae9dcca1914f7882}{Sample\-All\-Digital\-Outputs} (void)
+\begin{DoxyCompactList}\small\item\em Samples the digital output level of all added digital outputs, writing out the results. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__output_gaa10fe33be14ef4d8e16e6345f57938c5}{Write\-Digital\-Output} (\hyperlink{struct_digital___output__t}{Digital\-\_\-\-Output\-\_\-t} $\ast$output)
+\begin{DoxyCompactList}\small\item\em Writes out the data for the specified digital output. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__output_ga1198a3ce0740a6ba43f5325d3ba9f950}{Write\-All\-Digital\-Outputs} (void)
+\begin{DoxyCompactList}\small\item\em Writes out the data for all added digital outputs. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__digital__output_ga5178a212748e618e157767d96991b0b8}{Check\-Digital\-Output\-Status} (void)
+\begin{DoxyCompactList}\small\item\em Checks the stored status register contents for any errors. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__digital__output_gae27ad2dffb82e46632339521c3cfd6ee}{Set\-Digital\-Output\-Fault\-Status} (\hyperlink{group__tle7232__driver_ga84bb3f68b575c6add1c27f053b87746a}{T\-L\-E7232\-\_\-\-Status\-\_\-t} status, uint8\-\_\-t chip\-\_\-id, uint8\-\_\-t channel)
+\begin{DoxyCompactList}\small\item\em Sets the fault status register on the specified output driver. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__digital__output_gaeac54f24092eff564148db6cd346f153}{\index{Digital Output@{Digital Output}!Add\-Digital\-Output@{Add\-Digital\-Output}}
+\index{Add\-Digital\-Output@{Add\-Digital\-Output}!Digital Output@{Digital Output}}
+\subsubsection[{Add\-Digital\-Output}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Add\-Digital\-Output (
+\begin{DoxyParamCaption}
+\item[{{\bf Digital\-\_\-\-Output\-\_\-t} $\ast$}]{output}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_gaeac54f24092eff564148db6cd346f153}
+Adds an digital output structure to the board's appropriate list of outputs.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Digital\-\_\-\-Output\-\_\-t$\ast$ The digital output structure to add. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 319 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_ga5178a212748e618e157767d96991b0b8}{\index{Digital Output@{Digital Output}!Check\-Digital\-Output\-Status@{Check\-Digital\-Output\-Status}}
+\index{Check\-Digital\-Output\-Status@{Check\-Digital\-Output\-Status}!Digital Output@{Digital Output}}
+\subsubsection[{Check\-Digital\-Output\-Status}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Check\-Digital\-Output\-Status (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_ga5178a212748e618e157767d96991b0b8}
+Checks the current status of all digital outputs on the board, returning if a fault has occurred or not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & T\-R\-U\-E if a fault was detected. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 564 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_gad98544b3d86d168290b487808e58142f}{\index{Digital Output@{Digital Output}!Create\-Digital\-Output@{Create\-Digital\-Output}}
+\index{Create\-Digital\-Output@{Create\-Digital\-Output}!Digital Output@{Digital Output}}
+\subsubsection[{Create\-Digital\-Output}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Create\-Digital\-Output (
+\begin{DoxyParamCaption}
+\item[{char}]{keys\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{char}]{values\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{int}]{count}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_gad98544b3d86d168290b487808e58142f}
+Creates a new digital output data structure from the supplied parameters and adds it to the board's relevant output list.
+
+
+\begin{DoxyParams}{Parameters}
+{\em keys} & char$\ast$$\ast$ Array of strings containing the command line keys. Indexed with values. \\
+\hline
+{\em values} & char$\ast$$\ast$ Array of strings containing the command line values. Indexed with keys. \\
+\hline
+{\em count} & uint8\-\_\-t The number of parameters passed on the command line. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint8\-\_\-t} & The error status code. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 236 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_gaf266fa3481b0804611eb19719346b172}{\index{Digital Output@{Digital Output}!Digital\-Outputs\-Init@{Digital\-Outputs\-Init}}
+\index{Digital\-Outputs\-Init@{Digital\-Outputs\-Init}!Digital Output@{Digital Output}}
+\subsubsection[{Digital\-Outputs\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void Digital\-Outputs\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_gaf266fa3481b0804611eb19719346b172}
+Initializes all requisite sub-\/modules to properly operate digital outputs. This includes any multiplexing and default inputs.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 177 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_ga392c891d1dfd4610ea0e1ef67f76872b}{\index{Digital Output@{Digital Output}!Get\-Digital\-Output\-By\-Number@{Get\-Digital\-Output\-By\-Number}}
+\index{Get\-Digital\-Output\-By\-Number@{Get\-Digital\-Output\-By\-Number}!Digital Output@{Digital Output}}
+\subsubsection[{Get\-Digital\-Output\-By\-Number}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Digital\-\_\-\-Output\-\_\-t}$\ast$ Get\-Digital\-Output\-By\-Number (
+\begin{DoxyParamCaption}
+\item[{uint8\-\_\-t}]{number}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_ga392c891d1dfd4610ea0e1ef67f76872b}
+Retrieve a digital output structure by specifying the physical output channel.
+
+
+\begin{DoxyParams}{Parameters}
+{\em number} & uint8\-\_\-t The physical output channel to retrieve. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Digital\-\_\-\-Output\-\_\-t$\ast$} & Pointer to the analog input structure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 393 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_ga3310818e215cffd25126906b9215e46b}{\index{Digital Output@{Digital Output}!List\-Digital\-Outputs@{List\-Digital\-Outputs}}
+\index{List\-Digital\-Outputs@{List\-Digital\-Outputs}!Digital Output@{Digital Output}}
+\subsubsection[{List\-Digital\-Outputs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} List\-Digital\-Outputs (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_ga3310818e215cffd25126906b9215e46b}
+Prints a human readable representation of all the added digital outputs via the current write function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t The error status of this function. 
+\end{DoxyReturn}
+
+
+Definition at line 192 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_ga3ae9f85352ddfe3c29046f9d3b068d64}{\index{Digital Output@{Digital Output}!Remove\-Digital\-Output@{Remove\-Digital\-Output}}
+\index{Remove\-Digital\-Output@{Remove\-Digital\-Output}!Digital Output@{Digital Output}}
+\subsubsection[{Remove\-Digital\-Output}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Remove\-Digital\-Output (
+\begin{DoxyParamCaption}
+\item[{char}]{keys\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{char}]{values\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{int}]{count}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_ga3ae9f85352ddfe3c29046f9d3b068d64}
+Removes an digital output from the board's list based on the supplied parameters.
+
+
+\begin{DoxyParams}{Parameters}
+{\em keys} & char$\ast$$\ast$ Array of strings containing the command line keys. Indexed with values. \\
+\hline
+{\em values} & char$\ast$$\ast$ Array of strings containing the command line values. Indexed with keys. \\
+\hline
+{\em count} & uint8\-\_\-t The number of parameters passed on the command line. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em int} & The error status code. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 344 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_gacc8cec336fbe7c0aae9dcca1914f7882}{\index{Digital Output@{Digital Output}!Sample\-All\-Digital\-Outputs@{Sample\-All\-Digital\-Outputs}}
+\index{Sample\-All\-Digital\-Outputs@{Sample\-All\-Digital\-Outputs}!Digital Output@{Digital Output}}
+\subsubsection[{Sample\-All\-Digital\-Outputs}]{\setlength{\rightskip}{0pt plus 5cm}void Sample\-All\-Digital\-Outputs (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_gacc8cec336fbe7c0aae9dcca1914f7882}
+Samples the digital output level of all added digital inputs, writing out the results.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 506 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_ga51fe681dd6e8e9f84a03b8c71af0b71d}{\index{Digital Output@{Digital Output}!Sample\-Digital\-Output@{Sample\-Digital\-Output}}
+\index{Sample\-Digital\-Output@{Sample\-Digital\-Output}!Digital Output@{Digital Output}}
+\subsubsection[{Sample\-Digital\-Output}]{\setlength{\rightskip}{0pt plus 5cm}void Sample\-Digital\-Output (
+\begin{DoxyParamCaption}
+\item[{{\bf Digital\-\_\-\-Output\-\_\-t} $\ast$}]{output}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_ga51fe681dd6e8e9f84a03b8c71af0b71d}
+Samples the specified digital output's level and writes out the result.
+
+
+\begin{DoxyParams}{Parameters}
+{\em output} & Digital\-\_\-\-Output\-\_\-t$\ast$ The digital output to be sampled. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 496 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_gae27ad2dffb82e46632339521c3cfd6ee}{\index{Digital Output@{Digital Output}!Set\-Digital\-Output\-Fault\-Status@{Set\-Digital\-Output\-Fault\-Status}}
+\index{Set\-Digital\-Output\-Fault\-Status@{Set\-Digital\-Output\-Fault\-Status}!Digital Output@{Digital Output}}
+\subsubsection[{Set\-Digital\-Output\-Fault\-Status}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Set\-Digital\-Output\-Fault\-Status (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-L\-E7232\-\_\-\-Status\-\_\-t}}]{status, }
+\item[{uint8\-\_\-t}]{chip\-\_\-id, }
+\item[{uint8\-\_\-t}]{channel}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_gae27ad2dffb82e46632339521c3cfd6ee}
+Sets the fault status for the specified chip and channel.
+
+
+\begin{DoxyParams}{Parameters}
+{\em status} & T\-L\-E7232\-\_\-\-Status\-\_\-t The fault status to set. \\
+\hline
+{\em chip\-\_\-id} & uint8\-\_\-t The chip which the channel is on. \\
+\hline
+{\em channel} & uint8\-\_\-t The channel to set the fault status of. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 586 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_ga3853c412989dc241c2c9157e5102673b}{\index{Digital Output@{Digital Output}!Set\-Digital\-Output\-Write\-Function@{Set\-Digital\-Output\-Write\-Function}}
+\index{Set\-Digital\-Output\-Write\-Function@{Set\-Digital\-Output\-Write\-Function}!Digital Output@{Digital Output}}
+\subsubsection[{Set\-Digital\-Output\-Write\-Function}]{\setlength{\rightskip}{0pt plus 5cm}void Set\-Digital\-Output\-Write\-Function (
+\begin{DoxyParamCaption}
+\item[{{\bf Write\-Function}}]{write\-Function}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_ga3853c412989dc241c2c9157e5102673b}
+Set the function pointer to use when writing data from a digital output to the data connection.
+
+
+\begin{DoxyParams}{Parameters}
+{\em write\-Function} & Write\-Function pointer to the desired string writing function. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 486 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_ga1198a3ce0740a6ba43f5325d3ba9f950}{\index{Digital Output@{Digital Output}!Write\-All\-Digital\-Outputs@{Write\-All\-Digital\-Outputs}}
+\index{Write\-All\-Digital\-Outputs@{Write\-All\-Digital\-Outputs}!Digital Output@{Digital Output}}
+\subsubsection[{Write\-All\-Digital\-Outputs}]{\setlength{\rightskip}{0pt plus 5cm}void Write\-All\-Digital\-Outputs (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_ga1198a3ce0740a6ba43f5325d3ba9f950}
+Writes out the data for all added digital outputs to the stream controlled by the Write\-Function, if set.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 546 of file Digital\-\_\-\-Output.\-c.
+
+\hypertarget{group__digital__output_gaa10fe33be14ef4d8e16e6345f57938c5}{\index{Digital Output@{Digital Output}!Write\-Digital\-Output@{Write\-Digital\-Output}}
+\index{Write\-Digital\-Output@{Write\-Digital\-Output}!Digital Output@{Digital Output}}
+\subsubsection[{Write\-Digital\-Output}]{\setlength{\rightskip}{0pt plus 5cm}void Write\-Digital\-Output (
+\begin{DoxyParamCaption}
+\item[{{\bf Digital\-\_\-\-Output\-\_\-t} $\ast$}]{output}
+\end{DoxyParamCaption}
+)}}\label{group__digital__output_gaa10fe33be14ef4d8e16e6345f57938c5}
+Writes the data for the provided \hyperlink{struct_digital___output__t}{Digital\-\_\-\-Output\-\_\-t} structure to the stream controlled by the Write\-Function, if set.
+
+
+\begin{DoxyParams}{Parameters}
+{\em output} & Digital\-\_\-\-Output\-\_\-t$\ast$ Pointer to the data structure to write out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 522 of file Digital\-\_\-\-Output.\-c.
+

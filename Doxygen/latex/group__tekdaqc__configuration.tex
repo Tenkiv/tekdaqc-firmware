@@ -1,0 +1,205 @@
+\hypertarget{group__tekdaqc__configuration}{\section{Tekdaqc Configuration}
+\label{group__tekdaqc__configuration}\index{Tekdaqc Configuration@{Tekdaqc Configuration}}
+}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void($\ast$ \hyperlink{group__tekdaqc__configuration_ga163b2a4cc55a569e988df48908631967}{Write\-Function} )(char $\ast$str)
+\begin{DoxyCompactList}\small\item\em A common function pointer for specifying a function to write string data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tekdaqc__configuration_ga495a07bd1939981855363ee899e619ed}{Watchdog\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc's watchdog timer. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_ga77b9940dbe07de4765c23c27baf1de40}{Communication\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc's ethernet communications and lw\-I\-P stack. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_ga38dfe3d6b1f6f3da8b74612f51b0f479}{Flash\-Disk\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc's F\-L\-A\-S\-H disk. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_gabd78ed6a110b5878ee2388cb706ada9a}{Get\-Serial\-Number} (unsigned char $\ast$ptr)
+\begin{DoxyCompactList}\small\item\em Retrieves the serial number of this Tekdaqc. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_gaec08ef6f9e4d5e29da8f7af0490930b7}{C\-O\-M\-Init} (C\-O\-M\-\_\-\-Type\-Def C\-O\-M, U\-S\-A\-R\-T\-\_\-\-Init\-Type\-Def $\ast$U\-S\-A\-R\-T\-\_\-\-Init\-Struct)
+\begin{DoxyCompactList}\small\item\em Initializes the specified C\-O\-M port. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__tekdaqc__configuration_ga5aeffa7a603f954a637f967f37c29ec6}{Digital\-Level\-To\-String} (\hyperlink{group__board__channel__constants_gaee574a0d48c41a3e5426ffbf8ac4c5c4}{Digital\-Level\-\_\-t} level)
+\begin{DoxyCompactList}\small\item\em Converts a digital logic level enum value to a human readable string. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_ga7fee54fd2d4e5ad001547a64d519bdb1}{Clear\-To\-String\-Buffer} (void)
+\begin{DoxyCompactList}\small\item\em Clears the global T\-O\-S\-T\-R\-I\-N\-G\-\_\-\-B\-U\-F\-F\-E\-R data structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group__tekdaqc__configuration_ga163b2a4cc55a569e988df48908631967}{\index{Tekdaqc Configuration@{Tekdaqc Configuration}!Write\-Function@{Write\-Function}}
+\index{Write\-Function@{Write\-Function}!Tekdaqc Configuration@{Tekdaqc Configuration}}
+\subsubsection[{Write\-Function}]{\setlength{\rightskip}{0pt plus 5cm}typedef void($\ast$ Write\-Function)(char $\ast$str)}}\label{group__tekdaqc__configuration_ga163b2a4cc55a569e988df48908631967}
+A common function which is used to specify a function to write string data to an arbitrary destination. This abstracts the code doing the writing from the code wanting to write. 
+
+Definition at line 72 of file Tekdaqc\-\_\-config.\-h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__tekdaqc__configuration_ga7fee54fd2d4e5ad001547a64d519bdb1}{\index{Tekdaqc Configuration@{Tekdaqc Configuration}!Clear\-To\-String\-Buffer@{Clear\-To\-String\-Buffer}}
+\index{Clear\-To\-String\-Buffer@{Clear\-To\-String\-Buffer}!Tekdaqc Configuration@{Tekdaqc Configuration}}
+\subsubsection[{Clear\-To\-String\-Buffer}]{\setlength{\rightskip}{0pt plus 5cm}void Clear\-To\-String\-Buffer (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__configuration_ga7fee54fd2d4e5ad001547a64d519bdb1}
+Clears the global T\-O\-S\-T\-R\-I\-N\-G\-\_\-\-B\-U\-F\-F\-E\-R.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 310 of file Tekdaqc\-\_\-\-Config.\-c.
+
+\hypertarget{group__tekdaqc__configuration_gaec08ef6f9e4d5e29da8f7af0490930b7}{\index{Tekdaqc Configuration@{Tekdaqc Configuration}!C\-O\-M\-Init@{C\-O\-M\-Init}}
+\index{C\-O\-M\-Init@{C\-O\-M\-Init}!Tekdaqc Configuration@{Tekdaqc Configuration}}
+\subsubsection[{C\-O\-M\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void C\-O\-M\-Init (
+\begin{DoxyParamCaption}
+\item[{C\-O\-M\-\_\-\-Type\-Def}]{C\-O\-M, }
+\item[{U\-S\-A\-R\-T\-\_\-\-Init\-Type\-Def $\ast$}]{U\-S\-A\-R\-T\-\_\-\-Init\-Struct}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__configuration_gaec08ef6f9e4d5e29da8f7af0490930b7}
+Configures the specified C\-O\-M port.
+
+
+\begin{DoxyParams}{Parameters}
+{\em C\-O\-M} & C\-O\-M\-\_\-\-Type\-Def Specifies the C\-O\-M port to be configured. \\
+\hline
+{\em U\-S\-A\-R\-T\-\_\-\-Init\-Struct} & U\-S\-A\-R\-T\-\_\-\-Init\-Type\-Def$\ast$ Pointer to a U\-S\-A\-R\-T\-\_\-\-Init\-Type\-Def structure that contains the configuration information for the specified U\-S\-A\-R\-T peripheral. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 324 of file Tekdaqc\-\_\-\-Config.\-c.
+
+\hypertarget{group__tekdaqc__configuration_ga77b9940dbe07de4765c23c27baf1de40}{\index{Tekdaqc Configuration@{Tekdaqc Configuration}!Communication\-\_\-\-Init@{Communication\-\_\-\-Init}}
+\index{Communication\-\_\-\-Init@{Communication\-\_\-\-Init}!Tekdaqc Configuration@{Tekdaqc Configuration}}
+\subsubsection[{Communication\-\_\-\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void Communication\-\_\-\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__configuration_ga77b9940dbe07de4765c23c27baf1de40}
+Initializes the Tekdaqc's Ethernet communications and lw\-I\-P stack. This is necessary for both the main application functionality as well as the I\-A\-P update function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 243 of file Tekdaqc\-\_\-\-Config.\-c.
+
+\hypertarget{group__tekdaqc__configuration_ga5aeffa7a603f954a637f967f37c29ec6}{\index{Tekdaqc Configuration@{Tekdaqc Configuration}!Digital\-Level\-To\-String@{Digital\-Level\-To\-String}}
+\index{Digital\-Level\-To\-String@{Digital\-Level\-To\-String}!Tekdaqc Configuration@{Tekdaqc Configuration}}
+\subsubsection[{Digital\-Level\-To\-String}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ Digital\-Level\-To\-String (
+\begin{DoxyParamCaption}
+\item[{{\bf Digital\-Level\-\_\-t}}]{level}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__configuration_ga5aeffa7a603f954a637f967f37c29ec6}
+Returns a human readable string describing the digital logic level.
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & Digital\-Level\-\_\-t The digital logic level to convert to a string. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em const} & char$\ast$ The human readable C-\/\-String representation. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 287 of file Tekdaqc\-\_\-\-Config.\-c.
+
+\hypertarget{group__tekdaqc__configuration_ga38dfe3d6b1f6f3da8b74612f51b0f479}{\index{Tekdaqc Configuration@{Tekdaqc Configuration}!Flash\-Disk\-Init@{Flash\-Disk\-Init}}
+\index{Flash\-Disk\-Init@{Flash\-Disk\-Init}!Tekdaqc Configuration@{Tekdaqc Configuration}}
+\subsubsection[{Flash\-Disk\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void Flash\-Disk\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__configuration_ga38dfe3d6b1f6f3da8b74612f51b0f479}
+Initializes the Tekdaqc's F\-L\-A\-S\-H disk.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 264 of file Tekdaqc\-\_\-\-Config.\-c.
+
+\hypertarget{group__tekdaqc__configuration_gabd78ed6a110b5878ee2388cb706ada9a}{\index{Tekdaqc Configuration@{Tekdaqc Configuration}!Get\-Serial\-Number@{Get\-Serial\-Number}}
+\index{Get\-Serial\-Number@{Get\-Serial\-Number}!Tekdaqc Configuration@{Tekdaqc Configuration}}
+\subsubsection[{Get\-Serial\-Number}]{\setlength{\rightskip}{0pt plus 5cm}void Get\-Serial\-Number (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__configuration_gabd78ed6a110b5878ee2388cb706ada9a}
+Retrieves the boards serial number and stores in in the specified C-\/\-String.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & char$\ast$ Pointer to a C-\/\-String to store the serial number in. Must be at least sizeof(\-T\-E\-K\-D\-A\-Q\-C\-\_\-\-B\-O\-A\-R\-D\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-N\-U\-M) in size. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 277 of file Tekdaqc\-\_\-\-Config.\-c.
+
+\hypertarget{group__tekdaqc__configuration_ga495a07bd1939981855363ee899e619ed}{\index{Tekdaqc Configuration@{Tekdaqc Configuration}!Watchdog\-\_\-\-Init@{Watchdog\-\_\-\-Init}}
+\index{Watchdog\-\_\-\-Init@{Watchdog\-\_\-\-Init}!Tekdaqc Configuration@{Tekdaqc Configuration}}
+\subsubsection[{Watchdog\-\_\-\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void Watchdog\-\_\-\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__configuration_ga495a07bd1939981855363ee899e619ed}
+Initializes the boards watchdog timer. If the behavior of the board is changed, this method may need to be modified if the main control loop is changed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 209 of file Tekdaqc\-\_\-\-Config.\-c.
+

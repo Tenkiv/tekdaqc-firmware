@@ -1,0 +1,68 @@
+\hypertarget{_telnet_server_8c}{\section{Telnet\-Server.\-c File Reference}
+\label{_telnet_server_8c}\index{Telnet\-Server.\-c@{Telnet\-Server.\-c}}
+}
+
+
+Implements a control interface for the Tekdaqc via the Telnet protocol.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Telnet\-Server.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Config.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lwip/debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lwip/stats.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lwip/tcp.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__telnet__server_gab6653d6c1bd1261ebfcb4d667f848716}{Telnet\-Status\-\_\-t} \hyperlink{group__telnet__server_gae8002482499a83baab72c8714ef609d2}{Initialize\-Telnet\-Server} (void)
+\begin{DoxyCompactList}\small\item\em Initialize a \hyperlink{struct_telnet_server__t}{Telnet\-Server\-\_\-t} struct with default values. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_ga26f786d2e47e4bb5f180d2740eebc957}{Telnet\-Close} (void)
+\begin{DoxyCompactList}\small\item\em This function is called when the the T\-C\-P connection should be closed. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__telnet__server_ga6509e0047d80aea0570ec903a1e10887}{Telnet\-Is\-Connected} (void)
+\begin{DoxyCompactList}\small\item\em Indicates if the Telnet server is occupied or not. \end{DoxyCompactList}\item 
+err\-\_\-t \hyperlink{group__telnet__server_ga8946efc99077a959cb1cad3e059f9071}{Telnet\-Poll} (void $\ast$arg, struct tcp\-\_\-pcb $\ast$tpcb)
+\begin{DoxyCompactList}\small\item\em Called when the lw\-I\-P T\-C\-P/\-I\-P stack needs to poll the server with/for data. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_ga93c1e298d9778f890b6df05b35072988}{Telnet\-Recv\-Buffer\-Write} (char character)
+\begin{DoxyCompactList}\small\item\em Writes a character into the telnet receive buffer. \end{DoxyCompactList}\item 
+char \hyperlink{group__telnet__server_gaff55b8914481cb32d621a855a69a5635}{Telnet\-Read} (void)
+\begin{DoxyCompactList}\small\item\em Reads a character from the telnet interface. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_gaa2f418e9d287a2863fe1198e3c75f4ad}{Telnet\-Write} (const char character)
+\begin{DoxyCompactList}\small\item\em Writes a character to the telnet interface. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_ga579198334cf97874ecc89e3b29351066}{Telnet\-Write\-String} (char $\ast$string)
+\begin{DoxyCompactList}\small\item\em Writes a string to the telnet interface. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_ga8779bc1d2c7943063104c8624a877d8b}{Telnet\-Process\-Will} (char option)
+\begin{DoxyCompactList}\small\item\em Handle a W\-I\-L\-L request for a telnet option. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_gac84ea97f4be2d0b62498cca6297d0ab7}{Telnet\-Process\-Wont} (char option)
+\begin{DoxyCompactList}\small\item\em Handle a W\-O\-N\-T request for a telnet option. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_gabdf9478794e09f61ab850c78147a7c6f}{Telnet\-Process\-Do} (char option)
+\begin{DoxyCompactList}\small\item\em Handle a D\-O request for a telnet option. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_gaf2500a4ad4bcbfd6ac4367f298e42f10}{Telnet\-Process\-Dont} (char option)
+\begin{DoxyCompactList}\small\item\em Handle a D\-O\-N\-T request for a telnet option. \end{DoxyCompactList}\item 
+\hypertarget{group__telnet__server_ga348f2b04116a013b6eabfa72c926a25f}{void \hyperlink{group__telnet__server_ga348f2b04116a013b6eabfa72c926a25f}{Telnet\-Process\-Character} (char character)}\label{group__telnet__server_ga348f2b04116a013b6eabfa72c926a25f}
+
+\begin{DoxyCompactList}\small\item\em Process a character received from the telnet port. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_ga0660c325387baca6c54fe699ac048907}{Telnet\-Write\-Error\-Message} (char $\ast$message)
+\begin{DoxyCompactList}\small\item\em Print a message to the telnet connection formatted as an error. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_ga0afb5de5ce2d81cdc5322e0534bae1d8}{Telnet\-Write\-Status\-Message} (char $\ast$message)
+\begin{DoxyCompactList}\small\item\em Print a message to the telnet connection formatted as a status. \end{DoxyCompactList}\item 
+void \hyperlink{group__telnet__server_ga7d350b6355ef213d4aa15e9b80c3d15e}{Telnet\-Write\-Debug\-Message} (char $\ast$message)
+\begin{DoxyCompactList}\small\item\em Print a message to the telnet connection formatted as a debug. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implements a control interface for the Tekdaqc via the Telnet protocol. Only a single connection is allowed at a time. Any attempts to connect while an active connection is present will result in an error message from the board.
+
+This file based on the Telnet server implementation in the T\-I Stellaris example Cave Adventure game, in particular, the methods for processing the Telnet state machine.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_telnet_server_8c_source}{Telnet\-Server.\-c}.
+

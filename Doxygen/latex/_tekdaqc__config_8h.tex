@@ -1,0 +1,52 @@
+\hypertarget{_tekdaqc__config_8h}{\section{Tekdaqc\-\_\-config.\-h File Reference}
+\label{_tekdaqc__config_8h}\index{Tekdaqc\-\_\-config.\-h@{Tekdaqc\-\_\-config.\-h}}
+}
+
+
+Header file for the configuring the Tekdaqc.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-usart.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-B\-S\-P.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4x7\-\_\-eth\-\_\-bsp.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\-D\-S1256\-\_\-\-Driver.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Message\-Headers.\-h\char`\"{}}\\*
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void($\ast$ \hyperlink{group__tekdaqc__configuration_ga163b2a4cc55a569e988df48908631967}{Write\-Function} )(char $\ast$str)
+\begin{DoxyCompactList}\small\item\em A common function pointer for specifying a function to write string data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tekdaqc__configuration_ga495a07bd1939981855363ee899e619ed}{Watchdog\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc's watchdog timer. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_ga77b9940dbe07de4765c23c27baf1de40}{Communication\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc's ethernet communications and lw\-I\-P stack. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_ga38dfe3d6b1f6f3da8b74612f51b0f479}{Flash\-Disk\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc's F\-L\-A\-S\-H disk. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_gabd78ed6a110b5878ee2388cb706ada9a}{Get\-Serial\-Number} (unsigned char $\ast$ptr)
+\begin{DoxyCompactList}\small\item\em Retrieves the serial number of this Tekdaqc. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_gaec08ef6f9e4d5e29da8f7af0490930b7}{C\-O\-M\-Init} (C\-O\-M\-\_\-\-Type\-Def C\-O\-M, U\-S\-A\-R\-T\-\_\-\-Init\-Type\-Def $\ast$U\-S\-A\-R\-T\-\_\-\-Init\-Struct)
+\begin{DoxyCompactList}\small\item\em Initializes the specified C\-O\-M port. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__tekdaqc__configuration_ga5aeffa7a603f954a637f967f37c29ec6}{Digital\-Level\-To\-String} (\hyperlink{group__board__channel__constants_gaee574a0d48c41a3e5426ffbf8ac4c5c4}{Digital\-Level\-\_\-t} level)
+\begin{DoxyCompactList}\small\item\em Converts a digital logic level enum value to a human readable string. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__configuration_ga7fee54fd2d4e5ad001547a64d519bdb1}{Clear\-To\-String\-Buffer} (void)
+\begin{DoxyCompactList}\small\item\em Clears the global T\-O\-S\-T\-R\-I\-N\-G\-\_\-\-B\-U\-F\-F\-E\-R data structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public definitions and data types for configuring the Tekdaqc.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_tekdaqc__config_8h_source}{Tekdaqc\-\_\-config.\-h}.
+

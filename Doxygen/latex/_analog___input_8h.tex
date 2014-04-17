@@ -1,0 +1,74 @@
+\hypertarget{_analog___input_8h}{\section{Analog\-\_\-\-Input.\-h File Reference}
+\label{_analog___input_8h}\index{Analog\-\_\-\-Input.\-h@{Analog\-\_\-\-Input.\-h}}
+}
+
+
+Header file for the Tekdaqc\-\_\-\-Input data structure.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Error.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Config.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\-D\-S1256\-\_\-\-Driver.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Data structure used to store the state and requirements of an analog input to the Tekdaqc. This data structure contains all the information related to a particular input to the Tekdaqc, including values and allowable range. Please note that while there is nothing to stop you from manipulating the values of the structure directly, it is not recommended as it could put the structure in an indeterminate state. Instead, manipulation functions are provided which will ensure that all state related implications are addressed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__analog__input_ga7b523129daacaeca69045b3adb1aaf54}{\#define \hyperlink{group__analog__input_ga7b523129daacaeca69045b3adb1aaf54}{M\-A\-X\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}~24}\label{group__analog__input_ga7b523129daacaeca69045b3adb1aaf54}
+
+\begin{DoxyCompactList}\small\item\em The maximum number of characters for the name of an analog input. \end{DoxyCompactList}\item 
+\hypertarget{group__analog__input_ga3f128795c69a685d5e905c4117008271}{\#define \hyperlink{group__analog__input_ga3f128795c69a685d5e905c4117008271}{A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}~100\-U /$\ast$ 100 samples. Other code expects it to $<$= 255. $\ast$/}\label{group__analog__input_ga3f128795c69a685d5e905c4117008271}
+
+\begin{DoxyCompactList}\small\item\em The number or readings to store in the circular buffer for the input. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__analog__input_ga99258f91accf55ecea49707692a3889b}{Analog\-Input\-Status\-\_\-t} \{ \hyperlink{group__analog__input_gga99258f91accf55ecea49707692a3889baab4ee4ac298eaa158dc5d14eb9ca8b60}{B\-E\-L\-O\-W\-\_\-\-R\-A\-N\-G\-E}, 
+\hyperlink{group__analog__input_gga99258f91accf55ecea49707692a3889ba19a150b47d1db72e2947bef12bd1ca7f}{I\-N\-\_\-\-R\-A\-N\-G\-E}, 
+\hyperlink{group__analog__input_gga99258f91accf55ecea49707692a3889baa2ccf1ed52430dd6b0070370d5125d7e}{A\-B\-O\-V\-E\-\_\-\-R\-A\-N\-G\-E}
+ \}
+\begin{DoxyCompactList}\small\item\em Tekdaqc input status enumeration. Defines the possible status states of an input to the Tekdaqc, both analog and digital. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__analog__input_gaf65fcf2267ddebcf80049303dc9507ce}{Analog\-Inputs\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize all of the submodules for analog inputs. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__analog__input_gacdd326a56de1d837605d610cc638a959}{Create\-Analog\-Input} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, uint8\-\_\-t count)
+\begin{DoxyCompactList}\small\item\em Creates a new analog input structure and adds it to the board's list. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__analog__input_gab88a5ebe3b0749d880eec3c892649454}{Add\-Analog\-Input} (\hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t} $\ast$input)
+\begin{DoxyCompactList}\small\item\em Adds an analog input to the board's list. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__analog__input_ga221c8c5a1bbe659d613fa81a6a834dd9}{Remove\-Analog\-Input} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, uint8\-\_\-t count)
+\begin{DoxyCompactList}\small\item\em Removes an analog input from the board's list. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__analog__input_ga30736f8a2ceb6a1993055302893efefe}{List\-Analog\-Inputs} (void)
+\begin{DoxyCompactList}\small\item\em Prints a representation of all the added analog inputs. \end{DoxyCompactList}\item 
+\hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t} $\ast$ \hyperlink{group__analog__input_ga697505715d2411ad856bca3d1e726913}{Get\-Analog\-Input\-By\-Number} (uint8\-\_\-t number)
+\begin{DoxyCompactList}\small\item\em Retrieve the analog input structure corresponding to a physical channel. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input_ga3d7d6daf5f4b4a4c455dd9b9aec6053b}{Write\-Analog\-Input} (\hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t} $\ast$input)
+\begin{DoxyCompactList}\small\item\em Prints data from the analog input structure to the data connection. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input_ga8230666b0182b4ce633c20860b5146ff}{Set\-Analog\-Input\-Write\-Function} (\hyperlink{group__tekdaqc__configuration_ga163b2a4cc55a569e988df48908631967}{Write\-Function} write\-Function)
+\begin{DoxyCompactList}\small\item\em Sets the function to use for writing strings to the data connection. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__analog__input_ga87d73c733aa66effbdafe2a15b7c4a54}{Ext\-Analog\-Input\-To\-String} (External\-Muxed\-Input\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Returns the string representation of an externally muxed analog input. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__analog__input_gae568c96624ef9e126175706f85eec3b4}{Int\-Analog\-Input\-To\-String} (Internal\-Analog\-Input\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Returns the string representation of an internally muxed analog input. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public definitions and data types for the Tekdaqc\-\_\-\-Input data structure.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_analog___input_8h_source}{Analog\-\_\-\-Input.\-h}.
+

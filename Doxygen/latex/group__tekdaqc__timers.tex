@@ -1,0 +1,200 @@
+\hypertarget{group__tekdaqc__timers}{\section{Tekdaqc Timers}
+\label{group__tekdaqc__timers}\index{Tekdaqc Timers@{Tekdaqc Timers}}
+}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}{\#define \hyperlink{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D\-\_\-\-U\-S}~16}\label{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}
+
+\begin{DoxyCompactList}\small\item\em Defines the time period in microseconds for S\-Y\-S\-T\-I\-C\-K interrupts. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__timers_gad688df41f76297601fe702bd24190525}{\#define \hyperlink{group__tekdaqc__timers_gad688df41f76297601fe702bd24190525}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-D\-I\-V\-I\-D\-E\-R\-\_\-\-U\-S}~(1000000 / \hyperlink{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D\-\_\-\-U\-S})}\label{group__tekdaqc__timers_gad688df41f76297601fe702bd24190525}
+
+\begin{DoxyCompactList}\small\item\em Defines the clock divider for the S\-Y\-S\-T\-I\-C\-K timer. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__timers_ga7061932395158f1a4988896f1b32a8b3}{\#define \hyperlink{group__tekdaqc__timers_ga7061932395158f1a4988896f1b32a8b3}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D}~(\hyperlink{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D\-\_\-\-U\-S})}\label{group__tekdaqc__timers_ga7061932395158f1a4988896f1b32a8b3}
+
+\begin{DoxyCompactList}\small\item\em Defines the time period to use for the S\-Y\-S\-T\-I\-C\-K interrupts. This is what is used by the setup code. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__timers_gac55d476efeca526dcd924406fc9917bf}{\#define \hyperlink{group__tekdaqc__timers_gac55d476efeca526dcd924406fc9917bf}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-D\-I\-V\-I\-D\-E\-R}~(\hyperlink{group__tekdaqc__timers_gad688df41f76297601fe702bd24190525}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-D\-I\-V\-I\-D\-E\-R\-\_\-\-U\-S})}\label{group__tekdaqc__timers_gac55d476efeca526dcd924406fc9917bf}
+
+\begin{DoxyCompactList}\small\item\em Defines the clock divider for the S\-Y\-S\-T\-I\-C\-K timer. This is what is used by the setup code. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tekdaqc__timers_ga3c15420197589e14aa4da4b880a8005f}{Timer\-\_\-\-Config} (void)
+\begin{DoxyCompactList}\small\item\em Configure the timers. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_ga194e6c4226839758664f0e68816c0713}{Time\-\_\-\-Update} (void)
+\begin{DoxyCompactList}\small\item\em Called by the S\-Y\-S\-T\-I\-C\-K interrupt handler. \end{DoxyCompactList}\item 
+uint64\-\_\-t \hyperlink{group__tekdaqc__timers_ga11a66b1728633b77403a588f66a1be95}{Get\-Local\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the local time stamp. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_gaf7d18dc0155f873c4ed1d149e6060d19}{Delay\-\_\-ms} (float ms)
+\begin{DoxyCompactList}\small\item\em Blocking delay, measured in fractional milliseconds. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_ga5ec7c1ff1d0645d24d030f36382e9417}{Delay\-\_\-us} (uint64\-\_\-t us)
+\begin{DoxyCompactList}\small\item\em Blocking delay, measured in microseconds. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_gaa826dcc6214549a3ae300594de880024}{Delay\-\_\-\-Periods\-\_\-10\-M\-S} (uint32\-\_\-t n\-Count)
+\begin{DoxyCompactList}\small\item\em Blocking delay, measured in 10 millisecond periods. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_ga1431937e39123e5e4fddcfbdec5aa70e}{Delay\-\_\-\-Periods} (uint32\-\_\-t n\-Count)
+\begin{DoxyCompactList}\small\item\em Blocking delay, measured in S\-Y\-S\-T\-I\-C\-K periods. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__tekdaqc__timers_gaf7d18dc0155f873c4ed1d149e6060d19}{\index{Tekdaqc Timers@{Tekdaqc Timers}!Delay\-\_\-ms@{Delay\-\_\-ms}}
+\index{Delay\-\_\-ms@{Delay\-\_\-ms}!Tekdaqc Timers@{Tekdaqc Timers}}
+\subsubsection[{Delay\-\_\-ms}]{\setlength{\rightskip}{0pt plus 5cm}void Delay\-\_\-ms (
+\begin{DoxyParamCaption}
+\item[{float}]{ms}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__timers_gaf7d18dc0155f873c4ed1d149e6060d19}
+Inserts a delay time, measured in fractional milliseconds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ms} & float The number of milliseconds to wait for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 122 of file Tekdaqc\-\_\-\-Timers.\-c.
+
+\hypertarget{group__tekdaqc__timers_ga1431937e39123e5e4fddcfbdec5aa70e}{\index{Tekdaqc Timers@{Tekdaqc Timers}!Delay\-\_\-\-Periods@{Delay\-\_\-\-Periods}}
+\index{Delay\-\_\-\-Periods@{Delay\-\_\-\-Periods}!Tekdaqc Timers@{Tekdaqc Timers}}
+\subsubsection[{Delay\-\_\-\-Periods}]{\setlength{\rightskip}{0pt plus 5cm}void Delay\-\_\-\-Periods (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{n\-Count}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__timers_ga1431937e39123e5e4fddcfbdec5aa70e}
+Inserts a delay time, measured in S\-Y\-S\-T\-I\-C\-K periods. 
+\begin{DoxyParams}{Parameters}
+{\em n\-Count} & uint32\-\_\-t The number of S\-Y\-S\-T\-I\-C\-K periods to wait for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 102 of file Tekdaqc\-\_\-\-Timers.\-c.
+
+\hypertarget{group__tekdaqc__timers_gaa826dcc6214549a3ae300594de880024}{\index{Tekdaqc Timers@{Tekdaqc Timers}!Delay\-\_\-\-Periods\-\_\-10\-M\-S@{Delay\-\_\-\-Periods\-\_\-10\-M\-S}}
+\index{Delay\-\_\-\-Periods\-\_\-10\-M\-S@{Delay\-\_\-\-Periods\-\_\-10\-M\-S}!Tekdaqc Timers@{Tekdaqc Timers}}
+\subsubsection[{Delay\-\_\-\-Periods\-\_\-10\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}void Delay\-\_\-\-Periods\-\_\-10\-M\-S (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{n\-Count}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__timers_gaa826dcc6214549a3ae300594de880024}
+Inserts a delay time, measured in 10 millisecond periods.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\-Count} & uint32\-\_\-t The number of 10 millisecond periods to wait for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 112 of file Tekdaqc\-\_\-\-Timers.\-c.
+
+\hypertarget{group__tekdaqc__timers_ga5ec7c1ff1d0645d24d030f36382e9417}{\index{Tekdaqc Timers@{Tekdaqc Timers}!Delay\-\_\-us@{Delay\-\_\-us}}
+\index{Delay\-\_\-us@{Delay\-\_\-us}!Tekdaqc Timers@{Tekdaqc Timers}}
+\subsubsection[{Delay\-\_\-us}]{\setlength{\rightskip}{0pt plus 5cm}void Delay\-\_\-us (
+\begin{DoxyParamCaption}
+\item[{uint64\-\_\-t}]{us}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__timers_ga5ec7c1ff1d0645d24d030f36382e9417}
+Inserts a delay time, measured in integer microseconds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em us} & uint64\-\_\-t The number of microseconds to wait for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 133 of file Tekdaqc\-\_\-\-Timers.\-c.
+
+\hypertarget{group__tekdaqc__timers_ga11a66b1728633b77403a588f66a1be95}{\index{Tekdaqc Timers@{Tekdaqc Timers}!Get\-Local\-Time@{Get\-Local\-Time}}
+\index{Get\-Local\-Time@{Get\-Local\-Time}!Tekdaqc Timers@{Tekdaqc Timers}}
+\subsubsection[{Get\-Local\-Time}]{\setlength{\rightskip}{0pt plus 5cm}uint64\-\_\-t Get\-Local\-Time (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__timers_ga11a66b1728633b77403a588f66a1be95}
+Retrieves the current system local time stamp.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint64\-\_\-t} & The current local time stamp in microseconds. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 93 of file Tekdaqc\-\_\-\-Timers.\-c.
+
+\hypertarget{group__tekdaqc__timers_ga194e6c4226839758664f0e68816c0713}{\index{Tekdaqc Timers@{Tekdaqc Timers}!Time\-\_\-\-Update@{Time\-\_\-\-Update}}
+\index{Time\-\_\-\-Update@{Time\-\_\-\-Update}!Tekdaqc Timers@{Tekdaqc Timers}}
+\subsubsection[{Time\-\_\-\-Update}]{\setlength{\rightskip}{0pt plus 5cm}void Time\-\_\-\-Update (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__timers_ga194e6c4226839758664f0e68816c0713}
+Updates the system local time, incrementing by S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 83 of file Tekdaqc\-\_\-\-Timers.\-c.
+
+\hypertarget{group__tekdaqc__timers_ga3c15420197589e14aa4da4b880a8005f}{\index{Tekdaqc Timers@{Tekdaqc Timers}!Timer\-\_\-\-Config@{Timer\-\_\-\-Config}}
+\index{Timer\-\_\-\-Config@{Timer\-\_\-\-Config}!Tekdaqc Timers@{Tekdaqc Timers}}
+\subsubsection[{Timer\-\_\-\-Config}]{\setlength{\rightskip}{0pt plus 5cm}void Timer\-\_\-\-Config (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__timers_ga3c15420197589e14aa4da4b880a8005f}
+Configures the Tekdaqc's timers and any interrupts necessary for thier operation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 58 of file Tekdaqc\-\_\-\-Timers.\-c.
+

@@ -1,0 +1,269 @@
+\hypertarget{stm32f4xx__it_8c}{\section{stm32f4xx\-\_\-it.\-c File Reference}
+\label{stm32f4xx__it_8c}\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}}
+}
+
+
+Main Interrupt Service Routines. This file provides template for all exceptions handler and peripherals interrupt service routine.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Timers.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Config.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-C\-A\-N.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$inttypes.\-h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{stm32f4xx__it_8c_a6ad7a5e3ee69cb6db6a6b9111ba898bc}{N\-M\-I\-\_\-\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles N\-M\-I exception. \end{DoxyCompactList}\item 
+void \hyperlink{stm32f4xx__it_8c_a2bffc10d5bd4106753b7c30e86903bea}{Hard\-Fault\-\_\-\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Hard Fault exception. \end{DoxyCompactList}\item 
+void \hyperlink{stm32f4xx__it_8c_a3150f74512510287a942624aa9b44cc5}{Mem\-Manage\-\_\-\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Memory Manage exception. \end{DoxyCompactList}\item 
+void \hyperlink{stm32f4xx__it_8c_a850cefb17a977292ae5eb4cafa9976c3}{Bus\-Fault\-\_\-\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Bus Fault exception. \end{DoxyCompactList}\item 
+void \hyperlink{stm32f4xx__it_8c_a1d98923de2ed6b7309b66f9ba2971647}{Usage\-Fault\-\_\-\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Usage Fault exception. \end{DoxyCompactList}\item 
+void \hyperlink{stm32f4xx__it_8c_adbdfb05858cc36fc520974df37ec3cb0}{Debug\-Mon\-\_\-\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Debug Monitor exception. \end{DoxyCompactList}\item 
+void \hyperlink{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}{Sys\-Tick\-\_\-\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles Sys\-Tick Handler. \end{DoxyCompactList}\item 
+void \hyperlink{stm32f4xx__it_8c_a738473a5b43f6c92b80ce1d3d6f77ed9}{E\-X\-T\-I15\-\_\-10\-\_\-\-I\-R\-Q\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles External line 10 interrupt request. \end{DoxyCompactList}\item 
+void \hyperlink{stm32f4xx__it_8c_a4dcf621094d563287c456f7aa751e86b}{C\-A\-N1\-\_\-\-R\-X0\-\_\-\-I\-R\-Q\-Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles C\-A\-N1 R\-X0 request. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint16\-\_\-t \hyperlink{stm32f4xx__it_8c_a7b6e354242fbed46e6358d2267041e58}{tmp\-C\-C4} \mbox{[}2\mbox{]} = \{0, 0\}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+M\-C\-D Application Team 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+V1.\-1.\-0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+31-\/\-July-\/2013 
+\end{DoxyDate}
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+\subsubsection*{\begin{center}\copyright{} C\-O\-P\-Y\-R\-I\-G\-H\-T 2013 S\-T\-Microelectronics\end{center} }
+
+Licensed under M\-C\-D-\/\-S\-T Liberty S\-W License Agreement V2, (the \char`\"{}\-License\char`\"{}); You may not use this file except in compliance with the License. You may obtain a copy of the License at\-: \begin{DoxyVerb}   http://www.st.com/software_license_agreement_liberty_v2
+\end{DoxyVerb}
+
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \char`\"{}\-A\-S I\-S\char`\"{} B\-A\-S\-I\-S, W\-I\-T\-H\-O\-U\-T W\-A\-R\-R\-A\-N\-T\-I\-E\-S O\-R C\-O\-N\-D\-I\-T\-I\-O\-N\-S O\-F A\-N\-Y K\-I\-N\-D, either express or implied. See the License for the specific language governing permissions and limitations under the License. 
+
+Definition in file \hyperlink{stm32f4xx__it_8c_source}{stm32f4xx\-\_\-it.\-c}.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{stm32f4xx__it_8c_a850cefb17a977292ae5eb4cafa9976c3}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!Bus\-Fault\-\_\-\-Handler@{Bus\-Fault\-\_\-\-Handler}}
+\index{Bus\-Fault\-\_\-\-Handler@{Bus\-Fault\-\_\-\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{Bus\-Fault\-\_\-\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void Bus\-Fault\-\_\-\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_a850cefb17a977292ae5eb4cafa9976c3}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 143 of file stm32f4xx\-\_\-it.\-c.
+
+\hypertarget{stm32f4xx__it_8c_a4dcf621094d563287c456f7aa751e86b}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!C\-A\-N1\-\_\-\-R\-X0\-\_\-\-I\-R\-Q\-Handler@{C\-A\-N1\-\_\-\-R\-X0\-\_\-\-I\-R\-Q\-Handler}}
+\index{C\-A\-N1\-\_\-\-R\-X0\-\_\-\-I\-R\-Q\-Handler@{C\-A\-N1\-\_\-\-R\-X0\-\_\-\-I\-R\-Q\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{C\-A\-N1\-\_\-\-R\-X0\-\_\-\-I\-R\-Q\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void C\-A\-N1\-\_\-\-R\-X0\-\_\-\-I\-R\-Q\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_a4dcf621094d563287c456f7aa751e86b}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 218 of file stm32f4xx\-\_\-it.\-c.
+
+\hypertarget{stm32f4xx__it_8c_adbdfb05858cc36fc520974df37ec3cb0}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!Debug\-Mon\-\_\-\-Handler@{Debug\-Mon\-\_\-\-Handler}}
+\index{Debug\-Mon\-\_\-\-Handler@{Debug\-Mon\-\_\-\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{Debug\-Mon\-\_\-\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void Debug\-Mon\-\_\-\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_adbdfb05858cc36fc520974df37ec3cb0}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 165 of file stm32f4xx\-\_\-it.\-c.
+
+\hypertarget{stm32f4xx__it_8c_a738473a5b43f6c92b80ce1d3d6f77ed9}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!E\-X\-T\-I15\-\_\-10\-\_\-\-I\-R\-Q\-Handler@{E\-X\-T\-I15\-\_\-10\-\_\-\-I\-R\-Q\-Handler}}
+\index{E\-X\-T\-I15\-\_\-10\-\_\-\-I\-R\-Q\-Handler@{E\-X\-T\-I15\-\_\-10\-\_\-\-I\-R\-Q\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{E\-X\-T\-I15\-\_\-10\-\_\-\-I\-R\-Q\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void E\-X\-T\-I15\-\_\-10\-\_\-\-I\-R\-Q\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_a738473a5b43f6c92b80ce1d3d6f77ed9}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 190 of file stm32f4xx\-\_\-it.\-c.
+
+\hypertarget{stm32f4xx__it_8c_a2bffc10d5bd4106753b7c30e86903bea}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!Hard\-Fault\-\_\-\-Handler@{Hard\-Fault\-\_\-\-Handler}}
+\index{Hard\-Fault\-\_\-\-Handler@{Hard\-Fault\-\_\-\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{Hard\-Fault\-\_\-\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void Hard\-Fault\-\_\-\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_a2bffc10d5bd4106753b7c30e86903bea}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 68 of file stm32f4xx\-\_\-it.\-c.
+
+\hypertarget{stm32f4xx__it_8c_a3150f74512510287a942624aa9b44cc5}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!Mem\-Manage\-\_\-\-Handler@{Mem\-Manage\-\_\-\-Handler}}
+\index{Mem\-Manage\-\_\-\-Handler@{Mem\-Manage\-\_\-\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{Mem\-Manage\-\_\-\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void Mem\-Manage\-\_\-\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_a3150f74512510287a942624aa9b44cc5}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 132 of file stm32f4xx\-\_\-it.\-c.
+
+\hypertarget{stm32f4xx__it_8c_a6ad7a5e3ee69cb6db6a6b9111ba898bc}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!N\-M\-I\-\_\-\-Handler@{N\-M\-I\-\_\-\-Handler}}
+\index{N\-M\-I\-\_\-\-Handler@{N\-M\-I\-\_\-\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{N\-M\-I\-\_\-\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void N\-M\-I\-\_\-\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_a6ad7a5e3ee69cb6db6a6b9111ba898bc}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 60 of file stm32f4xx\-\_\-it.\-c.
+
+\hypertarget{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!Sys\-Tick\-\_\-\-Handler@{Sys\-Tick\-\_\-\-Handler}}
+\index{Sys\-Tick\-\_\-\-Handler@{Sys\-Tick\-\_\-\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{Sys\-Tick\-\_\-\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void Sys\-Tick\-\_\-\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 173 of file stm32f4xx\-\_\-it.\-c.
+
+\hypertarget{stm32f4xx__it_8c_a1d98923de2ed6b7309b66f9ba2971647}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!Usage\-Fault\-\_\-\-Handler@{Usage\-Fault\-\_\-\-Handler}}
+\index{Usage\-Fault\-\_\-\-Handler@{Usage\-Fault\-\_\-\-Handler}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{Usage\-Fault\-\_\-\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void Usage\-Fault\-\_\-\-Handler (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{stm32f4xx__it_8c_a1d98923de2ed6b7309b66f9ba2971647}
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 154 of file stm32f4xx\-\_\-it.\-c.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{stm32f4xx__it_8c_a7b6e354242fbed46e6358d2267041e58}{\index{stm32f4xx\-\_\-it.\-c@{stm32f4xx\-\_\-it.\-c}!tmp\-C\-C4@{tmp\-C\-C4}}
+\index{tmp\-C\-C4@{tmp\-C\-C4}!stm32f4xx_it.c@{stm32f4xx\-\_\-it.\-c}}
+\subsubsection[{tmp\-C\-C4}]{\setlength{\rightskip}{0pt plus 5cm}uint16\-\_\-t tmp\-C\-C4\mbox{[}2\mbox{]} = \{0, 0\}}}\label{stm32f4xx__it_8c_a7b6e354242fbed46e6358d2267041e58}
+This file modified by Tenkiv, Inc. \begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition at line 47 of file stm32f4xx\-\_\-it.\-c.
+

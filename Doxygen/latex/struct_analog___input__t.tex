@@ -1,0 +1,165 @@
+\hypertarget{struct_analog___input__t}{\section{Analog\-\_\-\-Input\-\_\-t Struct Reference}
+\label{struct_analog___input__t}\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}}
+}
+
+
+Data structure used to store the state and requirements of an analog input to the Tekdaqc. This data structure contains all the information related to a particular input to the Tekdaqc, including values and allowable range. Please note that while there is nothing to stop you from manipulating the values of the structure directly, it is not recommended as it could put the structure in an indeterminate state. Instead, manipulation functions are provided which will ensure that all state related implications are addressed.  
+
+
+
+
+{\ttfamily \#include $<$Analog\-\_\-\-Input.\-h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__board__channel__constants_gab0f30599ceb99e5ba3b2908d8e9bd131}{Channel\-Added\-\_\-t} \hyperlink{struct_analog___input__t_a6f1a4402ff8651dfc5e453b5e3154c2d}{added}
+\item 
+Physical\-Analog\-Input\-\_\-t \hyperlink{struct_analog___input__t_a56b9dddfb002a9709f8591dd04c06db8}{physical\-Input}
+\item 
+External\-Muxed\-Input\-\_\-t \hyperlink{struct_analog___input__t_abb199000d1f8af50de782aecf1f42108}{external\-Input}
+\item 
+Internal\-Analog\-Input\-\_\-t \hyperlink{struct_analog___input__t_a6a742e7de15fa168a904238051ba025e}{internal\-Input}
+\item 
+char \hyperlink{struct_analog___input__t_a3a0b07d12d70fc1006109b23512b61fb}{name} \mbox{[}\hyperlink{group__analog__input_ga7b523129daacaeca69045b3adb1aaf54}{M\-A\-X\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}
+\item 
+int32\-\_\-t \hyperlink{struct_analog___input__t_a0022b5ad7e496a802c64e3f6e0c2d8e1}{min}
+\item 
+int32\-\_\-t \hyperlink{struct_analog___input__t_accad1cdcd73e714badc388c3471bf33b}{max}
+\item 
+int32\-\_\-t \hyperlink{struct_analog___input__t_a5ec27e6ddaf65a4b494422578b93b246}{values} \mbox{[}\hyperlink{group__analog__input_ga3f128795c69a685d5e905c4117008271}{A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}\mbox{]}
+\item 
+uint64\-\_\-t \hyperlink{struct_analog___input__t_a611ead9e1d73ef2c8cac3f7cc95b0c17}{timestamps} \mbox{[}\hyperlink{group__analog__input_ga3f128795c69a685d5e905c4117008271}{A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}\mbox{]}
+\item 
+uint8\-\_\-t \hyperlink{struct_analog___input__t_ab88d160dc09c608f10a13c1b4cc06885}{buffer\-Read\-Idx}
+\item 
+uint8\-\_\-t \hyperlink{struct_analog___input__t_af6dc1e03b08d833bcad0d2a9ddacb9b2}{buffer\-Write\-Idx}
+\item 
+\hyperlink{group__analog__input_ga99258f91accf55ecea49707692a3889b}{Analog\-Input\-Status\-\_\-t} \hyperlink{struct_analog___input__t_ad008fd04a92bd503317246b84bedf3bc}{status}
+\item 
+\hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} \hyperlink{struct_analog___input__t_ac2c90c98d6a3c3e9dcd1d462078add38}{buffer}
+\item 
+\hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} \hyperlink{struct_analog___input__t_a9eb75430d096aa3e9c2211f836ae0b88}{gain}
+\item 
+\hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} \hyperlink{struct_analog___input__t_a8b7d6ee501678613c98e13a2dfbf33b5}{rate}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 89 of file Analog\-\_\-\-Input.\-h.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{struct_analog___input__t_a6f1a4402ff8651dfc5e453b5e3154c2d}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!added@{added}}
+\index{added@{added}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{added}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Channel\-Added\-\_\-t} added}}\label{struct_analog___input__t_a6f1a4402ff8651dfc5e453b5e3154c2d}
+Addition status of the input. 
+
+Definition at line 90 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_ac2c90c98d6a3c3e9dcd1d462078add38}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!buffer@{buffer}}
+\index{buffer@{buffer}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{buffer}]{\setlength{\rightskip}{0pt plus 5cm}{\bf A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} buffer}}\label{struct_analog___input__t_ac2c90c98d6a3c3e9dcd1d462078add38}
+Analog buffer state to use. 
+
+Definition at line 102 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_ab88d160dc09c608f10a13c1b4cc06885}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!buffer\-Read\-Idx@{buffer\-Read\-Idx}}
+\index{buffer\-Read\-Idx@{buffer\-Read\-Idx}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{buffer\-Read\-Idx}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t buffer\-Read\-Idx}}\label{struct_analog___input__t_ab88d160dc09c608f10a13c1b4cc06885}
+The index of the buffer to read data from. 
+
+Definition at line 99 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_af6dc1e03b08d833bcad0d2a9ddacb9b2}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!buffer\-Write\-Idx@{buffer\-Write\-Idx}}
+\index{buffer\-Write\-Idx@{buffer\-Write\-Idx}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{buffer\-Write\-Idx}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t buffer\-Write\-Idx}}\label{struct_analog___input__t_af6dc1e03b08d833bcad0d2a9ddacb9b2}
+The index of the buffer to write data to. 
+
+Definition at line 100 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_abb199000d1f8af50de782aecf1f42108}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!external\-Input@{external\-Input}}
+\index{external\-Input@{external\-Input}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{external\-Input}]{\setlength{\rightskip}{0pt plus 5cm}External\-Muxed\-Input\-\_\-t external\-Input}}\label{struct_analog___input__t_abb199000d1f8af50de782aecf1f42108}
+If an external input, which channel. 
+
+Definition at line 92 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_a9eb75430d096aa3e9c2211f836ae0b88}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!gain@{gain}}
+\index{gain@{gain}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{gain}]{\setlength{\rightskip}{0pt plus 5cm}{\bf A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} gain}}\label{struct_analog___input__t_a9eb75430d096aa3e9c2211f836ae0b88}
+Gain setting to use for analog measurements. 
+
+Definition at line 103 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_a6a742e7de15fa168a904238051ba025e}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!internal\-Input@{internal\-Input}}
+\index{internal\-Input@{internal\-Input}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{internal\-Input}]{\setlength{\rightskip}{0pt plus 5cm}Internal\-Analog\-Input\-\_\-t internal\-Input}}\label{struct_analog___input__t_a6a742e7de15fa168a904238051ba025e}
+If an internal input, which channel. 
+
+Definition at line 93 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_accad1cdcd73e714badc388c3471bf33b}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!max@{max}}
+\index{max@{max}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{max}]{\setlength{\rightskip}{0pt plus 5cm}int32\-\_\-t max}}\label{struct_analog___input__t_accad1cdcd73e714badc388c3471bf33b}
+The high value of the allowable range of this input. 
+
+Definition at line 96 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_a0022b5ad7e496a802c64e3f6e0c2d8e1}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!min@{min}}
+\index{min@{min}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{min}]{\setlength{\rightskip}{0pt plus 5cm}int32\-\_\-t min}}\label{struct_analog___input__t_a0022b5ad7e496a802c64e3f6e0c2d8e1}
+The low value of the allowable range of this input. 
+
+Definition at line 95 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_a3a0b07d12d70fc1006109b23512b61fb}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!name@{name}}
+\index{name@{name}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}char name\mbox{[}{\bf M\-A\-X\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}}}\label{struct_analog___input__t_a3a0b07d12d70fc1006109b23512b61fb}
+Pointer to a C string name for this input. 
+
+Definition at line 94 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_a56b9dddfb002a9709f8591dd04c06db8}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!physical\-Input@{physical\-Input}}
+\index{physical\-Input@{physical\-Input}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{physical\-Input}]{\setlength{\rightskip}{0pt plus 5cm}Physical\-Analog\-Input\-\_\-t physical\-Input}}\label{struct_analog___input__t_a56b9dddfb002a9709f8591dd04c06db8}
+The physical input for this input. 
+
+Definition at line 91 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_a8b7d6ee501678613c98e13a2dfbf33b5}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!rate@{rate}}
+\index{rate@{rate}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{rate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} rate}}\label{struct_analog___input__t_a8b7d6ee501678613c98e13a2dfbf33b5}
+Sample rate to use for measurements. 
+
+Definition at line 104 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_ad008fd04a92bd503317246b84bedf3bc}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!status@{status}}
+\index{status@{status}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{status}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Analog\-Input\-Status\-\_\-t} status}}\label{struct_analog___input__t_ad008fd04a92bd503317246b84bedf3bc}
+The current status of this input. 
+
+Definition at line 101 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_a611ead9e1d73ef2c8cac3f7cc95b0c17}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!timestamps@{timestamps}}
+\index{timestamps@{timestamps}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{timestamps}]{\setlength{\rightskip}{0pt plus 5cm}uint64\-\_\-t timestamps\mbox{[}{\bf A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}\mbox{]}}}\label{struct_analog___input__t_a611ead9e1d73ef2c8cac3f7cc95b0c17}
+The timestamps of the measurements in U\-N\-I\-X epoch format. 
+
+Definition at line 98 of file Analog\-\_\-\-Input.\-h.
+
+\hypertarget{struct_analog___input__t_a5ec27e6ddaf65a4b494422578b93b246}{\index{Analog\-\_\-\-Input\-\_\-t@{Analog\-\_\-\-Input\-\_\-t}!values@{values}}
+\index{values@{values}!Analog_Input_t@{Analog\-\_\-\-Input\-\_\-t}}
+\subsubsection[{values}]{\setlength{\rightskip}{0pt plus 5cm}int32\-\_\-t values\mbox{[}{\bf A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}\mbox{]}}}\label{struct_analog___input__t_a5ec27e6ddaf65a4b494422578b93b246}
+The recorded values of this input (A\-D\-C Counts). 
+
+Definition at line 97 of file Analog\-\_\-\-Input.\-h.
+
+
+
+The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_analog___input_8h}{Analog\-\_\-\-Input.\-h}\end{DoxyCompactItemize}

@@ -1,0 +1,107 @@
+\hypertarget{_tekdaqc___locator_8c}{\section{Tekdaqc\-\_\-\-Locator.\-c File Reference}
+\label{_tekdaqc___locator_8c}\index{Tekdaqc\-\_\-\-Locator.\-c@{Tekdaqc\-\_\-\-Locator.\-c}}
+}
+
+
+Allows for discovery of a Tekdaqc on an Ethernet network.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Locator.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Telnet\-Server.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-B\-S\-P.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lwip/udp.\-h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_tekdaqc___locator_8c_a1c00feb154f59a515e12382b816678da}{C\-M\-D\-\_\-\-D\-I\-S\-C\-O\-V\-E\-R\-\_\-\-T\-A\-R\-G\-E\-T}~((uint8\-\_\-t) 0x02)
+\begin{DoxyCompactList}\small\item\em Encodes a response as being a locator status response. \end{DoxyCompactList}\item 
+\#define \hyperlink{_tekdaqc___locator_8c_ab46e92a2b73bcc701b497bed347d410c}{L\-O\-C\-A\-T\-O\-R\-\_\-\-D\-A\-T\-A\-\_\-\-L\-E\-N\-G\-T\-H}~115\-U
+\begin{DoxyCompactList}\small\item\em The length of the data packet returned. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tekdaqc__locator_ga99090049c7556abdcff2bad0dfdf78af}{Tekdaqc\-\_\-\-Locator\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc locator service. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga668d2bf16094e0046055c231a3c2174c}{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set} (uint8\-\_\-t type)
+\begin{DoxyCompactList}\small\item\em Sets the board type in the locator response packet. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}{void \hyperlink{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}{Tekdaqc\-\_\-\-Locator\-Board\-I\-D\-Set} (const unsigned char $\ast$id)}\label{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}
+
+\begin{DoxyCompactList}\small\item\em Sets the board I\-D in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga841da02fec8e79caad0f1d3db9a7af73}{Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set} (uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em Sets the client I\-P address in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_gaedcc9e5e10826ca40b253bdc274e65cf}{Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set} (const unsigned char M\-A\-C\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Sets the M\-A\-C address in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga852fe5c43e378a8621913254a3e00bd1}{Tekdaqc\-\_\-\-Locator\-Version\-Set} (uint32\-\_\-t version)
+\begin{DoxyCompactList}\small\item\em Sets the firmware version in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{_tekdaqc___locator_8c_a9404d8297647f20b2c1cf4736380c4ee}{Locator\-App\-Title\-Set} (const unsigned char $\ast$title)
+\item 
+uint8\-\_\-t \hyperlink{group__tekdaqc__locator_ga573f8960093dc2ab0cc4c88b8f8c6ff9}{Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board type from the locator packet data. \end{DoxyCompactList}\item 
+unsigned char $\ast$ \hyperlink{group__tekdaqc__locator_gae38557024fc843c693d4b6f2cdb5d097}{Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board I\-D from the locator packet data. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{group__tekdaqc__locator_gaf8eaedaeca86f0d5c7af113faebe16a0}{Tekdaqc\-\_\-\-Get\-Locator\-Ip} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board I\-P address from the locator packet data. \end{DoxyCompactList}\item 
+unsigned char $\ast$ \hyperlink{group__tekdaqc__locator_ga03c9656c9876829e12f617d4e4abef04}{Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board M\-A\-C address from the locator packet data. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{group__tekdaqc__locator_ga502ebd4cceffc0fa3a7abefc7f79b42a}{Tekdaqc\-\_\-\-Get\-Locator\-Version} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board firmware version from the locator packet data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The locator listens for specially formatted U\-D\-P packets
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_tekdaqc___locator_8c_source}{Tekdaqc\-\_\-\-Locator.\-c}.
+
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{_tekdaqc___locator_8c_a1c00feb154f59a515e12382b816678da}{\index{Tekdaqc\-\_\-\-Locator.\-c@{Tekdaqc\-\_\-\-Locator.\-c}!C\-M\-D\-\_\-\-D\-I\-S\-C\-O\-V\-E\-R\-\_\-\-T\-A\-R\-G\-E\-T@{C\-M\-D\-\_\-\-D\-I\-S\-C\-O\-V\-E\-R\-\_\-\-T\-A\-R\-G\-E\-T}}
+\index{C\-M\-D\-\_\-\-D\-I\-S\-C\-O\-V\-E\-R\-\_\-\-T\-A\-R\-G\-E\-T@{C\-M\-D\-\_\-\-D\-I\-S\-C\-O\-V\-E\-R\-\_\-\-T\-A\-R\-G\-E\-T}!Tekdaqc_Locator.c@{Tekdaqc\-\_\-\-Locator.\-c}}
+\subsubsection[{C\-M\-D\-\_\-\-D\-I\-S\-C\-O\-V\-E\-R\-\_\-\-T\-A\-R\-G\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\-M\-D\-\_\-\-D\-I\-S\-C\-O\-V\-E\-R\-\_\-\-T\-A\-R\-G\-E\-T~((uint8\-\_\-t) 0x02)}}\label{_tekdaqc___locator_8c_a1c00feb154f59a515e12382b816678da}
+Encodes a response as being a discovery target.
+
+Definition at line 51 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{_tekdaqc___locator_8c_ab46e92a2b73bcc701b497bed347d410c}{\index{Tekdaqc\-\_\-\-Locator.\-c@{Tekdaqc\-\_\-\-Locator.\-c}!L\-O\-C\-A\-T\-O\-R\-\_\-\-D\-A\-T\-A\-\_\-\-L\-E\-N\-G\-T\-H@{L\-O\-C\-A\-T\-O\-R\-\_\-\-D\-A\-T\-A\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{L\-O\-C\-A\-T\-O\-R\-\_\-\-D\-A\-T\-A\-\_\-\-L\-E\-N\-G\-T\-H@{L\-O\-C\-A\-T\-O\-R\-\_\-\-D\-A\-T\-A\-\_\-\-L\-E\-N\-G\-T\-H}!Tekdaqc_Locator.c@{Tekdaqc\-\_\-\-Locator.\-c}}
+\subsubsection[{L\-O\-C\-A\-T\-O\-R\-\_\-\-D\-A\-T\-A\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\-O\-C\-A\-T\-O\-R\-\_\-\-D\-A\-T\-A\-\_\-\-L\-E\-N\-G\-T\-H~115\-U}}\label{_tekdaqc___locator_8c_ab46e92a2b73bcc701b497bed347d410c}
+
+
+Definition at line 58 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{_tekdaqc___locator_8c_a9404d8297647f20b2c1cf4736380c4ee}{\index{Tekdaqc\-\_\-\-Locator.\-c@{Tekdaqc\-\_\-\-Locator.\-c}!Locator\-App\-Title\-Set@{Locator\-App\-Title\-Set}}
+\index{Locator\-App\-Title\-Set@{Locator\-App\-Title\-Set}!Tekdaqc_Locator.c@{Tekdaqc\-\_\-\-Locator.\-c}}
+\subsubsection[{Locator\-App\-Title\-Set}]{\setlength{\rightskip}{0pt plus 5cm}void Locator\-App\-Title\-Set (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{title}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___locator_8c_a9404d8297647f20b2c1cf4736380c4ee}
+This function sets the application title in the locator response packet. The string is truncated at 64 characters if it is longer (without a terminating 0), and is zero-\/filled to 64 characters if it is shorter.
+
+
+\begin{DoxyParams}{Parameters}
+{\em title} & const char$\ast$ Pointer to a C-\/\-String containing the application title string. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 300 of file Tekdaqc\-\_\-\-Locator.\-c.
+

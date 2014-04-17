@@ -1,0 +1,71 @@
+\hypertarget{struct_calibration_state__t}{\section{Calibration\-State\-\_\-t Struct Reference}
+\label{struct_calibration_state__t}\index{Calibration\-State\-\_\-t@{Calibration\-State\-\_\-t}}
+}
+
+
+Data structure for keeping track of the current state of the calibration process.  
+
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint8\-\_\-t \hyperlink{struct_calibration_state__t_a1726d9a3d7daf8e1b958e6a6b808a9de}{gain\-\_\-index}
+\item 
+uint8\-\_\-t \hyperlink{struct_calibration_state__t_a0f6cfefaa997e30d150fb53ceeb28d57}{rate\-\_\-index}
+\item 
+uint8\-\_\-t \hyperlink{struct_calibration_state__t_a2359bfa4a10109d5dcc2e002cb8ece47}{buffer\-\_\-index}
+\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{struct_calibration_state__t_a9324389a5cdc532c6417a87ccafe18ce}{finished}
+\item 
+uint8\-\_\-t \hyperlink{struct_calibration_state__t_adf2e3081566a821fce9f314e5d5348cc}{finished\-\_\-count}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The Tekdaqc uses this data structure to keep track of the current state of its calibration process, which includes both offset and gain calibrations. 
+
+Definition at line 59 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{struct_calibration_state__t_a2359bfa4a10109d5dcc2e002cb8ece47}{\index{Calibration\-State\-\_\-t@{Calibration\-State\-\_\-t}!buffer\-\_\-index@{buffer\-\_\-index}}
+\index{buffer\-\_\-index@{buffer\-\_\-index}!CalibrationState_t@{Calibration\-State\-\_\-t}}
+\subsubsection[{buffer\-\_\-index}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t buffer\-\_\-index}}\label{struct_calibration_state__t_a2359bfa4a10109d5dcc2e002cb8ece47}
+The index of the current buffer setting being calibrated. 
+
+Definition at line 62 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{struct_calibration_state__t_a9324389a5cdc532c6417a87ccafe18ce}{\index{Calibration\-State\-\_\-t@{Calibration\-State\-\_\-t}!finished@{finished}}
+\index{finished@{finished}!CalibrationState_t@{Calibration\-State\-\_\-t}}
+\subsubsection[{finished}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} finished}}\label{struct_calibration_state__t_a9324389a5cdc532c6417a87ccafe18ce}
+T\-R\-U\-E if the particular calibration set has completed. Note that this is not the entire process. 
+
+Definition at line 63 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{struct_calibration_state__t_adf2e3081566a821fce9f314e5d5348cc}{\index{Calibration\-State\-\_\-t@{Calibration\-State\-\_\-t}!finished\-\_\-count@{finished\-\_\-count}}
+\index{finished\-\_\-count@{finished\-\_\-count}!CalibrationState_t@{Calibration\-State\-\_\-t}}
+\subsubsection[{finished\-\_\-count}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t finished\-\_\-count}}\label{struct_calibration_state__t_adf2e3081566a821fce9f314e5d5348cc}
+The number of calibration sets which have completed. 
+
+Definition at line 64 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{struct_calibration_state__t_a1726d9a3d7daf8e1b958e6a6b808a9de}{\index{Calibration\-State\-\_\-t@{Calibration\-State\-\_\-t}!gain\-\_\-index@{gain\-\_\-index}}
+\index{gain\-\_\-index@{gain\-\_\-index}!CalibrationState_t@{Calibration\-State\-\_\-t}}
+\subsubsection[{gain\-\_\-index}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t gain\-\_\-index}}\label{struct_calibration_state__t_a1726d9a3d7daf8e1b958e6a6b808a9de}
+The index of the current gain setting being calibrated. 
+
+Definition at line 60 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{struct_calibration_state__t_a0f6cfefaa997e30d150fb53ceeb28d57}{\index{Calibration\-State\-\_\-t@{Calibration\-State\-\_\-t}!rate\-\_\-index@{rate\-\_\-index}}
+\index{rate\-\_\-index@{rate\-\_\-index}!CalibrationState_t@{Calibration\-State\-\_\-t}}
+\subsubsection[{rate\-\_\-index}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t rate\-\_\-index}}\label{struct_calibration_state__t_a0f6cfefaa997e30d150fb53ceeb28d57}
+The index of the current rate setting being calibrated. 
+
+Definition at line 61 of file A\-D\-C\-\_\-\-State\-Machine.\-c.
+
+
+
+The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_a_d_c___state_machine_8c}{A\-D\-C\-\_\-\-State\-Machine.\-c}\end{DoxyCompactItemize}

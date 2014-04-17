@@ -30,11 +30,11 @@ var NAVTREEINDEX =
 "_a_d_c___state_machine_8c.html",
 "_a_d_s1256___driver_8h.html#ggab0437f81aad031aadf3e05dd5fe0a731a0f9109a1a40838123ccd55e1af90a3e6",
 "_digital___output_8h.html#ga514fc5ac6ead9d3aee8ae8fc8188a1d3",
-"_tekdaqc___calibration_table_8h.html#a180d881a8974f106b80ea5c1a88e2ae0",
-"_tekdaqc___locator_8c.html#gaf8eaedaeca86f0d5c7af113faebe16a0",
-"group__ads1256__driver.html#ga612ca0b8927aa0580401813ee278348b",
-"group__command__interpreter.html#gade511743b3ecf569a2e74c1b14291a5b",
-"group__telnet__server.html#ga8b600918f84783490fd791ce773175ab"
+"_tekdaqc___calibration_table_8c_source.html",
+"_tekdaqc___locator_8c.html#ga841da02fec8e79caad0f1d3db9a7af73",
+"group__ads1256__driver.html#ga55a9f5e79ef35937961a7ec254558010",
+"group__command__interpreter.html#gac5a3a40f966d23af1d572909c1d8e952",
+"group__telnet__server.html#ga6509e0047d80aea0570ec903a1e10887"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,0 +1,44 @@
+\hypertarget{_d_i___state_machine_8c}{\section{D\-I\-\_\-\-State\-Machine.\-c File Reference}
+\label{_d_i___state_machine_8c}\index{D\-I\-\_\-\-State\-Machine.\-c@{D\-I\-\_\-\-State\-Machine.\-c}}
+}
+
+
+State machine for the digital input system of the board.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}D\-I\-\_\-\-State\-Machine.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Command\-State.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Telnet\-Server.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__di__statemachine_ga5f2cfe7443234cdadb81a5b221975fa4}{D\-I\-\_\-\-Machine\-\_\-\-Create} (void)
+\begin{DoxyCompactList}\small\item\em Create the digital input state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gaf2587f28e9c969fde047cd11b6042f2b}{D\-I\-\_\-\-Machine\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the digital input state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gaab31cdbb772e1aaadfef389a7e54012f}{D\-I\-\_\-\-Machine\-\_\-\-Service} (void)
+\begin{DoxyCompactList}\small\item\em Perform a periodic service of the state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_ga0e3f0f8603501b5ff86cd5e849d97cad}{D\-I\-\_\-\-Machine\-\_\-\-Halt} (void)
+\begin{DoxyCompactList}\small\item\em Halt any current operations and return the idle state. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gaa8df31aa65e69cb9e81cdcb11e942001}{D\-I\-\_\-\-Machine\-\_\-\-Idle} (void)
+\begin{DoxyCompactList}\small\item\em Idle state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gac2e52e7ee418f5ee8301fbf6baecd207}{D\-I\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample} (\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$$\ast$inputs, uint32\-\_\-t count, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} single\-Channel)
+\begin{DoxyCompactList}\small\item\em Input sampling state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gad16cfcc75eda3999dc6605770b0ea4d7}{D\-I\-\_\-\-Machine\-\_\-\-Reset} (void)
+\begin{DoxyCompactList}\small\item\em Reset state handler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implements a state machine used for time slicing tasks on the processor. In this way this file encapsulates a very basic thread emulation.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_d_i___state_machine_8c_source}{D\-I\-\_\-\-State\-Machine.\-c}.
+

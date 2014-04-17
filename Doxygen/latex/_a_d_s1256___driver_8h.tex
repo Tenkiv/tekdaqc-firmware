@@ -1,0 +1,374 @@
+\hypertarget{_a_d_s1256___driver_8h}{\section{A\-D\-S1256\-\_\-\-Driver.\-h File Reference}
+\label{_a_d_s1256___driver_8h}\index{A\-D\-S1256\-\_\-\-Driver.\-h@{A\-D\-S1256\-\_\-\-Driver.\-h}}
+}
+
+
+Header file for the A\-D\-S1256 A\-D\-C driver.  
+
+
+{\ttfamily \#include \char`\"{}stm32f4xx.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\-D\-S1256\-\_\-\-S\-P\-I\-\_\-\-Controller.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__ads1256__driver_gab7331aa24935fc439a7064538cd16db5}{\#define \hyperlink{group__ads1256__driver_gab7331aa24935fc439a7064538cd16db5}{A\-D\-S1256\-\_\-\-D\-U\-M\-M\-Y\-\_\-\-B\-Y\-T\-E}~((uint8\-\_\-t) 0x00)}\label{group__ads1256__driver_gab7331aa24935fc439a7064538cd16db5}
+
+\begin{DoxyCompactList}\small\item\em The padding value to send over S\-P\-I when reading data from the A\-D\-S1256. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_ga8836defa503977dda06238596f6bb8e3}{\#define \hyperlink{group__status__register_ga8836defa503977dda06238596f6bb8e3}{A\-D\-S1256\-\_\-\-D\-R\-D\-Y\-\_\-\-B\-I\-T}~0}\label{group__status__register_ga8836defa503977dda06238596f6bb8e3}
+
+\begin{DoxyCompactList}\small\item\em The data ready bit starting position in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_ga39195cf60d4a91b0b61a5461ed1a5a67}{\#define \hyperlink{group__status__register_ga39195cf60d4a91b0b61a5461ed1a5a67}{A\-D\-S1256\-\_\-\-D\-R\-D\-Y\-\_\-\-S\-P\-A\-N}~1}\label{group__status__register_ga39195cf60d4a91b0b61a5461ed1a5a67}
+
+\begin{DoxyCompactList}\small\item\em The data ready bit count in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_ga2cbdb7cbaac91a12c2818e87b97a4906}{\#define \hyperlink{group__status__register_ga2cbdb7cbaac91a12c2818e87b97a4906}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-N\-\_\-\-B\-I\-T}~1}\label{group__status__register_ga2cbdb7cbaac91a12c2818e87b97a4906}
+
+\begin{DoxyCompactList}\small\item\em The analog buffer enable bit starting position in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_gae477a7ad4b56f4a0579a674f5ef44d26}{\#define \hyperlink{group__status__register_gae477a7ad4b56f4a0579a674f5ef44d26}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-N\-\_\-\-S\-P\-A\-N}~1}\label{group__status__register_gae477a7ad4b56f4a0579a674f5ef44d26}
+
+\begin{DoxyCompactList}\small\item\em The analog buffer enable bit count in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_ga94588026849071dfdf4bacbdbf24976a}{\#define \hyperlink{group__status__register_ga94588026849071dfdf4bacbdbf24976a}{A\-D\-S1256\-\_\-\-A\-C\-A\-L\-\_\-\-B\-I\-T}~2}\label{group__status__register_ga94588026849071dfdf4bacbdbf24976a}
+
+\begin{DoxyCompactList}\small\item\em The automatic calibration enable bit starting position in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_gacccdeffab4e1942cec3794851ef228c7}{\#define \hyperlink{group__status__register_gacccdeffab4e1942cec3794851ef228c7}{A\-D\-S1256\-\_\-\-A\-C\-A\-L\-\_\-\-S\-P\-A\-N}~1}\label{group__status__register_gacccdeffab4e1942cec3794851ef228c7}
+
+\begin{DoxyCompactList}\small\item\em The automatic calibration enable bit count in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_ga295221d00dc4ae777c591ffdbc7f8922}{\#define \hyperlink{group__status__register_ga295221d00dc4ae777c591ffdbc7f8922}{A\-D\-S1256\-\_\-\-O\-R\-D\-E\-R\-\_\-\-B\-I\-T}~3}\label{group__status__register_ga295221d00dc4ae777c591ffdbc7f8922}
+
+\begin{DoxyCompactList}\small\item\em The data output order bit starting position in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_gaa07ca51df9b9ce477186cf92d331a59c}{\#define \hyperlink{group__status__register_gaa07ca51df9b9ce477186cf92d331a59c}{A\-D\-S1256\-\_\-\-O\-R\-D\-E\-R\-\_\-\-S\-P\-A\-N}~1}\label{group__status__register_gaa07ca51df9b9ce477186cf92d331a59c}
+
+\begin{DoxyCompactList}\small\item\em The data output order bit count in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_ga14da33a69f54e320a00c3e33e9dcf44a}{\#define \hyperlink{group__status__register_ga14da33a69f54e320a00c3e33e9dcf44a}{A\-D\-S1256\-\_\-\-I\-D\-\_\-\-B\-I\-T}~4}\label{group__status__register_ga14da33a69f54e320a00c3e33e9dcf44a}
+
+\begin{DoxyCompactList}\small\item\em The factory programmed I\-D bit starting position in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__status__register_ga4b89c536e185cfdbd9fa248a3e3772b7}{\#define \hyperlink{group__status__register_ga4b89c536e185cfdbd9fa248a3e3772b7}{A\-D\-S1256\-\_\-\-I\-D\-\_\-\-S\-P\-A\-N}~4}\label{group__status__register_ga4b89c536e185cfdbd9fa248a3e3772b7}
+
+\begin{DoxyCompactList}\small\item\em The factory programmed I\-D bit count in the S\-T\-A\-T\-U\-S register. \end{DoxyCompactList}\item 
+\hypertarget{group__adcon__register_ga5c128ef483f3f73486edc0926cfdd489}{\#define \hyperlink{group__adcon__register_ga5c128ef483f3f73486edc0926cfdd489}{A\-D\-S1256\-\_\-\-C\-O\-\_\-\-B\-I\-T}~((uint8\-\_\-t) 5)}\label{group__adcon__register_ga5c128ef483f3f73486edc0926cfdd489}
+
+\begin{DoxyCompactList}\small\item\em The clock out setting bit starting position in the A\-D\-C\-O\-N register. \end{DoxyCompactList}\item 
+\hypertarget{group__adcon__register_gaca76a3e75786c24c21dcc1f8b95d3c8f}{\#define \hyperlink{group__adcon__register_gaca76a3e75786c24c21dcc1f8b95d3c8f}{A\-D\-S1256\-\_\-\-C\-O\-\_\-\-S\-P\-A\-N}~((uint8\-\_\-t) 2)}\label{group__adcon__register_gaca76a3e75786c24c21dcc1f8b95d3c8f}
+
+\begin{DoxyCompactList}\small\item\em The clock out setting bit count in the A\-D\-C\-O\-N register. \end{DoxyCompactList}\item 
+\hypertarget{group__adcon__register_gae9ac3d875a51151679aa3bb5de911286}{\#define \hyperlink{group__adcon__register_gae9ac3d875a51151679aa3bb5de911286}{A\-D\-S1256\-\_\-\-S\-D\-\_\-\-B\-I\-T}~((uint8\-\_\-t) 3)}\label{group__adcon__register_gae9ac3d875a51151679aa3bb5de911286}
+
+\begin{DoxyCompactList}\small\item\em The sensor detect current setting bit starting position in the A\-D\-C\-O\-N register. \end{DoxyCompactList}\item 
+\hypertarget{group__adcon__register_ga7ccaedf1fc3255f7701cf9512d500a42}{\#define \hyperlink{group__adcon__register_ga7ccaedf1fc3255f7701cf9512d500a42}{A\-D\-S1256\-\_\-\-S\-D\-\_\-\-S\-P\-A\-N}~((uint8\-\_\-t) 2)}\label{group__adcon__register_ga7ccaedf1fc3255f7701cf9512d500a42}
+
+\begin{DoxyCompactList}\small\item\em The sensor detect current setting bit count in the A\-D\-C\-O\-N register. \end{DoxyCompactList}\item 
+\hypertarget{group__adcon__register_ga331593eda0ade15ce934f8d2188e0f4f}{\#define \hyperlink{group__adcon__register_ga331593eda0ade15ce934f8d2188e0f4f}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-\-B\-I\-T}~((uint8\-\_\-t) 0)}\label{group__adcon__register_ga331593eda0ade15ce934f8d2188e0f4f}
+
+\begin{DoxyCompactList}\small\item\em The programmable gain amplifier setting bit starting position in the A\-D\-C\-O\-N register. \end{DoxyCompactList}\item 
+\hypertarget{group__adcon__register_ga04102c89838c33a2da9fb44d71c9ce16}{\#define \hyperlink{group__adcon__register_ga04102c89838c33a2da9fb44d71c9ce16}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-\-S\-P\-A\-N}~((uint8\-\_\-t) 3)}\label{group__adcon__register_ga04102c89838c33a2da9fb44d71c9ce16}
+
+\begin{DoxyCompactList}\small\item\em The programmable gain amplifier setting bit count in the A\-D\-C\-O\-N register. \end{DoxyCompactList}\item 
+\hypertarget{group__io__register_ga79e29004c3a9381caf716a834ad58426}{\#define \hyperlink{group__io__register_ga79e29004c3a9381caf716a834ad58426}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-D\-I\-R\-\_\-\-O\-F\-F\-S\-E\-T}~4}\label{group__io__register_ga79e29004c3a9381caf716a834ad58426}
+
+\begin{DoxyCompactList}\small\item\em Offset in the I\-O register to the direction bits. \end{DoxyCompactList}\item 
+\hypertarget{group__io__register_gaae5e18a5051bc2b7c8f7ff4237edae2a}{\#define \hyperlink{group__io__register_gaae5e18a5051bc2b7c8f7ff4237edae2a}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-B\-I\-T\-\_\-\-S\-P\-A\-N}~1}\label{group__io__register_gaae5e18a5051bc2b7c8f7ff4237edae2a}
+
+\begin{DoxyCompactList}\small\item\em The bit count for one G\-P\-I\-O pin int the I\-O register. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_ga655fb9a3125b65a0275bab57496008d3}{\#define \hyperlink{group__ads1256__driver_ga655fb9a3125b65a0275bab57496008d3}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-A\-I\-N\-\_\-\-S\-E\-T\-T\-I\-N\-G}(A\-I\-N)}\label{group__ads1256__driver_ga655fb9a3125b65a0275bab57496008d3}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a valid analog input channel. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_ga33886a7717bd57bc4c1adc81dd78f4d5}{\#define \hyperlink{group__ads1256__driver_ga33886a7717bd57bc4c1adc81dd78f4d5}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-C\-L\-O\-C\-K\-O\-U\-T\-\_\-\-S\-E\-T\-T\-I\-N\-G}(C\-L\-K)}\label{group__ads1256__driver_ga33886a7717bd57bc4c1adc81dd78f4d5}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a valid clock out rate. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_ga6b5e19fd414526c448625765505d8b8c}{\#define \hyperlink{group__ads1256__driver_ga6b5e19fd414526c448625765505d8b8c}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-S\-E\-N\-S\-O\-R\-\_\-\-D\-E\-T\-E\-C\-T\-\_\-\-S\-E\-T\-T\-I\-N\-G}(S\-E\-N)}\label{group__ads1256__driver_ga6b5e19fd414526c448625765505d8b8c}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a valid sensor detect current output. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_gafbb63ded07f35a486351c82902a33b8c}{\#define \hyperlink{group__ads1256__driver_gafbb63ded07f35a486351c82902a33b8c}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-\-S\-E\-T\-T\-I\-N\-G}(P\-G\-A)}\label{group__ads1256__driver_gafbb63ded07f35a486351c82902a33b8c}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a valid gain setting. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_gabe0b1d880e2de683730c16b5e90464b2}{\#define \hyperlink{group__ads1256__driver_gabe0b1d880e2de683730c16b5e90464b2}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-\-S\-E\-T\-T\-I\-N\-G}(S\-P\-S)}\label{group__ads1256__driver_gabe0b1d880e2de683730c16b5e90464b2}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a valid data rate setting. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_ga06f377fb5b5b3d2ab93060ec6c9e3c61}{\#define \hyperlink{group__ads1256__driver_ga06f377fb5b5b3d2ab93060ec6c9e3c61}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-D\-I\-R\-\_\-\-S\-E\-T\-T\-I\-N\-G}(D\-I\-R)}\label{group__ads1256__driver_ga06f377fb5b5b3d2ab93060ec6c9e3c61}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a valid G\-P\-I\-O direction state. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_ga020698e4651ad6159ff7805f0a933562}{\#define \hyperlink{group__ads1256__driver_ga020698e4651ad6159ff7805f0a933562}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-V\-A\-L\-U\-E}(V\-A\-L)}\label{group__ads1256__driver_ga020698e4651ad6159ff7805f0a933562}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a valid G\-P\-I\-O state. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_gaebc1a1a44c11e1f5ee2281f10e7577f7}{\#define \hyperlink{group__ads1256__driver_gaebc1a1a44c11e1f5ee2281f10e7577f7}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R}(R\-E\-G)}\label{group__ads1256__driver_gaebc1a1a44c11e1f5ee2281f10e7577f7}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a valid register of the A\-D\-S1256. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_ga55a9f5e79ef35937961a7ec254558010}{\#define \hyperlink{group__ads1256__driver_ga55a9f5e79ef35937961a7ec254558010}{I\-S\-\_\-\-A\-D\-S1256\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-\_\-\-C\-O\-M\-M\-A\-N\-D}(C\-M\-D)}\label{group__ads1256__driver_ga55a9f5e79ef35937961a7ec254558010}
+
+\begin{DoxyCompactList}\small\item\em Checks that the specified value is a special register command of the A\-D\-S1256. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__ads1256__driver_gaf437774eb0db277a2916b6322213b449}{A\-D\-S1256\-\_\-\-D\-A\-T\-A\-\_\-\-R\-E\-A\-D\-Y\-\_\-t} \{ \hyperlink{group__ads1256__driver_ggaf437774eb0db277a2916b6322213b449a0487f4550f3178d69a29cde93e86918c}{A\-D\-S1256\-\_\-\-D\-A\-T\-A\-\_\-\-R\-E\-A\-D\-Y} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_ggaf437774eb0db277a2916b6322213b449a86cfc530dfe000eea81833322610a507}{A\-D\-S1256\-\_\-\-D\-A\-T\-A\-\_\-\-N\-O\-T\-R\-E\-A\-D\-Y} = ((uint8\-\_\-t) 0x01)
+ \}
+\begin{DoxyCompactList}\small\item\em Data ready flag enumeration. Defines the two possible states of the A\-D\-S1256 data ready flag. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} \{ \hyperlink{group__ads1256__driver_gga12f71f8fc93fe63fb3c855ddd2070890ab96fff9524e97e03826453e744f85e92}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-D\-I\-S\-A\-B\-L\-E\-D} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_gga12f71f8fc93fe63fb3c855ddd2070890a5e401084d351163377c60d8e4e2a50c1}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-E\-N\-A\-B\-L\-E\-D} = ((uint8\-\_\-t) 0x01)
+ \}
+\begin{DoxyCompactList}\small\item\em Analog input buffer flag enumeration. Defines the two possible states of the A\-D\-S1256 analog input buffer flag. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_ga17864ca559c443a262068f0d19406113}{A\-D\-S1256\-\_\-\-A\-C\-A\-L\-\_\-t} \{ \hyperlink{group__ads1256__driver_gga17864ca559c443a262068f0d19406113a1d47eab8dbc92c3879643572738ab3fb}{A\-D\-S1256\-\_\-\-A\-C\-A\-L\-\_\-\-D\-I\-S\-A\-B\-L\-E\-D} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_gga17864ca559c443a262068f0d19406113a79c968fa3703df5e7e03262dad11fc77}{A\-D\-S1256\-\_\-\-A\-C\-A\-L\-\_\-\-E\-N\-A\-B\-L\-E\-D} = ((uint8\-\_\-t) 0x01)
+ \}
+\begin{DoxyCompactList}\small\item\em Automatic calibration flag enumeration. Defines the two possible states of the A\-D\-S1256 automatic calibration flag. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_ga3615e2e1ba70971dcdd5f7e54ffe5606}{A\-D\-S1256\-\_\-\-O\-R\-D\-E\-R\-\_\-t} \{ \hyperlink{group__ads1256__driver_gga3615e2e1ba70971dcdd5f7e54ffe5606ad87274f158f6a5534bb84cb4c75ac3e7}{A\-D\-S1256\-\_\-\-M\-S\-B\-\_\-\-F\-I\-R\-S\-T} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_gga3615e2e1ba70971dcdd5f7e54ffe5606a1ec7c8b9391d0c09ca557ad0c5aab861}{A\-D\-S1256\-\_\-\-L\-S\-B\-\_\-\-F\-I\-R\-S\-T} = ((uint8\-\_\-t) 0x01)
+ \}
+\begin{DoxyCompactList}\small\item\em Data output order flag enumeration. Defines the two possible states of the A\-D\-S1256 data output order flag. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_ga7eac069c538033668b7baeca198def8f}{A\-D\-S1256\-\_\-\-A\-I\-N\-\_\-t} \{ \\*
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8fa47239a420bad562940da8a369ba7ef02}{A\-D\-S1256\-\_\-\-A\-I\-N0} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8fa20686f8f3555bdf3074706ea7a0dbf56}{A\-D\-S1256\-\_\-\-A\-I\-N1} = ((uint8\-\_\-t) 0x01), 
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8fab4bbf5219baf9f5eadad4f04f97b7226}{A\-D\-S1256\-\_\-\-A\-I\-N2} = ((uint8\-\_\-t) 0x02), 
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8fa7517493ec2ddb093570dea22b2adc827}{A\-D\-S1256\-\_\-\-A\-I\-N3} = ((uint8\-\_\-t) 0x03), 
+\\*
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8faf4eebd8a33f7e323adb2a7c6cb1c0097}{A\-D\-S1256\-\_\-\-A\-I\-N4} = ((uint8\-\_\-t) 0x04), 
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8fa8aab4ff09924f28f86c95871f3a7469b}{A\-D\-S1256\-\_\-\-A\-I\-N5} = ((uint8\-\_\-t) 0x05), 
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8fa3759a4dbba9fcbb227181834597784c3}{A\-D\-S1256\-\_\-\-A\-I\-N6} = ((uint8\-\_\-t) 0x06), 
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8fa8fea766eea050739d6fbc1718f2a9d72}{A\-D\-S1256\-\_\-\-A\-I\-N7} = ((uint8\-\_\-t) 0x07), 
+\\*
+\hyperlink{group__ads1256__driver_gga7eac069c538033668b7baeca198def8fada4ab8d72cb9bd115ba94655dd0ff0c1}{A\-D\-S1256\-\_\-\-A\-I\-N\-\_\-\-C\-O\-M} = ((uint8\-\_\-t) 0x08)
+ \}
+\begin{DoxyCompactList}\small\item\em Analog input channel enumeration. Defines the register values for each analog input selectable by the A\-D\-S1256's multiplexer. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_ga2d683909a58aa0617ee7c5d06d0a489f}{A\-D\-S1256\-\_\-\-C\-L\-O\-C\-K\-\_\-\-O\-U\-T\-\_\-t} \{ \hyperlink{group__ads1256__driver_gga2d683909a58aa0617ee7c5d06d0a489fa916ced2e355d66e2d3a92b8c2a0b7ec0}{A\-D\-S1256\-\_\-\-C\-L\-O\-C\-K\-\_\-\-O\-U\-T\-\_\-\-O\-F\-F} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_gga2d683909a58aa0617ee7c5d06d0a489fa8647029ebfcad85600d3ffcae0dc476c}{A\-D\-S1256\-\_\-\-C\-L\-O\-C\-K\-\_\-\-O\-U\-T\-\_\-\-F} = ((uint8\-\_\-t) 0x01), 
+\hyperlink{group__ads1256__driver_gga2d683909a58aa0617ee7c5d06d0a489fa3e9c4c939f623dbf12efa9b029d9ce8b}{A\-D\-S1256\-\_\-\-C\-L\-O\-C\-K\-\_\-\-O\-U\-T\-\_\-\-F2} = ((uint8\-\_\-t) 0x02), 
+\hyperlink{group__ads1256__driver_gga2d683909a58aa0617ee7c5d06d0a489fa0bfbba7f2973a961feca70e5c3ecf7f2}{A\-D\-S1256\-\_\-\-C\-L\-O\-C\-K\-\_\-\-O\-U\-T\-\_\-\-F4} = ((uint8\-\_\-t) 0x03)
+ \}
+\begin{DoxyCompactList}\small\item\em Clock out frequency setting enumeration. Defines the different possible clock out rates of the A\-D\-S1256. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_gaa3102e98865ba4e72463676779cd62d4}{A\-D\-S1256\-\_\-\-S\-E\-N\-S\-O\-R\-\_\-\-D\-E\-T\-E\-C\-T\-\_\-t} \{ \hyperlink{group__ads1256__driver_ggaa3102e98865ba4e72463676779cd62d4a916890dc39cbdbb4bc7eb2b83df10810}{A\-D\-S1256\-\_\-\-S\-D\-\_\-\-O\-F\-F} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_ggaa3102e98865ba4e72463676779cd62d4a3157602ce936edb0fe99427c78815ced}{A\-D\-S1256\-\_\-\-S\-D\-C\-\_\-0\-\_\-5} = ((uint8\-\_\-t) 0x01), 
+\hyperlink{group__ads1256__driver_ggaa3102e98865ba4e72463676779cd62d4a9d3134a67a27b194dbaed692d7266e2e}{A\-D\-S1256\-\_\-\-S\-D\-C\-\_\-2} = ((uint8\-\_\-t) 0x02), 
+\hyperlink{group__ads1256__driver_ggaa3102e98865ba4e72463676779cd62d4a3c2671f14301baa37c7ec1397068037e}{A\-D\-S1256\-\_\-\-S\-D\-C\-\_\-10} = ((uint8\-\_\-t) 0x03)
+ \}
+\begin{DoxyCompactList}\small\item\em Sensor detect current source setting enumeration. Defines the different possible current source outputs for sensor break/short circuit detection. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} \{ \\*
+\hyperlink{group__ads1256__driver_ggace2e231df7cd3598eb26d5ff51171701a3d71ca28a4b57bae10b35448e957e62f}{A\-D\-S1256\-\_\-\-P\-G\-Ax1} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_ggace2e231df7cd3598eb26d5ff51171701a3f8ee6f9a6ee59517b45d2704741b0d5}{A\-D\-S1256\-\_\-\-P\-G\-Ax2} = ((uint8\-\_\-t) 0x01), 
+\hyperlink{group__ads1256__driver_ggace2e231df7cd3598eb26d5ff51171701a754ed5e91f3b93223b05f37e9614d609}{A\-D\-S1256\-\_\-\-P\-G\-Ax4} = ((uint8\-\_\-t) 0x02), 
+\hyperlink{group__ads1256__driver_ggace2e231df7cd3598eb26d5ff51171701a9f7099b461faf079cb07e6bb2a011d95}{A\-D\-S1256\-\_\-\-P\-G\-Ax8} = ((uint8\-\_\-t) 0x03), 
+\\*
+\hyperlink{group__ads1256__driver_ggace2e231df7cd3598eb26d5ff51171701acb36c0b12e2f4f18a074dbbe34f9cbcc}{A\-D\-S1256\-\_\-\-P\-G\-Ax16} = ((uint8\-\_\-t) 0x04), 
+\hyperlink{group__ads1256__driver_ggace2e231df7cd3598eb26d5ff51171701aec68ef5e63b72eebbaf8411c8570a788}{A\-D\-S1256\-\_\-\-P\-G\-Ax32} = ((uint8\-\_\-t) 0x05), 
+\hyperlink{group__ads1256__driver_ggace2e231df7cd3598eb26d5ff51171701a89a612ad300d0abb0ab2c73f43610604}{A\-D\-S1256\-\_\-\-P\-G\-Ax64} = ((uint8\-\_\-t) 0x06)
+ \}
+\begin{DoxyCompactList}\small\item\em Programmable gain amplifier gain setting enumeration. Defines the different possible gain settings of the A\-D\-S1256's input programmable gain amplifier. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} \{ \\*
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a81215671a55d86226c4ac6c931d9dfa3}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-30000} = ((uint8\-\_\-t) 0x\-F0), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731af955d6f41a97fe05c19e33875b9f8179}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-15000} = ((uint8\-\_\-t) 0x\-E0), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a04ee81dece7d46e4d4db5ed37f358b0d}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-7500} = ((uint8\-\_\-t) 0x\-D0), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731ac08e0021f65ebc828e467da3713964ed}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-3750} = ((uint8\-\_\-t) 0x\-C0), 
+\\*
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731af12dc4b35be49d560742916582e6176c}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-2000} = ((uint8\-\_\-t) 0x\-B0), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a12d8d1323c2628fe27a17765b06d0af0}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-1000} = ((uint8\-\_\-t) 0x\-A1), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731ae658af6aeb6976e4333295abe9cd2bfe}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-500} = ((uint8\-\_\-t) 0x92), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a610b2d5c532647c47eccfae4f38180c9}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-100} = ((uint8\-\_\-t) 0x82), 
+\\*
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a7a94d4abfbc3f888640cc1301bba481c}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-60} = ((uint8\-\_\-t) 0x72), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a5146cfab8c3f5a4229a192d7f6c75fee}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-50} = ((uint8\-\_\-t) 0x63), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731af00f11dbdf6bc388f20b6ee3b6e4bec3}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-30} = ((uint8\-\_\-t) 0x53), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a0f9109a1a40838123ccd55e1af90a3e6}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-25} = ((uint8\-\_\-t) 0x43), 
+\\*
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731acebddb9fec5c26050c0f10760593c7b8}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-15} = ((uint8\-\_\-t) 0x33), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a968c2e2d2088b56c7983ea25d88ab095}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-10} = ((uint8\-\_\-t) 0x23), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731a60cbd1927b566eafda96104ece8d7e70}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-5} = ((uint8\-\_\-t) 0x13), 
+\hyperlink{group__ads1256__driver_ggab0437f81aad031aadf3e05dd5fe0a731adac392298502254c3d10c687fa20e230}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-2\-\_\-5} = ((uint8\-\_\-t) 0x03)
+ \}
+\begin{DoxyCompactList}\small\item\em Data rate (samples per second) setting enumeration. Defines the different possible data rate (samples per second) of the A\-D\-S1256. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_gaf55f2ff09e67223f3e5e0a6eb69de98b}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-t} \{ \hyperlink{group__ads1256__driver_ggaf55f2ff09e67223f3e5e0a6eb69de98bac7ab1779825d4ab6001474514f992803}{A\-D\-S1256\-\_\-\-G\-P\-I\-O0} = 0, 
+\hyperlink{group__ads1256__driver_ggaf55f2ff09e67223f3e5e0a6eb69de98baa385c94d0f1cd9e883827ff1fa4670cc}{A\-D\-S1256\-\_\-\-G\-P\-I\-O1} = 1, 
+\hyperlink{group__ads1256__driver_ggaf55f2ff09e67223f3e5e0a6eb69de98baa698b0647ba8ce2732153c5a5760462d}{A\-D\-S1256\-\_\-\-G\-P\-I\-O2} = 2, 
+\hyperlink{group__ads1256__driver_ggaf55f2ff09e67223f3e5e0a6eb69de98ba4c163c64138d288b3b3d81d82263673b}{A\-D\-S1256\-\_\-\-G\-P\-I\-O3} = 3
+ \}
+\begin{DoxyCompactList}\small\item\em G\-P\-I\-O pin enumeration. Defines the different G\-P\-I\-O pins of the A\-D\-S1256. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_ga4df06f2662792cc9eff4ac7f97e35026}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N\-\_\-t} \{ \hyperlink{group__ads1256__driver_gga4df06f2662792cc9eff4ac7f97e35026aeb27500675e6a6c77bf127853092a6e7}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-O\-U\-T\-P\-U\-T} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_gga4df06f2662792cc9eff4ac7f97e35026afeaaf398ab13211be0864d1532282e51}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-I\-N\-P\-U\-T} = ((uint8\-\_\-t) 0x01)
+ \}
+\begin{DoxyCompactList}\small\item\em G\-P\-I\-O direction enumeration. Defines the input and output states of the G\-P\-I\-O pins of the A\-D\-S1256. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_ga587084017ba4b239ffb8d90376921c2c}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-t} \{ \hyperlink{group__ads1256__driver_gga587084017ba4b239ffb8d90376921c2caa73adb23173490c355e1f42cc097b62e}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-L\-O\-W} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__ads1256__driver_gga587084017ba4b239ffb8d90376921c2caa47febef361d2bbadc48ef4df1a22f96}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-H\-I\-G\-H} = ((uint8\-\_\-t) 0x01)
+ \}
+\begin{DoxyCompactList}\small\item\em G\-P\-I\-O logic level enumeration. Defines the two logic states of the G\-P\-I\-O pins of the A\-D\-S1256. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_ga03b6f97db2c7988af4c239575cc88fde}{A\-D\-S1256\-\_\-\-Register\-\_\-t} \{ \\*
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdea861808fe9ebfaefd3b40f35d785f76ad}{A\-D\-S1256\-\_\-\-S\-T\-A\-T\-U\-S} = 0x00\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdea2652bd9dbe69551c508a9459a46de864}{A\-D\-S1256\-\_\-\-M\-U\-X} = 0x01\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdea199864dc6828ab191e384581f7de2448}{A\-D\-S1256\-\_\-\-A\-D\-C\-O\-N} = 0x02\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdeacec171aa33aaa60cc213196342d75488}{A\-D\-S1256\-\_\-\-D\-R\-A\-T\-E} = 0x03\-U, 
+\\*
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdeae03cf2e683ca72e093cbc79352b4d7ed}{A\-D\-S1256\-\_\-\-I\-O} = 0x04\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdeaeb4092ff7d4d1de90200d3555a6e2c6c}{A\-D\-S1256\-\_\-\-O\-F\-C0} = 0x05\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdeaf21f5bd93a2140b83adfc26c55d5a9f5}{A\-D\-S1256\-\_\-\-O\-F\-C1} = 0x06\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdeaf07570553a6f796ef337e5075dc30767}{A\-D\-S1256\-\_\-\-O\-F\-C2} = 0x07\-U, 
+\\*
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdeaa0f2a3e21e4efa92857623a7283cfdd1}{A\-D\-S1256\-\_\-\-F\-S\-C0} = 0x08\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdeaf24fb3090a15c8ec37e8920054076b33}{A\-D\-S1256\-\_\-\-F\-S\-C1} = 0x09\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdea546b556453240d6fcf14f818575e4e00}{A\-D\-S1256\-\_\-\-F\-S\-C2} = 0x0\-A\-U, 
+\hyperlink{group__ads1256__driver_gga03b6f97db2c7988af4c239575cc88fdea6f3879237c79faf51383e8a52dbecd58}{A\-D\-S1256\-\_\-\-N\-R\-E\-G\-S} = 0x0\-B\-U
+ \}
+\begin{DoxyCompactList}\small\item\em A\-D\-S1256 register enumeration. Defines the addresses of the 11 control registers of the A\-D\-S1256 A\-D\-C. \end{DoxyCompactList}\item 
+enum \hyperlink{group__ads1256__driver_gadb203fb3b246881a33160b5b25822d42}{A\-D\-S1256\-\_\-\-Command\-\_\-t} \{ \\*
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42a7ec76391f15bfc4dbc9f67f657793a8a}{A\-D\-S1256\-\_\-\-W\-A\-K\-E\-U\-P} = 0x00, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42a4fba878e65192a50066360cc328630c6}{A\-D\-S1256\-\_\-\-R\-D\-A\-T\-A} = 0x01, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42a679e4ecf298787f45a358ac2a1134e4f}{A\-D\-S1256\-\_\-\-R\-D\-A\-T\-A\-C} = 0x03, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42a4cd4f08ab7243e4dc7b3c1f1bafbc4ff}{A\-D\-S1256\-\_\-\-S\-D\-A\-T\-A\-C} = 0x0\-F, 
+\\*
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42aee3ef8f7acb16ce684bfd531f1c79ab6}{A\-D\-S1256\-\_\-\-R\-R\-E\-G} = 0x10, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42a15d3f34090137e08b2a38765214a1153}{A\-D\-S1256\-\_\-\-W\-R\-E\-G} = 0x50, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42abc99c1ced898bb7b5d16bd6e73e8d2e1}{A\-D\-S1256\-\_\-\-S\-E\-L\-F\-C\-A\-L} = 0x\-F0, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42aa6ae2f4d183376bc577810a320dbb227}{A\-D\-S1256\-\_\-\-S\-E\-L\-F\-O\-C\-A\-L} = 0x\-F1, 
+\\*
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42af0834ed9ad198db005df6fe8508c4c83}{A\-D\-S1256\-\_\-\-S\-E\-L\-F\-G\-C\-A\-L} = 0x\-F2, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42a364c3ff9b43a6bd1a5bc716ee2327e8b}{A\-D\-S1256\-\_\-\-S\-Y\-S\-O\-C\-A\-L} = 0x\-F3, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42aa07436d08b9a5a260db9d8c1107a5af9}{A\-D\-S1256\-\_\-\-S\-Y\-S\-G\-C\-A\-L} = 0x\-F4, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42a16dda7b760f74ca18488460f89193303}{A\-D\-S1256\-\_\-\-S\-Y\-N\-C} = 0x\-F\-C, 
+\\*
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42ac774622b486ccde765515c2de6b45bda}{A\-D\-S1256\-\_\-\-S\-T\-A\-N\-D\-B\-Y} = 0x\-F\-D, 
+\hyperlink{group__ads1256__driver_ggadb203fb3b246881a33160b5b25822d42a5d52692a6ccf9bb846ba1844057243c7}{A\-D\-S1256\-\_\-\-R\-E\-S\-E\-T} = 0x\-F\-E
+ \}
+\begin{DoxyCompactList}\small\item\em A\-D\-S1256 command enumeration. Defines the commands which the A\-D\-S1256 A\-D\-C understands. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__ads1256__driver_ga817dc23392ce56ae255cb3238d796b60}{A\-D\-S1256\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the A\-D\-S1256 A\-D\-C Driver. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gac1a6ea86db094b51ec478098738353b4}{A\-D\-S1256\-\_\-\-State\-Pins\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the state pins of the A\-D\-C Driver. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga9642423b95878836291bbf57102e92a6}{A\-D\-S1256\-\_\-\-Print\-Regs} (void)
+\begin{DoxyCompactList}\small\item\em Print all the local registers. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gacbbff85197a622b07cfb2bf47b57c29b}{A\-D\-S1256\-\_\-\-Registers\-To\-String} (void)
+\begin{DoxyCompactList}\small\item\em Print all the local registers to a string. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__ads1256__driver_gabfd8ef639770cdb94388e1b63da1b0ba}{A\-D\-S1256\-\_\-\-String\-From\-S\-P\-S} (\hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} sps)
+\begin{DoxyCompactList}\small\item\em Return the human readable string representation of the provided data rate. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__ads1256__driver_ga59c2fb71d5fac95ab30f4c66c0e4a9e2}{A\-D\-S1256\-\_\-\-String\-From\-P\-G\-A} (\hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} pga)
+\begin{DoxyCompactList}\small\item\em Return the human readable string representation of the provided gain setting. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__ads1256__driver_gafab91604ac5588b9c626bb7e050f0774}{A\-D\-S1256\-\_\-\-String\-From\-Buffer} (\hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} buffer)
+\begin{DoxyCompactList}\small\item\em Return the human readable string representation of the provided buffer setting. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} \hyperlink{group__ads1256__driver_gac39cc4f0a18e9f7ce3f915d5b5050d94}{A\-D\-S1256\-\_\-\-String\-To\-Buffer} (char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Convert a human readable string into the relevant A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t value. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} \hyperlink{group__ads1256__driver_gae2f1be4b151cfc9dfeede38a79764dff}{A\-D\-S1256\-\_\-\-String\-To\-Data\-Rate} (char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Convert a human readable string into the relevant A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t value. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} \hyperlink{group__ads1256__driver_ga04cf21f06b462886045c4075782fdf13}{A\-D\-S1256\-\_\-\-String\-To\-P\-G\-A} (char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Convert a human readable string into the relevant A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t value. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga7b012a2ab6b0494da4e1297e34ab9925}{A\-D\-S1256\-\_\-\-Full\-\_\-\-Reset} (void)
+\begin{DoxyCompactList}\small\item\em Completely reset the A\-D\-S1256 A\-D\-C. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gafdd4555dcde566f72adf2d9d51f4a883}{A\-D\-S1256\-\_\-\-Reset\-\_\-\-By\-\_\-\-Command} (void)
+\begin{DoxyCompactList}\small\item\em Reset the A\-D\-S1256 A\-D\-C via S\-P\-I command. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga1c25b603705f67cccde59e406b1c4c07}{A\-D\-S1256\-\_\-\-Reset\-\_\-\-By\-\_\-\-Clock} (void)
+\begin{DoxyCompactList}\small\item\em Reset the A\-D\-S1256 A\-D\-C via clock command. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga4664ba6707817673019016b0b0d6668e}{A\-D\-S1256\-\_\-\-Reset\-\_\-\-By\-\_\-\-Pin} (void)
+\begin{DoxyCompactList}\small\item\em Reset the A\-D\-S1256 A\-D\-C via its R\-E\-S\-E\-T pin. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga5fb186f2113df3c976ae00debb6095d7}{A\-D\-S1256\-\_\-\-Reset\-\_\-\-S\-P\-I} (void)
+\begin{DoxyCompactList}\small\item\em Reset the A\-D\-S1256 A\-D\-C S\-P\-I port. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga16dbb214bb63f6051170ee4f8964beb6}{A\-D\-S1256\-\_\-\-Reset\-And\-Reprogram} (void)
+\begin{DoxyCompactList}\small\item\em Performs a complete reset of the A\-D\-S1256 and restores its state. \end{DoxyCompactList}\item 
+int32\-\_\-t \hyperlink{group__ads1256__driver_ga7dee6663af668f862c4bca7c56d80f5e}{A\-D\-S1256\-\_\-\-Get\-Measurement} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the latest measurement code from the A\-D\-C. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gaa44ba74c5036ac42b24ce84eafaf56f2}{A\-D\-S1256\-\_\-\-Request\-Measurement} (void)
+\begin{DoxyCompactList}\small\item\em Initiate a measurement. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga91d8582f9d5cb52b54fb801644e05e21}{A\-D\-S1256\-\_\-\-Read\-Data} (uint8\-\_\-t $\ast$data)
+\begin{DoxyCompactList}\small\item\em Start reading the 3-\/byte data. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga458c5bdb28d0e87e28cdaa9cfcd5f429}{A\-D\-S1256\-\_\-\-Wait\-Until\-Data\-Ready} (\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} use\-Command)
+\begin{DoxyCompactList}\small\item\em Wait in a loop until data is ready. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__ads1256__driver_gafa9381054942c98cb2be8881e86bc209}{A\-D\-S1256\-\_\-\-Is\-Data\-Ready} (\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} use\-Command)
+\begin{DoxyCompactList}\small\item\em Checks to see if valid data is ready. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga612ca0b8927aa0580401813ee278348b}{A\-D\-S1256\-\_\-\-Sync} (\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} use\-Command)
+\begin{DoxyCompactList}\small\item\em Activate the S\-Y\-N\-C feature of the A\-D\-C. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga2388b60ca886620f0daba1efc69c940a}{A\-D\-S1256\-\_\-\-Wakeup} (void)
+\begin{DoxyCompactList}\small\item\em Wakeup the A\-D\-C from S\-Y\-N\-C/\-P\-W\-D\-N. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga5a915f192a268c5737f34dcbe2859524}{A\-D\-S1256\-\_\-\-Standby} (void)
+\begin{DoxyCompactList}\small\item\em Put the A\-D\-C into S\-T\-A\-N\-D\-B\-Y mode. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga72de73cf9585121dd65895c6addf16ff}{A\-D\-S1256\-\_\-\-Calibrate\-Self} (void)
+\begin{DoxyCompactList}\small\item\em Performs a complete self calibration of the A\-D\-C. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga96e7231f5e5efc15c39b81b21baf1b95}{A\-D\-S1256\-\_\-\-Calibrate\-Self\-\_\-\-Gain} (void)
+\begin{DoxyCompactList}\small\item\em Performs a self gain calibration of the A\-D\-C. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga16aea61ac77485fb889c960e16b0ed6b}{A\-D\-S1256\-\_\-\-Calibrate\-Self\-\_\-\-Offset} (void)
+\begin{DoxyCompactList}\small\item\em Performs a self offset calibration of the A\-D\-C. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga46a14d9bcba054e6b6db5b4f8f0bf895}{A\-D\-S1256\-\_\-\-Calibrate\-System\-\_\-\-Gain} (void)
+\begin{DoxyCompactList}\small\item\em Performs a system gain calibration. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gab49754dd631e07c61fed6c41b18ad88e}{A\-D\-S1256\-\_\-\-Calibrate\-System\-\_\-\-Offset} (void)
+\begin{DoxyCompactList}\small\item\em Performs a system offset calibration. \end{DoxyCompactList}\item 
+int32\-\_\-t \hyperlink{group__ads1256__driver_gad8605a86bb12367efea3074b97dfa529}{A\-D\-S1256\-\_\-\-Convert\-Raw\-Value} (uint32\-\_\-t value)
+\begin{DoxyCompactList}\small\item\em Converts the raw output of the A\-D\-C into a signed integer type. \end{DoxyCompactList}\item 
+float \hyperlink{group__ads1256__driver_ga4a1749dfc2cad3986a2f29cbe6e63b87}{A\-D\-S1256\-\_\-\-Get\-Self\-Cal\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the total self calibration time. \end{DoxyCompactList}\item 
+float \hyperlink{group__ads1256__driver_ga2628d1ea4f1436c89584bcc47baf79ef}{A\-D\-S1256\-\_\-\-Get\-Offset\-Cal\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the self offset calibration time. \end{DoxyCompactList}\item 
+float \hyperlink{group__ads1256__driver_ga041017c82a9411b72436c29667e98960}{A\-D\-S1256\-\_\-\-Get\-Self\-Gain\-Cal\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the self gain calibration time. \end{DoxyCompactList}\item 
+float \hyperlink{group__ads1256__driver_ga429559f049274cd24a6be2b20fd82973}{A\-D\-S1256\-\_\-\-Get\-System\-Gain\-Cal\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the total system calibration time. \end{DoxyCompactList}\item 
+float \hyperlink{group__ads1256__driver_ga5cb8add9c1b77b2cf87be526d6363d1c}{A\-D\-S1256\-\_\-\-Get\-Settling\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the settling time of the A\-D\-C. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gad426414f0eab896faac18f0c6d4dbaa2}{A\-D\-S1256\-\_\-\-Alway\-Fetch} (\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} always)
+\begin{DoxyCompactList}\small\item\em Selects remote register auto-\/fetch behavior. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga525f292542208f8309ee79c912b77334}{A\-D\-S1256\-\_\-\-S\-C\-L\-K\-\_\-\-L\-O\-W} (void)
+\begin{DoxyCompactList}\small\item\em Send the S\-P\-I Clock pin low. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga13b51a0fb626ff6f592fc7ce425e8046}{A\-D\-S1256\-\_\-\-S\-C\-L\-K\-\_\-\-H\-I\-G\-H} (void)
+\begin{DoxyCompactList}\small\item\em Send the S\-P\-I Clock pin high. \end{DoxyCompactList}\item 
+uint8\-\_\-t \hyperlink{group__ads1256__driver_gaec26aa231ee327bf65220eee6f779b81}{A\-D\-S1256\-\_\-\-Get\-Factory\-Programmed\-I\-D} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the factory programed I\-D of the A\-D\-C. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_ga3615e2e1ba70971dcdd5f7e54ffe5606}{A\-D\-S1256\-\_\-\-O\-R\-D\-E\-R\-\_\-t} \hyperlink{group__ads1256__driver_ga6f362fc42d375f4aec10bd2115dfd85d}{A\-D\-S1256\-\_\-\-Get\-Data\-Output\-Bit\-Order} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the current data output order. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_ga17864ca559c443a262068f0d19406113}{A\-D\-S1256\-\_\-\-A\-C\-A\-L\-\_\-t} \hyperlink{group__ads1256__driver_ga3a4dac1ff9bffcccbc561853a9598554}{A\-D\-S1256\-\_\-\-Get\-Auto\-Cal\-Setting} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the current auto calibration setting. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} \hyperlink{group__ads1256__driver_gafb6c3c92ef11b050dfa33073e0347a4c}{A\-D\-S1256\-\_\-\-Get\-Input\-Buffer\-Setting} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the current input buffer setting. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga4131f935614bc1ea9eff4f0ec8b1cdfb}{A\-D\-S1256\-\_\-\-Set\-Data\-Output\-Bit\-Order} (\hyperlink{group__ads1256__driver_ga3615e2e1ba70971dcdd5f7e54ffe5606}{A\-D\-S1256\-\_\-\-O\-R\-D\-E\-R\-\_\-t} order)
+\begin{DoxyCompactList}\small\item\em Sets the data output order. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga7dbd4e23a723295a60adc8a7a97b9c5a}{A\-D\-S1256\-\_\-\-Set\-Auto\-Cal\-Setting} (\hyperlink{group__ads1256__driver_ga17864ca559c443a262068f0d19406113}{A\-D\-S1256\-\_\-\-A\-C\-A\-L\-\_\-t} acal)
+\begin{DoxyCompactList}\small\item\em Sets the auto calibration setting. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga0d74a1bb54e74bd1ef8af302471d3905}{A\-D\-S1256\-\_\-\-Set\-Input\-Buffer\-Setting} (\hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} buffer)
+\begin{DoxyCompactList}\small\item\em Sets the input buffer setting. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga9b6a25919b727c6e438f8bddf36f10b0}{A\-D\-S1256\-\_\-\-Get\-Input\-Channels} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the currently selected input channels. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga2bf7d5627d8645de8b27842a006653bd}{A\-D\-S1256\-\_\-\-Set\-Input\-Channels} (\hyperlink{group__ads1256__driver_ga7eac069c538033668b7baeca198def8f}{A\-D\-S1256\-\_\-\-A\-I\-N\-\_\-t} pos, \hyperlink{group__ads1256__driver_ga7eac069c538033668b7baeca198def8f}{A\-D\-S1256\-\_\-\-A\-I\-N\-\_\-t} neg)
+\begin{DoxyCompactList}\small\item\em Set the currently selected input channels. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_ga2d683909a58aa0617ee7c5d06d0a489f}{A\-D\-S1256\-\_\-\-C\-L\-O\-C\-K\-\_\-\-O\-U\-T\-\_\-t} \hyperlink{group__ads1256__driver_ga047a9418e182cce649f167169e3a72bf}{A\-D\-S1256\-\_\-\-Get\-Clock\-Out\-Rate} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the A\-D\-C clock out rate. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_gaa3102e98865ba4e72463676779cd62d4}{A\-D\-S1256\-\_\-\-S\-E\-N\-S\-O\-R\-\_\-\-D\-E\-T\-E\-C\-T\-\_\-t} \hyperlink{group__ads1256__driver_ga7ce3f5d5b256eeeba15bd2ad17c1010a}{A\-D\-S1256\-\_\-\-Get\-Sensor\-Detect\-Current} (void)
+\item 
+\hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} \hyperlink{group__ads1256__driver_gab8cdcd9e7ab992e068f8b008c138f4e1}{A\-D\-S1256\-\_\-\-Get\-P\-G\-A\-Setting} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the A\-D\-C P\-G\-A gain setting. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga8354e6ff9be09b89afcac3c5fcbd3083}{A\-D\-S1256\-\_\-\-Set\-Clock\-Out\-Rate} (\hyperlink{group__ads1256__driver_ga2d683909a58aa0617ee7c5d06d0a489f}{A\-D\-S1256\-\_\-\-C\-L\-O\-C\-K\-\_\-\-O\-U\-T\-\_\-t} clock)
+\begin{DoxyCompactList}\small\item\em Set the A\-D\-C clock out rate. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gae179dd8d2feace96c296cdff466225dc}{A\-D\-S1256\-\_\-\-Set\-Sensor\-Detect\-Current} (\hyperlink{group__ads1256__driver_gaa3102e98865ba4e72463676779cd62d4}{A\-D\-S1256\-\_\-\-S\-E\-N\-S\-O\-R\-\_\-\-D\-E\-T\-E\-C\-T\-\_\-t} current)
+\begin{DoxyCompactList}\small\item\em Set the A\-D\-C sensor detect current output. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gabd0d17a03fdddefb2d8cf04ad304a49d}{A\-D\-S1256\-\_\-\-Set\-P\-G\-A\-Setting} (\hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} gain)
+\begin{DoxyCompactList}\small\item\em Set the A\-D\-C P\-G\-A gain setting. \end{DoxyCompactList}\item 
+int32\-\_\-t \hyperlink{group__ads1256__driver_ga853d2d710efae91bb12c6cb17d562459}{A\-D\-S1256\-\_\-\-Get\-Gain\-Multiplier} (\hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} gain)
+\begin{DoxyCompactList}\small\item\em Retrieve the multiplier for a specific P\-G\-A setting. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} \hyperlink{group__ads1256__driver_gacf2f61cb43087ae7c270f00d24b27526}{A\-D\-S1256\-\_\-\-Get\-Data\-Rate} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the A\-D\-C data rate (sample rate) setting. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga14de02499be3d1dae8497b4e048b9568}{A\-D\-S1256\-\_\-\-Set\-Data\-Rate} (\hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} sps)
+\begin{DoxyCompactList}\small\item\em Set the A\-D\-C data rate (sample rate) setting. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_ga4df06f2662792cc9eff4ac7f97e35026}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N\-\_\-t} \hyperlink{group__ads1256__driver_gacc11f35703f43c395edb1e56c93d707f}{A\-D\-S1256\-\_\-\-Get\-G\-P\-I\-O\-Direction} (\hyperlink{group__ads1256__driver_gaf55f2ff09e67223f3e5e0a6eb69de98b}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-t} pin)
+\begin{DoxyCompactList}\small\item\em Retrieve the G\-P\-I\-O direction setting of a pin. \end{DoxyCompactList}\item 
+\hyperlink{group__ads1256__driver_ga587084017ba4b239ffb8d90376921c2c}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-t} \hyperlink{group__ads1256__driver_gaf864f2f518cd80873993a8f2ca073e27}{A\-D\-S1256\-\_\-\-Get\-G\-P\-I\-O\-Status} (\hyperlink{group__ads1256__driver_gaf55f2ff09e67223f3e5e0a6eb69de98b}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-t} pin)
+\begin{DoxyCompactList}\small\item\em Retrieve the current state of a G\-P\-I\-O pin. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_gacea1f1adb429508088a4a32029f90d00}{A\-D\-S1256\-\_\-\-Set\-G\-P\-I\-O\-Direction} (\hyperlink{group__ads1256__driver_gaf55f2ff09e67223f3e5e0a6eb69de98b}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-t} pin, \hyperlink{group__ads1256__driver_ga4df06f2662792cc9eff4ac7f97e35026}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-D\-I\-R\-E\-C\-T\-I\-O\-N\-\_\-t} direction)
+\begin{DoxyCompactList}\small\item\em Set the G\-P\-I\-O direction setting of a pin. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga3285b54e967fbb817f071f9a1c455920}{A\-D\-S1256\-\_\-\-Set\-G\-P\-I\-O\-Status} (\hyperlink{group__ads1256__driver_gaf55f2ff09e67223f3e5e0a6eb69de98b}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-t} pin, \hyperlink{group__ads1256__driver_ga587084017ba4b239ffb8d90376921c2c}{A\-D\-S1256\-\_\-\-G\-P\-I\-O\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-t} status)
+\begin{DoxyCompactList}\small\item\em Set the state of a G\-P\-I\-O pin. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{group__ads1256__driver_ga63ad5ddbb824fd07aedb6c0884db47eb}{A\-D\-S1256\-\_\-\-Get\-Offset\-Cal\-Setting} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the current offset calibration value. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga420b194968282731c912be5ccad0d30c}{A\-D\-S1256\-\_\-\-Set\-Offset\-Cal\-Setting} (uint8\-\_\-t $\ast$value)
+\begin{DoxyCompactList}\small\item\em Set the offset calibration value. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{group__ads1256__driver_ga06c5d4c98c45514224e4f494b2618221}{A\-D\-S1256\-\_\-\-Get\-Gain\-Cal\-Setting} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the current gain calibration value. \end{DoxyCompactList}\item 
+void \hyperlink{group__ads1256__driver_ga87d92ada1f9826aabe9e4b330e9edbef}{A\-D\-S1256\-\_\-\-Set\-Gain\-Cal\-Setting} (uint8\-\_\-t $\ast$value)
+\begin{DoxyCompactList}\small\item\em Set the gain calibration value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public definitions and data types for the A\-D\-S1256 A\-D\-C driver.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_a_d_s1256___driver_8h_source}{A\-D\-S1256\-\_\-\-Driver.\-h}.
+

@@ -1,0 +1,101 @@
+\hypertarget{group__flash__disk__driver}{\section{F\-L\-A\-S\-H Disk Driver}
+\label{group__flash__disk__driver}\index{F\-L\-A\-S\-H Disk Driver@{F\-L\-A\-S\-H Disk Driver}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint16\-\_\-t \hyperlink{group__flash__disk__driver_ga83834957567411c76bb7f659cf8a1a38}{E\-E\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Restore the pages to a known good state in case of page's status corruption after a power loss. \end{DoxyCompactList}\item 
+uint16\-\_\-t \hyperlink{group__flash__disk__driver_ga0776e2e16f54d3a675e4f2f401703a85}{E\-E\-\_\-\-Read\-Variable} (uint16\-\_\-t Virt\-Address, uint16\-\_\-t $\ast$Data)
+\begin{DoxyCompactList}\small\item\em Returns the last stored variable data, if found, which correspond to the passed virtual address. \end{DoxyCompactList}\item 
+uint16\-\_\-t \hyperlink{group__flash__disk__driver_ga516e9ced7438b9452c72884aa1df5915}{E\-E\-\_\-\-Write\-Variable} (uint16\-\_\-t Virt\-Address, uint16\-\_\-t Data)
+\begin{DoxyCompactList}\small\item\em Writes/upadtes variable data in E\-E\-P\-R\-O\-M. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__flash__disk__driver_ga83834957567411c76bb7f659cf8a1a38}{\index{F\-L\-A\-S\-H Disk Driver@{F\-L\-A\-S\-H Disk Driver}!E\-E\-\_\-\-Init@{E\-E\-\_\-\-Init}}
+\index{E\-E\-\_\-\-Init@{E\-E\-\_\-\-Init}!FLASH Disk Driver@{F\-L\-A\-S\-H Disk Driver}}
+\subsubsection[{E\-E\-\_\-\-Init}]{\setlength{\rightskip}{0pt plus 5cm}uint16\-\_\-t E\-E\-\_\-\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__flash__disk__driver_ga83834957567411c76bb7f659cf8a1a38}
+
+\begin{DoxyParams}{Parameters}
+{\em None.} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em -\/} & Flash error code\-: on write Flash error
+\begin{DoxyItemize}
+\item F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E\-: on success 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 52 of file eeprom.\-c.
+
+\hypertarget{group__flash__disk__driver_ga0776e2e16f54d3a675e4f2f401703a85}{\index{F\-L\-A\-S\-H Disk Driver@{F\-L\-A\-S\-H Disk Driver}!E\-E\-\_\-\-Read\-Variable@{E\-E\-\_\-\-Read\-Variable}}
+\index{E\-E\-\_\-\-Read\-Variable@{E\-E\-\_\-\-Read\-Variable}!FLASH Disk Driver@{F\-L\-A\-S\-H Disk Driver}}
+\subsubsection[{E\-E\-\_\-\-Read\-Variable}]{\setlength{\rightskip}{0pt plus 5cm}uint16\-\_\-t E\-E\-\_\-\-Read\-Variable (
+\begin{DoxyParamCaption}
+\item[{uint16\-\_\-t}]{Virt\-Address, }
+\item[{uint16\-\_\-t $\ast$}]{Data}
+\end{DoxyParamCaption}
+)}}\label{group__flash__disk__driver_ga0776e2e16f54d3a675e4f2f401703a85}
+
+\begin{DoxyParams}{Parameters}
+{\em Virt\-Address} & Variable virtual address \\
+\hline
+{\em Data} & Global variable contains the read variable value \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Success} & or error status\-:
+\begin{DoxyItemize}
+\item 0\-: if variable was found
+\item 1\-: if the variable was not found
+\item N\-O\-\_\-\-V\-A\-L\-I\-D\-\_\-\-P\-A\-G\-E\-: if no valid page was found. 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 247 of file eeprom.\-c.
+
+\hypertarget{group__flash__disk__driver_ga516e9ced7438b9452c72884aa1df5915}{\index{F\-L\-A\-S\-H Disk Driver@{F\-L\-A\-S\-H Disk Driver}!E\-E\-\_\-\-Write\-Variable@{E\-E\-\_\-\-Write\-Variable}}
+\index{E\-E\-\_\-\-Write\-Variable@{E\-E\-\_\-\-Write\-Variable}!FLASH Disk Driver@{F\-L\-A\-S\-H Disk Driver}}
+\subsubsection[{E\-E\-\_\-\-Write\-Variable}]{\setlength{\rightskip}{0pt plus 5cm}uint16\-\_\-t E\-E\-\_\-\-Write\-Variable (
+\begin{DoxyParamCaption}
+\item[{uint16\-\_\-t}]{Virt\-Address, }
+\item[{uint16\-\_\-t}]{Data}
+\end{DoxyParamCaption}
+)}}\label{group__flash__disk__driver_ga516e9ced7438b9452c72884aa1df5915}
+
+\begin{DoxyParams}{Parameters}
+{\em Virt\-Address} & Variable virtual address \\
+\hline
+{\em Data} & 16 bit data to be written \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Success} & or error status\-:
+\begin{DoxyItemize}
+\item F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E\-: on success
+\item P\-A\-G\-E\-\_\-\-F\-U\-L\-L\-: if valid page is full
+\item N\-O\-\_\-\-V\-A\-L\-I\-D\-\_\-\-P\-A\-G\-E\-: if no valid page was found
+\item Flash error code\-: on write Flash error 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 300 of file eeprom.\-c.
+

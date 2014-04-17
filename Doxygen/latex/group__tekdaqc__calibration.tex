@@ -1,0 +1,93 @@
+\hypertarget{group__tekdaqc__calibration}{\section{Calibration}
+\label{group__tekdaqc__calibration}\index{Calibration@{Calibration}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__tekdaqc__calibration_ga65885f14ff00d87bd3ca21265e7d26f6}{Perform\-System\-Gain\-Calibration} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, uint8\-\_\-t count)
+\begin{DoxyCompactList}\small\item\em Performs a system gain calibration with specified parameters. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__tekdaqc__calibration_ga8aa6dd97a6551e9ca12b12439eec2332}{Perform\-System\-Calibration} (void)
+\begin{DoxyCompactList}\small\item\em Performs a self system calibration, determining offset values and base gain values. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__tekdaqc__calibration_gae09f531b1b83f3e80e981f14bfc27261}{is\-Tekdaqc\-\_\-\-Calibration\-Valid} (void)
+\begin{DoxyCompactList}\small\item\em Determines if the calibration data in the F\-L\-A\-S\-H memory is valid or not. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__tekdaqc__calibration_gae09f531b1b83f3e80e981f14bfc27261}{\index{Calibration@{Calibration}!is\-Tekdaqc\-\_\-\-Calibration\-Valid@{is\-Tekdaqc\-\_\-\-Calibration\-Valid}}
+\index{is\-Tekdaqc\-\_\-\-Calibration\-Valid@{is\-Tekdaqc\-\_\-\-Calibration\-Valid}!Calibration@{Calibration}}
+\subsubsection[{is\-Tekdaqc\-\_\-\-Calibration\-Valid}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} is\-Tekdaqc\-\_\-\-Calibration\-Valid (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__calibration_gae09f531b1b83f3e80e981f14bfc27261}
+Checks the recorded temperature history to determine if the board has ever fallen out of its specified temperature range.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & True if the board has never exceeded the specified calibration limit temperatures. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 169 of file Tekdaqc\-\_\-\-Calibration.\-c.
+
+\hypertarget{group__tekdaqc__calibration_ga8aa6dd97a6551e9ca12b12439eec2332}{\index{Calibration@{Calibration}!Perform\-System\-Calibration@{Perform\-System\-Calibration}}
+\index{Perform\-System\-Calibration@{Perform\-System\-Calibration}!Calibration@{Calibration}}
+\subsubsection[{Perform\-System\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Perform\-System\-Calibration (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__calibration_ga8aa6dd97a6551e9ca12b12439eec2332}
+Performs a system auto calibration. This will consist of a full A\-D\-C self calibration followed by a system offset calibration for each combination of sampling parameters (gain, rate, buffer state).
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} & The function error status. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 117 of file Tekdaqc\-\_\-\-Calibration.\-c.
+
+\hypertarget{group__tekdaqc__calibration_ga65885f14ff00d87bd3ca21265e7d26f6}{\index{Calibration@{Calibration}!Perform\-System\-Gain\-Calibration@{Perform\-System\-Gain\-Calibration}}
+\index{Perform\-System\-Gain\-Calibration@{Perform\-System\-Gain\-Calibration}!Calibration@{Calibration}}
+\subsubsection[{Perform\-System\-Gain\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Perform\-System\-Gain\-Calibration (
+\begin{DoxyParamCaption}
+\item[{char}]{keys\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{char}]{values\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{uint8\-\_\-t}]{count}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__calibration_ga65885f14ff00d87bd3ca21265e7d26f6}
+Performs a gain calibration with specified parameters. It is important that this is not executed while the A\-D\-C is performing anything other than it's idle task.
+
+
+\begin{DoxyParams}{Parameters}
+{\em keys} & char\mbox{[}\mbox{]}\mbox{[}\mbox{]} C-\/\-String of the command parameter keys. \\
+\hline
+{\em values} & char\mbox{[}\mbox{]}\mbox{[}\mbox{]} C-\/\-String of the command parameter values. \\
+\hline
+{\em count} & uint8\-\_\-t The number of command parameters. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} & The function error status. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 132 of file Tekdaqc\-\_\-\-Calibration.\-c.
+

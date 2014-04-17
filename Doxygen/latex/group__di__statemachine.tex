@@ -1,0 +1,230 @@
+\hypertarget{group__di__statemachine}{\section{Digital Input State Machine}
+\label{group__di__statemachine}\index{Digital Input State Machine@{Digital Input State Machine}}
+}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__di__statemachine_ga1ff79a885858a15562d8bd473c1efe24}{D\-I\-\_\-\-State\-\_\-t} \{ \\*
+\hyperlink{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a8ae7603290feb31901a777c7225aa403}{D\-I\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}, 
+\hyperlink{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24aa0ac7a9cdfc538dd66f76f5b6f75f4b1}{D\-I\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}, 
+\hyperlink{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a19f7283672ff38fff614237c05de6350}{D\-I\-\_\-\-I\-D\-L\-E}, 
+\hyperlink{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a6b154c2051b086032c67aa91fa0ef163}{D\-I\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}, 
+\\*
+\hyperlink{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24ac285ee632a605767148a84ff1d5d1b61}{D\-I\-\_\-\-R\-E\-S\-E\-T}
+ \}
+\begin{DoxyCompactList}\small\item\em Digital input state machine state definitions. Defines all the possible states for the digital input state machine to be in. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__di__statemachine_ga5f2cfe7443234cdadb81a5b221975fa4}{D\-I\-\_\-\-Machine\-\_\-\-Create} (void)
+\begin{DoxyCompactList}\small\item\em Create the digital input state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gaf2587f28e9c969fde047cd11b6042f2b}{D\-I\-\_\-\-Machine\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the digital input state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gaab31cdbb772e1aaadfef389a7e54012f}{D\-I\-\_\-\-Machine\-\_\-\-Service} (void)
+\begin{DoxyCompactList}\small\item\em Perform a periodic service of the state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_ga0e3f0f8603501b5ff86cd5e849d97cad}{D\-I\-\_\-\-Machine\-\_\-\-Halt} (void)
+\begin{DoxyCompactList}\small\item\em Halt any current operations and return the idle state. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gaa8df31aa65e69cb9e81cdcb11e942001}{D\-I\-\_\-\-Machine\-\_\-\-Idle} (void)
+\begin{DoxyCompactList}\small\item\em Idle state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gac2e52e7ee418f5ee8301fbf6baecd207}{D\-I\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample} (\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$$\ast$inputs, uint32\-\_\-t count, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} single\-Channel)
+\begin{DoxyCompactList}\small\item\em Input sampling state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__di__statemachine_gad16cfcc75eda3999dc6605770b0ea4d7}{D\-I\-\_\-\-Machine\-\_\-\-Reset} (void)
+\begin{DoxyCompactList}\small\item\em Reset state handler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__di__statemachine_ga1ff79a885858a15562d8bd473c1efe24}{\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-State\-\_\-t@{D\-I\-\_\-\-State\-\_\-t}}
+\index{D\-I\-\_\-\-State\-\_\-t@{D\-I\-\_\-\-State\-\_\-t}!Digital Input State Machine@{Digital Input State Machine}}
+\subsubsection[{D\-I\-\_\-\-State\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf D\-I\-\_\-\-State\-\_\-t}}}\label{group__di__statemachine_ga1ff79a885858a15562d8bd473c1efe24}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{D\-I\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{D\-I\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}!Digital Input State Machine@{Digital Input State Machine}}\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{D\-I\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}}\item[{\em 
+\hypertarget{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a8ae7603290feb31901a777c7225aa403}{D\-I\-\_\-\-U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}\label{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a8ae7603290feb31901a777c7225aa403}
+}]The state machine is in an invalid, uninitialized state. \index{D\-I\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{D\-I\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}!Digital Input State Machine@{Digital Input State Machine}}\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D@{D\-I\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}}\item[{\em 
+\hypertarget{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24aa0ac7a9cdfc538dd66f76f5b6f75f4b1}{D\-I\-\_\-\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D}\label{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24aa0ac7a9cdfc538dd66f76f5b6f75f4b1}
+}]The state machine is in a valid, initialized state. \index{D\-I\-\_\-\-I\-D\-L\-E@{D\-I\-\_\-\-I\-D\-L\-E}!Digital Input State Machine@{Digital Input State Machine}}\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-I\-D\-L\-E@{D\-I\-\_\-\-I\-D\-L\-E}}\item[{\em 
+\hypertarget{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a19f7283672ff38fff614237c05de6350}{D\-I\-\_\-\-I\-D\-L\-E}\label{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a19f7283672ff38fff614237c05de6350}
+}]The state machine is idling. \index{D\-I\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G@{D\-I\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}!Digital Input State Machine@{Digital Input State Machine}}\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G@{D\-I\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}}\item[{\em 
+\hypertarget{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a6b154c2051b086032c67aa91fa0ef163}{D\-I\-\_\-\-C\-H\-A\-N\-N\-E\-L\-\_\-\-S\-A\-M\-P\-L\-I\-N\-G}\label{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24a6b154c2051b086032c67aa91fa0ef163}
+}]The state machine is configured for sampling digital inputs. \index{D\-I\-\_\-\-R\-E\-S\-E\-T@{D\-I\-\_\-\-R\-E\-S\-E\-T}!Digital Input State Machine@{Digital Input State Machine}}\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-R\-E\-S\-E\-T@{D\-I\-\_\-\-R\-E\-S\-E\-T}}\item[{\em 
+\hypertarget{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24ac285ee632a605767148a84ff1d5d1b61}{D\-I\-\_\-\-R\-E\-S\-E\-T}\label{group__di__statemachine_gga1ff79a885858a15562d8bd473c1efe24ac285ee632a605767148a84ff1d5d1b61}
+}]The state machine is resetting. It will return to I\-D\-L\-E after reset completes. \end{description}
+\end{Desc}
+
+
+Definition at line 60 of file D\-I\-\_\-\-State\-Machine.\-h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__di__statemachine_ga5f2cfe7443234cdadb81a5b221975fa4}{\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-Machine\-\_\-\-Create@{D\-I\-\_\-\-Machine\-\_\-\-Create}}
+\index{D\-I\-\_\-\-Machine\-\_\-\-Create@{D\-I\-\_\-\-Machine\-\_\-\-Create}!Digital Input State Machine@{Digital Input State Machine}}
+\subsubsection[{D\-I\-\_\-\-Machine\-\_\-\-Create}]{\setlength{\rightskip}{0pt plus 5cm}void D\-I\-\_\-\-Machine\-\_\-\-Create (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__di__statemachine_ga5f2cfe7443234cdadb81a5b221975fa4}
+Creates the D\-I state machine. Note that no initialization is done here.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 94 of file D\-I\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__di__statemachine_ga0e3f0f8603501b5ff86cd5e849d97cad}{\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-Machine\-\_\-\-Halt@{D\-I\-\_\-\-Machine\-\_\-\-Halt}}
+\index{D\-I\-\_\-\-Machine\-\_\-\-Halt@{D\-I\-\_\-\-Machine\-\_\-\-Halt}!Digital Input State Machine@{Digital Input State Machine}}
+\subsubsection[{D\-I\-\_\-\-Machine\-\_\-\-Halt}]{\setlength{\rightskip}{0pt plus 5cm}void D\-I\-\_\-\-Machine\-\_\-\-Halt (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__di__statemachine_ga0e3f0f8603501b5ff86cd5e849d97cad}
+Halt the current sampling activity of the D\-I state machine and return to the idle state. This can be used to interrupt long term or continuous sampling.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 199 of file D\-I\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__di__statemachine_gaa8df31aa65e69cb9e81cdcb11e942001}{\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-Machine\-\_\-\-Idle@{D\-I\-\_\-\-Machine\-\_\-\-Idle}}
+\index{D\-I\-\_\-\-Machine\-\_\-\-Idle@{D\-I\-\_\-\-Machine\-\_\-\-Idle}!Digital Input State Machine@{Digital Input State Machine}}
+\subsubsection[{D\-I\-\_\-\-Machine\-\_\-\-Idle}]{\setlength{\rightskip}{0pt plus 5cm}void D\-I\-\_\-\-Machine\-\_\-\-Idle (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__di__statemachine_gaa8df31aa65e69cb9e81cdcb11e942001}
+Enter the idle state. In this state the D\-I will be made to do nothing.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 217 of file D\-I\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__di__statemachine_gaf2587f28e9c969fde047cd11b6042f2b}{\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-Machine\-\_\-\-Init@{D\-I\-\_\-\-Machine\-\_\-\-Init}}
+\index{D\-I\-\_\-\-Machine\-\_\-\-Init@{D\-I\-\_\-\-Machine\-\_\-\-Init}!Digital Input State Machine@{Digital Input State Machine}}
+\subsubsection[{D\-I\-\_\-\-Machine\-\_\-\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void D\-I\-\_\-\-Machine\-\_\-\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__di__statemachine_gaf2587f28e9c969fde047cd11b6042f2b}
+Initializes the D\-I state machine to a valid state and performs all necessary setup of the D\-I.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 107 of file D\-I\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__di__statemachine_gac2e52e7ee418f5ee8301fbf6baecd207}{\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample@{D\-I\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample}}
+\index{D\-I\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample@{D\-I\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample}!Digital Input State Machine@{Digital Input State Machine}}
+\subsubsection[{D\-I\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample}]{\setlength{\rightskip}{0pt plus 5cm}void D\-I\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample (
+\begin{DoxyParamCaption}
+\item[{{\bf Digital\-\_\-\-Input\-\_\-t} $\ast$$\ast$}]{inputs, }
+\item[{uint32\-\_\-t}]{count, }
+\item[{{\bf bool}}]{single\-Channel}
+\end{DoxyParamCaption}
+)}}\label{group__di__statemachine_gac2e52e7ee418f5ee8301fbf6baecd207}
+Enter the input sampling state. In this state the D\-I will be made to sample a set of inputs each the specified number of times.
+
+
+\begin{DoxyParams}{Parameters}
+{\em inputs} & Digital\-\_\-\-Input\-\_\-t$\ast$$\ast$ Pointer to array of input data structures holding the configurations of the sampling. \\
+\hline
+{\em count} & uint32\-\_\-t The number of samples of each input to take. 0 results in continuous sampling. \\
+\hline
+{\em single\-Channel} & bool True if the sampling is for a single channel only. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 240 of file D\-I\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__di__statemachine_gad16cfcc75eda3999dc6605770b0ea4d7}{\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-Machine\-\_\-\-Reset@{D\-I\-\_\-\-Machine\-\_\-\-Reset}}
+\index{D\-I\-\_\-\-Machine\-\_\-\-Reset@{D\-I\-\_\-\-Machine\-\_\-\-Reset}!Digital Input State Machine@{Digital Input State Machine}}
+\subsubsection[{D\-I\-\_\-\-Machine\-\_\-\-Reset}]{\setlength{\rightskip}{0pt plus 5cm}void D\-I\-\_\-\-Machine\-\_\-\-Reset (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__di__statemachine_gad16cfcc75eda3999dc6605770b0ea4d7}
+Enter the reset state. In this state the D\-I will be reset and returned to the idle state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 323 of file D\-I\-\_\-\-State\-Machine.\-c.
+
+\hypertarget{group__di__statemachine_gaab31cdbb772e1aaadfef389a7e54012f}{\index{Digital Input State Machine@{Digital Input State Machine}!D\-I\-\_\-\-Machine\-\_\-\-Service@{D\-I\-\_\-\-Machine\-\_\-\-Service}}
+\index{D\-I\-\_\-\-Machine\-\_\-\-Service@{D\-I\-\_\-\-Machine\-\_\-\-Service}!Digital Input State Machine@{Digital Input State Machine}}
+\subsubsection[{D\-I\-\_\-\-Machine\-\_\-\-Service}]{\setlength{\rightskip}{0pt plus 5cm}void D\-I\-\_\-\-Machine\-\_\-\-Service (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__di__statemachine_gaab31cdbb772e1aaadfef389a7e54012f}
+Perform a periodic service of the state machine. This will subsequently call the relevant state handler.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 139 of file D\-I\-\_\-\-State\-Machine.\-c.
+

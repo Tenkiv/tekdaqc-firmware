@@ -1,0 +1,69 @@
+\hypertarget{_digital___input_8c}{\section{Digital\-\_\-\-Input.\-c File Reference}
+\label{_digital___input_8c}\index{Digital\-\_\-\-Input.\-c@{Digital\-\_\-\-Input.\-c}}
+}
+
+
+Source file for the \hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} data structure.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Digital\-\_\-\-Input.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-B\-S\-P.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Command\-Interpreter.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Timers.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include $<$inttypes.\-h$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_digital___input_8c_a79e35a57d50639541672dcfbe9193e43}{D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-F\-O\-R\-M\-A\-T\-T\-E\-R}~\char`\"{}\textbackslash{}n\textbackslash{}r-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\textbackslash{}n\textbackslash{}r\-Digital Input\textbackslash{}n\textbackslash{}r\textbackslash{}t\-Name\-: \%s\textbackslash{}n\textbackslash{}r\textbackslash{}t\-Physical Channel\-: \%i\textbackslash{}n\textbackslash{}r\textbackslash{}t\-Timestamp\-: \%\char`\"{} P\-R\-Iu64 \char`\"{}\textbackslash{}n\textbackslash{}r\textbackslash{}t\-Level\-: \%s\textbackslash{}n\textbackslash{}r-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\textbackslash{}n\textbackslash{}r\textbackslash{}x1\-E\char`\"{}
+\begin{DoxyCompactList}\small\item\em The message format string for printing a digital input to a human readable string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__digital__input_gacf4e27adc3b6643e12e01e4d1000db63}{Digital\-Inputs\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the boards digital input data structures. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__input_gaf5dbc88e9aa5cee34b35d908a2e61276}{List\-Digital\-Inputs} (void)
+\begin{DoxyCompactList}\small\item\em Prints a representation of all the added digital inputs. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__input_ga5b4bb29221f6aafe926340eafcf7f722}{Create\-Digital\-Input} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, int count)
+\begin{DoxyCompactList}\small\item\em Configures a digital input with the specified parameters. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__input_ga654bd56de221fbfe0426cb0a18917beb}{Add\-Digital\-Input} (\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$input)
+\begin{DoxyCompactList}\small\item\em Adds a digital input, marking it for inclusion in the state machine. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__input_ga3b0d15fea40d84eaf677d216e1530d89}{Remove\-Digital\-Input} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, int count)
+\begin{DoxyCompactList}\small\item\em Removes a digital input, marking it for exclusion from the state machine. \end{DoxyCompactList}\item 
+\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$ \hyperlink{group__digital__input_gadfa62573aaa64c6bdcbb94c164099154}{Get\-Digital\-Input\-By\-Number} (uint8\-\_\-t number)
+\begin{DoxyCompactList}\small\item\em Retrieves the requested digital input. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_ga8c060a2a592e2644ffe8efdb198637f2}{Sample\-Digital\-Input} (\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$input)
+\begin{DoxyCompactList}\small\item\em Samples the specified digital input's level and writes out the result. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_gaaa11463a9a8f8ae76ebd26ca8331e734}{Sample\-All\-Digital\-Inputs} (void)
+\begin{DoxyCompactList}\small\item\em Samples the digital input level of all added digital inputs, writing out the results. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_ga77861794e1f3432e96903fee5fe1bc2b}{Set\-Digital\-Input\-Write\-Function} (\hyperlink{group__tekdaqc__configuration_ga163b2a4cc55a569e988df48908631967}{Write\-Function} write\-Function)
+\begin{DoxyCompactList}\small\item\em Sets the pointer to the function to invoke when digital input data needs to be written. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_ga007c56810797c98a6c03ac2836ad9328}{Write\-Digital\-Input} (\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$input)
+\begin{DoxyCompactList}\small\item\em Writes out the data for the specified digital input. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_gaffb0acdfc01e77cc785bda2fbbe1c367}{Write\-All\-Digital\-Inputs} (void)
+\begin{DoxyCompactList}\small\item\em Writes out the data for all added digital inputs. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains methods for manipulating and interfacing to the Digital\-\_\-\-Input)t data structure.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+
+
+Definition in file \hyperlink{_digital___input_8c_source}{Digital\-\_\-\-Input.\-c}.
+
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{_digital___input_8c_a79e35a57d50639541672dcfbe9193e43}{\index{Digital\-\_\-\-Input.\-c@{Digital\-\_\-\-Input.\-c}!D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-F\-O\-R\-M\-A\-T\-T\-E\-R@{D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-F\-O\-R\-M\-A\-T\-T\-E\-R}}
+\index{D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-F\-O\-R\-M\-A\-T\-T\-E\-R@{D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-F\-O\-R\-M\-A\-T\-T\-E\-R}!Digital_Input.c@{Digital\-\_\-\-Input.\-c}}
+\subsubsection[{D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-F\-O\-R\-M\-A\-T\-T\-E\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-F\-O\-R\-M\-A\-T\-T\-E\-R~\char`\"{}\textbackslash{}n\textbackslash{}r-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\textbackslash{}n\textbackslash{}r\-Digital Input\textbackslash{}n\textbackslash{}r\textbackslash{}t\-Name\-: \%s\textbackslash{}n\textbackslash{}r\textbackslash{}t\-Physical Channel\-: \%i\textbackslash{}n\textbackslash{}r\textbackslash{}t\-Timestamp\-: \%\char`\"{} P\-R\-Iu64 \char`\"{}\textbackslash{}n\textbackslash{}r\textbackslash{}t\-Level\-: \%s\textbackslash{}n\textbackslash{}r-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\textbackslash{}n\textbackslash{}r\textbackslash{}x1\-E\char`\"{}}}\label{_digital___input_8c_a79e35a57d50639541672dcfbe9193e43}
+
+
+Definition at line 50 of file Digital\-\_\-\-Input.\-c.
+

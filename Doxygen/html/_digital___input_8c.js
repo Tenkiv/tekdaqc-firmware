@@ -1,7 +1,7 @@
 var _digital___input_8c =
 [
     [ "DIGITAL_INPUT_FORMATTER", "_digital___input_8c.html#a79e35a57d50639541672dcfbe9193e43", null ],
-    [ "AddDigitalInput", "_digital___input_8c.html#ga2f7815dc130460ff54b2f21d0864bf8f", null ],
+    [ "AddDigitalInput", "_digital___input_8c.html#ga654bd56de221fbfe0426cb0a18917beb", null ],
     [ "CreateDigitalInput", "_digital___input_8c.html#ga5b4bb29221f6aafe926340eafcf7f722", null ],
     [ "DigitalInputsInit", "_digital___input_8c.html#gacf4e27adc3b6643e12e01e4d1000db63", null ],
     [ "GetDigitalInputByNumber", "_digital___input_8c.html#gadfa62573aaa64c6bdcbb94c164099154", null ],

@@ -1,0 +1,56 @@
+\hypertarget{_tekdaqc___timers_8h}{\section{Tekdaqc\-\_\-\-Timers.\-h File Reference}
+\label{_tekdaqc___timers_8h}\index{Tekdaqc\-\_\-\-Timers.\-h@{Tekdaqc\-\_\-\-Timers.\-h}}
+}
+
+
+Header file for the various timers used by the Tekdaqc.  
+
+
+{\ttfamily \#include \char`\"{}stm32f4xx.\-h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}{\#define \hyperlink{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D\-\_\-\-U\-S}~16}\label{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}
+
+\begin{DoxyCompactList}\small\item\em Defines the time period in microseconds for S\-Y\-S\-T\-I\-C\-K interrupts. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__timers_gad688df41f76297601fe702bd24190525}{\#define \hyperlink{group__tekdaqc__timers_gad688df41f76297601fe702bd24190525}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-D\-I\-V\-I\-D\-E\-R\-\_\-\-U\-S}~(1000000 / \hyperlink{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D\-\_\-\-U\-S})}\label{group__tekdaqc__timers_gad688df41f76297601fe702bd24190525}
+
+\begin{DoxyCompactList}\small\item\em Defines the clock divider for the S\-Y\-S\-T\-I\-C\-K timer. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__timers_ga7061932395158f1a4988896f1b32a8b3}{\#define \hyperlink{group__tekdaqc__timers_ga7061932395158f1a4988896f1b32a8b3}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D}~(\hyperlink{group__tekdaqc__timers_gacc6f2ef6fc22ccd784d38b7de6f22492}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-P\-E\-R\-I\-O\-D\-\_\-\-U\-S})}\label{group__tekdaqc__timers_ga7061932395158f1a4988896f1b32a8b3}
+
+\begin{DoxyCompactList}\small\item\em Defines the time period to use for the S\-Y\-S\-T\-I\-C\-K interrupts. This is what is used by the setup code. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__timers_gac55d476efeca526dcd924406fc9917bf}{\#define \hyperlink{group__tekdaqc__timers_gac55d476efeca526dcd924406fc9917bf}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-D\-I\-V\-I\-D\-E\-R}~(\hyperlink{group__tekdaqc__timers_gad688df41f76297601fe702bd24190525}{S\-Y\-S\-T\-E\-M\-T\-I\-C\-K\-\_\-\-D\-I\-V\-I\-D\-E\-R\-\_\-\-U\-S})}\label{group__tekdaqc__timers_gac55d476efeca526dcd924406fc9917bf}
+
+\begin{DoxyCompactList}\small\item\em Defines the clock divider for the S\-Y\-S\-T\-I\-C\-K timer. This is what is used by the setup code. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tekdaqc__timers_ga3c15420197589e14aa4da4b880a8005f}{Timer\-\_\-\-Config} (void)
+\begin{DoxyCompactList}\small\item\em Configure the timers. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_ga194e6c4226839758664f0e68816c0713}{Time\-\_\-\-Update} (void)
+\begin{DoxyCompactList}\small\item\em Called by the S\-Y\-S\-T\-I\-C\-K interrupt handler. \end{DoxyCompactList}\item 
+uint64\-\_\-t \hyperlink{group__tekdaqc__timers_ga11a66b1728633b77403a588f66a1be95}{Get\-Local\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the local time stamp. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_gaf7d18dc0155f873c4ed1d149e6060d19}{Delay\-\_\-ms} (float ms)
+\begin{DoxyCompactList}\small\item\em Blocking delay, measured in fractional milliseconds. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_ga5ec7c1ff1d0645d24d030f36382e9417}{Delay\-\_\-us} (uint64\-\_\-t us)
+\begin{DoxyCompactList}\small\item\em Blocking delay, measured in microseconds. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_gaa826dcc6214549a3ae300594de880024}{Delay\-\_\-\-Periods\-\_\-10\-M\-S} (uint32\-\_\-t n\-Count)
+\begin{DoxyCompactList}\small\item\em Blocking delay, measured in 10 millisecond periods. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__timers_ga1431937e39123e5e4fddcfbdec5aa70e}{Delay\-\_\-\-Periods} (uint32\-\_\-t n\-Count)
+\begin{DoxyCompactList}\small\item\em Blocking delay, measured in S\-Y\-S\-T\-I\-C\-K periods. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public definitions and data types for the times used by the Tekdaqc.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_tekdaqc___timers_8h_source}{Tekdaqc\-\_\-\-Timers.\-h}.
+

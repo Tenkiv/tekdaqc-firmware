@@ -1,5 +1,11 @@
 var NAVTREEINDEX4 =
 {
+"_tekdaqc___locator_8c.html#ga841da02fec8e79caad0f1d3db9a7af73":[2,0,44,10],
+"_tekdaqc___locator_8c.html#ga852fe5c43e378a8621913254a3e00bd1":[2,0,44,13],
+"_tekdaqc___locator_8c.html#ga87bf26021e9bb75cf09e9982a2ce657b":[2,0,44,8],
+"_tekdaqc___locator_8c.html#ga99090049c7556abdcff2bad0dfdf78af":[2,0,44,11],
+"_tekdaqc___locator_8c.html#gae38557024fc843c693d4b6f2cdb5d097":[2,0,44,3],
+"_tekdaqc___locator_8c.html#gaedcc9e5e10826ca40b253bdc274e65cf":[2,0,44,12],
 "_tekdaqc___locator_8c.html#gaf8eaedaeca86f0d5c7af113faebe16a0":[2,0,44,5],
 "_tekdaqc___locator_8c_source.html":[2,0,44],
 "_tekdaqc___locator_8h.html":[2,0,45],
@@ -135,8 +141,8 @@ var NAVTREEINDEX4 =
 "files.html":[2,0],
 "functions.html":[1,2,0],
 "functions_vars.html":[1,2,1],
-"globals.html":[2,1,0,0],
 "globals.html":[2,1,0],
+"globals.html":[2,1,0,0],
 "globals_b.html":[2,1,0,1],
 "globals_c.html":[2,1,0,2],
 "globals_d.html":[2,1,0,3],
@@ -145,8 +151,8 @@ var NAVTREEINDEX4 =
 "globals_enum.html":[2,1,4],
 "globals_eval.html":[2,1,5],
 "globals_f.html":[2,1,0,5],
-"globals_func.html":[2,1,1],
 "globals_func.html":[2,1,1,0],
+"globals_func.html":[2,1,1],
 "globals_func_b.html":[2,1,1,1],
 "globals_func_c.html":[2,1,1,2],
 "globals_func_d.html":[2,1,1,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX4 =
 "group__ads1256__driver.html#ga46a14d9bcba054e6b6db5b4f8f0bf895":[0,1,0,33],
 "group__ads1256__driver.html#ga4a1749dfc2cad3986a2f29cbe6e63b87":[0,1,0,53],
 "group__ads1256__driver.html#ga4df06f2662792cc9eff4ac7f97e35026":[0,1,0,21],
-"group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334":[0,1,0,73],
-"group__ads1256__driver.html#ga55a9f5e79ef35937961a7ec254558010":[0,1,0,12],
-"group__ads1256__driver.html#ga587084017ba4b239ffb8d90376921c2c":[0,1,0,22],
-"group__ads1256__driver.html#ga59c2fb71d5fac95ab30f4c66c0e4a9e2":[0,1,0,92],
-"group__ads1256__driver.html#ga5a915f192a268c5737f34dcbe2859524":[0,1,0,89],
-"group__ads1256__driver.html#ga5cb8add9c1b77b2cf87be526d6363d1c":[0,1,0,56],
-"group__ads1256__driver.html#ga5fb186f2113df3c976ae00debb6095d7":[0,1,0,70]
+"group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334":[0,1,0,73]
 };

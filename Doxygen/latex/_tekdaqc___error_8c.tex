@@ -1,0 +1,36 @@
+\hypertarget{_tekdaqc___error_8c}{\section{Tekdaqc\-\_\-\-Error.\-c File Reference}
+\label{_tekdaqc___error_8c}\index{Tekdaqc\-\_\-\-Error.\-c@{Tekdaqc\-\_\-\-Error.\-c}}
+}
+
+
+Source file for the Tekdaqc error handling methods.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Error.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Digital\-\_\-\-Output.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Telnet\-Server.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tekdaqc__error_ga5da23e6c262bd5e28f3b73a588470493}{Tekdaqc\-\_\-\-Check\-Status} (void)
+\begin{DoxyCompactList}\small\item\em Check the error status of the digital outputs. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__tekdaqc__error_ga9e4249e557d2ff186f09a6f941bfcaa2}{Tekdaqc\-\_\-\-Command\-Error\-\_\-\-To\-String} (\hyperlink{group__tekdaqc__error_ga91c51567356a5f53b2d62610fa1bf397}{Tekdaqc\-\_\-\-Command\-\_\-\-Error\-\_\-t} error)
+\begin{DoxyCompactList}\small\item\em Converts a Tekdaqc\-\_\-\-Command\-\_\-\-Error\-\_\-t into a human readable string. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__tekdaqc__error_ga82d499e0314eb5c3bdab515f82be322c}{Tekdaqc\-\_\-\-Function\-Error\-\_\-\-To\-String} (\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} error)
+\begin{DoxyCompactList}\small\item\em Converts a Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t into a human readable string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains methods for determining the error status of a Tekdaqc and converting them to a human readable string.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_tekdaqc___error_8c_source}{Tekdaqc\-\_\-\-Error.\-c}.
+

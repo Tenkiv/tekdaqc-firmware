@@ -1,7 +1,7 @@
 var _digital___input_8h =
 [
     [ "MAX_DIGITAL_INPUT_NAME_LENGTH", "_digital___input_8h.html#gaf48b39ba82663f6926d1a02d1e501926", null ],
-    [ "AddDigitalInput", "_digital___input_8h.html#ga2f7815dc130460ff54b2f21d0864bf8f", null ],
+    [ "AddDigitalInput", "_digital___input_8h.html#ga654bd56de221fbfe0426cb0a18917beb", null ],
     [ "CreateDigitalInput", "_digital___input_8h.html#ga5b4bb29221f6aafe926340eafcf7f722", null ],
     [ "DigitalInputsInit", "_digital___input_8h.html#gacf4e27adc3b6643e12e01e4d1000db63", null ],
     [ "GetDigitalInputByNumber", "_digital___input_8h.html#gadfa62573aaa64c6bdcbb94c164099154", null ],

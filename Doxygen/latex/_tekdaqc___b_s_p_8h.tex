@@ -1,0 +1,85 @@
+\hypertarget{_tekdaqc___b_s_p_8h}{\section{Tekdaqc\-\_\-\-B\-S\-P.\-h File Reference}
+\label{_tekdaqc___b_s_p_8h}\index{Tekdaqc\-\_\-\-B\-S\-P.\-h@{Tekdaqc\-\_\-\-B\-S\-P.\-h}}
+}
+
+
+Header file for the Tekdaqc.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-adc.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-can.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-crc.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-cryp.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-dac.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-dbgmcu.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-dcmi.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-dma.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-exti.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-flash.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-hash.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-gpio.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-i2c.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-iwdg.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-pwr.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-rcc.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-rng.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-rtc.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-sdio.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-spi.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-syscfg.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-tim.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-usart.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stm32f4xx\-\_\-wwdg.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}misc.\-h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__command__parser_gaab74dfff7eb006955f2aabec581f8d9f}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-L\-I\-N\-E\-\_\-\-L\-E\-N\-G\-T\-H}~512\-U
+\item 
+\#define \hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}~36\-U
+\item 
+\hypertarget{group__tekdaqc__communication_ga5a136fbad6cb2fa002bd9fd5a9288336}{\#define \hyperlink{group__tekdaqc__communication_ga5a136fbad6cb2fa002bd9fd5a9288336}{L\-O\-C\-A\-T\-O\-R\-\_\-\-P\-O\-R\-T}~9800\-U}\label{group__tekdaqc__communication_ga5a136fbad6cb2fa002bd9fd5a9288336}
+
+\begin{DoxyCompactList}\small\item\em The port the locator service is listening on. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__communication_gad036d23530f3aa396f7cc2dba2e8fb2e}{\#define \hyperlink{group__tekdaqc__communication_gad036d23530f3aa396f7cc2dba2e8fb2e}{T\-E\-L\-N\-E\-T\-\_\-\-P\-O\-R\-T}~9801\-U}\label{group__tekdaqc__communication_gad036d23530f3aa396f7cc2dba2e8fb2e}
+
+\begin{DoxyCompactList}\small\item\em The port to use for the Telnet server. \end{DoxyCompactList}\item 
+\hypertarget{group__analog__input__constants_gae3bad9f0257d0c7056e81f3257d2ec80}{\#define \hyperlink{group__analog__input__constants_gae3bad9f0257d0c7056e81f3257d2ec80}{N\-U\-L\-L\-\_\-\-C\-H\-A\-N\-N\-E\-L}~((uint8\-\_\-t) 255\-U)}\label{group__analog__input__constants_gae3bad9f0257d0c7056e81f3257d2ec80}
+
+\begin{DoxyCompactList}\small\item\em Value to represent that an channel is not being used. \end{DoxyCompactList}\item 
+\hypertarget{group__ads1256__driver_ga1fa41750fbcecde7e22785ff60fa68bb}{\#define \hyperlink{group__ads1256__driver_ga1fa41750fbcecde7e22785ff60fa68bb}{A\-D\-S1256\-\_\-\-C\-L\-K\-\_\-\-F\-R\-E\-Q}~((uint32\-\_\-t) 7680000)}\label{group__ads1256__driver_ga1fa41750fbcecde7e22785ff60fa68bb}
+
+\begin{DoxyCompactList}\small\item\em The operating frequency of the A\-D\-S1256. \end{DoxyCompactList}\item 
+\hypertarget{group__com__port__driver_ga5e1bf137a61b8d8536c6ddf16db0b2e3}{\#define \hyperlink{group__com__port__driver_ga5e1bf137a61b8d8536c6ddf16db0b2e3}{C\-O\-M1\-\_\-\-U\-S\-A\-R\-T}~(U\-S\-A\-R\-T2)}\label{group__com__port__driver_ga5e1bf137a61b8d8536c6ddf16db0b2e3}
+
+\begin{DoxyCompactList}\small\item\em Definition for C\-O\-M port1, connected to U\-S\-A\-R\-T3. \end{DoxyCompactList}\item 
+\hypertarget{group__com__port__driver_ga5907fc16d2de43c1f80f0de8b68a577a}{\#define \hyperlink{group__com__port__driver_ga5907fc16d2de43c1f80f0de8b68a577a}{C\-O\-M2\-\_\-\-U\-S\-A\-R\-T}~(U\-S\-A\-R\-T3)}\label{group__com__port__driver_ga5907fc16d2de43c1f80f0de8b68a577a}
+
+\begin{DoxyCompactList}\small\item\em Definition for C\-O\-M port 2, connected to U\-S\-A\-R\-T3. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__board__channel__constants_gaee574a0d48c41a3e5426ffbf8ac4c5c4}{Digital\-Level\-\_\-t} \{ \hyperlink{group__board__channel__constants_ggaee574a0d48c41a3e5426ffbf8ac4c5c4ad49fd7cec8a5997c9347759048470fc9}{L\-O\-G\-I\-C\-\_\-\-H\-I\-G\-H}, 
+\hyperlink{group__board__channel__constants_ggaee574a0d48c41a3e5426ffbf8ac4c5c4ab4d04526d504d52286c0125def0faef4}{L\-O\-G\-I\-C\-\_\-\-L\-O\-W}
+ \}
+\begin{DoxyCompactList}\small\item\em Tekdaqc logic level enumeration. Defines the possible status states of an digital input/output to the Tekdaqc. \end{DoxyCompactList}\item 
+enum \hyperlink{group__board__channel__constants_gab0f30599ceb99e5ba3b2908d8e9bd131}{Channel\-Added\-\_\-t} \{ \hyperlink{group__board__channel__constants_ggab0f30599ceb99e5ba3b2908d8e9bd131aaee2b8395093e69408a16f6981d07fa9}{C\-H\-A\-N\-N\-E\-L\-\_\-\-A\-D\-D\-E\-D} = 0\-U, 
+\hyperlink{group__board__channel__constants_ggab0f30599ceb99e5ba3b2908d8e9bd131a4ecfadabb635f0b5dd33b66498b2d04f}{C\-H\-A\-N\-N\-E\-L\-\_\-\-N\-O\-T\-A\-D\-D\-E\-D} = 1\-U
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration to indicate if a channel has been added to the Tekdaqc or not. Defines the two possible states of an input or output channel, both analog and digital. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public definitions and data types for the Tekdaqc. These include peripheral pin connections, register addresses and various constants used for the Tekdaqc board.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_tekdaqc___b_s_p_8h_source}{Tekdaqc\-\_\-\-B\-S\-P.\-h}.
+

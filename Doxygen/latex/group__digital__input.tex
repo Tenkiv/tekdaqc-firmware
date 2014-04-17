@@ -1,0 +1,308 @@
+\hypertarget{group__digital__input}{\section{Digital Input}
+\label{group__digital__input}\index{Digital Input@{Digital Input}}
+}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Data structure used to store the state and requirements of a digital input to the Tekdaqc. This data structure contains all the information related to a particular input to the Tekdaqc. Please note that while there is nothing to stop you from manipulating the values of the structure directly, it is not recommended as it could put the structure in an indeterminate state. Instead, manipulation functions are provided which will ensure that all state related implications are addressed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__digital__input_gaf48b39ba82663f6926d1a02d1e501926}{\#define \hyperlink{group__digital__input_gaf48b39ba82663f6926d1a02d1e501926}{M\-A\-X\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}~24}\label{group__digital__input_gaf48b39ba82663f6926d1a02d1e501926}
+
+\begin{DoxyCompactList}\small\item\em The maximum number of characters for the name of an digital input. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__digital__input_gacf4e27adc3b6643e12e01e4d1000db63}{Digital\-Inputs\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the boards digital input data structures. \end{DoxyCompactList}\item 
+\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$ \hyperlink{group__digital__input_gadfa62573aaa64c6bdcbb94c164099154}{Get\-Digital\-Input\-By\-Number} (uint8\-\_\-t number)
+\begin{DoxyCompactList}\small\item\em Retrieves the requested digital input. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__input_ga654bd56de221fbfe0426cb0a18917beb}{Add\-Digital\-Input} (\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$input)
+\begin{DoxyCompactList}\small\item\em Adds a digital input, marking it for inclusion in the state machine. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__input_ga3b0d15fea40d84eaf677d216e1530d89}{Remove\-Digital\-Input} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, int count)
+\begin{DoxyCompactList}\small\item\em Removes a digital input, marking it for exclusion from the state machine. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__input_gaf5dbc88e9aa5cee34b35d908a2e61276}{List\-Digital\-Inputs} (void)
+\begin{DoxyCompactList}\small\item\em Prints a representation of all the added digital inputs. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__digital__input_ga5b4bb29221f6aafe926340eafcf7f722}{Create\-Digital\-Input} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, char values\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, int count)
+\begin{DoxyCompactList}\small\item\em Configures a digital input with the specified parameters. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_ga77861794e1f3432e96903fee5fe1bc2b}{Set\-Digital\-Input\-Write\-Function} (\hyperlink{group__tekdaqc__configuration_ga163b2a4cc55a569e988df48908631967}{Write\-Function} write\-Function)
+\begin{DoxyCompactList}\small\item\em Sets the pointer to the function to invoke when digital input data needs to be written. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_ga8c060a2a592e2644ffe8efdb198637f2}{Sample\-Digital\-Input} (\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$input)
+\begin{DoxyCompactList}\small\item\em Samples the specified digital input's level and writes out the result. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_gaaa11463a9a8f8ae76ebd26ca8331e734}{Sample\-All\-Digital\-Inputs} (void)
+\begin{DoxyCompactList}\small\item\em Samples the digital input level of all added digital inputs, writing out the results. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_ga007c56810797c98a6c03ac2836ad9328}{Write\-Digital\-Input} (\hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} $\ast$input)
+\begin{DoxyCompactList}\small\item\em Writes out the data for the specified digital input. \end{DoxyCompactList}\item 
+void \hyperlink{group__digital__input_gaffb0acdfc01e77cc785bda2fbbe1c367}{Write\-All\-Digital\-Inputs} (void)
+\begin{DoxyCompactList}\small\item\em Writes out the data for all added digital inputs. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__digital__input_ga654bd56de221fbfe0426cb0a18917beb}{\index{Digital Input@{Digital Input}!Add\-Digital\-Input@{Add\-Digital\-Input}}
+\index{Add\-Digital\-Input@{Add\-Digital\-Input}!Digital Input@{Digital Input}}
+\subsubsection[{Add\-Digital\-Input}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Add\-Digital\-Input (
+\begin{DoxyParamCaption}
+\item[{{\bf Digital\-\_\-\-Input\-\_\-t} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_ga654bd56de221fbfe0426cb0a18917beb}
+Adds a digital input structure to the board's appropriate list of inputs.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Digital\-\_\-\-Input\-\_\-t$\ast$ The digital input structure to add. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} & The error status code. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 437 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_ga5b4bb29221f6aafe926340eafcf7f722}{\index{Digital Input@{Digital Input}!Create\-Digital\-Input@{Create\-Digital\-Input}}
+\index{Create\-Digital\-Input@{Create\-Digital\-Input}!Digital Input@{Digital Input}}
+\subsubsection[{Create\-Digital\-Input}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Create\-Digital\-Input (
+\begin{DoxyParamCaption}
+\item[{char}]{keys\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{char}]{values\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{int}]{count}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_ga5b4bb29221f6aafe926340eafcf7f722}
+Creates a new digital input data structure from the supplied parameters and adds it to the board's relevant input list.
+
+
+\begin{DoxyParams}{Parameters}
+{\em keys} & char$\ast$$\ast$ Array of strings containing the command line keys. Indexed with values. \\
+\hline
+{\em values} & char$\ast$$\ast$ Array of strings containing the command line values. Indexed with keys. \\
+\hline
+{\em count} & uint8\-\_\-t The number of parameters passed on the command line. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint8\-\_\-t} & The error status code. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 354 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_gacf4e27adc3b6643e12e01e4d1000db63}{\index{Digital Input@{Digital Input}!Digital\-Inputs\-Init@{Digital\-Inputs\-Init}}
+\index{Digital\-Inputs\-Init@{Digital\-Inputs\-Init}!Digital Input@{Digital Input}}
+\subsubsection[{Digital\-Inputs\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void Digital\-Inputs\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_gacf4e27adc3b6643e12e01e4d1000db63}
+Initializes all requisite sub-\/modules to properly operate digital inputs. This includes any multiplexing and default inputs.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 260 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_gadfa62573aaa64c6bdcbb94c164099154}{\index{Digital Input@{Digital Input}!Get\-Digital\-Input\-By\-Number@{Get\-Digital\-Input\-By\-Number}}
+\index{Get\-Digital\-Input\-By\-Number@{Get\-Digital\-Input\-By\-Number}!Digital Input@{Digital Input}}
+\subsubsection[{Get\-Digital\-Input\-By\-Number}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Digital\-\_\-\-Input\-\_\-t}$\ast$ Get\-Digital\-Input\-By\-Number (
+\begin{DoxyParamCaption}
+\item[{uint8\-\_\-t}]{number}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_gadfa62573aaa64c6bdcbb94c164099154}
+Retrieve a digital input structure by specifying the physical input channel.
+
+
+\begin{DoxyParams}{Parameters}
+{\em number} & uint8\-\_\-t The physical input channel to retrieve. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Digital\-\_\-\-Input\-\_\-t$\ast$} & Pointer to the digital input structure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 512 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_gaf5dbc88e9aa5cee34b35d908a2e61276}{\index{Digital Input@{Digital Input}!List\-Digital\-Inputs@{List\-Digital\-Inputs}}
+\index{List\-Digital\-Inputs@{List\-Digital\-Inputs}!Digital Input@{Digital Input}}
+\subsubsection[{List\-Digital\-Inputs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} List\-Digital\-Inputs (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_gaf5dbc88e9aa5cee34b35d908a2e61276}
+Prints a human readable representation of all the added digital inputs via the current write function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t The error status of this function. 
+\end{DoxyReturn}
+
+
+Definition at line 309 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_ga3b0d15fea40d84eaf677d216e1530d89}{\index{Digital Input@{Digital Input}!Remove\-Digital\-Input@{Remove\-Digital\-Input}}
+\index{Remove\-Digital\-Input@{Remove\-Digital\-Input}!Digital Input@{Digital Input}}
+\subsubsection[{Remove\-Digital\-Input}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Remove\-Digital\-Input (
+\begin{DoxyParamCaption}
+\item[{char}]{keys\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{char}]{values\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{int}]{count}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_ga3b0d15fea40d84eaf677d216e1530d89}
+Removes a digital input from the board's list based on the supplied parameters.
+
+
+\begin{DoxyParams}{Parameters}
+{\em keys} & char$\ast$$\ast$ Array of strings containing the command line keys. Indexed with values. \\
+\hline
+{\em values} & char$\ast$$\ast$ Array of strings containing the command line values. Indexed with keys. \\
+\hline
+{\em count} & uint8\-\_\-t The number of parameters passed on the command line. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} & The error status code. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 464 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_gaaa11463a9a8f8ae76ebd26ca8331e734}{\index{Digital Input@{Digital Input}!Sample\-All\-Digital\-Inputs@{Sample\-All\-Digital\-Inputs}}
+\index{Sample\-All\-Digital\-Inputs@{Sample\-All\-Digital\-Inputs}!Digital Input@{Digital Input}}
+\subsubsection[{Sample\-All\-Digital\-Inputs}]{\setlength{\rightskip}{0pt plus 5cm}void Sample\-All\-Digital\-Inputs (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_gaaa11463a9a8f8ae76ebd26ca8331e734}
+Reads the state of all digital inputs which have been added to the device and stores the result in the respective internal buffers.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 541 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_ga8c060a2a592e2644ffe8efdb198637f2}{\index{Digital Input@{Digital Input}!Sample\-Digital\-Input@{Sample\-Digital\-Input}}
+\index{Sample\-Digital\-Input@{Sample\-Digital\-Input}!Digital Input@{Digital Input}}
+\subsubsection[{Sample\-Digital\-Input}]{\setlength{\rightskip}{0pt plus 5cm}void Sample\-Digital\-Input (
+\begin{DoxyParamCaption}
+\item[{{\bf Digital\-\_\-\-Input\-\_\-t} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_ga8c060a2a592e2644ffe8efdb198637f2}
+Reads the state of a digital input and stores it in the internal buffer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & \hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} The data structure of the digital input to sample. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 530 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_ga77861794e1f3432e96903fee5fe1bc2b}{\index{Digital Input@{Digital Input}!Set\-Digital\-Input\-Write\-Function@{Set\-Digital\-Input\-Write\-Function}}
+\index{Set\-Digital\-Input\-Write\-Function@{Set\-Digital\-Input\-Write\-Function}!Digital Input@{Digital Input}}
+\subsubsection[{Set\-Digital\-Input\-Write\-Function}]{\setlength{\rightskip}{0pt plus 5cm}void Set\-Digital\-Input\-Write\-Function (
+\begin{DoxyParamCaption}
+\item[{{\bf Write\-Function}}]{write\-Function}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_ga77861794e1f3432e96903fee5fe1bc2b}
+Set the function pointer to use when writing data from a digital input to the data connection.
+
+
+\begin{DoxyParams}{Parameters}
+{\em write\-Function} & Write\-Function pointer to the desired string writing function. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 557 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_gaffb0acdfc01e77cc785bda2fbbe1c367}{\index{Digital Input@{Digital Input}!Write\-All\-Digital\-Inputs@{Write\-All\-Digital\-Inputs}}
+\index{Write\-All\-Digital\-Inputs@{Write\-All\-Digital\-Inputs}!Digital Input@{Digital Input}}
+\subsubsection[{Write\-All\-Digital\-Inputs}]{\setlength{\rightskip}{0pt plus 5cm}void Write\-All\-Digital\-Inputs (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_gaffb0acdfc01e77cc785bda2fbbe1c367}
+Writes out the data for all added digital inputs to the stream controlled by the Write\-Function, if set.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 591 of file Digital\-\_\-\-Input.\-c.
+
+\hypertarget{group__digital__input_ga007c56810797c98a6c03ac2836ad9328}{\index{Digital Input@{Digital Input}!Write\-Digital\-Input@{Write\-Digital\-Input}}
+\index{Write\-Digital\-Input@{Write\-Digital\-Input}!Digital Input@{Digital Input}}
+\subsubsection[{Write\-Digital\-Input}]{\setlength{\rightskip}{0pt plus 5cm}void Write\-Digital\-Input (
+\begin{DoxyParamCaption}
+\item[{{\bf Digital\-\_\-\-Input\-\_\-t} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{group__digital__input_ga007c56810797c98a6c03ac2836ad9328}
+Writes the data for the provided \hyperlink{struct_digital___input__t}{Digital\-\_\-\-Input\-\_\-t} structure to the stream controlled by the Write\-Function, if set.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Digital\-\_\-\-Input\-\_\-t$\ast$ Pointer to the data structure to write out. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 567 of file Digital\-\_\-\-Input.\-c.
+

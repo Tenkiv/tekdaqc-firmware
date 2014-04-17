@@ -1,0 +1,529 @@
+\hypertarget{group__command__interpreter}{\section{Command Interpreter}
+\label{group__command__interpreter}\index{Command Interpreter@{Command Interpreter}}
+}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_tekdaqc___command_interpreter__t}{Tekdaqc\-\_\-\-Command\-Interpreter\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Data structure for maintaining the state of the command interpreter. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{\#define \hyperlink{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-I\-N\-P\-U\-T}~\char`\"{}I\-N\-P\-U\-T\char`\"{}}\label{group__command__interpreter_gaf1fc1a31411fef881a2ca2a38d375bda}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the I\-N\-P\-U\-T parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga0edc411fe5766dfbe192e22155fb0020}{\#define \hyperlink{group__command__interpreter_ga0edc411fe5766dfbe192e22155fb0020}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-R\-A\-T\-E}~\char`\"{}R\-A\-T\-E\char`\"{}}\label{group__command__interpreter_ga0edc411fe5766dfbe192e22155fb0020}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the R\-A\-T\-E parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gaf97c884c75bad1017220b24ccff04016}{\#define \hyperlink{group__command__interpreter_gaf97c884c75bad1017220b24ccff04016}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-G\-A\-I\-N}~\char`\"{}G\-A\-I\-N\char`\"{}}\label{group__command__interpreter_gaf97c884c75bad1017220b24ccff04016}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the G\-A\-I\-N parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga943938961217e5b466d15306bd5504b9}{\#define \hyperlink{group__command__interpreter_ga943938961217e5b466d15306bd5504b9}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-B\-U\-F\-F\-E\-R}~\char`\"{}B\-U\-F\-F\-E\-R\char`\"{}}\label{group__command__interpreter_ga943938961217e5b466d15306bd5504b9}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the B\-U\-F\-F\-E\-R parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gadc1cbfe3c96811afe874d8fe8a76b967}{\#define \hyperlink{group__command__interpreter_gadc1cbfe3c96811afe874d8fe8a76b967}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-N\-U\-M\-B\-E\-R}~\char`\"{}N\-U\-M\-B\-E\-R\char`\"{}}\label{group__command__interpreter_gadc1cbfe3c96811afe874d8fe8a76b967}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the N\-U\-M\-B\-E\-R parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gacd4917419f347a3210e7b468c47188f0}{\#define \hyperlink{group__command__interpreter_gacd4917419f347a3210e7b468c47188f0}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-N\-A\-M\-E}~\char`\"{}N\-A\-M\-E\char`\"{}}\label{group__command__interpreter_gacd4917419f347a3210e7b468c47188f0}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the N\-A\-M\-E parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gae845277b8fe01a11cfad1732696507d3}{\#define \hyperlink{group__command__interpreter_gae845277b8fe01a11cfad1732696507d3}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-O\-U\-T\-P\-U\-T}~\char`\"{}O\-U\-T\-P\-U\-T\char`\"{}}\label{group__command__interpreter_gae845277b8fe01a11cfad1732696507d3}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the O\-U\-T\-P\-U\-T parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gaa4e33f1b6e384ab8abcb41c12924896c}{\#define \hyperlink{group__command__interpreter_gaa4e33f1b6e384ab8abcb41c12924896c}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-S\-T\-A\-T\-E}~\char`\"{}S\-T\-A\-T\-E\char`\"{}}\label{group__command__interpreter_gaa4e33f1b6e384ab8abcb41c12924896c}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the S\-T\-A\-T\-E parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga5a03812b6ac732c91bbca5149d3e14bd}{\#define \hyperlink{group__command__interpreter_ga5a03812b6ac732c91bbca5149d3e14bd}{P\-A\-R\-A\-M\-E\-T\-E\-R\-\_\-\-V\-A\-L\-U\-E}~\char`\"{}V\-A\-L\-U\-E\char`\"{}}\label{group__command__interpreter_ga5a03812b6ac732c91bbca5149d3e14bd}
+
+\begin{DoxyCompactList}\small\item\em String constant definition for the V\-A\-L\-U\-E parameter. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gadef3034178d2e2de064a8709350e8f01}{\#define \hyperlink{group__command__interpreter_gadef3034178d2e2de064a8709350e8f01}{N\-U\-M\-\_\-\-C\-O\-M\-M\-A\-N\-D\-S}~28}\label{group__command__interpreter_gadef3034178d2e2de064a8709350e8f01}
+
+\begin{DoxyCompactList}\small\item\em The total number of commands known by this board. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga04bb0d5c60e13237cdd0aad90e81bcd5}{\#define \hyperlink{group__command__interpreter_ga04bb0d5c60e13237cdd0aad90e81bcd5}{T\-E\-L\-N\-E\-T\-\_\-\-E\-O\-F}~((char) '\textbackslash{}r')}\label{group__command__interpreter_ga04bb0d5c60e13237cdd0aad90e81bcd5}
+
+\begin{DoxyCompactList}\small\item\em The character which signifies the E\-O\-F character for Telnet. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga89c4eb6445082c988990fe2be2f441b5}{\#define \hyperlink{group__command__interpreter_ga89c4eb6445082c988990fe2be2f441b5}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_ga89c4eb6445082c988990fe2be2f441b5}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gae7b1842582f0a314801b97783767e609}{\#define \hyperlink{group__command__interpreter_gae7b1842582f0a314801b97783767e609}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_gae7b1842582f0a314801b97783767e609}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gac419882cd49159e3078f1fedfe7f1d9d}{\#define \hyperlink{group__command__interpreter_gac419882cd49159e3078f1fedfe7f1d9d}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~2}\label{group__command__interpreter_gac419882cd49159e3078f1fedfe7f1d9d}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gaf0d093bb26c186189433bbd8007cf0c0}{\#define \hyperlink{group__command__interpreter_gaf0d093bb26c186189433bbd8007cf0c0}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~5}\label{group__command__interpreter_gaf0d093bb26c186189433bbd8007cf0c0}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gac7fdbccfbee444562e69bbdc64b3d92d}{\#define \hyperlink{group__command__interpreter_gac7fdbccfbee444562e69bbdc64b3d92d}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_gac7fdbccfbee444562e69bbdc64b3d92d}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga06548395b7cce1059cd7eff8f5bfb433}{\#define \hyperlink{group__command__interpreter_ga06548395b7cce1059cd7eff8f5bfb433}{N\-U\-M\-\_\-\-C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_ga06548395b7cce1059cd7eff8f5bfb433}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga5ee0ee8ce38b367ad3e68b77020ddc66}{\#define \hyperlink{group__command__interpreter_ga5ee0ee8ce38b367ad3e68b77020ddc66}{N\-U\-M\-\_\-\-S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}~4}\label{group__command__interpreter_ga5ee0ee8ce38b367ad3e68b77020ddc66}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gab61f2dda81ab965fb510863070474767}{\#define \hyperlink{group__command__interpreter_gab61f2dda81ab965fb510863070474767}{N\-U\-M\-\_\-\-S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_gab61f2dda81ab965fb510863070474767}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga5ad550260c3e06471bddb5c3a8aaba04}{\#define \hyperlink{group__command__interpreter_ga5ad550260c3e06471bddb5c3a8aaba04}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_ga5ad550260c3e06471bddb5c3a8aaba04}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gae9468d3d4d92a32a998fa97c0075db48}{\#define \hyperlink{group__command__interpreter_gae9468d3d4d92a32a998fa97c0075db48}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~2}\label{group__command__interpreter_gae9468d3d4d92a32a998fa97c0075db48}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga9c5c1af739a3a4edde8cdb7af7df1ec5}{\#define \hyperlink{group__command__interpreter_ga9c5c1af739a3a4edde8cdb7af7df1ec5}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~2}\label{group__command__interpreter_ga9c5c1af739a3a4edde8cdb7af7df1ec5}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga6096182153b5f1ed0b7c7f02337c1782}{\#define \hyperlink{group__command__interpreter_ga6096182153b5f1ed0b7c7f02337c1782}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_ga6096182153b5f1ed0b7c7f02337c1782}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga3d5083d6431df96a397de8cfad75d3b4}{\#define \hyperlink{group__command__interpreter_ga3d5083d6431df96a397de8cfad75d3b4}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_ga3d5083d6431df96a397de8cfad75d3b4}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gaac55dd13b66c6ed14773e930596be11e}{\#define \hyperlink{group__command__interpreter_gaac55dd13b66c6ed14773e930596be11e}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~2}\label{group__command__interpreter_gaac55dd13b66c6ed14773e930596be11e}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga8e7fef9c50e4a2992d7ac233d7e65510}{\#define \hyperlink{group__command__interpreter_ga8e7fef9c50e4a2992d7ac233d7e65510}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~2}\label{group__command__interpreter_ga8e7fef9c50e4a2992d7ac233d7e65510}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gadea8918a215685b1576f95e1fb754778}{\#define \hyperlink{group__command__interpreter_gadea8918a215685b1576f95e1fb754778}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~2}\label{group__command__interpreter_gadea8918a215685b1576f95e1fb754778}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gaab1534ae5702e990bfdc0f8c85094df0}{\#define \hyperlink{group__command__interpreter_gaab1534ae5702e990bfdc0f8c85094df0}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_gaab1534ae5702e990bfdc0f8c85094df0}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gaebf261e1faa9877050475c6a01c2f698}{\#define \hyperlink{group__command__interpreter_gaebf261e1faa9877050475c6a01c2f698}{N\-U\-M\-\_\-\-C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_gaebf261e1faa9877050475c6a01c2f698}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gab5824d68d182fb33e2aebc616288f06a}{\#define \hyperlink{group__command__interpreter_gab5824d68d182fb33e2aebc616288f06a}{N\-U\-M\-\_\-\-D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_gab5824d68d182fb33e2aebc616288f06a}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the D\-I\-S\-C\-O\-N\-N\-E\-C\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga42bcbf56d92ed56e8a88c69e5d4cb4c0}{\#define \hyperlink{group__command__interpreter_ga42bcbf56d92ed56e8a88c69e5d4cb4c0}{N\-U\-M\-\_\-\-U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_ga42bcbf56d92ed56e8a88c69e5d4cb4c0}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the U\-P\-G\-R\-A\-D\-E command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga6162173d76eb84687f453450c6973ed5}{\#define \hyperlink{group__command__interpreter_ga6162173d76eb84687f453450c6973ed5}{N\-U\-M\-\_\-\-I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_ga6162173d76eb84687f453450c6973ed5}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the I\-D\-E\-N\-T\-I\-F\-Y command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga1fc6732ec779877a349a53c180c22c29}{\#define \hyperlink{group__command__interpreter_ga1fc6732ec779877a349a53c180c22c29}{N\-U\-M\-\_\-\-S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_ga1fc6732ec779877a349a53c180c22c29}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the S\-A\-M\-P\-L\-E command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga9998ef3c02f0f85f3f984b04ab30663d}{\#define \hyperlink{group__command__interpreter_ga9998ef3c02f0f85f3f984b04ab30663d}{N\-U\-M\-\_\-\-H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_ga9998ef3c02f0f85f3f984b04ab30663d}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the H\-A\-L\-T command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga36e8fbb263e5a9243d52f56202b5e3ce}{\#define \hyperlink{group__command__interpreter_ga36e8fbb263e5a9243d52f56202b5e3ce}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_ga36e8fbb263e5a9243d52f56202b5e3ce}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the S\-E\-T\-\_\-\-R\-T\-C command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_gaafcaaef444e34052e8d96c863c90543f}{\#define \hyperlink{group__command__interpreter_gaafcaaef444e34052e8d96c863c90543f}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_gaafcaaef444e34052e8d96c863c90543f}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga4e0199c558a2061732f2e8a1245cb4a2}{\#define \hyperlink{group__command__interpreter_ga4e0199c558a2061732f2e8a1245cb4a2}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S}~1}\label{group__command__interpreter_ga4e0199c558a2061732f2e8a1245cb4a2}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga4fc716dc88ef0cbdbc503e78eab47df4}{\#define \hyperlink{group__command__interpreter_ga4fc716dc88ef0cbdbc503e78eab47df4}{N\-U\-M\-\_\-\-G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_ga4fc716dc88ef0cbdbc503e78eab47df4}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S command. \end{DoxyCompactList}\item 
+\hypertarget{group__command__interpreter_ga6581408fc45ede8a8c643b4700e4113b}{\#define \hyperlink{group__command__interpreter_ga6581408fc45ede8a8c643b4700e4113b}{N\-U\-M\-\_\-\-N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S}~0}\label{group__command__interpreter_ga6581408fc45ede8a8c643b4700e4113b}
+
+\begin{DoxyCompactList}\small\item\em The number of parameters for the N\-O\-N\-E command. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__command__interpreter_gafe8d33d42ee3ed4867090180ef38afbd}{Command\-\_\-t} 
+\begin{DoxyCompactList}\small\item\em Enumeration of all commands known by this board. This is an enumeration of all commands known by this board. Because we are explicitly relying on the assigned ordinal value, we define it to prevent any issues with other compilers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__command__interpreter_ga8a32c543f87d40b158c3007b8ab8b525}{Create\-Command\-Interpreter} (void)
+\begin{DoxyCompactList}\small\item\em Instantiates and allocates the command interpreter. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__interpreter_gae17b8153644216734412b48e52b760d3}{Command\-\_\-\-Add\-Char} (const char character)
+\begin{DoxyCompactList}\small\item\em Adds a character to the command parser's buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__command__interpreter_ga1958dfed537e8e071b08b488b5911575}{Clear\-Command\-Buffer} (void)
+\begin{DoxyCompactList}\small\item\em Clears the entire contents of the command parser's buffer. \end{DoxyCompactList}\item 
+int8\-\_\-t \hyperlink{group__command__interpreter_ga40f7ab5c778b33671146878fe6bd8191}{Get\-Index\-Of\-Argument} (char keys\mbox{[}$\,$\mbox{]}\mbox{[}\hyperlink{group__command__parser_ga6147771b5547853f33eb838895e3d5a2}{M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}, const char $\ast$target, uint8\-\_\-t total)
+\begin{DoxyCompactList}\small\item\em Gets the index of the specified argument from the list of parameters. \end{DoxyCompactList}\item 
+\hyperlink{group__tekdaqc__error_ga19df05d919ecca7a7501b35ae9080a32}{Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} \hyperlink{group__command__interpreter_ga507d74a3df649ff693df84ae46e9b696}{Get\-Last\-Function\-Error} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the last set function error. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga05294e7317989e4fa34c8b51c703fc70}{L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga89c4eb6445082c988990fe2be2f441b5}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gab349c2970503a44eb4e57436974a2bf9}{R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gae7b1842582f0a314801b97783767e609}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gadb61b1d6d360af240f9a0ef5d83c25cf}{R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gac419882cd49159e3078f1fedfe7f1d9d}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga436d10e43feb396c9f5e4d3ef5d510f5}{A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaf0d093bb26c186189433bbd8007cf0c0}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga9bb48c8ce63d89ea1aab20833fbd9691}{R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gac7fdbccfbee444562e69bbdc64b3d92d}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga80461ab1e8d28de20ba44ff93e90c174}{C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga06548395b7cce1059cd7eff8f5bfb433}{N\-U\-M\-\_\-\-C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga12cbb3a7ff1264641a75db037130c062}{S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga5ee0ee8ce38b367ad3e68b77020ddc66}{N\-U\-M\-\_\-\-S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga012ad2ab047f56ee2f1bbe24441f46d3}{S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gab61f2dda81ab965fb510863070474767}{N\-U\-M\-\_\-\-S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga37e4457ed0cb0dabb34ffcd740d59ed7}{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga5ad550260c3e06471bddb5c3a8aaba04}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga26d009205a856ee4c4c6e6c3b363f188}{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gae9468d3d4d92a32a998fa97c0075db48}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga02032c0b60b605fe89dc910a27e12582}{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga9c5c1af739a3a4edde8cdb7af7df1ec5}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga26930165286ff4adccafca5650b4b4cf}{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga6096182153b5f1ed0b7c7f02337c1782}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gad3444869609f37e2fcb9ca55ac0b53ef}{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga3d5083d6431df96a397de8cfad75d3b4}{N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gade511743b3ecf569a2e74c1b14291a5b}{S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaac55dd13b66c6ed14773e930596be11e}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga4f49602cd24e42a37f7509d5fc24ff34}{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga8e7fef9c50e4a2992d7ac233d7e65510}{N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gaf583eedd117e9397b34163b0ed4791c3}{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gadea8918a215685b1576f95e1fb754778}{N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gab8e88e0e75930f03474e1ff9e232ef63}{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaab1534ae5702e990bfdc0f8c85094df0}{N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gae3e466b9002fbb2a3b72a14091736c14}{C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaebf261e1faa9877050475c6a01c2f698}{N\-U\-M\-\_\-\-C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga4c2b766d3384cd7cb0ed759dab8fc4ac}{D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gab5824d68d182fb33e2aebc616288f06a}{N\-U\-M\-\_\-\-D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gaf4f7b3cf35167e36d202bb65a02f0b71}{U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga42bcbf56d92ed56e8a88c69e5d4cb4c0}{N\-U\-M\-\_\-\-U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gab114f1bb247754ff4bbc705b92f53222}{I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga6162173d76eb84687f453450c6973ed5}{N\-U\-M\-\_\-\-I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga7008aaf205ddd844e0a5affd12a08775}{S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga1fc6732ec779877a349a53c180c22c29}{N\-U\-M\-\_\-\-S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gafc7b206c3c05fcf1ac21ddd5108f690a}{H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga9998ef3c02f0f85f3f984b04ab30663d}{N\-U\-M\-\_\-\-H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga37a6030d18afb1719e8b674ac3e649ec}{S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga36e8fbb263e5a9243d52f56202b5e3ce}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gac5a3a40f966d23af1d572909c1d8e952}{S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_gaafcaaef444e34052e8d96c863c90543f}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_ga27977b5ae6f92883015ee0cb83d54617}{S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga4e0199c558a2061732f2e8a1245cb4a2}{N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gaea50720799ad68731b7672c1974aae1a}{G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga4fc716dc88ef0cbdbc503e78eab47df4}{N\-U\-M\-\_\-\-G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\item 
+const char $\ast$ \hyperlink{group__command__interpreter_gae6bcf7679336081f08e81ef76a680c81}{N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S} \mbox{[}\hyperlink{group__command__interpreter_ga6581408fc45ede8a8c643b4700e4113b}{N\-U\-M\-\_\-\-N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__command__interpreter_ga1958dfed537e8e071b08b488b5911575}{\index{Command Interpreter@{Command Interpreter}!Clear\-Command\-Buffer@{Clear\-Command\-Buffer}}
+\index{Clear\-Command\-Buffer@{Clear\-Command\-Buffer}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{Clear\-Command\-Buffer}]{\setlength{\rightskip}{0pt plus 5cm}void Clear\-Command\-Buffer (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__interpreter_ga1958dfed537e8e071b08b488b5911575}
+Clear all characters from the command buffer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 2058 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gae17b8153644216734412b48e52b760d3}{\index{Command Interpreter@{Command Interpreter}!Command\-\_\-\-Add\-Char@{Command\-\_\-\-Add\-Char}}
+\index{Command\-\_\-\-Add\-Char@{Command\-\_\-\-Add\-Char}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{Command\-\_\-\-Add\-Char}]{\setlength{\rightskip}{0pt plus 5cm}void Command\-\_\-\-Add\-Char (
+\begin{DoxyParamCaption}
+\item[{const char}]{character}
+\end{DoxyParamCaption}
+)}}\label{group__command__interpreter_gae17b8153644216734412b48e52b760d3}
+Adds a character to the end of the command buffer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em character} & const char The character to add. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 2071 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga8a32c543f87d40b158c3007b8ab8b525}{\index{Command Interpreter@{Command Interpreter}!Create\-Command\-Interpreter@{Create\-Command\-Interpreter}}
+\index{Create\-Command\-Interpreter@{Create\-Command\-Interpreter}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{Create\-Command\-Interpreter}]{\setlength{\rightskip}{0pt plus 5cm}void Create\-Command\-Interpreter (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__interpreter_ga8a32c543f87d40b158c3007b8ab8b525}
+Create the command interpreter, initializing its internal data structure to default values.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 2048 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga40f7ab5c778b33671146878fe6bd8191}{\index{Command Interpreter@{Command Interpreter}!Get\-Index\-Of\-Argument@{Get\-Index\-Of\-Argument}}
+\index{Get\-Index\-Of\-Argument@{Get\-Index\-Of\-Argument}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{Get\-Index\-Of\-Argument}]{\setlength{\rightskip}{0pt plus 5cm}int8\-\_\-t Get\-Index\-Of\-Argument (
+\begin{DoxyParamCaption}
+\item[{char}]{keys\mbox{[}$\,$\mbox{]}\mbox{[}\-M\-A\-X\-\_\-\-C\-O\-M\-M\-A\-N\-D\-P\-A\-R\-T\-\_\-\-L\-E\-N\-G\-T\-H\mbox{]}, }
+\item[{const char $\ast$}]{target, }
+\item[{uint8\-\_\-t}]{total}
+\end{DoxyParamCaption}
+)}}\label{group__command__interpreter_ga40f7ab5c778b33671146878fe6bd8191}
+Retrieves the index of the desired argument in the list of keys.
+
+
+\begin{DoxyParams}{Parameters}
+{\em keys} & char\mbox{[}\mbox{]}\mbox{[}\mbox{]} Array of C-\/\-Strings containing the list of keys to search. \\
+\hline
+{\em target} & const char$\ast$ The parameter key C-\/\-String to search for. \\
+\hline
+{\em total} & uint8\-\_\-t The total number of keys in the list. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em int8\-\_\-t} & The index of the parameter in the keys array, or -\/1 if it was not found. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 2112 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga507d74a3df649ff693df84ae46e9b696}{\index{Command Interpreter@{Command Interpreter}!Get\-Last\-Function\-Error@{Get\-Last\-Function\-Error}}
+\index{Get\-Last\-Function\-Error@{Get\-Last\-Function\-Error}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{Get\-Last\-Function\-Error}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t} Get\-Last\-Function\-Error (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__command__interpreter_ga507d74a3df649ff693df84ae46e9b696}
+Retrieves the last set value for a function error and resets it to E\-R\-R\-\_\-\-F\-U\-N\-C\-T\-I\-O\-N\-\_\-\-O\-K.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Tekdaqc\-\_\-\-Function\-\_\-\-Error\-\_\-t The last set value for a function error. 
+\end{DoxyReturn}
+
+
+Definition at line 2098 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{group__command__interpreter_ga436d10e43feb396c9f5e4d3ef5d510f5}{\index{Command Interpreter@{Command Interpreter}!A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga436d10e43feb396c9f5e4d3ef5d510f5}
+List of all parameters for the A\-D\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T command. 
+
+Definition at line 129 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga02032c0b60b605fe89dc910a27e12582}{\index{Command Interpreter@{Command Interpreter}!A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga02032c0b60b605fe89dc910a27e12582}
+List of all parameters for the A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T command. 
+
+Definition at line 165 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gaf583eedd117e9397b34163b0ed4791c3}{\index{Command Interpreter@{Command Interpreter}!A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gaf583eedd117e9397b34163b0ed4791c3}
+List of all parameters for the A\-D\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. 
+
+Definition at line 190 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga80461ab1e8d28de20ba44ff93e90c174}{\index{Command Interpreter@{Command Interpreter}!C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga80461ab1e8d28de20ba44ff93e90c174}
+List of all parameters for the C\-H\-E\-C\-K\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T command. 
+
+Definition at line 140 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gae3e466b9002fbb2a3b72a14091736c14}{\index{Command Interpreter@{Command Interpreter}!C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S@{C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S@{C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gae3e466b9002fbb2a3b72a14091736c14}
+List of all parameters for the C\-L\-E\-A\-R\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. 
+
+Definition at line 200 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga4c2b766d3384cd7cb0ed759dab8fc4ac}{\index{Command Interpreter@{Command Interpreter}!D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S@{D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S@{D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-D\-I\-S\-C\-O\-N\-N\-E\-C\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga4c2b766d3384cd7cb0ed759dab8fc4ac}
+List of all parameters for the D\-I\-S\-C\-O\-N\-N\-E\-C\-T command. 
+
+Definition at line 205 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gaea50720799ad68731b7672c1974aae1a}{\index{Command Interpreter@{Command Interpreter}!G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S@{G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S@{G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gaea50720799ad68731b7672c1974aae1a}
+List of all parameters for the G\-E\-T\-\_\-\-C\-A\-L\-I\-B\-R\-A\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S command. 
+
+Definition at line 245 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gafc7b206c3c05fcf1ac21ddd5108f690a}{\index{Command Interpreter@{Command Interpreter}!H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S@{H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S@{H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-H\-A\-L\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gafc7b206c3c05fcf1ac21ddd5108f690a}
+List of all parameters for the H\-A\-L\-T command. 
+
+Definition at line 225 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gab114f1bb247754ff4bbc705b92f53222}{\index{Command Interpreter@{Command Interpreter}!I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S@{I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S@{I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-I\-D\-E\-N\-T\-I\-F\-Y\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gab114f1bb247754ff4bbc705b92f53222}
+List of all parameters for the I\-D\-E\-N\-T\-I\-F\-Y command. 
+
+Definition at line 215 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga05294e7317989e4fa34c8b51c703fc70}{\index{Command Interpreter@{Command Interpreter}!L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S@{L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S@{L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga05294e7317989e4fa34c8b51c703fc70}
+List of all parameters for the L\-I\-S\-T\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-S command. 
+
+Definition at line 114 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga37e4457ed0cb0dabb34ffcd740d59ed7}{\index{Command Interpreter@{Command Interpreter}!L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S@{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S@{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga37e4457ed0cb0dabb34ffcd740d59ed7}
+List of all the parameters for the L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T command. 
+
+Definition at line 155 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gad3444869609f37e2fcb9ca55ac0b53ef}{\index{Command Interpreter@{Command Interpreter}!L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S@{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S@{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gad3444869609f37e2fcb9ca55ac0b53ef}
+List of all parameters for the L\-I\-S\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-S command. 
+
+Definition at line 175 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gae6bcf7679336081f08e81ef76a680c81}{\index{Command Interpreter@{Command Interpreter}!N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S@{N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S@{N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-N\-O\-N\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gae6bcf7679336081f08e81ef76a680c81}
+List of all parameters for the N\-O\-N\-E command. 
+
+Definition at line 250 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gab349c2970503a44eb4e57436974a2bf9}{\index{Command Interpreter@{Command Interpreter}!R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gab349c2970503a44eb4e57436974a2bf9}
+List of all parameters for the R\-E\-A\-D\-\_\-\-A\-D\-C\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S command. 
+
+Definition at line 119 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gadb61b1d6d360af240f9a0ef5d83c25cf}{\index{Command Interpreter@{Command Interpreter}!R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gadb61b1d6d360af240f9a0ef5d83c25cf}
+List of all parameters for the R\-E\-A\-D\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T command. 
+
+Definition at line 124 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga26d009205a856ee4c4c6e6c3b363f188}{\index{Command Interpreter@{Command Interpreter}!R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga26d009205a856ee4c4c6e6c3b363f188}
+List of all parameters for the R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T command. 
+
+Definition at line 160 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga4f49602cd24e42a37f7509d5fc24ff34}{\index{Command Interpreter@{Command Interpreter}!R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga4f49602cd24e42a37f7509d5fc24ff34}
+List of all parameters for the R\-E\-A\-D\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. 
+
+Definition at line 185 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga9bb48c8ce63d89ea1aab20833fbd9691}{\index{Command Interpreter@{Command Interpreter}!R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga9bb48c8ce63d89ea1aab20833fbd9691}
+List of all parameters for the R\-E\-M\-O\-V\-E\-\_\-\-A\-N\-A\-L\-O\-G\-\_\-\-I\-N\-P\-U\-T command. 
+
+Definition at line 135 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga26930165286ff4adccafca5650b4b4cf}{\index{Command Interpreter@{Command Interpreter}!R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga26930165286ff4adccafca5650b4b4cf}
+List of all parameters for the R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T command. 
+
+Definition at line 170 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gab8e88e0e75930f03474e1ff9e232ef63}{\index{Command Interpreter@{Command Interpreter}!R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gab8e88e0e75930f03474e1ff9e232ef63}
+List of all parameters for the R\-E\-M\-O\-V\-E\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. 
+
+Definition at line 195 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga7008aaf205ddd844e0a5affd12a08775}{\index{Command Interpreter@{Command Interpreter}!S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S@{S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S@{S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-S\-A\-M\-P\-L\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga7008aaf205ddd844e0a5affd12a08775}
+List of all parameters for the S\-A\-M\-P\-L\-E command. 
+
+Definition at line 220 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gade511743b3ecf569a2e74c1b14291a5b}{\index{Command Interpreter@{Command Interpreter}!S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S@{S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gade511743b3ecf569a2e74c1b14291a5b}
+List of all parameters for the S\-E\-T\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-O\-U\-T\-P\-U\-T command. 
+
+Definition at line 180 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga37a6030d18afb1719e8b674ac3e649ec}{\index{Command Interpreter@{Command Interpreter}!S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S@{S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S@{S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-R\-T\-C\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga37a6030d18afb1719e8b674ac3e649ec}
+List of all parameters for the S\-E\-T\-\_\-\-R\-T\-C command. 
+
+Definition at line 230 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga27977b5ae6f92883015ee0cb83d54617}{\index{Command Interpreter@{Command Interpreter}!S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S@{S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S@{S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga27977b5ae6f92883015ee0cb83d54617}
+List of all parameters for the S\-E\-T\-\_\-\-S\-T\-A\-T\-I\-C\-\_\-\-I\-P command. 
+
+Definition at line 240 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gac5a3a40f966d23af1d572909c1d8e952}{\index{Command Interpreter@{Command Interpreter}!S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S@{S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S@{S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gac5a3a40f966d23af1d572909c1d8e952}
+List of all parameters for the S\-E\-T\-\_\-\-U\-S\-E\-R\-\_\-\-M\-A\-C command. 
+
+Definition at line 235 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga012ad2ab047f56ee2f1bbe24441f46d3}{\index{Command Interpreter@{Command Interpreter}!S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S@{S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S@{S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga012ad2ab047f56ee2f1bbe24441f46d3}
+List of all parameters for the S\-Y\-S\-T\-E\-M\-\_\-\-C\-A\-L command. 
+
+Definition at line 150 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_ga12cbb3a7ff1264641a75db037130c062}{\index{Command Interpreter@{Command Interpreter}!S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S@{S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S@{S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_ga12cbb3a7ff1264641a75db037130c062}
+List of all parameters for the S\-Y\-S\-T\-E\-M\-\_\-\-G\-C\-A\-L command. 
+
+Definition at line 145 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+
+\hypertarget{group__command__interpreter_gaf4f7b3cf35167e36d202bb65a02f0b71}{\index{Command Interpreter@{Command Interpreter}!U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S@{U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S}}
+\index{U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S@{U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S}!Command Interpreter@{Command Interpreter}}
+\subsubsection[{U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S\mbox{[}{\bf N\-U\-M\-\_\-\-U\-P\-G\-R\-A\-D\-E\-\_\-\-P\-A\-R\-A\-M\-S}\mbox{]}}}\label{group__command__interpreter_gaf4f7b3cf35167e36d202bb65a02f0b71}
+List of all parameters for the U\-P\-G\-R\-A\-D\-E command. 
+
+Definition at line 210 of file Tekdaqc\-\_\-\-Command\-Interpreter.\-c.
+

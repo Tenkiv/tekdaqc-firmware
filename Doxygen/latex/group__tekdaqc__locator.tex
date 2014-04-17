@@ -1,0 +1,268 @@
+\hypertarget{group__tekdaqc__locator}{\section{Tekdaqc Locator Service}
+\label{group__tekdaqc__locator}\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tekdaqc__locator_ga99090049c7556abdcff2bad0dfdf78af}{Tekdaqc\-\_\-\-Locator\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the Tekdaqc locator service. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga668d2bf16094e0046055c231a3c2174c}{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set} (uint8\-\_\-t type)
+\begin{DoxyCompactList}\small\item\em Sets the board type in the locator response packet. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}{void \hyperlink{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}{Tekdaqc\-\_\-\-Locator\-Board\-I\-D\-Set} (const unsigned char $\ast$id)}\label{group__tekdaqc__locator_ga87bf26021e9bb75cf09e9982a2ce657b}
+
+\begin{DoxyCompactList}\small\item\em Sets the board I\-D in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga841da02fec8e79caad0f1d3db9a7af73}{Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set} (uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em Sets the client I\-P address in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_gaedcc9e5e10826ca40b253bdc274e65cf}{Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set} (const unsigned char M\-A\-C\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Sets the M\-A\-C address in the locator response packet. \end{DoxyCompactList}\item 
+void \hyperlink{group__tekdaqc__locator_ga852fe5c43e378a8621913254a3e00bd1}{Tekdaqc\-\_\-\-Locator\-Version\-Set} (uint32\-\_\-t version)
+\begin{DoxyCompactList}\small\item\em Sets the firmware version in the locator response packet. \end{DoxyCompactList}\item 
+\hypertarget{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}{void \hyperlink{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}{Tekdaqc\-\_\-\-Locator\-App\-Title\-Set} (const unsigned char $\ast$title)}\label{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}
+
+\begin{DoxyCompactList}\small\item\em Sets the application title in the locator response packet. \end{DoxyCompactList}\item 
+uint8\-\_\-t \hyperlink{group__tekdaqc__locator_ga573f8960093dc2ab0cc4c88b8f8c6ff9}{Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board type from the locator packet data. \end{DoxyCompactList}\item 
+unsigned char $\ast$ \hyperlink{group__tekdaqc__locator_gae38557024fc843c693d4b6f2cdb5d097}{Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board I\-D from the locator packet data. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{group__tekdaqc__locator_gaf8eaedaeca86f0d5c7af113faebe16a0}{Tekdaqc\-\_\-\-Get\-Locator\-Ip} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board I\-P address from the locator packet data. \end{DoxyCompactList}\item 
+unsigned char $\ast$ \hyperlink{group__tekdaqc__locator_ga03c9656c9876829e12f617d4e4abef04}{Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board M\-A\-C address from the locator packet data. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{group__tekdaqc__locator_ga502ebd4cceffc0fa3a7abefc7f79b42a}{Tekdaqc\-\_\-\-Get\-Locator\-Version} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the board firmware version from the locator packet data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__tekdaqc__locator_gae38557024fc843c693d4b6f2cdb5d097}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D@{Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D}}
+\index{Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D@{Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ Tekdaqc\-\_\-\-Get\-Locator\-Board\-I\-D (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_gae38557024fc843c693d4b6f2cdb5d097}
+Retrieves the board serial number I\-D from the locator packet data. This only retrieves the starting pointer of the C-\/\-String.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em unsigned} & char$\ast$ Pointer to the start of the C-\/\-String. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 331 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_ga573f8960093dc2ab0cc4c88b8f8c6ff9}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type@{Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type}}
+\index{Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type@{Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_ga573f8960093dc2ab0cc4c88b8f8c6ff9}
+Retrieves the board type as it is stored in the locator packet data.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint8\-\_\-t} & The board type A\-S\-C\-I\-I code. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 320 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_gaf8eaedaeca86f0d5c7af113faebe16a0}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Get\-Locator\-Ip@{Tekdaqc\-\_\-\-Get\-Locator\-Ip}}
+\index{Tekdaqc\-\_\-\-Get\-Locator\-Ip@{Tekdaqc\-\_\-\-Get\-Locator\-Ip}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Locator\-Ip}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t Tekdaqc\-\_\-\-Get\-Locator\-Ip (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_gaf8eaedaeca86f0d5c7af113faebe16a0}
+Retrieves the board I\-P address from the locator packet data.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint32\-\_\-t} & The board's I\-P address. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 341 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_ga03c9656c9876829e12f617d4e4abef04}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C@{Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C}}
+\index{Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C@{Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ Tekdaqc\-\_\-\-Get\-Locator\-M\-A\-C (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_ga03c9656c9876829e12f617d4e4abef04}
+Retrieves the board M\-A\-C address from the locator packet data.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em unsigned} & char$\ast$ Pointer to the board M\-A\-C address from the locator packet data. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 356 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_ga502ebd4cceffc0fa3a7abefc7f79b42a}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Get\-Locator\-Version@{Tekdaqc\-\_\-\-Get\-Locator\-Version}}
+\index{Tekdaqc\-\_\-\-Get\-Locator\-Version@{Tekdaqc\-\_\-\-Get\-Locator\-Version}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Locator\-Version}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t Tekdaqc\-\_\-\-Get\-Locator\-Version (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_ga502ebd4cceffc0fa3a7abefc7f79b42a}
+Retrieves the board firmware version number from the locator packet data.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint32\-\_\-t} & The board firmware version number. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 366 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_ga668d2bf16094e0046055c231a3c2174c}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set@{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set}}
+\index{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set@{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set (
+\begin{DoxyParamCaption}
+\item[{uint8\-\_\-t}]{type}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_ga668d2bf16094e0046055c231a3c2174c}
+This function sets the board type field in the locator response packet.
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & uint8\-\_\-t The A\-S\-C\-I\-I character type of the board. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 228 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_ga841da02fec8e79caad0f1d3db9a7af73}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set@{Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set}}
+\index{Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set@{Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-Locator\-Client\-I\-P\-Set (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_ga841da02fec8e79caad0f1d3db9a7af73}
+This function sets the I\-P address of the board in the locator response packet.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & uint32\-\_\-t The I\-P address of the currently connected client. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 252 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_ga99090049c7556abdcff2bad0dfdf78af}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Locator\-Init@{Tekdaqc\-\_\-\-Locator\-Init}}
+\index{Tekdaqc\-\_\-\-Locator\-Init@{Tekdaqc\-\_\-\-Locator\-Init}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Locator\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-Locator\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_ga99090049c7556abdcff2bad0dfdf78af}
+This function prepares the locator service to handle device discovery requests. A U\-D\-P server is created and the locator response data is initialized to all empty.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 192 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_gaedcc9e5e10826ca40b253bdc274e65cf}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set@{Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set}}
+\index{Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set@{Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-Locator\-M\-A\-C\-Addr\-Set (
+\begin{DoxyParamCaption}
+\item[{const unsigned char}]{M\-A\-C\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_gaedcc9e5e10826ca40b253bdc274e65cf}
+This function sets the M\-A\-C address of the network interface in the locator response packet.
+
+
+\begin{DoxyParams}{Parameters}
+{\em M\-A\-C} & unsigned char$\ast$ Pointer to a C-\/\-String containing the M\-A\-C address of the network interface. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 267 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_ga852fe5c43e378a8621913254a3e00bd1}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Locator\-Version\-Set@{Tekdaqc\-\_\-\-Locator\-Version\-Set}}
+\index{Tekdaqc\-\_\-\-Locator\-Version\-Set@{Tekdaqc\-\_\-\-Locator\-Version\-Set}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Locator\-Version\-Set}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-Locator\-Version\-Set (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{version}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_ga852fe5c43e378a8621913254a3e00bd1}
+This function sets the version number of the device firmware in the locator response packet.
+
+
+\begin{DoxyParams}{Parameters}
+{\em version} & uint32\-\_\-t The version number of the device firmware. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 284 of file Tekdaqc\-\_\-\-Locator.\-c.
+

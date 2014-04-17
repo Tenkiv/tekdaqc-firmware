@@ -29,10 +29,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="signature_logo_100x100.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Tekdaqc Firmware
-   &#160;<span id="projectnumber">1.0.0.0</span>
+   &#160;<span id="projectnumber">1.0.1.0</span>
    </div>
    <div id="projectbrief">The firmware of the Tekdaqc.</div>
   </td>
@@ -122,9 +121,6 @@ $(document).ready(function(){initNavTree('_tekdaqc___calibration_table_8h.html',
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a82300c4a55d563ea8c11367b11c32215"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#a82300c4a55d563ea8c11367b11c32215">Tekdaqc_Calibration_SetBaseGainValue</a> (uint32_t val, <a class="el" href="group__ads1256__driver.html#gab0437f81aad031aadf3e05dd5fe0a731">ADS1256_SPS_t</a> rate, <a class="el" href="group__ads1256__driver.html#gace2e231df7cd3598eb26d5ff51171701">ADS1256_PGA_t</a> gain, <a class="el" href="group__ads1256__driver.html#ga12f71f8fc93fe63fb3c855ddd2070890">ADS1256_BUFFER_t</a> buffer)</td></tr>
-<tr class="memdesc:a82300c4a55d563ea8c11367b11c32215"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the base gain value to apply the calibration table to.  <a href="#a82300c4a55d563ea8c11367b11c32215">More...</a><br/></td></tr>
-<tr class="separator:a82300c4a55d563ea8c11367b11c32215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ecb791b957781d6401a3019dba657b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__data__types.html#ga0ecf26b576b9a54eca656b9be7ba6a06">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#af6ecb791b957781d6401a3019dba657b">Tekdaqc_CalibrationInit</a> (void)</td></tr>
 <tr class="separator:af6ecb791b957781d6401a3019dba657b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fdb97e78b7e8036eb9b9dc1053d2f6a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#a7fdb97e78b7e8036eb9b9dc1053d2f6a">Tekdaqc_GetGainCalibration</a> (<a class="el" href="group__ads1256__driver.html#gab0437f81aad031aadf3e05dd5fe0a731">ADS1256_SPS_t</a> rate, <a class="el" href="group__ads1256__driver.html#gace2e231df7cd3598eb26d5ff51171701">ADS1256_PGA_t</a> gain, <a class="el" href="group__ads1256__driver.html#ga12f71f8fc93fe63fb3c855ddd2070890">ADS1256_BUFFER_t</a> buffer, float temperature)</td></tr>
@@ -133,6 +129,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ac10ad531169839fabde0444d38594134"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#ac10ad531169839fabde0444d38594134">Tekdaqc_GetOffsetCalibration</a> (<a class="el" href="group__ads1256__driver.html#gab0437f81aad031aadf3e05dd5fe0a731">ADS1256_SPS_t</a> rate, <a class="el" href="group__ads1256__driver.html#gace2e231df7cd3598eb26d5ff51171701">ADS1256_PGA_t</a> gain, <a class="el" href="group__ads1256__driver.html#ga12f71f8fc93fe63fb3c855ddd2070890">ADS1256_BUFFER_t</a> buffer)</td></tr>
 <tr class="memdesc:ac10ad531169839fabde0444d38594134"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves an offset calibration value for the specified parameters.  <a href="#ac10ad531169839fabde0444d38594134">More...</a><br/></td></tr>
 <tr class="separator:ac10ad531169839fabde0444d38594134"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab112c2a9907278f9c2875742841b0597"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#ab112c2a9907278f9c2875742841b0597">Tekdaqc_GetColdJunctionOffsetCalibration</a> (void)</td></tr>
+<tr class="memdesc:ab112c2a9907278f9c2875742841b0597"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the offset calibration value for the cold junction.  <a href="#ab112c2a9907278f9c2875742841b0597">More...</a><br/></td></tr>
+<tr class="separator:ab112c2a9907278f9c2875742841b0597"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ad75008ed876cbb2ae2d56b5b5a2bc0"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#a4ad75008ed876cbb2ae2d56b5b5a2bc0">Tekdaqc_GetColdJunctionGainCalibration</a> (void)</td></tr>
+<tr class="memdesc:a4ad75008ed876cbb2ae2d56b5b5a2bc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a gain calibration value for the cold junction.  <a href="#a4ad75008ed876cbb2ae2d56b5b5a2bc0">More...</a><br/></td></tr>
+<tr class="separator:a4ad75008ed876cbb2ae2d56b5b5a2bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac005584d9f0811033e24d9f3f3e8519f"><td class="memItemLeft" align="right" valign="top">FLASH_Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#ac005584d9f0811033e24d9f3f3e8519f">Tekdaqc_SetCalibrationMode</a> (void)</td></tr>
 <tr class="memdesc:ac005584d9f0811033e24d9f3f3e8519f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enters calibration mode, enabling write access to the calibration table.  <a href="#ac005584d9f0811033e24d9f3f3e8519f">More...</a><br/></td></tr>
 <tr class="separator:ac005584d9f0811033e24d9f3f3e8519f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,6 +156,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a8f0cb3a405f24587e7ae051211471bc1"><td class="memItemLeft" align="right" valign="top">FLASH_Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#a8f0cb3a405f24587e7ae051211471bc1">Tekdaqc_SetGainCalibration</a> (uint32_t cal, <a class="el" href="group__ads1256__driver.html#gab0437f81aad031aadf3e05dd5fe0a731">ADS1256_SPS_t</a> rate, <a class="el" href="group__ads1256__driver.html#gace2e231df7cd3598eb26d5ff51171701">ADS1256_PGA_t</a> gain, <a class="el" href="group__ads1256__driver.html#ga12f71f8fc93fe63fb3c855ddd2070890">ADS1256_BUFFER_t</a> buffer, float temperature)</td></tr>
 <tr class="memdesc:a8f0cb3a405f24587e7ae051211471bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the gain calibration value for the specified parameters.  <a href="#a8f0cb3a405f24587e7ae051211471bc1">More...</a><br/></td></tr>
 <tr class="separator:a8f0cb3a405f24587e7ae051211471bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74549da5ded91bc8cba5a5a445ed8d7a"><td class="memItemLeft" align="right" valign="top">FLASH_Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#a74549da5ded91bc8cba5a5a445ed8d7a">Tekdaqc_SetColdJunctionOffsetCalibration</a> (uint32_t cal)</td></tr>
+<tr class="memdesc:a74549da5ded91bc8cba5a5a445ed8d7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the offset calibration value to be used for the cold junction sensor.  <a href="#a74549da5ded91bc8cba5a5a445ed8d7a">More...</a><br/></td></tr>
+<tr class="separator:a74549da5ded91bc8cba5a5a445ed8d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6afb54dbf18cdb79ce973cf728c3038f"><td class="memItemLeft" align="right" valign="top">FLASH_Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#a6afb54dbf18cdb79ce973cf728c3038f">Tekdaqc_SetColdJunctionGainCalibration</a> (uint32_t cal)</td></tr>
+<tr class="memdesc:a6afb54dbf18cdb79ce973cf728c3038f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the gain calibration value to be used for the cold junction sensor.  <a href="#a6afb54dbf18cdb79ce973cf728c3038f">More...</a><br/></td></tr>
+<tr class="separator:a6afb54dbf18cdb79ce973cf728c3038f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87e24b5d31fe4dcf2e5de7408715d70a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tekdaqc___calibration_table_8h.html#a87e24b5d31fe4dcf2e5de7408715d70a">Tekdaqc_SetOffsetCalibration</a> (uint32_t cal, <a class="el" href="group__ads1256__driver.html#gab0437f81aad031aadf3e05dd5fe0a731">ADS1256_SPS_t</a> rate, <a class="el" href="group__ads1256__driver.html#gace2e231df7cd3598eb26d5ff51171701">ADS1256_PGA_t</a> gain, <a class="el" href="group__ads1256__driver.html#ga12f71f8fc93fe63fb3c855ddd2070890">ADS1256_BUFFER_t</a> buffer)</td></tr>
 <tr class="memdesc:a87e24b5d31fe4dcf2e5de7408715d70a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the offset calibration value for the specified parameters.  <a href="#a87e24b5d31fe4dcf2e5de7408715d70a">More...</a><br/></td></tr>
 <tr class="separator:a87e24b5d31fe4dcf2e5de7408715d70a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,62 +176,6 @@ Functions</h2></td></tr>
 
 <p>Definition in file <a class="el" href="_tekdaqc___calibration_table_8h_source.html">Tekdaqc_CalibrationTable.h</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a82300c4a55d563ea8c11367b11c32215"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Tekdaqc_Calibration_SetBaseGainValue </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__ads1256__driver.html#gab0437f81aad031aadf3e05dd5fe0a731">ADS1256_SPS_t</a>&#160;</td>
-          <td class="paramname"><em>rate</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__ads1256__driver.html#gace2e231df7cd3598eb26d5ff51171701">ADS1256_PGA_t</a>&#160;</td>
-          <td class="paramname"><em>gain</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__ads1256__driver.html#ga12f71f8fc93fe63fb3c855ddd2070890">ADS1256_BUFFER_t</a>&#160;</td>
-          <td class="paramname"><em>buffer</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Sets the base gain calibration value. This value is added to the value retrieved from the table and allows the board to adjust its gain to remove thermal EMF and other environmental errors.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">val</td><td>uint32_t The gain calibration value. </td></tr>
-    <tr><td class="paramname">rate</td><td>ADS1256_SPS_t The sample rate to lookup for. </td></tr>
-    <tr><td class="paramname">gain</td><td>ADS1256_PGA_t The gain to lookup for. </td></tr>
-    <tr><td class="paramname">buffer</td><td>ADS1256_BUFFER_t The buffer setting to lookup for. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">none</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00253">253</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="af6ecb791b957781d6401a3019dba657b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -251,7 +203,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00268">268</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00255">255</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -282,7 +234,69 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00409">409</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00432">432</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4ad75008ed876cbb2ae2d56b5b5a2bc0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t Tekdaqc_GetColdJunctionGainCalibration </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Retrieves the gain calibration value for the cold junction.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">none</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">The</td><td>calibration value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00363">363</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab112c2a9907278f9c2875742841b0597"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t Tekdaqc_GetColdJunctionOffsetCalibration </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Retrieves the offset calibration value for the cold junction.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">none</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">The</td><td>calibration value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00346">346</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -338,7 +352,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00287">287</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00276">276</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -387,7 +401,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00342">342</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00331">331</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -443,7 +457,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00549">549</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00604">604</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -474,7 +488,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00474">474</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00497">497</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -505,7 +519,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00457">457</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00480">480</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -536,7 +550,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00357">357</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00380">380</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -567,7 +581,69 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00490">490</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00513">513</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6afb54dbf18cdb79ce973cf728c3038f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FLASH_Status Tekdaqc_SetColdJunctionGainCalibration </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>cal</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Writes the gain calibration value to be used for the cold junction sensor into the flash calibration table. This method requires that the board be in calibration mode and will return FLASH_ERROR_WRP if it is not.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cal</td><td>uint32 The calibration value to write. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">FLASH_Status</td><td>FLASH_COMPLETE on success, or the error status on failure. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00566">566</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a74549da5ded91bc8cba5a5a445ed8d7a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FLASH_Status Tekdaqc_SetColdJunctionOffsetCalibration </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>cal</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Writes the offset calibration value to be used for the cold junction sensor into the flash calibration table. This method requires that the board be in calibration mode and will return FLASH_ERROR_WRP if it is not.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cal</td><td>uint32 The calibration value to write. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">FLASH_Status</td><td>FLASH_COMPLETE on success, or the error status on failure. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00550">550</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -630,7 +706,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00510">510</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00533">533</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -686,7 +762,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00530">530</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00585">585</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -717,7 +793,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00426">426</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
+<p>Definition at line <a class="el" href="_tekdaqc___calibration_table_8c_source.html#l00449">449</a> of file <a class="el" href="_tekdaqc___calibration_table_8c_source.html">Tekdaqc_CalibrationTable.c</a>.</p>
 
 </div>
 </div>
@@ -726,8 +802,8 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_8e5de21ae2c0e2e52ebd9b2e1880b407.html">TekDAQC_Libraries_Firmware</a></li><li class="navelem"><a class="el" href="dir_a14269e38e3b68ed8737f3fae4ada78a.html">inc</a></li><li class="navelem"><a class="el" href="_tekdaqc___calibration_table_8h.html">Tekdaqc_CalibrationTable.h</a></li>
-    <li class="footer">Generated on Wed Mar 19 2014 15:21:53 for Tekdaqc Firmware by
+    <li class="navelem"><a class="el" href="dir_da411aab950102a7c87084f4501853eb.html">TekDAQC_Libraries_Firmware</a></li><li class="navelem"><a class="el" href="dir_88d5fee1f3a2431f8b61c607d983c39a.html">inc</a></li><li class="navelem"><a class="el" href="_tekdaqc___calibration_table_8h.html">Tekdaqc_CalibrationTable.h</a></li>
+    <li class="footer">Generated on Wed Apr 16 2014 21:24:45 for Tekdaqc Firmware by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

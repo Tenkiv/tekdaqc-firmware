@@ -1,0 +1,531 @@
+\hypertarget{group__tle7232__driver}{\section{T\-L\-E7232 Driver}
+\label{group__tle7232__driver}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}
+}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__tle7232__driver_ga9831033e1b4daac75b5942977df10b9d}{\#define \hyperlink{group__tle7232__driver_ga9831033e1b4daac75b5942977df10b9d}{T\-L\-E7232\-\_\-\-M\-A\-P\-\_\-\-N\-O\-T\-\_\-\-C\-O\-N\-T\-R\-O\-L\-L\-E\-D}~0}\label{group__tle7232__driver_ga9831033e1b4daac75b5942977df10b9d}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an input pin does not control outputs. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga716b363f498d2bb22bd3ab86026539be}{\#define \hyperlink{group__tle7232__driver_ga716b363f498d2bb22bd3ab86026539be}{T\-L\-E7232\-\_\-\-M\-A\-P\-\_\-\-C\-O\-N\-T\-R\-O\-L\-L\-E\-D}~1}\label{group__tle7232__driver_ga716b363f498d2bb22bd3ab86026539be}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an input pin does control outputs. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga998bfd9163083c1fd3904a5f4653ff7c}{\#define \hyperlink{group__tle7232__driver_ga998bfd9163083c1fd3904a5f4653ff7c}{T\-L\-E7232\-\_\-\-C\-T\-L\-\_\-\-B\-O\-O\-L\-E\-A\-N\-\_\-\-O\-R}~0}\label{group__tle7232__driver_ga998bfd9163083c1fd3904a5f4653ff7c}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that outputs are controlled by the the pin mapping logically O\-R'ed with the control register. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga7f1c5d057eda9473d87183dca9d1beac}{\#define \hyperlink{group__tle7232__driver_ga7f1c5d057eda9473d87183dca9d1beac}{T\-L\-E7232\-\_\-\-C\-T\-L\-\_\-\-B\-O\-O\-L\-E\-N\-A\-\_\-\-A\-N\-D}~1}\label{group__tle7232__driver_ga7f1c5d057eda9473d87183dca9d1beac}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that outputs are controlled by the the pin mapping logically A\-N\-D'ed with the control register. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga9969132fe427bf6d85708a045041d349}{\#define \hyperlink{group__tle7232__driver_ga9969132fe427bf6d85708a045041d349}{T\-L\-E7232\-\_\-\-S\-L\-E\-W\-\_\-\-F\-A\-S\-T}~0}\label{group__tle7232__driver_ga9969132fe427bf6d85708a045041d349}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an output should be toggled with a high slew rate. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_gaafc5605a1d7f50da7eabc93169f965c9}{\#define \hyperlink{group__tle7232__driver_gaafc5605a1d7f50da7eabc93169f965c9}{T\-L\-E7232\-\_\-\-S\-L\-E\-W\-\_\-\-S\-L\-O\-W}~1}\label{group__tle7232__driver_gaafc5605a1d7f50da7eabc93169f965c9}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an output should be toggled with a low slew rate. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_gab886743dbb4204b8bd27b7495f9a8847}{\#define \hyperlink{group__tle7232__driver_gab886743dbb4204b8bd27b7495f9a8847}{T\-L\-E7232\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-O\-F\-F}~0}\label{group__tle7232__driver_gab886743dbb4204b8bd27b7495f9a8847}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an output should be turned off. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga3d05c892163115f5ba5e87c4939ecb7f}{\#define \hyperlink{group__tle7232__driver_ga3d05c892163115f5ba5e87c4939ecb7f}{T\-L\-E7232\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-O\-N}~1}\label{group__tle7232__driver_ga3d05c892163115f5ba5e87c4939ecb7f}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an output should be turned on. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga1cd67769a2ac03b866d2f891766e0af4}{\#define \hyperlink{group__tle7232__driver_ga1cd67769a2ac03b866d2f891766e0af4}{T\-L\-E7232\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-L\-I\-M\-I\-T}~0}\label{group__tle7232__driver_ga1cd67769a2ac03b866d2f891766e0af4}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an output current fault should enter current limiting. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_gae3d427736a0d9839593d5cceaaec90ec}{\#define \hyperlink{group__tle7232__driver_gae3d427736a0d9839593d5cceaaec90ec}{T\-L\-E7232\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-F\-A\-U\-L\-T\-\_\-\-O\-F\-F}~1}\label{group__tle7232__driver_gae3d427736a0d9839593d5cceaaec90ec}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an output current fault should disable the channel until cleared. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga8f8a4167b9dca7249c7a09b1370ecd33}{\#define \hyperlink{group__tle7232__driver_ga8f8a4167b9dca7249c7a09b1370ecd33}{T\-L\-E7232\-\_\-\-T\-E\-M\-P\-\_\-\-F\-A\-U\-L\-T\-\_\-\-R\-E\-S\-T\-A\-R\-T}~0}\label{group__tle7232__driver_ga8f8a4167b9dca7249c7a09b1370ecd33}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an output over temperature fault should restart after cooldown. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga5d58ff304d7b6adf09ca14e9cd0771c0}{\#define \hyperlink{group__tle7232__driver_ga5d58ff304d7b6adf09ca14e9cd0771c0}{T\-L\-E7232\-\_\-\-T\-E\-M\-P\-\_\-\-F\-A\-U\-L\-T\-\_\-\-O\-F\-F}~1}\label{group__tle7232__driver_ga5d58ff304d7b6adf09ca14e9cd0771c0}
+
+\begin{DoxyCompactList}\small\item\em Defines the value for specifying that an output over temperature fault should disable the channel until cleared. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_gaf3e778e49469b6ce4fc05cb8092b1e78}{\#define \hyperlink{group__tle7232__driver_gaf3e778e49469b6ce4fc05cb8092b1e78}{T\-L\-E7232\-\_\-\-C\-S\-\_\-\-L\-O\-W}()~(G\-P\-I\-O\-\_\-\-Reset\-Bits(T\-L\-E7232\-\_\-\-C\-S\-\_\-\-G\-P\-I\-O\-\_\-\-P\-O\-R\-T, T\-L\-E7232\-\_\-\-C\-S\-\_\-\-P\-I\-N))}\label{group__tle7232__driver_gaf3e778e49469b6ce4fc05cb8092b1e78}
+
+\begin{DoxyCompactList}\small\item\em Function like M\-A\-C\-R\-O to select T\-L\-E7232\-: Chip Select pin low. \end{DoxyCompactList}\item 
+\hypertarget{group__tle7232__driver_ga3a719332ae22bc9078a2b10a07c4e4f0}{\#define \hyperlink{group__tle7232__driver_ga3a719332ae22bc9078a2b10a07c4e4f0}{T\-L\-E7232\-\_\-\-C\-S\-\_\-\-H\-I\-G\-H}()~(G\-P\-I\-O\-\_\-\-Set\-Bits(T\-L\-E7232\-\_\-\-C\-S\-\_\-\-G\-P\-I\-O\-\_\-\-P\-O\-R\-T, T\-L\-E7232\-\_\-\-C\-S\-\_\-\-P\-I\-N))}\label{group__tle7232__driver_ga3a719332ae22bc9078a2b10a07c4e4f0}
+
+\begin{DoxyCompactList}\small\item\em Function like M\-A\-C\-R\-O to de-\/select T\-L\-E7232\-: Chip Select pin high. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__tle7232__driver_gaa9b9a934fcc689bc16f7dbf4ba70feb1}{typedef \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool}($\ast$ \hyperlink{group__tle7232__driver_gaa9b9a934fcc689bc16f7dbf4ba70feb1}{Set\-Output\-Fault\-Status} )(\hyperlink{group__tle7232__driver_ga84bb3f68b575c6add1c27f053b87746a}{T\-L\-E7232\-\_\-\-Status\-\_\-t} status, uint8\-\_\-t chip\-\_\-id, uint8\-\_\-t channel)}\label{group__tle7232__driver_gaa9b9a934fcc689bc16f7dbf4ba70feb1}
+
+\begin{DoxyCompactList}\small\item\em Function pointer definition for setting the fault status of a channel. Defines a function pointer which can be used to set the fault status of a particular channel on a particular driver chip. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__tle7232__driver_gadfd620e995ab38cff032a38f7a26c750}{T\-L\-E7232\-\_\-\-Command\-\_\-t} \{ \hyperlink{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a0c2fb7bd6f85d6b969d4994b4df86ec2}{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-D\-I\-A\-G\-N\-O\-S\-I\-S} = ((uint16\-\_\-t) 0x0000), 
+\hyperlink{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a6d83b794ae8afa281ba77ad2ce8bb1e2}{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-A\-D\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R} = ((uint16\-\_\-t) 0x4000), 
+\hyperlink{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a92f81a617ea64c1750305ee7f78295ea}{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-S\-E\-T\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S} = ((uint16\-\_\-t) 0x8000), 
+\hyperlink{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a84c6f231bfdf34e25a62748562eebc03}{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-W\-R\-I\-T\-E\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R} = ((uint16\-\_\-t) 0x\-C000)
+ \}
+\begin{DoxyCompactList}\small\item\em Command enumeration. Defines the possible commands which can be sent to the T\-L\-E7232 chip over S\-P\-I. They are defined such that you can bitwise O\-R valid register addresses and data to compose a valid S\-P\-I word. \end{DoxyCompactList}\item 
+enum \hyperlink{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}{T\-L\-E7232\-\_\-\-Register\-\_\-t} \{ \\*
+\hyperlink{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffac605987bd4b9ba532b761e612677c4e8}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-I\-M\-C\-R} = ((uint16\-\_\-t) 0x0100), 
+\hyperlink{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffaf59e5d7aecd963852e51afddc0beb495}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-B\-O\-C\-R} = ((uint16\-\_\-t) 0x0200), 
+\hyperlink{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffad2e338648c58e761ac1a67cdb835ddee}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-L\-C\-R} = ((uint16\-\_\-t) 0x0300), 
+\hyperlink{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffacc6c5d10483955ece767f0479156d5c8}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-T\-C\-R} = ((uint16\-\_\-t) 0x0400), 
+\\*
+\hyperlink{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffabda605c9fd11bb4b3ebec02afc0b3779}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-R\-C\-R} = ((uint16\-\_\-t) 0x0500), 
+\hyperlink{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffa3cfa8fd947bed261da5941282b4ba3c2}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-T\-A} = ((uint16\-\_\-t) 0x0600), 
+\hyperlink{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffa5f2571f5978ed414d188b4d9d045e4c3}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-C\-T\-L} = ((uint16\-\_\-t) 0x0700)
+ \}
+\begin{DoxyCompactList}\small\item\em Register enumeration. Defines the registers and their addresses for the T\-L\-E7232. They are defined such that you can bitwise O\-R valid commands and data to compose a valid S\-P\-I word. \end{DoxyCompactList}\item 
+enum \hyperlink{group__tle7232__driver_ga84bb3f68b575c6add1c27f053b87746a}{T\-L\-E7232\-\_\-\-Status\-\_\-t} \{ \hyperlink{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aaba0966287a04856e8adc96bf43660a25}{T\-L\-E7232\-\_\-\-Short\-\_\-\-To\-\_\-\-Ground} = ((uint8\-\_\-t) 0x00), 
+\hyperlink{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aa7f953b1ba715cf01969f1ee75ac66b5a}{T\-L\-E7232\-\_\-\-Open\-\_\-\-Load} = ((uint8\-\_\-t) 0x01), 
+\hyperlink{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aaa205b2791276ee1bf81498e720eb26be}{T\-L\-E7232\-\_\-\-Overload\-\_\-\-Overtemp} = ((uint8\-\_\-t) 0x02), 
+\hyperlink{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aa41ad46c089b8040e5c8fe85befa75589}{T\-L\-E7232\-\_\-\-Normal\-\_\-\-Operation} = ((uint8\-\_\-t) 0x03)
+ \}
+\begin{DoxyCompactList}\small\item\em T\-L\-E7232 Status enumeration. Defines the possible status states of the T\-L\-E7232. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__tle7232__driver_ga97ef893379ebeb042e738b4cecfa8bff}{T\-L\-E7232\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the T\-L\-E7232 Driver. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_ga307b487187274ea82fd8f1674a0e2d3c}{T\-L\-E7232\-\_\-\-Reset} (void)
+\begin{DoxyCompactList}\small\item\em Reset the T\-L\-E7232. \end{DoxyCompactList}\item 
+uint16\-\_\-t \hyperlink{group__tle7232__driver_ga82fd3520b4ff7c04460d6e37490a29eb}{T\-L\-E7232\-\_\-\-Read\-Diagnosis} (uint8\-\_\-t chip\-\_\-index)
+\begin{DoxyCompactList}\small\item\em Read the diagnosis registers of the specified device. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_gadefac9d800f68f872c6c8c4d5b3379cd}{T\-L\-E7232\-\_\-\-Read\-All\-Diagnosis} (void)
+\begin{DoxyCompactList}\small\item\em Read the diagnosis registers of all devices. \end{DoxyCompactList}\item 
+uint16\-\_\-t \hyperlink{group__tle7232__driver_ga70b056c53eb119997811f7d942007109}{T\-L\-E7232\-\_\-\-Get\-Diagnosis} (uint8\-\_\-t chip\-\_\-index)
+\item 
+void \hyperlink{group__tle7232__driver_ga5b83ed93b7c747534e40c3b6a0cd994e}{T\-L\-E7232\-\_\-\-Reset\-Registers} (uint8\-\_\-t chip\-\_\-index)
+\begin{DoxyCompactList}\small\item\em Reset the diagnosis registers of the specified device. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_gac27a30e4da66392e2a53b1414aa3c9cb}{T\-L\-E7232\-\_\-\-Reset\-All\-Registers} (void)
+\begin{DoxyCompactList}\small\item\em Reset the diagnosis registers of all devices. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_gabf56c66110adfb8658cff9c2f6fc5cd6}{T\-L\-E7232\-\_\-\-Write\-Register} (\hyperlink{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}{T\-L\-E7232\-\_\-\-Register\-\_\-t} reg, uint8\-\_\-t data, uint8\-\_\-t chip\-\_\-index)
+\begin{DoxyCompactList}\small\item\em Write the specified data to the specified register of a device. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_ga082ee2578c277c689e4ce6c0647cdcf5}{T\-L\-E7232\-\_\-\-Write\-Register\-All} (\hyperlink{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}{T\-L\-E7232\-\_\-\-Register\-\_\-t} reg, uint8\-\_\-t data\mbox{[}N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]})
+\begin{DoxyCompactList}\small\item\em Write the specified data to the specified register of all devices. Data can be different for each device. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_gaf3e85d7d9a54143703684223ac382b9e}{T\-L\-E7232\-\_\-\-Write\-Arbitrary\-Register\-All} (\hyperlink{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}{T\-L\-E7232\-\_\-\-Register\-\_\-t} reg\mbox{[}N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]}, uint8\-\_\-t data\mbox{[}N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]})
+\begin{DoxyCompactList}\small\item\em Write the specified data to the specified register of all devices. Register and data can be different for each device. \end{DoxyCompactList}\item 
+uint8\-\_\-t \hyperlink{group__tle7232__driver_ga5d2ff3c331e9b1bd5d1d4522ffc92b5d}{T\-L\-E7232\-\_\-\-Read\-Register} (\hyperlink{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}{T\-L\-E7232\-\_\-\-Register\-\_\-t} reg, uint8\-\_\-t chip\-\_\-index)
+\begin{DoxyCompactList}\small\item\em Read the specified register of a specific device. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_ga69d5853d67c276595fc03169822f65f9}{T\-L\-E7232\-\_\-\-Read\-Register\-All} (\hyperlink{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}{T\-L\-E7232\-\_\-\-Register\-\_\-t} reg, uint8\-\_\-t data\mbox{[}N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]})
+\begin{DoxyCompactList}\small\item\em Read the specified register of all devices. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_ga6e1abd4edfc5d3be4de3f98716b21786}{T\-L\-E7232\-\_\-\-Read\-Arbitrary\-Register\-All} (\hyperlink{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}{T\-L\-E7232\-\_\-\-Register\-\_\-t} reg\mbox{[}N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]}, uint8\-\_\-t data\mbox{[}N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]})
+\begin{DoxyCompactList}\small\item\em Read arbitrary registers from each device. \end{DoxyCompactList}\item 
+void \hyperlink{group__tle7232__driver_ga1db076dc4fbbff6d149a2a80f3070e6a}{Set\-Output\-Fault\-Status\-Function} (\hyperlink{group__tle7232__driver_gaa9b9a934fcc689bc16f7dbf4ba70feb1}{Set\-Output\-Fault\-Status} func)
+\begin{DoxyCompactList}\small\item\em Sets the function to be called when an output fault occurs. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__tle7232__driver_gadfd620e995ab38cff032a38f7a26c750}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Command\-\_\-t@{T\-L\-E7232\-\_\-\-Command\-\_\-t}}
+\index{T\-L\-E7232\-\_\-\-Command\-\_\-t@{T\-L\-E7232\-\_\-\-Command\-\_\-t}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Command\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf T\-L\-E7232\-\_\-\-Command\-\_\-t}}}\label{group__tle7232__driver_gadfd620e995ab38cff032a38f7a26c750}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-D\-I\-A\-G\-N\-O\-S\-I\-S@{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-D\-I\-A\-G\-N\-O\-S\-I\-S}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-D\-I\-A\-G\-N\-O\-S\-I\-S@{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-D\-I\-A\-G\-N\-O\-S\-I\-S}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a0c2fb7bd6f85d6b969d4994b4df86ec2}{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-D\-I\-A\-G\-N\-O\-S\-I\-S}\label{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a0c2fb7bd6f85d6b969d4994b4df86ec2}
+}]Read diagnosis only. \index{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-A\-D\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R@{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-A\-D\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-A\-D\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R@{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-A\-D\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a6d83b794ae8afa281ba77ad2ce8bb1e2}{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-A\-D\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R}\label{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a6d83b794ae8afa281ba77ad2ce8bb1e2}
+}]Read the contents of a register. \index{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-S\-E\-T\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S@{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-S\-E\-T\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-S\-E\-T\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S@{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-S\-E\-T\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a92f81a617ea64c1750305ee7f78295ea}{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-R\-E\-S\-E\-T\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-S}\label{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a92f81a617ea64c1750305ee7f78295ea}
+}]Reset the registers to their default value. \index{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-W\-R\-I\-T\-E\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R@{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-W\-R\-I\-T\-E\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-W\-R\-I\-T\-E\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R@{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-W\-R\-I\-T\-E\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a84c6f231bfdf34e25a62748562eebc03}{T\-L\-E7232\-\_\-\-C\-M\-D\-\_\-\-W\-R\-I\-T\-E\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R}\label{group__tle7232__driver_ggadfd620e995ab38cff032a38f7a26c750a84c6f231bfdf34e25a62748562eebc03}
+}]Write the contents of a register. \end{description}
+\end{Desc}
+
+
+Definition at line 144 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-h.
+
+\hypertarget{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Register\-\_\-t@{T\-L\-E7232\-\_\-\-Register\-\_\-t}}
+\index{T\-L\-E7232\-\_\-\-Register\-\_\-t@{T\-L\-E7232\-\_\-\-Register\-\_\-t}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Register\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf T\-L\-E7232\-\_\-\-Register\-\_\-t}}}\label{group__tle7232__driver_gabd1d28f92015db8d6a418c8346f4b4ff}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-I\-M\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-I\-M\-C\-R}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-I\-M\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-I\-M\-C\-R}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffac605987bd4b9ba532b761e612677c4e8}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-I\-M\-C\-R}\label{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffac605987bd4b9ba532b761e612677c4e8}
+}]Input mapping configuration register. Defaults to 0x08. \index{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-B\-O\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-B\-O\-C\-R}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-B\-O\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-B\-O\-C\-R}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffaf59e5d7aecd963852e51afddc0beb495}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-B\-O\-C\-R}\label{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffaf59e5d7aecd963852e51afddc0beb495}
+}]Boolean operator configuration register. Defaults to 0x00. \index{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-L\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-L\-C\-R}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-L\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-L\-C\-R}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffad2e338648c58e761ac1a67cdb835ddee}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-L\-C\-R}\label{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffad2e338648c58e761ac1a67cdb835ddee}
+}]Overload configuration register. Defaults to 0x00. \index{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-T\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-T\-C\-R}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-T\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-T\-C\-R}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffacc6c5d10483955ece767f0479156d5c8}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-O\-T\-C\-R}\label{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffacc6c5d10483955ece767f0479156d5c8}
+}]Overtemperature configuration register. Defaults to 0x00. \index{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-R\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-R\-C\-R}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-R\-C\-R@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-R\-C\-R}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffabda605c9fd11bb4b3ebec02afc0b3779}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-R\-C\-R}\label{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffabda605c9fd11bb4b3ebec02afc0b3779}
+}]Slew rate configuration register. Defaults to 0x00. \index{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-T\-A@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-T\-A}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-T\-A@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-T\-A}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffa3cfa8fd947bed261da5941282b4ba3c2}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-S\-T\-A}\label{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffa3cfa8fd947bed261da5941282b4ba3c2}
+}]Output status monitor. Defaults to 0x00. \index{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-C\-T\-L@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-C\-T\-L}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-C\-T\-L@{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-C\-T\-L}}\item[{\em 
+\hypertarget{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffa5f2571f5978ed414d188b4d9d045e4c3}{T\-L\-E7232\-\_\-\-R\-E\-G\-\_\-\-C\-T\-L}\label{group__tle7232__driver_ggabd1d28f92015db8d6a418c8346f4b4ffa5f2571f5978ed414d188b4d9d045e4c3}
+}]Output control register. Defaults to 0x00. \end{description}
+\end{Desc}
+
+
+Definition at line 156 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-h.
+
+\hypertarget{group__tle7232__driver_ga84bb3f68b575c6add1c27f053b87746a}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Status\-\_\-t@{T\-L\-E7232\-\_\-\-Status\-\_\-t}}
+\index{T\-L\-E7232\-\_\-\-Status\-\_\-t@{T\-L\-E7232\-\_\-\-Status\-\_\-t}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Status\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf T\-L\-E7232\-\_\-\-Status\-\_\-t}}}\label{group__tle7232__driver_ga84bb3f68b575c6add1c27f053b87746a}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{T\-L\-E7232\-\_\-\-Short\-\_\-\-To\-\_\-\-Ground@{T\-L\-E7232\-\_\-\-Short\-\_\-\-To\-\_\-\-Ground}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Short\-\_\-\-To\-\_\-\-Ground@{T\-L\-E7232\-\_\-\-Short\-\_\-\-To\-\_\-\-Ground}}\item[{\em 
+\hypertarget{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aaba0966287a04856e8adc96bf43660a25}{T\-L\-E7232\-\_\-\-Short\-\_\-\-To\-\_\-\-Ground}\label{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aaba0966287a04856e8adc96bf43660a25}
+}]The channel is shorted to ground. \index{T\-L\-E7232\-\_\-\-Open\-\_\-\-Load@{T\-L\-E7232\-\_\-\-Open\-\_\-\-Load}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Open\-\_\-\-Load@{T\-L\-E7232\-\_\-\-Open\-\_\-\-Load}}\item[{\em 
+\hypertarget{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aa7f953b1ba715cf01969f1ee75ac66b5a}{T\-L\-E7232\-\_\-\-Open\-\_\-\-Load}\label{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aa7f953b1ba715cf01969f1ee75ac66b5a}
+}]The channel is open circuit/open load. \index{T\-L\-E7232\-\_\-\-Overload\-\_\-\-Overtemp@{T\-L\-E7232\-\_\-\-Overload\-\_\-\-Overtemp}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Overload\-\_\-\-Overtemp@{T\-L\-E7232\-\_\-\-Overload\-\_\-\-Overtemp}}\item[{\em 
+\hypertarget{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aaa205b2791276ee1bf81498e720eb26be}{T\-L\-E7232\-\_\-\-Overload\-\_\-\-Overtemp}\label{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aaa205b2791276ee1bf81498e720eb26be}
+}]The channel is in overtemperature overload. \index{T\-L\-E7232\-\_\-\-Normal\-\_\-\-Operation@{T\-L\-E7232\-\_\-\-Normal\-\_\-\-Operation}!T\-L\-E7232 Driver@{T\-L\-E7232 Driver}}\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Normal\-\_\-\-Operation@{T\-L\-E7232\-\_\-\-Normal\-\_\-\-Operation}}\item[{\em 
+\hypertarget{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aa41ad46c089b8040e5c8fe85befa75589}{T\-L\-E7232\-\_\-\-Normal\-\_\-\-Operation}\label{group__tle7232__driver_gga84bb3f68b575c6add1c27f053b87746aa41ad46c089b8040e5c8fe85befa75589}
+}]The channel is in normal operation. \end{description}
+\end{Desc}
+
+
+Definition at line 170 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__tle7232__driver_ga1db076dc4fbbff6d149a2a80f3070e6a}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!Set\-Output\-Fault\-Status\-Function@{Set\-Output\-Fault\-Status\-Function}}
+\index{Set\-Output\-Fault\-Status\-Function@{Set\-Output\-Fault\-Status\-Function}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{Set\-Output\-Fault\-Status\-Function}]{\setlength{\rightskip}{0pt plus 5cm}void Set\-Output\-Fault\-Status\-Function (
+\begin{DoxyParamCaption}
+\item[{{\bf Set\-Output\-Fault\-Status}}]{func}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga1db076dc4fbbff6d149a2a80f3070e6a}
+Sets the function pointer for updating the output fault status when detected.
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & Set\-Output\-Fault\-Status The function pointer. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 569 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga70b056c53eb119997811f7d942007109}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Get\-Diagnosis@{T\-L\-E7232\-\_\-\-Get\-Diagnosis}}
+\index{T\-L\-E7232\-\_\-\-Get\-Diagnosis@{T\-L\-E7232\-\_\-\-Get\-Diagnosis}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Get\-Diagnosis}]{\setlength{\rightskip}{0pt plus 5cm}uint16\-\_\-t T\-L\-E7232\-\_\-\-Get\-Diagnosis (
+\begin{DoxyParamCaption}
+\item[{uint8\-\_\-t}]{chip\-\_\-index}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga70b056c53eb119997811f7d942007109}
+Retrieve the diagnosis registers of the specified device.
+
+Retrieve the current local copy of the diagnosis register for the specified driver chip.
+
+
+\begin{DoxyParams}{Parameters}
+{\em chip\-\_\-index} & uint8\-\_\-t The index of the chip to read the diagnosis register from. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint16\-\_\-t} & The retrieved diagnosis register value. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 299 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga97ef893379ebeb042e738b4cecfa8bff}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Init@{T\-L\-E7232\-\_\-\-Init}}
+\index{T\-L\-E7232\-\_\-\-Init@{T\-L\-E7232\-\_\-\-Init}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga97ef893379ebeb042e738b4cecfa8bff}
+Initializes the T\-L\-E7232 relay drivers and prepares them to receive commands.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 197 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_gadefac9d800f68f872c6c8c4d5b3379cd}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Read\-All\-Diagnosis@{T\-L\-E7232\-\_\-\-Read\-All\-Diagnosis}}
+\index{T\-L\-E7232\-\_\-\-Read\-All\-Diagnosis@{T\-L\-E7232\-\_\-\-Read\-All\-Diagnosis}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Read\-All\-Diagnosis}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Read\-All\-Diagnosis (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_gadefac9d800f68f872c6c8c4d5b3379cd}
+Reads the diagnosis register from all T\-L\-E7232 driver chips in the daisy chain, storing them in the local Diagnosis\-Registers copy.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 274 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga6e1abd4edfc5d3be4de3f98716b21786}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Read\-Arbitrary\-Register\-All@{T\-L\-E7232\-\_\-\-Read\-Arbitrary\-Register\-All}}
+\index{T\-L\-E7232\-\_\-\-Read\-Arbitrary\-Register\-All@{T\-L\-E7232\-\_\-\-Read\-Arbitrary\-Register\-All}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Read\-Arbitrary\-Register\-All}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Read\-Arbitrary\-Register\-All (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-L\-E7232\-\_\-\-Register\-\_\-t}}]{reg\mbox{[}\-N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]}, }
+\item[{uint8\-\_\-t}]{data\mbox{[}\-N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga6e1abd4edfc5d3be4de3f98716b21786}
+Reads all T\-K\-E7232 drivers, pulling the specified register from the specified T\-L\-E7232 drivers in the chain.
+
+
+\begin{DoxyParams}{Parameters}
+{\em reg} & T\-L\-E7232\-\_\-\-Register\-\_\-t The register to read data from, indexed by chip index. \\
+\hline
+{\em data} & uint8\-\_\-t\mbox{[}\mbox{]} Array to store the read-\/in data, indexed by chip index. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 541 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga82fd3520b4ff7c04460d6e37490a29eb}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Read\-Diagnosis@{T\-L\-E7232\-\_\-\-Read\-Diagnosis}}
+\index{T\-L\-E7232\-\_\-\-Read\-Diagnosis@{T\-L\-E7232\-\_\-\-Read\-Diagnosis}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Read\-Diagnosis}]{\setlength{\rightskip}{0pt plus 5cm}uint16\-\_\-t T\-L\-E7232\-\_\-\-Read\-Diagnosis (
+\begin{DoxyParamCaption}
+\item[{uint8\-\_\-t}]{chip\-\_\-index}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga82fd3520b4ff7c04460d6e37490a29eb}
+Reads the diagnosis register from the specified T\-L\-E7232 driver chip.
+
+
+\begin{DoxyParams}{Parameters}
+{\em chip\-\_\-index} & uint8\-\_\-t The index of the chip to read the diagnosis register from. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint16\-\_\-t} & The read-\/in diagnosis register. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 240 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga5d2ff3c331e9b1bd5d1d4522ffc92b5d}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Read\-Register@{T\-L\-E7232\-\_\-\-Read\-Register}}
+\index{T\-L\-E7232\-\_\-\-Read\-Register@{T\-L\-E7232\-\_\-\-Read\-Register}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Read\-Register}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t T\-L\-E7232\-\_\-\-Read\-Register (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-L\-E7232\-\_\-\-Register\-\_\-t}}]{reg, }
+\item[{uint8\-\_\-t}]{chip\-\_\-index}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga5d2ff3c331e9b1bd5d1d4522ffc92b5d}
+Reads the specified register from the specified T\-L\-E7232 driver.
+
+
+\begin{DoxyParams}{Parameters}
+{\em reg} & T\-L\-E7232\-\_\-\-Register\-\_\-t The register to read data from. \\
+\hline
+{\em chip\-\_\-index} & The specific T\-L\-E7232 to read data from. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em uint8\-\_\-t} & The read-\/in data. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 474 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga69d5853d67c276595fc03169822f65f9}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Read\-Register\-All@{T\-L\-E7232\-\_\-\-Read\-Register\-All}}
+\index{T\-L\-E7232\-\_\-\-Read\-Register\-All@{T\-L\-E7232\-\_\-\-Read\-Register\-All}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Read\-Register\-All}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Read\-Register\-All (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-L\-E7232\-\_\-\-Register\-\_\-t}}]{reg, }
+\item[{uint8\-\_\-t}]{data\mbox{[}\-N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga69d5853d67c276595fc03169822f65f9}
+Reads the specified register from all T\-L\-E7232 drivers in the chain.
+
+
+\begin{DoxyParams}{Parameters}
+{\em reg} & T\-L\-E7232\-\_\-\-Register\-\_\-t The register to read data from. \\
+\hline
+{\em data} & uint8\-\_\-t\mbox{[}\mbox{]} Array to store the read-\/in data, indexed by chip index. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 511 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga307b487187274ea82fd8f1674a0e2d3c}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Reset@{T\-L\-E7232\-\_\-\-Reset}}
+\index{T\-L\-E7232\-\_\-\-Reset@{T\-L\-E7232\-\_\-\-Reset}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Reset}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Reset (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga307b487187274ea82fd8f1674a0e2d3c}
+Resets the T\-L\-E7232 drivers, returning them to their default state. This method does not require S\-P\-I communication and can be used to re-\/establish lost communication.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 228 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_gac27a30e4da66392e2a53b1414aa3c9cb}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Reset\-All\-Registers@{T\-L\-E7232\-\_\-\-Reset\-All\-Registers}}
+\index{T\-L\-E7232\-\_\-\-Reset\-All\-Registers@{T\-L\-E7232\-\_\-\-Reset\-All\-Registers}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Reset\-All\-Registers}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Reset\-All\-Registers (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_gac27a30e4da66392e2a53b1414aa3c9cb}
+Resets (clears errors) from the diagnosis register of all T\-L\-E7232 drivers in the daisy chain.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 354 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga5b83ed93b7c747534e40c3b6a0cd994e}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Reset\-Registers@{T\-L\-E7232\-\_\-\-Reset\-Registers}}
+\index{T\-L\-E7232\-\_\-\-Reset\-Registers@{T\-L\-E7232\-\_\-\-Reset\-Registers}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Reset\-Registers}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Reset\-Registers (
+\begin{DoxyParamCaption}
+\item[{uint8\-\_\-t}]{chip\-\_\-index}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga5b83ed93b7c747534e40c3b6a0cd994e}
+Resets (clears errors) from the diagnosis register of the specified driver chip.
+
+
+\begin{DoxyParams}{Parameters}
+{\em chip\-\_\-index} & uint8\-\_\-t The index of the chip to read the diagnosis register from. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 317 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_gaf3e85d7d9a54143703684223ac382b9e}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Write\-Arbitrary\-Register\-All@{T\-L\-E7232\-\_\-\-Write\-Arbitrary\-Register\-All}}
+\index{T\-L\-E7232\-\_\-\-Write\-Arbitrary\-Register\-All@{T\-L\-E7232\-\_\-\-Write\-Arbitrary\-Register\-All}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Write\-Arbitrary\-Register\-All}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Write\-Arbitrary\-Register\-All (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-L\-E7232\-\_\-\-Register\-\_\-t}}]{reg\mbox{[}\-N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]}, }
+\item[{uint8\-\_\-t}]{data\mbox{[}\-N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_gaf3e85d7d9a54143703684223ac382b9e}
+Writes the provided data to the specified register of each T\-L\-E7232 drivers in the chain.
+
+
+\begin{DoxyParams}{Parameters}
+{\em reg} & T\-L\-E7232\-\_\-\-Register\-\_\-t The register to write data to, indexed by chip index. \\
+\hline
+{\em data} & uint8\-\_\-t\mbox{[}\mbox{]} The data to write, indexed by chip index. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 444 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_gabf56c66110adfb8658cff9c2f6fc5cd6}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Write\-Register@{T\-L\-E7232\-\_\-\-Write\-Register}}
+\index{T\-L\-E7232\-\_\-\-Write\-Register@{T\-L\-E7232\-\_\-\-Write\-Register}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Write\-Register}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Write\-Register (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-L\-E7232\-\_\-\-Register\-\_\-t}}]{reg, }
+\item[{uint8\-\_\-t}]{data, }
+\item[{uint8\-\_\-t}]{chip\-\_\-index}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_gabf56c66110adfb8658cff9c2f6fc5cd6}
+Writes the provided data to the specified register of the specified T\-L\-E7232 driver in the chain.
+
+
+\begin{DoxyParams}{Parameters}
+{\em reg} & T\-L\-E7232\-\_\-\-Register\-\_\-t The register to write data to. \\
+\hline
+{\em data} & uint8\-\_\-t The data to write \\
+\hline
+{\em chip\-\_\-index} & The specific T\-L\-E7232 to write data to. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 382 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+
+\hypertarget{group__tle7232__driver_ga082ee2578c277c689e4ce6c0647cdcf5}{\index{T\-L\-E7232 Driver@{T\-L\-E7232 Driver}!T\-L\-E7232\-\_\-\-Write\-Register\-All@{T\-L\-E7232\-\_\-\-Write\-Register\-All}}
+\index{T\-L\-E7232\-\_\-\-Write\-Register\-All@{T\-L\-E7232\-\_\-\-Write\-Register\-All}!TLE7232 Driver@{T\-L\-E7232 Driver}}
+\subsubsection[{T\-L\-E7232\-\_\-\-Write\-Register\-All}]{\setlength{\rightskip}{0pt plus 5cm}void T\-L\-E7232\-\_\-\-Write\-Register\-All (
+\begin{DoxyParamCaption}
+\item[{{\bf T\-L\-E7232\-\_\-\-Register\-\_\-t}}]{reg, }
+\item[{uint8\-\_\-t}]{data\mbox{[}\-N\-U\-M\-B\-E\-R\-\_\-\-T\-L\-E7232\-\_\-\-C\-H\-I\-P\-S\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{group__tle7232__driver_ga082ee2578c277c689e4ce6c0647cdcf5}
+Writes the provided data to the specified register of the all T\-L\-E7232 drivers in the chain.
+
+
+\begin{DoxyParams}{Parameters}
+{\em reg} & T\-L\-E7232\-\_\-\-Register\-\_\-t The register to write data to. \\
+\hline
+{\em data} & uint8\-\_\-t\mbox{[}\mbox{]} The data to write, indexed by chip index. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 414 of file T\-L\-E7232\-\_\-\-Relay\-Driver.\-c.
+

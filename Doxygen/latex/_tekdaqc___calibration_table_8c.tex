@@ -1,0 +1,482 @@
+\hypertarget{_tekdaqc___calibration_table_8c}{\section{Tekdaqc\-\_\-\-Calibration\-Table.\-c File Reference}
+\label{_tekdaqc___calibration_table_8c}\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+}
+
+
+Implements a calibration lookup table for analog measurements.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Calibration\-Table.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-B\-S\-P.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Telnet\-Server.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include $<$inttypes.\-h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{_tekdaqc___calibration_table_8c_af6ecb791b957781d6401a3019dba657b}{Tekdaqc\-\_\-\-Calibration\-Init} (void)
+\item 
+uint32\-\_\-t \hyperlink{_tekdaqc___calibration_table_8c_a7fdb97e78b7e8036eb9b9dc1053d2f6a}{Tekdaqc\-\_\-\-Get\-Gain\-Calibration} (\hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} rate, \hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} gain, \hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} buffer, float temperature)
+\begin{DoxyCompactList}\small\item\em Retrieves a gain calibration value for the specified parameters. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{_tekdaqc___calibration_table_8c_ac10ad531169839fabde0444d38594134}{Tekdaqc\-\_\-\-Get\-Offset\-Calibration} (\hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} rate, \hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} gain, \hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} buffer)
+\begin{DoxyCompactList}\small\item\em Retrieves an offset calibration value for the specified parameters. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{_tekdaqc___calibration_table_8c_ab112c2a9907278f9c2875742841b0597}{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Offset\-Calibration} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the offset calibration value for the cold junction. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{_tekdaqc___calibration_table_8c_a4ad75008ed876cbb2ae2d56b5b5a2bc0}{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Gain\-Calibration} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves a gain calibration value for the cold junction. \end{DoxyCompactList}\item 
+F\-L\-A\-S\-H\-\_\-\-Status \hyperlink{_tekdaqc___calibration_table_8c_ac005584d9f0811033e24d9f3f3e8519f}{Tekdaqc\-\_\-\-Set\-Calibration\-Mode} (void)
+\begin{DoxyCompactList}\small\item\em Enters calibration mode, enabling write access to the calibration table. \end{DoxyCompactList}\item 
+void \hyperlink{_tekdaqc___calibration_table_8c_a0c1fa5f649f31632cfa62a1b59b5ae17}{Tekdaqc\-\_\-\-End\-Calibration\-Mode} (void)
+\begin{DoxyCompactList}\small\item\em Exits calibration mode, disabling write access to the calibration table. \end{DoxyCompactList}\item 
+F\-L\-A\-S\-H\-\_\-\-Status \hyperlink{_tekdaqc___calibration_table_8c_a180d881a8974f106b80ea5c1a88e2ae0}{Tekdaqc\-\_\-\-Set\-Serial\-Number} (char $\ast$serial)
+\begin{DoxyCompactList}\small\item\em Sets the serial number of this Tekdaqc. \end{DoxyCompactList}\item 
+F\-L\-A\-S\-H\-\_\-\-Status \hyperlink{_tekdaqc___calibration_table_8c_af7596691e91746a2326357b5c0f7ddd4}{Tekdaqc\-\_\-\-Set\-Calibration\-Low\-Temperature} (float temp)
+\begin{DoxyCompactList}\small\item\em Sets the temperature value for the lowest temperature entry of the table. \end{DoxyCompactList}\item 
+F\-L\-A\-S\-H\-\_\-\-Status \hyperlink{_tekdaqc___calibration_table_8c_a3864bec21d5077b294b23d177de99db6}{Tekdaqc\-\_\-\-Set\-Calibration\-High\-Temperature} (float temp)
+\begin{DoxyCompactList}\small\item\em Sets the temperature value for the highest temperature entry of the table. \end{DoxyCompactList}\item 
+F\-L\-A\-S\-H\-\_\-\-Status \hyperlink{_tekdaqc___calibration_table_8c_a3391c5f7bb8b43d1dbd2f047100b35c6}{Tekdaqc\-\_\-\-Set\-Calibration\-Step\-Temperature} (float temp)
+\begin{DoxyCompactList}\small\item\em Sets the temperature step value for the temperature entries of the table. \end{DoxyCompactList}\item 
+F\-L\-A\-S\-H\-\_\-\-Status \hyperlink{_tekdaqc___calibration_table_8c_a8f0cb3a405f24587e7ae051211471bc1}{Tekdaqc\-\_\-\-Set\-Gain\-Calibration} (uint32\-\_\-t cal, \hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} rate, \hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} gain, \hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} buffer, float temperature)
+\begin{DoxyCompactList}\small\item\em Sets the gain calibration value for the specified parameters. \end{DoxyCompactList}\item 
+F\-L\-A\-S\-H\-\_\-\-Status \hyperlink{_tekdaqc___calibration_table_8c_a74549da5ded91bc8cba5a5a445ed8d7a}{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Offset\-Calibration} (uint32\-\_\-t cal)
+\begin{DoxyCompactList}\small\item\em Sets the offset calibration value to be used for the cold junction sensor. \end{DoxyCompactList}\item 
+F\-L\-A\-S\-H\-\_\-\-Status \hyperlink{_tekdaqc___calibration_table_8c_a6afb54dbf18cdb79ce973cf728c3038f}{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Gain\-Calibration} (uint32\-\_\-t cal)
+\begin{DoxyCompactList}\small\item\em Sets the gain calibration value to be used for the cold junction sensor. \end{DoxyCompactList}\item 
+void \hyperlink{_tekdaqc___calibration_table_8c_a87e24b5d31fe4dcf2e5de7408715d70a}{Tekdaqc\-\_\-\-Set\-Offset\-Calibration} (uint32\-\_\-t cal, \hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} rate, \hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} gain, \hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} buffer)
+\begin{DoxyCompactList}\small\item\em Sets the offset calibration value for the specified parameters. \end{DoxyCompactList}\item 
+void \hyperlink{_tekdaqc___calibration_table_8c_a52ecb644642c69543b416a0b480499c7}{Tekdaqc\-\_\-\-Set\-Base\-Gain\-Calibration} (uint32\-\_\-t cal, \hyperlink{group__ads1256__driver_gab0437f81aad031aadf3e05dd5fe0a731}{A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t} rate, \hyperlink{group__ads1256__driver_gace2e231df7cd3598eb26d5ff51171701}{A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t} gain, \hyperlink{group__ads1256__driver_ga12f71f8fc93fe63fb3c855ddd2070890}{A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t} buffer)
+\begin{DoxyCompactList}\small\item\em Sets the base gain calibration value for the specified parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implements a calibration lookup table for the Tekdaqc's analog measurements. 32 bit gain calibration values are stored which can be applied to the A\-D\-C's measurement. The table has the ability to store values for each gain, sample rate and buffer setting on the Tekdaqc, as well as for various temperature data points. When requesting a value, a temperature must be specified and the value will automatically be interpolated from the closest high and low temperature data points.
+
+Since the board has the ability to in the field perform offset calibrations, no values are specified for the offset register in the table. Instead they are determined at run time by performing a complete offset calibration and storing the results in a R\-A\-M table.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_tekdaqc___calibration_table_8c_source}{Tekdaqc\-\_\-\-Calibration\-Table.\-c}.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{_tekdaqc___calibration_table_8c_af6ecb791b957781d6401a3019dba657b}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Calibration\-Init@{Tekdaqc\-\_\-\-Calibration\-Init}}
+\index{Tekdaqc\-\_\-\-Calibration\-Init@{Tekdaqc\-\_\-\-Calibration\-Init}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Calibration\-Init}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Tekdaqc\-\_\-\-Calibration\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_af6ecb791b957781d6401a3019dba657b}
+Initializes the calibration table for read operations.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & Always T\-R\-U\-E. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 255 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a0c1fa5f649f31632cfa62a1b59b5ae17}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-End\-Calibration\-Mode@{Tekdaqc\-\_\-\-End\-Calibration\-Mode}}
+\index{Tekdaqc\-\_\-\-End\-Calibration\-Mode@{Tekdaqc\-\_\-\-End\-Calibration\-Mode}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-End\-Calibration\-Mode}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-End\-Calibration\-Mode (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a0c1fa5f649f31632cfa62a1b59b5ae17}
+Exits calibration mode, locking the F\-L\-A\-S\-H sector against unintended write operations.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 432 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a4ad75008ed876cbb2ae2d56b5b5a2bc0}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Gain\-Calibration@{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Gain\-Calibration}}
+\index{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Gain\-Calibration@{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Gain\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Gain\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Gain\-Calibration (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a4ad75008ed876cbb2ae2d56b5b5a2bc0}
+Retrieves the gain calibration value for the cold junction.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & calibration value. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 363 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_ab112c2a9907278f9c2875742841b0597}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Offset\-Calibration@{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Offset\-Calibration}}
+\index{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Offset\-Calibration@{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Offset\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Offset\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t Tekdaqc\-\_\-\-Get\-Cold\-Junction\-Offset\-Calibration (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_ab112c2a9907278f9c2875742841b0597}
+Retrieves the offset calibration value for the cold junction.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & calibration value. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 346 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a7fdb97e78b7e8036eb9b9dc1053d2f6a}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Get\-Gain\-Calibration@{Tekdaqc\-\_\-\-Get\-Gain\-Calibration}}
+\index{Tekdaqc\-\_\-\-Get\-Gain\-Calibration@{Tekdaqc\-\_\-\-Get\-Gain\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Gain\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t Tekdaqc\-\_\-\-Get\-Gain\-Calibration (
+\begin{DoxyParamCaption}
+\item[{{\bf A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t}}]{rate, }
+\item[{{\bf A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t}}]{gain, }
+\item[{{\bf A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t}}]{buffer, }
+\item[{float}]{temperature}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a7fdb97e78b7e8036eb9b9dc1053d2f6a}
+Retrieve the gain calibration value for the specified sampling parameters.
+
+
+\begin{DoxyParams}{Parameters}
+{\em rate} & A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t The sample rate to lookup for. \\
+\hline
+{\em gain} & A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t The gain to lookup for. \\
+\hline
+{\em buffer} & A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t The buffer setting to lookup for. \\
+\hline
+{\em temperature} & float The temperature value to lookup for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & determined calibration value. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 276 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_ac10ad531169839fabde0444d38594134}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Get\-Offset\-Calibration@{Tekdaqc\-\_\-\-Get\-Offset\-Calibration}}
+\index{Tekdaqc\-\_\-\-Get\-Offset\-Calibration@{Tekdaqc\-\_\-\-Get\-Offset\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Get\-Offset\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t Tekdaqc\-\_\-\-Get\-Offset\-Calibration (
+\begin{DoxyParamCaption}
+\item[{{\bf A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t}}]{rate, }
+\item[{{\bf A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t}}]{gain, }
+\item[{{\bf A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_ac10ad531169839fabde0444d38594134}
+Retrieve the offset calibration value for the specified sampling parameters.
+
+
+\begin{DoxyParams}{Parameters}
+{\em rate} & A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t The sample rate to lookup for. \\
+\hline
+{\em gain} & A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t The gain to lookup for. \\
+\hline
+{\em buffer} & A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t The buffer setting to lookup for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em The} & determined calibration value. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 331 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a52ecb644642c69543b416a0b480499c7}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Base\-Gain\-Calibration@{Tekdaqc\-\_\-\-Set\-Base\-Gain\-Calibration}}
+\index{Tekdaqc\-\_\-\-Set\-Base\-Gain\-Calibration@{Tekdaqc\-\_\-\-Set\-Base\-Gain\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Base\-Gain\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-Set\-Base\-Gain\-Calibration (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{cal, }
+\item[{{\bf A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t}}]{rate, }
+\item[{{\bf A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t}}]{gain, }
+\item[{{\bf A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a52ecb644642c69543b416a0b480499c7}
+Writes the base gain calibration value for the specified parameters. This method does not require the board to be in calibration mode and only stores the values in a R\-A\-M lookup table.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cal} & uint32\-\_\-t The calibration value to write. \\
+\hline
+{\em rate} & A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t The sample rate to write for. \\
+\hline
+{\em gain} & A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t The gain to write for. \\
+\hline
+{\em buffer} & A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t The buffer setting to write for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 604 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a3864bec21d5077b294b23d177de99db6}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Calibration\-High\-Temperature@{Tekdaqc\-\_\-\-Set\-Calibration\-High\-Temperature}}
+\index{Tekdaqc\-\_\-\-Set\-Calibration\-High\-Temperature@{Tekdaqc\-\_\-\-Set\-Calibration\-High\-Temperature}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Calibration\-High\-Temperature}]{\setlength{\rightskip}{0pt plus 5cm}F\-L\-A\-S\-H\-\_\-\-Status Tekdaqc\-\_\-\-Set\-Calibration\-High\-Temperature (
+\begin{DoxyParamCaption}
+\item[{float}]{temp}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a3864bec21d5077b294b23d177de99db6}
+Writes the high temperature for which calibration data exists. This is the highest temperature for which we have valid calibration data. This method requires that the board be in calibration mode and will return F\-L\-A\-S\-H\-\_\-\-E\-R\-R\-O\-R\-\_\-\-W\-R\-P if it is not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em temp} & float The temperature value. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em F\-L\-A\-S\-H\-\_\-\-Status} & F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E on success, or the error status on failure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 497 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_af7596691e91746a2326357b5c0f7ddd4}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Calibration\-Low\-Temperature@{Tekdaqc\-\_\-\-Set\-Calibration\-Low\-Temperature}}
+\index{Tekdaqc\-\_\-\-Set\-Calibration\-Low\-Temperature@{Tekdaqc\-\_\-\-Set\-Calibration\-Low\-Temperature}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Calibration\-Low\-Temperature}]{\setlength{\rightskip}{0pt plus 5cm}F\-L\-A\-S\-H\-\_\-\-Status Tekdaqc\-\_\-\-Set\-Calibration\-Low\-Temperature (
+\begin{DoxyParamCaption}
+\item[{float}]{temp}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_af7596691e91746a2326357b5c0f7ddd4}
+Writes the low temperature for which calibration data exists. This is the lowest temperature for which we have valid calibration data. This method requires that the board be in calibration mode and will return F\-L\-A\-S\-H\-\_\-\-E\-R\-R\-O\-R\-\_\-\-W\-R\-P if it is not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em temp} & float The temperature value. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em F\-L\-A\-S\-H\-\_\-\-Status} & F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E on success, or the error status on failure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 480 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_ac005584d9f0811033e24d9f3f3e8519f}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Calibration\-Mode@{Tekdaqc\-\_\-\-Set\-Calibration\-Mode}}
+\index{Tekdaqc\-\_\-\-Set\-Calibration\-Mode@{Tekdaqc\-\_\-\-Set\-Calibration\-Mode}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Calibration\-Mode}]{\setlength{\rightskip}{0pt plus 5cm}F\-L\-A\-S\-H\-\_\-\-Status Tekdaqc\-\_\-\-Set\-Calibration\-Mode (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_ac005584d9f0811033e24d9f3f3e8519f}
+Enter calibration mode. N\-O\-T\-E\-: Calling this method will erase the calibration table.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em F\-L\-A\-S\-H\-\_\-\-Status} & The status of the F\-L\-A\-S\-H operations. Returns F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E on success. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 380 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a3391c5f7bb8b43d1dbd2f047100b35c6}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Calibration\-Step\-Temperature@{Tekdaqc\-\_\-\-Set\-Calibration\-Step\-Temperature}}
+\index{Tekdaqc\-\_\-\-Set\-Calibration\-Step\-Temperature@{Tekdaqc\-\_\-\-Set\-Calibration\-Step\-Temperature}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Calibration\-Step\-Temperature}]{\setlength{\rightskip}{0pt plus 5cm}F\-L\-A\-S\-H\-\_\-\-Status Tekdaqc\-\_\-\-Set\-Calibration\-Step\-Temperature (
+\begin{DoxyParamCaption}
+\item[{float}]{temp}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a3391c5f7bb8b43d1dbd2f047100b35c6}
+Writes the temperature step for the calibration data points. This method requires that the board be in calibration mode and will return F\-L\-A\-S\-H\-\_\-\-E\-R\-R\-O\-R\-\_\-\-W\-R\-P if it is not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em temp} & float The temperature step value. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em F\-L\-A\-S\-H\-\_\-\-Status} & F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E on success, or the error status on failure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 513 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a6afb54dbf18cdb79ce973cf728c3038f}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Gain\-Calibration@{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Gain\-Calibration}}
+\index{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Gain\-Calibration@{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Gain\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Gain\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}F\-L\-A\-S\-H\-\_\-\-Status Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Gain\-Calibration (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{cal}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a6afb54dbf18cdb79ce973cf728c3038f}
+Writes the gain calibration value to be used for the cold junction sensor into the flash calibration table. This method requires that the board be in calibration mode and will return F\-L\-A\-S\-H\-\_\-\-E\-R\-R\-O\-R\-\_\-\-W\-R\-P if it is not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cal} & uint32 The calibration value to write. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em F\-L\-A\-S\-H\-\_\-\-Status} & F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E on success, or the error status on failure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 566 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a74549da5ded91bc8cba5a5a445ed8d7a}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Offset\-Calibration@{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Offset\-Calibration}}
+\index{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Offset\-Calibration@{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Offset\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Offset\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}F\-L\-A\-S\-H\-\_\-\-Status Tekdaqc\-\_\-\-Set\-Cold\-Junction\-Offset\-Calibration (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{cal}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a74549da5ded91bc8cba5a5a445ed8d7a}
+Writes the offset calibration value to be used for the cold junction sensor into the flash calibration table. This method requires that the board be in calibration mode and will return F\-L\-A\-S\-H\-\_\-\-E\-R\-R\-O\-R\-\_\-\-W\-R\-P if it is not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cal} & uint32 The calibration value to write. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em F\-L\-A\-S\-H\-\_\-\-Status} & F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E on success, or the error status on failure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 550 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a8f0cb3a405f24587e7ae051211471bc1}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Gain\-Calibration@{Tekdaqc\-\_\-\-Set\-Gain\-Calibration}}
+\index{Tekdaqc\-\_\-\-Set\-Gain\-Calibration@{Tekdaqc\-\_\-\-Set\-Gain\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Gain\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}F\-L\-A\-S\-H\-\_\-\-Status Tekdaqc\-\_\-\-Set\-Gain\-Calibration (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{cal, }
+\item[{{\bf A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t}}]{rate, }
+\item[{{\bf A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t}}]{gain, }
+\item[{{\bf A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t}}]{buffer, }
+\item[{float}]{temperature}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a8f0cb3a405f24587e7ae051211471bc1}
+Writes the gain calibration value for the specified parameters. This method requires that the board be in calibration mode and will return F\-L\-A\-S\-H\-\_\-\-E\-R\-R\-O\-R\-\_\-\-W\-R\-P if it is not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cal} & uint32\-\_\-t The calibration value to write. \\
+\hline
+{\em rate} & A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t The sample rate to write for. \\
+\hline
+{\em gain} & A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t The gain to write for. \\
+\hline
+{\em buffer} & A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t The buffer setting to write for. \\
+\hline
+{\em temperature} & float The temperature value to write for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em F\-L\-A\-S\-H\-\_\-\-Status} & F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E on success, or the error status on failure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 533 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a87e24b5d31fe4dcf2e5de7408715d70a}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Offset\-Calibration@{Tekdaqc\-\_\-\-Set\-Offset\-Calibration}}
+\index{Tekdaqc\-\_\-\-Set\-Offset\-Calibration@{Tekdaqc\-\_\-\-Set\-Offset\-Calibration}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Offset\-Calibration}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-Set\-Offset\-Calibration (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{cal, }
+\item[{{\bf A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t}}]{rate, }
+\item[{{\bf A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t}}]{gain, }
+\item[{{\bf A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a87e24b5d31fe4dcf2e5de7408715d70a}
+Writes the offset calibration value for the specified parameters. This method does not require the board to be in calibration mode and only stores the values in a R\-A\-M lookup table.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cal} & uint32\-\_\-t The calibration value to write. \\
+\hline
+{\em rate} & A\-D\-S1256\-\_\-\-S\-P\-S\-\_\-t The sample rate to write for. \\
+\hline
+{\em gain} & A\-D\-S1256\-\_\-\-P\-G\-A\-\_\-t The gain to write for. \\
+\hline
+{\em buffer} & A\-D\-S1256\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-t The buffer setting to write for. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 585 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+
+\hypertarget{_tekdaqc___calibration_table_8c_a180d881a8974f106b80ea5c1a88e2ae0}{\index{Tekdaqc\-\_\-\-Calibration\-Table.\-c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}!Tekdaqc\-\_\-\-Set\-Serial\-Number@{Tekdaqc\-\_\-\-Set\-Serial\-Number}}
+\index{Tekdaqc\-\_\-\-Set\-Serial\-Number@{Tekdaqc\-\_\-\-Set\-Serial\-Number}!Tekdaqc_CalibrationTable.c@{Tekdaqc\-\_\-\-Calibration\-Table.\-c}}
+\subsubsection[{Tekdaqc\-\_\-\-Set\-Serial\-Number}]{\setlength{\rightskip}{0pt plus 5cm}F\-L\-A\-S\-H\-\_\-\-Status Tekdaqc\-\_\-\-Set\-Serial\-Number (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{serial}
+\end{DoxyParamCaption}
+)}}\label{_tekdaqc___calibration_table_8c_a180d881a8974f106b80ea5c1a88e2ae0}
+Writes a the provided serial number to the serial number area of the calibration table. This method requires that the board be in calibration mode and will return F\-L\-A\-S\-H\-\_\-\-E\-R\-R\-O\-R\-\_\-\-W\-R\-P if it is not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em serial} & char$\ast$ Pointer to a C-\/\-String containing the board serial number. Expected to be B\-O\-A\-R\-D\-\_\-\-S\-E\-R\-I\-A\-L\-\_\-\-N\-U\-M\-\_\-\-L\-E\-N\-G\-T\-H in size. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em F\-L\-A\-S\-H\-\_\-\-Status} & F\-L\-A\-S\-H\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E on success, or the error status on failure. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 449 of file Tekdaqc\-\_\-\-Calibration\-Table.\-c.
+

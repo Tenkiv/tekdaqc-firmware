@@ -1,0 +1,129 @@
+\hypertarget{struct_telnet_server__t}{\section{Telnet\-Server\-\_\-t Struct Reference}
+\label{struct_telnet_server__t}\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}}
+}
+
+
+Data structure to hold the state of the Telnet server. Contains all of the necessary state variables to impliment the Telnet server. Direct manipulation of these members is not recommended as it may leave the server in an inconsistent state. Instead, helper methods are provided which will ensure that all necessary operations occur as a result of any change.  
+
+
+
+
+{\ttfamily \#include $<$Telnet\-Server.\-h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{struct_telnet_server__t_a9a80d626b495810428f2f14b4dae6ecb}{halt}
+\item 
+\hyperlink{group__telnet__server_ga6a34decdb77d8c9df8ead5420ea8d326}{Telnet\-State\-\_\-t} \hyperlink{struct_telnet_server__t_a8010cffb8a33a3f5d540dcd6ef57a7b6}{state}
+\item 
+volatile unsigned long \hyperlink{struct_telnet_server__t_ad311f0113656983251afddd4b62e758e}{outstanding}
+\item 
+unsigned long \hyperlink{struct_telnet_server__t_a65bcef02b557e4aa1e0f04cc2ae743b9}{close}
+\item 
+unsigned char \hyperlink{struct_telnet_server__t_a2153306d0b7676b5fbe604eb2d5d8dd9}{buffer} \mbox{[}\hyperlink{group__telnet__server_gae9088b6c383afeff8d58098f141afbd3}{T\-E\-L\-N\-E\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}
+\item 
+volatile unsigned long \hyperlink{struct_telnet_server__t_a41a73345f82ef7f47757b13967fcc815}{length}
+\item 
+unsigned char \hyperlink{struct_telnet_server__t_a22aa9df37278d5baef90c6738214d9a1}{recv\-Buffer} \mbox{[}\hyperlink{group__telnet__server_gae9088b6c383afeff8d58098f141afbd3}{T\-E\-L\-N\-E\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}
+\item 
+volatile unsigned long \hyperlink{struct_telnet_server__t_ac07efa3d17c62c9b958f4324b78ebf55}{recv\-Write}
+\item 
+volatile unsigned long \hyperlink{struct_telnet_server__t_a4b9f32d419aaecd74a928bb8286f2a7b}{recv\-Read}
+\item 
+struct tcp\-\_\-pcb $\ast$ \hyperlink{struct_telnet_server__t_a7d8c5f5eed3154f7848c3a2ac9a9863a}{pcb}
+\item 
+unsigned char \hyperlink{struct_telnet_server__t_a8616416f9e7e002fe8f0a98f0ed71fd5}{previous}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 159 of file Telnet\-Server.\-h.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{struct_telnet_server__t_a2153306d0b7676b5fbe604eb2d5d8dd9}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!buffer@{buffer}}
+\index{buffer@{buffer}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{buffer}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char buffer\mbox{[}{\bf T\-E\-L\-N\-E\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}}}\label{struct_telnet_server__t_a2153306d0b7676b5fbe604eb2d5d8dd9}
+A buffer used to construct a packet of data to be transmitted to the telnet client. 
+
+Definition at line 164 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_a65bcef02b557e4aa1e0f04cc2ae743b9}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!close@{close}}
+\index{close@{close}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{close}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long close}}\label{struct_telnet_server__t_a65bcef02b557e4aa1e0f04cc2ae743b9}
+A value that is non-\/zero when the telnet connection should be closed down. 
+
+Definition at line 163 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_a9a80d626b495810428f2f14b4dae6ecb}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!halt@{halt}}
+\index{halt@{halt}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{halt}]{\setlength{\rightskip}{0pt plus 5cm}int halt}}\label{struct_telnet_server__t_a9a80d626b495810428f2f14b4dae6ecb}
+Halt signal when the lw\-I\-P T\-C\-P/\-I\-P stack has detected an error 
+
+Definition at line 160 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_a41a73345f82ef7f47757b13967fcc815}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!length@{length}}
+\index{length@{length}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{length}]{\setlength{\rightskip}{0pt plus 5cm}volatile unsigned long length}}\label{struct_telnet_server__t_a41a73345f82ef7f47757b13967fcc815}
+The number of bytes of valid data in the telnet packet buffer. 
+
+Definition at line 165 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_ad311f0113656983251afddd4b62e758e}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!outstanding@{outstanding}}
+\index{outstanding@{outstanding}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{outstanding}]{\setlength{\rightskip}{0pt plus 5cm}volatile unsigned long outstanding}}\label{struct_telnet_server__t_ad311f0113656983251afddd4b62e758e}
+A count of the number of bytes that have been transmitted but have not yet been A\-C\-Ked. 
+
+Definition at line 162 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_a7d8c5f5eed3154f7848c3a2ac9a9863a}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!pcb@{pcb}}
+\index{pcb@{pcb}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{pcb}]{\setlength{\rightskip}{0pt plus 5cm}struct tcp\-\_\-pcb$\ast$ pcb}}\label{struct_telnet_server__t_a7d8c5f5eed3154f7848c3a2ac9a9863a}
+A pointer to the telnet session P\-C\-B data structure. 
+
+Definition at line 171 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_a8616416f9e7e002fe8f0a98f0ed71fd5}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!previous@{previous}}
+\index{previous@{previous}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{previous}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char previous}}\label{struct_telnet_server__t_a8616416f9e7e002fe8f0a98f0ed71fd5}
+The character most recently received via the telnet interface. This is used to convert C\-R/\-L\-F sequences into a simple C\-R sequence. 
+
+Definition at line 172 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_a22aa9df37278d5baef90c6738214d9a1}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!recv\-Buffer@{recv\-Buffer}}
+\index{recv\-Buffer@{recv\-Buffer}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{recv\-Buffer}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char recv\-Buffer\mbox{[}{\bf T\-E\-L\-N\-E\-T\-\_\-\-B\-U\-F\-F\-E\-R\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}}}\label{struct_telnet_server__t_a22aa9df37278d5baef90c6738214d9a1}
+A buffer used to receive data from the telnet connection. 
+
+Definition at line 166 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_a4b9f32d419aaecd74a928bb8286f2a7b}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!recv\-Read@{recv\-Read}}
+\index{recv\-Read@{recv\-Read}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{recv\-Read}]{\setlength{\rightskip}{0pt plus 5cm}volatile unsigned long recv\-Read}}\label{struct_telnet_server__t_a4b9f32d419aaecd74a928bb8286f2a7b}
+The offset into g\-\_\-puc\-Telnet\-Recv\-Read of the next location to be read from the buffer. The buffer is empty if this value is equal to g\-\_\-ul\-Telnet\-Recv\-Write. 
+
+Definition at line 169 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_ac07efa3d17c62c9b958f4324b78ebf55}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!recv\-Write@{recv\-Write}}
+\index{recv\-Write@{recv\-Write}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{recv\-Write}]{\setlength{\rightskip}{0pt plus 5cm}volatile unsigned long recv\-Write}}\label{struct_telnet_server__t_ac07efa3d17c62c9b958f4324b78ebf55}
+The offset into g\-\_\-puc\-Telnet\-Recv\-Buffer of the next location to be written in the buffer. The buffer is full if this value is one less than g\-\_\-ul\-Telnet\-Recv\-Read (modulo the buffer size). 
+
+Definition at line 167 of file Telnet\-Server.\-h.
+
+\hypertarget{struct_telnet_server__t_a8010cffb8a33a3f5d540dcd6ef57a7b6}{\index{Telnet\-Server\-\_\-t@{Telnet\-Server\-\_\-t}!state@{state}}
+\index{state@{state}!TelnetServer_t@{Telnet\-Server\-\_\-t}}
+\subsubsection[{state}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Telnet\-State\-\_\-t} state}}\label{struct_telnet_server__t_a8010cffb8a33a3f5d540dcd6ef57a7b6}
+The current state of the telnet option parser. 
+
+Definition at line 161 of file Telnet\-Server.\-h.
+
+
+
+The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_telnet_server_8h}{Telnet\-Server.\-h}\end{DoxyCompactItemize}

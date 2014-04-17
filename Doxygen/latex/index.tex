@@ -1,0 +1,84 @@
+This repository contains the source code and its supporting library for the Tekdaqc firmware. We are actively working to improve the code which operates the Tekdaqc and will update this repository with our progress, as well as field bug reports and pull requests. Additionally, feature requests may be made in our issues page and we will happily discuss them with you.
+
+Join \href{https://plus.google.com/u/0/communities/109351353187504550254}{\tt Intelligent Automation, Computer Interface, \& D\-A\-Q Community} on \href{https://plus.google.com/u/0/communities/109351353187504550254}{\tt !\mbox{[}D\-A\-Q Community on Google Plus\mbox{]}(https\-://ssl.\-gstatic.\-com/images/icons/gplus-\/16.\-png)} to stay up-\/to-\/date on the latest news.
+
+{\itshape N\-O\-T\-E\-: Currently the bootloader used for updating the Tekdaqc is not included in this repository. We still have some work to do in documenting and cleanup of the code before it is ready to be published. Stay tuned for updates.}
+
+\subsection*{Using the Tekdaqc Firmware}
+
+\subsubsection*{Dependencies}
+
+
+\begin{DoxyEnumerate}
+\item None
+\end{DoxyEnumerate}
+
+\subsubsection*{Environment}
+
+Tenkiv, Inc. uses Atollic True\-Studio for our development, and as such the project files for this environment are included. Atollic uses the G\-N\-U compiler under the hood and attempts have been made to adhere to I\-S\-O C and M\-I\-S\-R\-A-\/\-C\-:2004 standards. Exceptions to both exist and there is ongoing development to eliminate these exceptions, in particular the M\-I\-S\-R\-A-\/\-C\-:2004 exceptions. With this in mind, with some effort it should be possible to set up your own build environment based on the G\-N\-U A\-R\-M compiler, though the details of this are beyond the scope of this repository. We freely welcome any how-\/to's people wish to contribute and share and will post them and their credit prominently within this repository and its wiki. Additionally, any issues found which decrease the compatibility of our code with any compiler, we are open to comment on and will either accept pull requests or do our best to increase the cross compiler support.
+
+If you plan to debug or flash the Tekdaqc, you will need a J\-T\-A\-G probe compatible with whichever I\-D\-E you are using. A low cost solution is the \href{http://www.st.com/web/en/catalog/tools/FM146/CL1984/SC724/SS1677/PF251168}{\tt S\-T-\/\-Link v2}, which is compatible with nearly all A\-R\-M I\-D\-E's, Windows, and with the help of \href{https://github.com/texane/stlink}{\tt another Git\-Hub project}, Linux.
+
+\subsubsection*{Setup}
+
+
+\begin{DoxyEnumerate}
+\item Clone or download a copy of the Tekdaqc Firmware source code.
+\item Import the Tekdaqc Firmware Library project into True\-Studio.
+\item Import the Tekdaqc Firmware project into True\-Studio.
+\item You should be ready to go at this point.
+\end{DoxyEnumerate}
+
+\subsection*{More Information}
+
+\subsubsection*{Tekdaqc Firmware Wiki}
+
+
+\begin{DoxyItemize}
+\item Please see our \href{https://github.com/Tenkiv/Tekdaqc-Firmware/wiki}{\tt wiki} for more detailed documetnation and information about the source code and its design.
+\end{DoxyItemize}
+
+\subsubsection*{Tekdaqc Manual}
+
+
+\begin{DoxyItemize}
+\item Download the \href{http://www.tenkiv.com/tekdaqc_manual_pdf_v3.pdf}{\tt Tekdaqc Manual here}
+\end{DoxyItemize}
+
+\subsubsection*{Other Links}
+
+
+\begin{DoxyItemize}
+\item \href{http://www.tenkiv.com/}{\tt Tenkiv Webpage}
+\item \href{https://plus.google.com/u/0/communities/109351353187504550254}{\tt Intelligent Automation, Computer Interface, \& D\-A\-Q Community} on \href{https://plus.google.com/u/0/communities/109351353187504550254}{\tt !\mbox{[}D\-A\-Q Community on Google Plus\mbox{]}(https\-://ssl.\-gstatic.\-com/images/icons/gplus-\/16.\-png)}
+\end{DoxyItemize}
+
+\subsection*{Contributing}
+
+Please see our https\-://github.com/\-Tenkiv/\-Tekdaqc-\/\-Firmware/blob/master/\-C\-O\-N\-T\-R\-I\-B\-U\-T\-I\-N\-G.\-md \char`\"{}contribution guidelines\char`\"{} if you have issues or code contributions.
+
+\subsubsection*{Contributors}
+
+\paragraph*{Tenkiv, Inc.}
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/jwoolston}{\tt Jared Woolston}
+\end{DoxyItemize}
+
+\subsection*{License}
+
+\begin{DoxyVerb}Copyright 2013 Tenkiv, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.\end{DoxyVerb}
+ 

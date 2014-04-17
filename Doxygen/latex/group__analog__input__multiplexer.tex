@@ -1,0 +1,268 @@
+\hypertarget{group__analog__input__multiplexer}{\section{Analog Input Multiplexer}
+\label{group__analog__input__multiplexer}\index{Analog Input Multiplexer@{Analog Input Multiplexer}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__analog__input__multiplexer_ga82dce77857c1a4197599b5e53d4c4baf}{is\-External\-Input} (Physical\-Analog\-Input\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Determines if the specified input is an external analog input. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__analog__input__multiplexer_ga9452ba5ad241ec1be905a8683f3aa893}{is\-Internal\-Input} (Physical\-Analog\-Input\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Determines if the specified input is an internal analog input. \end{DoxyCompactList}\item 
+\hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} \hyperlink{group__analog__input__multiplexer_ga5b4aed86c91b3b4bbdc4c7e03f6923ef}{is\-External\-Muxing\-Complete} (void)
+\begin{DoxyCompactList}\small\item\em Checks to see if the external input muxing process has completed. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_ga7f67e83c34a57a26b88716b132d78c9f}{Input\-Multiplexer\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the analog input multiplexer. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_ga03ab9244c4f082f5fec2ab96b319db65}{Select\-Analog\-Input} (\hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t} $\ast$input, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} do\-Mux\-Delay)
+\begin{DoxyCompactList}\small\item\em Selects the specified analog input. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_gab5cea2fc9723db50fa8b7c18c0ec0679}{Select\-Physical\-Input} (Physical\-Analog\-Input\-\_\-t input, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} do\-Mux\-Delay)
+\begin{DoxyCompactList}\small\item\em Selects the specified physical input. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_gade4a88985454a90749affb88214a817e}{Select\-Calibration\-Input} (void)
+\begin{DoxyCompactList}\small\item\em Selects the designated offset calibration input. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_gae6210a53610863d94bea3968f43b4e88}{Select\-Cold\-Junction\-Input} (void)
+\begin{DoxyCompactList}\small\item\em Selects the designated cold junction sensor input. \end{DoxyCompactList}\item 
+void \hyperlink{group__analog__input__multiplexer_ga719b0357a9dca76e01dcc6a511cd8b7f}{Reset\-Selected\-Input} (void)
+\begin{DoxyCompactList}\small\item\em Reselects the selected input if we swithced away from it. \end{DoxyCompactList}\item 
+External\-Muxed\-Input\-\_\-t \hyperlink{group__analog__input__multiplexer_ga03f66c16ea15a425062a4b09c0bceba1}{Get\-External\-Muxed\-Input\-By\-Number} (uint8\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Determines the external input for the specified input index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__analog__input__multiplexer_ga03f66c16ea15a425062a4b09c0bceba1}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!Get\-External\-Muxed\-Input\-By\-Number@{Get\-External\-Muxed\-Input\-By\-Number}}
+\index{Get\-External\-Muxed\-Input\-By\-Number@{Get\-External\-Muxed\-Input\-By\-Number}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{Get\-External\-Muxed\-Input\-By\-Number}]{\setlength{\rightskip}{0pt plus 5cm}External\-Muxed\-Input\-\_\-t Get\-External\-Muxed\-Input\-By\-Number (
+\begin{DoxyParamCaption}
+\item[{uint8\-\_\-t}]{input}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_ga03f66c16ea15a425062a4b09c0bceba1}
+Looks up the corresponding External\-Muxed\-Input\-\_\-t for the specified input number.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & uint8\-\_\-t The input number to lookup. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em External\-Mux\-Input\-\_\-t} & The lookup value. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 333 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_ga7f67e83c34a57a26b88716b132d78c9f}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!Input\-Multiplexer\-Init@{Input\-Multiplexer\-Init}}
+\index{Input\-Multiplexer\-Init@{Input\-Multiplexer\-Init}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{Input\-Multiplexer\-Init}]{\setlength{\rightskip}{0pt plus 5cm}void Input\-Multiplexer\-Init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_ga7f67e83c34a57a26b88716b132d78c9f}
+Initializes the analog input multiplexer, configuring the processor's peripherals and setting the multiplexer to its default state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 197 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_ga82dce77857c1a4197599b5e53d4c4baf}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!is\-External\-Input@{is\-External\-Input}}
+\index{is\-External\-Input@{is\-External\-Input}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{is\-External\-Input}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} is\-External\-Input (
+\begin{DoxyParamCaption}
+\item[{Physical\-Analog\-Input\-\_\-t}]{input}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_ga82dce77857c1a4197599b5e53d4c4baf}
+Checks if the specified analog input is an external input.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Physical\-Analog\-Input\-\_\-t The physical analog input to check. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & T\-R\-U\-E if the input is an external input. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 159 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_ga5b4aed86c91b3b4bbdc4c7e03f6923ef}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!is\-External\-Muxing\-Complete@{is\-External\-Muxing\-Complete}}
+\index{is\-External\-Muxing\-Complete@{is\-External\-Muxing\-Complete}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{is\-External\-Muxing\-Complete}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} is\-External\-Muxing\-Complete (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_ga5b4aed86c91b3b4bbdc4c7e03f6923ef}
+Checks if the external multiplexing process has completed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & T\-R\-U\-E if the external multiplexing process is completed. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 186 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_ga9452ba5ad241ec1be905a8683f3aa893}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!is\-Internal\-Input@{is\-Internal\-Input}}
+\index{is\-Internal\-Input@{is\-Internal\-Input}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{is\-Internal\-Input}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} is\-Internal\-Input (
+\begin{DoxyParamCaption}
+\item[{Physical\-Analog\-Input\-\_\-t}]{input}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_ga9452ba5ad241ec1be905a8683f3aa893}
+Checks if the specified analog input is an internal input.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Physical\-Analog\-Input\-\_\-t The physical analog input to check. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em bool} & T\-R\-U\-E if the input is an internal input. \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 176 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_ga719b0357a9dca76e01dcc6a511cd8b7f}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!Reset\-Selected\-Input@{Reset\-Selected\-Input}}
+\index{Reset\-Selected\-Input@{Reset\-Selected\-Input}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{Reset\-Selected\-Input}]{\setlength{\rightskip}{0pt plus 5cm}void Reset\-Selected\-Input (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_ga719b0357a9dca76e01dcc6a511cd8b7f}
+Re-\/selects the currently selected input, returning the multiplexer to the state it was in prior to calibration or temperature processes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 316 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_ga03ab9244c4f082f5fec2ab96b319db65}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!Select\-Analog\-Input@{Select\-Analog\-Input}}
+\index{Select\-Analog\-Input@{Select\-Analog\-Input}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{Select\-Analog\-Input}]{\setlength{\rightskip}{0pt plus 5cm}void Select\-Analog\-Input (
+\begin{DoxyParamCaption}
+\item[{{\bf Analog\-\_\-\-Input\-\_\-t} $\ast$}]{input, }
+\item[{{\bf bool}}]{do\-Mux\-Delay}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_ga03ab9244c4f082f5fec2ab96b319db65}
+Selects the specified analog input, automatically handling any multiplexing and timing needs.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Analog\-\_\-\-Input\-\_\-t$\ast$ The analog input to select. \\
+\hline
+{\em do\-Mux\-Delay} & bool If true, the A\-D\-C\-\_\-\-M\-U\-X\-I\-N\-G state should be used while waiting for the external multiplexers. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 232 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_gade4a88985454a90749affb88214a817e}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!Select\-Calibration\-Input@{Select\-Calibration\-Input}}
+\index{Select\-Calibration\-Input@{Select\-Calibration\-Input}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{Select\-Calibration\-Input}]{\setlength{\rightskip}{0pt plus 5cm}void Select\-Calibration\-Input (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_gade4a88985454a90749affb88214a817e}
+Selects the input which has been designated as the calibration input. This input is expected by the board to be shorted together for performing a system offset calibration.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 294 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_gae6210a53610863d94bea3968f43b4e88}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!Select\-Cold\-Junction\-Input@{Select\-Cold\-Junction\-Input}}
+\index{Select\-Cold\-Junction\-Input@{Select\-Cold\-Junction\-Input}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{Select\-Cold\-Junction\-Input}]{\setlength{\rightskip}{0pt plus 5cm}void Select\-Cold\-Junction\-Input (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_gae6210a53610863d94bea3968f43b4e88}
+Selects the input which has been designated as the cold junction input. This input is connected to the boards temperature sensor and is used for calibration and thermocouple compensations.
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 305 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+
+\hypertarget{group__analog__input__multiplexer_gab5cea2fc9723db50fa8b7c18c0ec0679}{\index{Analog Input Multiplexer@{Analog Input Multiplexer}!Select\-Physical\-Input@{Select\-Physical\-Input}}
+\index{Select\-Physical\-Input@{Select\-Physical\-Input}!Analog Input Multiplexer@{Analog Input Multiplexer}}
+\subsubsection[{Select\-Physical\-Input}]{\setlength{\rightskip}{0pt plus 5cm}void Select\-Physical\-Input (
+\begin{DoxyParamCaption}
+\item[{Physical\-Analog\-Input\-\_\-t}]{input, }
+\item[{{\bf bool}}]{do\-Mux\-Delay}
+\end{DoxyParamCaption}
+)}}\label{group__analog__input__multiplexer_gab5cea2fc9723db50fa8b7c18c0ec0679}
+Selects the specified physical input on the board, automatically handling any multiplexing and timing needs.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Physical\-Analog\-Input\-\_\-t The physical input to select. \\
+\hline
+{\em do\-Mux\-Delay} & bool If true, the A\-D\-C\-\_\-\-M\-U\-X\-I\-N\-G state should be used while waiting for the external multiplexers. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 266 of file Analog\-Input\-\_\-\-Multiplexer.\-c.
+

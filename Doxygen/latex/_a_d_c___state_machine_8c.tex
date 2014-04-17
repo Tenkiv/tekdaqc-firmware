@@ -1,0 +1,65 @@
+\hypertarget{_a_d_c___state_machine_8c}{\section{A\-D\-C\-\_\-\-State\-Machine.\-c File Reference}
+\label{_a_d_c___state_machine_8c}\index{A\-D\-C\-\_\-\-State\-Machine.\-c@{A\-D\-C\-\_\-\-State\-Machine.\-c}}
+}
+
+
+State machine for the digital input system of the board.  
+
+
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Debug.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\-D\-C\-\_\-\-State\-Machine.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Analog\-Input\-\_\-\-Multiplexer.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Command\-State.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Board\-Temperature.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Calibration.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Calibration\-Table.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\-D\-S1256\-\_\-\-Driver.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Config.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tekdaqc\-\_\-\-Timers.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Telnet\-Server.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}boolean.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$inttypes.\-h$>$}\\*
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_calibration_state__t}{Calibration\-State\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Data structure for keeping track of the current state of the calibration process. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__adc__statemachine_gaf9ab485b0fb6ddf69c8bfb43597ab06b}{A\-D\-C\-\_\-\-Machine\-\_\-\-Create} (void)
+\begin{DoxyCompactList}\small\item\em Create the A\-D\-C state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_gaabf53da7a14f298b049ed2ad432b0ed6}{A\-D\-C\-\_\-\-Machine\-\_\-\-Init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the A\-D\-C state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga7eb6744d5738bf35b1cb86b44cdc99ad}{A\-D\-C\-\_\-\-Calibrate} (void)
+\begin{DoxyCompactList}\small\item\em Perform a self zero calibration. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga91d632b5c373982d2554840a65e89758}{A\-D\-C\-\_\-\-Gain\-Calibrate} (Physical\-Analog\-Input\-\_\-t input)
+\begin{DoxyCompactList}\small\item\em Perform a system gain calibration on the specified input. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga89889fc7c9dba41da2ab451fe5e06d68}{A\-D\-C\-\_\-\-Machine\-\_\-\-Service} (void)
+\begin{DoxyCompactList}\small\item\em Perform a periodic service of the state machine. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga6424732e3475cc653a8e7cd3598555f5}{A\-D\-C\-\_\-\-Machine\-\_\-\-Halt} (void)
+\begin{DoxyCompactList}\small\item\em Halt any current operations and return the idle state. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_gac1ea03f0a36d3488bfb5c728b118942c}{A\-D\-C\-\_\-\-Machine\-\_\-\-Idle} (void)
+\begin{DoxyCompactList}\small\item\em Idle state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga979620e2e4743c8f5d1f053a90705841}{A\-D\-C\-\_\-\-Machine\-\_\-\-Input\-\_\-\-Sample} (\hyperlink{struct_analog___input__t}{Analog\-\_\-\-Input\-\_\-t} $\ast$$\ast$inputs, uint32\-\_\-t count, \hyperlink{group__data__types_ga0ecf26b576b9a54eca656b9be7ba6a06}{bool} single\-Channel)
+\begin{DoxyCompactList}\small\item\em Input sampling state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_ga82e1537e4763ba13d894276ab9de1cd7}{A\-D\-C\-\_\-\-Machine\-\_\-\-Reset} (void)
+\begin{DoxyCompactList}\small\item\em Reset state handler. \end{DoxyCompactList}\item 
+void \hyperlink{group__adc__statemachine_gafdb90e36c49985480868585799f00b22}{A\-D\-C\-\_\-\-External\-\_\-\-Muxing} (void)
+\begin{DoxyCompactList}\small\item\em External multiplexer switch handler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implements a state machine used for time slicing tasks on the processor. In this way this file encapsulates a very basic thread emulation.
+
+\begin{DoxyAuthor}{Author}
+Jared Woolston (\href{mailto:jwoolston@tenkiv.com}{\tt jwoolston@tenkiv.\-com}) 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+v1.\-0.\-0.\-0 
+\end{DoxySince}
+
+
+Definition in file \hyperlink{_a_d_c___state_machine_8c_source}{A\-D\-C\-\_\-\-State\-Machine.\-c}.
+

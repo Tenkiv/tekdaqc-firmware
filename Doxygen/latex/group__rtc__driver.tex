@@ -1,0 +1,38 @@
+\hypertarget{group__rtc__driver}{\section{R\-T\-C Driver}
+\label{group__rtc__driver}\index{R\-T\-C Driver@{R\-T\-C Driver}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__rtc__driver_ga1c3df1ec7ceb1e5b7b33833fba06515c}{R\-T\-C\-\_\-\-Config} (uint32\-\_\-t synch\-\_\-prediv, uint32\-\_\-t asynch\-\_\-prediv)
+\begin{DoxyCompactList}\small\item\em Configure the R\-T\-C domain of the processor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__rtc__driver_ga1c3df1ec7ceb1e5b7b33833fba06515c}{\index{R\-T\-C Driver@{R\-T\-C Driver}!R\-T\-C\-\_\-\-Config@{R\-T\-C\-\_\-\-Config}}
+\index{R\-T\-C\-\_\-\-Config@{R\-T\-C\-\_\-\-Config}!RTC Driver@{R\-T\-C Driver}}
+\subsubsection[{R\-T\-C\-\_\-\-Config}]{\setlength{\rightskip}{0pt plus 5cm}void R\-T\-C\-\_\-\-Config (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{synch\-\_\-prediv, }
+\item[{uint32\-\_\-t}]{asynch\-\_\-prediv}
+\end{DoxyParamCaption}
+)}}\label{group__rtc__driver_ga1c3df1ec7ceb1e5b7b33833fba06515c}
+Configure the R\-T\-C peripheral by selecting the clock source. ck\-\_\-spre(1\-Hz) = R\-T\-C\-C\-L\-K(\-L\-S\-E) /(asynch\-Prediv + 1)$\ast$(synch\-Prediv + 1)
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 48 of file Tekdaqc\-\_\-\-R\-T\-C.\-c.
+

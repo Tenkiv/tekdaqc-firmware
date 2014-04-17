@@ -322,6 +322,7 @@ static inline const char* ADS1256_StringFromRegister(ADS1256_Register_t reg) {
  * @retval none
  */
 void ADS1256_PrintRegs(void) {
+	ADS1256_ReadRegisters(ADS1256_STATUS, ADS1256_NREGS); /* Read out all the registers */
 	for (uint_fast8_t i = 0; i < ADS1256_NREGS; ++i) {
 		printf(ADS1256_REGISTERS_DEBUG_FORMATTER, i, ADS1256_StringFromRegister(i), ADS1256_Registers[i]);
 	}
@@ -783,7 +784,7 @@ void ADS1256_Sync(bool useCommand) {
  * @param none
  * @retval none
  */
-void ADS1256_Wakeup() {
+void ADS1256_Wakeup(void) {
 	if (SYNC_USE_COMMAND == true) { /* If we should use SPI */
 		ADS1256_Send_Command(ADS1256_WAKEUP); /* Send WAKEUP command byte */
 		SYNC_USE_COMMAND = false;
@@ -798,7 +799,7 @@ void ADS1256_Wakeup() {
  * @param none
  * @retval none
  */
-void ADS1256_Standby() {
+void ADS1256_Standby(void) {
 	ADS1256_Send_Command(ADS1256_STANDBY); /* Send the STANDBY command byte */
 	SYNC_USE_COMMAND = true;
 }
@@ -816,7 +817,7 @@ void ADS1256_Standby() {
  * @param none
  * @retval none
  */
-void ADS1256_CalibrateSelf() {
+void ADS1256_CalibrateSelf(void) {
 	ADS1256_Send_Command(ADS1256_SELFCAL); /* Send the self cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
@@ -829,7 +830,7 @@ void ADS1256_CalibrateSelf() {
  * @param none
  * @retval none
  */
-void ADS1256_CalibrateSelf_Gain() {
+void ADS1256_CalibrateSelf_Gain(void) {
 	ADS1256_Send_Command(ADS1256_SELFGCAL); /* Send the self gain cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
@@ -842,7 +843,7 @@ void ADS1256_CalibrateSelf_Gain() {
  * @param none
  * @retval none
  */
-void ADS1256_CalibrateSelf_Offset() {
+void ADS1256_CalibrateSelf_Offset(void) {
 	ADS1256_Send_Command(ADS1256_SELFOCAL); /* Send the self offset cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
@@ -856,7 +857,7 @@ void ADS1256_CalibrateSelf_Offset() {
  * @param none
  * @retval none
  */
-void ADS1256_CalibrateSystem_Gain() {
+void ADS1256_CalibrateSystem_Gain(void) {
 	ADS1256_Send_Command(ADS1256_SYSGCAL); /* Send the system gain cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
@@ -869,7 +870,7 @@ void ADS1256_CalibrateSystem_Gain() {
  * @param none
  * @retval none
  */
-void ADS1256_CalibrateSystem_Offset() {
+void ADS1256_CalibrateSystem_Offset(void) {
 	ADS1256_Send_Command(ADS1256_SYSOCAL); /* Send the system offset cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
@@ -905,7 +906,7 @@ int32_t ADS1256_ConvertRawValue(uint32_t value) {
  * @param none
  * @retval float The calibration time in milliseconds.
  */
-float ADS1256_GetSelfCalTime() {
+float ADS1256_GetSelfCalTime(void) {
 	float retval = 0.892f;
 	switch (SPS) {
 	case ADS1256_SPS_30000:
@@ -1017,7 +1018,7 @@ float ADS1256_GetSelfCalTime() {
  * @param none
  * @retval float The calibration time in milliseconds.
  */
-float ADS1256_GetOffsetCalTime() {
+float ADS1256_GetOffsetCalTime(void) {
 	switch (SPS) {
 	case ADS1256_SPS_30000:
 		return 0.387f;
@@ -1062,7 +1063,7 @@ float ADS1256_GetOffsetCalTime() {
  * @param none
  * @retval float The calibration time in milliseconds.
  */
-float ADS1256_GetSelfGainCalTime() {
+float ADS1256_GetSelfGainCalTime(void) {
 	switch (SPS) {
 	case ADS1256_SPS_30000:
 		switch (PGA) {
@@ -1148,7 +1149,7 @@ float ADS1256_GetSelfGainCalTime() {
  * @param none
  * @retval float The calibration time in milliseconds.
  */
-float ADS1256_GetSystemGainCalTime() {
+float ADS1256_GetSystemGainCalTime(void) {
 	switch (SPS) {
 	case ADS1256_SPS_30000:
 		return 0.417f;
@@ -1193,7 +1194,7 @@ float ADS1256_GetSystemGainCalTime() {
  * @param none
  * @retval float The settling time of the ADC in milliseconds.
  */
-float ADS1256_GetSettlingTime() {
+float ADS1256_GetSettlingTime(void) {
 	ADS1256_GetDataRate(); /* Update the register if we need to */
 	switch (SPS) {
 	case ADS1256_SPS_30000:
@@ -1258,7 +1259,8 @@ void ADS1256_AlwayFetch(bool always) {
  * @param none
  * @retval uint8_t The ADC ID.
  */
-uint8_t ADS1256_GetFactoryProgrammedID() {
+uint8_t ADS1256_GetFactoryProgrammedID(void) {
+	ADS1256_ReadRegister(ADS1256_STATUS);
 	uint8_t byte = ADS1256_GetRegisterBits(ADS1256_STATUS, ADS1256_ID_BIT,
 			ADS1256_ID_SPAN);
 #ifdef ADS156_DEBUG
@@ -1273,7 +1275,8 @@ uint8_t ADS1256_GetFactoryProgrammedID() {
  * @param none
  * @retval ADS1256_ORDER_t The data output bit order.
  */
-ADS1256_ORDER_t ADS1256_GetDataOutputBitOrder() {
+ADS1256_ORDER_t ADS1256_GetDataOutputBitOrder(void) {
+	ADS1256_ReadRegister(ADS1256_STATUS);
 	ADS1256_ORDER_t order = ADS1256_GetRegisterBits(ADS1256_STATUS,
 			ADS1256_ORDER_BIT, ADS1256_ORDER_SPAN);
 #ifdef ADS1256_DEBUG
@@ -1288,7 +1291,8 @@ ADS1256_ORDER_t ADS1256_GetDataOutputBitOrder() {
  * @param none
  * @retval ADS1256_ACAL_t The auto calibration setting.
  */
-ADS1256_ACAL_t ADS1256_GetAutoCalSetting() {
+ADS1256_ACAL_t ADS1256_GetAutoCalSetting(void) {
+	ADS1256_ReadRegister(ADS1256_STATUS);
 	ADS1256_ACAL_t acal = ADS1256_GetRegisterBits(ADS1256_STATUS,
 			ADS1256_ACAL_BIT, ADS1256_ACAL_SPAN);
 #ifdef ADS1256_DEBUG
@@ -1303,7 +1307,8 @@ ADS1256_ACAL_t ADS1256_GetAutoCalSetting() {
  * @param none
  * @retval ADS1256_BUFFER_t The input buffer setting.
  */
-ADS1256_BUFFER_t ADS1256_GetInputBufferSetting() {
+ADS1256_BUFFER_t ADS1256_GetInputBufferSetting(void) {
+	ADS1256_ReadRegister(ADS1256_STATUS);
 	ADS1256_BUFFER_t buffer = ADS1256_GetRegisterBits(ADS1256_STATUS,
 			ADS1256_BUFFEN_BIT, ADS1256_BUFFEN_SPAN);
 #ifdef ADS1256_DEBUG
@@ -1356,7 +1361,8 @@ void ADS1256_SetInputBufferSetting(ADS1256_BUFFER_t buffer) {
  * @param none
  * @retval none
  */
-void ADS1256_GetInputChannels() {
+void ADS1256_GetInputChannels(void) {
+	ADS1256_ReadRegister(ADS1256_MUX);
 	uint8_t val = ADS1256_GetRegister(ADS1256_MUX);
 	AIN_NEG = val & 0x0F;
 	AIN_POS = val >> 4;
@@ -1390,7 +1396,8 @@ void ADS1256_SetInputChannels(ADS1256_AIN_t pos, ADS1256_AIN_t neg) {
  * @param none
  * @retval ADS1256_CLOCK_OUT_t The clock out rate setting.
  */
-ADS1256_CLOCK_OUT_t ADS1256_GetClockOutRate() {
+ADS1256_CLOCK_OUT_t ADS1256_GetClockOutRate(void) {
+	ADS1256_ReadRegister(ADS1256_ADCON);
 	ADS1256_CLOCK_OUT_t clock = ADS1256_GetRegisterBits(ADS1256_ADCON, ADS1256_CO_BIT, ADS1256_CO_SPAN);
 	assert_param(IS_ADS1256_CLOCKOUT_SETTING(clock));
 	CLOCK_OUT = clock;
@@ -1406,7 +1413,8 @@ ADS1256_CLOCK_OUT_t ADS1256_GetClockOutRate() {
  * @param none
  * @retval ADS1256_SENSOR_DETECT_t The sensor detect current output setting.
  */
-ADS1256_SENSOR_DETECT_t ADS1256_GetSensorDetectCurrent() {
+ADS1256_SENSOR_DETECT_t ADS1256_GetSensorDetectCurrent(void) {
+	ADS1256_ReadRegister(ADS1256_ADCON);
 	ADS1256_SENSOR_DETECT_t current = ADS1256_GetRegisterBits(ADS1256_ADCON,
 			ADS1256_SD_BIT, ADS1256_SD_SPAN);
 	assert_param(IS_ADS1256_SENSOR_DETECT_SETTING(current));
@@ -1423,7 +1431,8 @@ ADS1256_SENSOR_DETECT_t ADS1256_GetSensorDetectCurrent() {
  * @param none
  * @retval ADS1256_PGA_t The PGA gain setting.
  */
-ADS1256_PGA_t ADS1256_GetPGASetting() {
+ADS1256_PGA_t ADS1256_GetPGASetting(void) {
+	ADS1256_ReadRegister(ADS1256_ADCON);
 	ADS1256_PGA_t setting = ADS1256_GetRegisterBits(ADS1256_ADCON, ADS1256_PGA_BIT, ADS1256_PGA_SPAN);
 	assert_param(IS_ADS1256_PGA_SETTING(setting));
 	PGA = setting;
@@ -1517,7 +1526,8 @@ int32_t ADS1256_GetGainMultiplier(ADS1256_PGA_t gain) {
  * @param none
  * @retval ADS125_SPS_t The data (sample) rate setting.
  */
-ADS1256_SPS_t ADS1256_GetDataRate() {
+ADS1256_SPS_t ADS1256_GetDataRate(void) {
+	ADS1256_ReadRegister(ADS1256_DRATE);
 	ADS1256_SPS_t setting = ADS1256_GetRegister(ADS1256_DRATE);
 	if (setting) {
 		SPS = setting;
@@ -1553,6 +1563,7 @@ void ADS1256_SetDataRate(ADS1256_SPS_t sps) {
  * @retval ADS1256_GPIO_DIRECTION_t The direction setting of the specified GPIO pin.
  */
 ADS1256_GPIO_DIRECTION_t ADS1256_GetGPIODirection(ADS1256_GPIO_t pin) {
+	ADS1256_ReadRegister(ADS1256_IO);
 	ADS1256_GPIO_DIRECTION_t dir = ADS1256_GetRegisterBits(ADS1256_IO, pin + ADS1256_GPIO_DIR_OFFSET, ADS1256_GPIO_BIT_SPAN);
 	GPIO_DIRECTIONS[pin] = dir;
 	return dir;
@@ -1565,6 +1576,7 @@ ADS1256_GPIO_DIRECTION_t ADS1256_GetGPIODirection(ADS1256_GPIO_t pin) {
  * @retval ADS1256_GPIO_STATUS_t The current logic state of the specified GPIO pin.
  */
 ADS1256_GPIO_STATUS_t ADS1256_GetGPIOStatus(ADS1256_GPIO_t pin) {
+	ADS1256_ReadRegister(ADS1256_IO);
 	ADS1256_GPIO_STATUS_t status = ADS1256_GetRegisterBits(ADS1256_IO, pin, ADS1256_GPIO_BIT_SPAN);
 	assert_param(IS_ADS1256_GPIO_VALUE(status));
 	GPIO_STATUS[pin] = status;
@@ -1609,9 +1621,10 @@ void ADS1256_SetGPIOStatus(ADS1256_GPIO_t pin, ADS1256_GPIO_STATUS_t status) {
  * @param none
  * @retval uint32_t The offset calibration value, exactly as it is stored by the ADC but converted to a single number.
  */
-uint32_t ADS1256_GetOffsetCalSetting() {
+uint32_t ADS1256_GetOffsetCalSetting(void) {
 	uint32_t setting = 0x00000000;
 	uint32_t temp = 0x00000000;
+	ADS1256_ReadRegisters(ADS1256_OFC0, 3);
 	temp |= ADS1256_GetRegister(ADS1256_OFC2);
 	temp <<= 16;
 	setting |= temp;
@@ -1631,7 +1644,6 @@ uint32_t ADS1256_GetOffsetCalSetting() {
  */
 void ADS1256_SetOffsetCalSetting(uint8_t* value) {
 	ADS1256_SetRegisters(ADS1256_OFC0, 3, value);
-
 }
 
 
@@ -1646,9 +1658,10 @@ void ADS1256_SetOffsetCalSetting(uint8_t* value) {
  * @param none
  * @retval uint32_t The gain calibration value, exactly as it is stored by the ADC but converted to a single number.
  */
-uint32_t ADS1256_GetGainCalSetting() {
+uint32_t ADS1256_GetGainCalSetting(void) {
 	uint32_t setting = 0x00000000;
 	uint32_t temp = 0x00000000;
+	ADS1256_ReadRegisters(ADS1256_FSC0, 3);
 	temp |= ADS1256_GetRegister(ADS1256_FSC2);
 	temp <<= 16;
 	setting |= temp;
@@ -1750,15 +1763,13 @@ static void ADS1256_SetRegisterBits(ADS1256_Register_t reg, uint8_t index, uint8
 }
 
 /**
- * Retrieve the local copy of a register.
+ * Retrieve the local copy of a register. If an up to date value is needed then
+ * a read should be requested first.
  *
  * @param reg ADS1256_Register_t The register to retrieve.
  * @retval uint8_t The retrieved register value.
  */
 static uint8_t ADS1256_GetRegister(ADS1256_Register_t reg) {
-	if (ADS1256_AlwaysReadReg) {
-		ADS1256_ReadRegister(reg);
-	}
 	return ADS1256_Registers[reg];
 }
 
@@ -1867,7 +1878,7 @@ static void ADS1256_WriteRegisters(ADS1256_Register_t reg, uint8_t count) {
  * @param none
  * @retval none
  */
-void ADS1256_SCLK_LOW() {
+void ADS1256_SCLK_LOW(void) {
 	GPIO_ResetBits(ADS1256_SPI_SCK_GPIO_PORT, ADS1256_SPI_SCK_PIN );
 }
 
@@ -1877,6 +1888,6 @@ void ADS1256_SCLK_LOW() {
  * @param none
  * @retval none
  */
-void ADS1256_SCLK_HIGH() {
+void ADS1256_SCLK_HIGH(void) {
 	GPIO_SetBits(ADS1256_SPI_SCK_GPIO_PORT, ADS1256_SPI_SCK_PIN );
 }

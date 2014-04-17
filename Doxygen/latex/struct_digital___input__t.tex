@@ -1,0 +1,75 @@
+\hypertarget{struct_digital___input__t}{\section{Digital\-\_\-\-Input\-\_\-t Struct Reference}
+\label{struct_digital___input__t}\index{Digital\-\_\-\-Input\-\_\-t@{Digital\-\_\-\-Input\-\_\-t}}
+}
+
+
+Data structure used to store the state and requirements of a digital input to the Tekdaqc. This data structure contains all the information related to a particular input to the Tekdaqc. Please note that while there is nothing to stop you from manipulating the values of the structure directly, it is not recommended as it could put the structure in an indeterminate state. Instead, manipulation functions are provided which will ensure that all state related implications are addressed.  
+
+
+
+
+{\ttfamily \#include $<$Digital\-\_\-\-Input.\-h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__board__channel__constants_gab0f30599ceb99e5ba3b2908d8e9bd131}{Channel\-Added\-\_\-t} \hyperlink{struct_digital___input__t_a6f1a4402ff8651dfc5e453b5e3154c2d}{added}
+\item 
+G\-P\-I\-\_\-\-Type\-Def \hyperlink{struct_digital___input__t_abc35a555f8e6b8717b5232ee5220726f}{input}
+\item 
+char \hyperlink{struct_digital___input__t_af41190915b6eafe6003d377631e93f5a}{name} \mbox{[}\hyperlink{group__digital__input_gaf48b39ba82663f6926d1a02d1e501926}{M\-A\-X\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}
+\item 
+\hyperlink{group__board__channel__constants_gaee574a0d48c41a3e5426ffbf8ac4c5c4}{Digital\-Level\-\_\-t} \hyperlink{struct_digital___input__t_a077d2fbd9f466d58856071f5314b9c09}{level}
+\item 
+uint64\-\_\-t \hyperlink{struct_digital___input__t_a465bef81f6478756e5443025b1f2ddfa}{timestamp}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 73 of file Digital\-\_\-\-Input.\-h.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{struct_digital___input__t_a6f1a4402ff8651dfc5e453b5e3154c2d}{\index{Digital\-\_\-\-Input\-\_\-t@{Digital\-\_\-\-Input\-\_\-t}!added@{added}}
+\index{added@{added}!Digital_Input_t@{Digital\-\_\-\-Input\-\_\-t}}
+\subsubsection[{added}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Channel\-Added\-\_\-t} added}}\label{struct_digital___input__t_a6f1a4402ff8651dfc5e453b5e3154c2d}
+Addition status of the input. 
+
+Definition at line 74 of file Digital\-\_\-\-Input.\-h.
+
+\hypertarget{struct_digital___input__t_abc35a555f8e6b8717b5232ee5220726f}{\index{Digital\-\_\-\-Input\-\_\-t@{Digital\-\_\-\-Input\-\_\-t}!input@{input}}
+\index{input@{input}!Digital_Input_t@{Digital\-\_\-\-Input\-\_\-t}}
+\subsubsection[{input}]{\setlength{\rightskip}{0pt plus 5cm}G\-P\-I\-\_\-\-Type\-Def input}}\label{struct_digital___input__t_abc35a555f8e6b8717b5232ee5220726f}
+An integer id for this input. 
+
+Definition at line 75 of file Digital\-\_\-\-Input.\-h.
+
+\hypertarget{struct_digital___input__t_a077d2fbd9f466d58856071f5314b9c09}{\index{Digital\-\_\-\-Input\-\_\-t@{Digital\-\_\-\-Input\-\_\-t}!level@{level}}
+\index{level@{level}!Digital_Input_t@{Digital\-\_\-\-Input\-\_\-t}}
+\subsubsection[{level}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Digital\-Level\-\_\-t} level}}\label{struct_digital___input__t_a077d2fbd9f466d58856071f5314b9c09}
+The recorded status of this input. 
+
+Definition at line 77 of file Digital\-\_\-\-Input.\-h.
+
+\hypertarget{struct_digital___input__t_af41190915b6eafe6003d377631e93f5a}{\index{Digital\-\_\-\-Input\-\_\-t@{Digital\-\_\-\-Input\-\_\-t}!name@{name}}
+\index{name@{name}!Digital_Input_t@{Digital\-\_\-\-Input\-\_\-t}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}char name\mbox{[}{\bf M\-A\-X\-\_\-\-D\-I\-G\-I\-T\-A\-L\-\_\-\-I\-N\-P\-U\-T\-\_\-\-N\-A\-M\-E\-\_\-\-L\-E\-N\-G\-T\-H}\mbox{]}}}\label{struct_digital___input__t_af41190915b6eafe6003d377631e93f5a}
+Pointer to a C string name for this input. 
+
+Definition at line 76 of file Digital\-\_\-\-Input.\-h.
+
+\hypertarget{struct_digital___input__t_a465bef81f6478756e5443025b1f2ddfa}{\index{Digital\-\_\-\-Input\-\_\-t@{Digital\-\_\-\-Input\-\_\-t}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!Digital_Input_t@{Digital\-\_\-\-Input\-\_\-t}}
+\subsubsection[{timestamp}]{\setlength{\rightskip}{0pt plus 5cm}uint64\-\_\-t timestamp}}\label{struct_digital___input__t_a465bef81f6478756e5443025b1f2ddfa}
+The timestamp of the measurement in U\-N\-I\-X epoch format. 
+
+Definition at line 78 of file Digital\-\_\-\-Input.\-h.
+
+
+
+The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_digital___input_8h}{Digital\-\_\-\-Input.\-h}\end{DoxyCompactItemize}
