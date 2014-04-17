@@ -857,7 +857,7 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 			break;
 		}
 		aInputs[0] = GetAnalogInputByNumber(channel);
-		break;
+		break; /* END SINGLE_INPUT */
 	case CHANNEL_SET: /* CHANNEL_SET */
 		if (param != NULL) {
 			str = param;
@@ -875,7 +875,7 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 				}
 			}
 		}
-		break;
+		break; /* END INPUT SET */
 	case CHANNEL_RANGE: /* INPUT_RANGE */
 		start = 0U;
 		end = 0U;
@@ -897,7 +897,7 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 		for (int i = 0; i < count; ++i) {
 			aInputs[i] = GetAnalogInputByNumber(start + i); /* Some of these may be NULL, this is OK. */
 		}
-		break;
+		break; /* END INPUT RANGE */
 	case ALL_CHANNELS: /* ALL_CHANNELS */
 		count = NUM_ANALOG_INPUTS;
 		for (int i = 0; i < count; ++i) {
@@ -947,45 +947,45 @@ static void BuildDigitalInputList(Channel_List_t list_type, char* param) {
 		dInputs[0] = GetDigitalInputByNumber(channel);
 		break; /* END SINGLE_INPUT */
 	case CHANNEL_SET: /* CHANNEL_SET */
-		value = 0L;
-		str = param;
-		value = strtol(str, &ptr, 10);
-		while (value != 0L) {
-			++count;
-			if (*ptr == SET_DELIMETER) {
-				str = ptr + 1;
+		if (param != NULL) {
+			str = param;
+			while (TRUE) {
+				if (*ptr == SET_DELIMETER) {
+					str = ptr + 1;
+				}
+				value = strtol(str, &ptr, 10);
+				if (value < NUM_DIGITAL_INPUTS && value >= 0L) {
+					dInputs[value] = GetDigitalInputByNumber(value);
+					++count;
+				}
+				if (*ptr == NULL) {
+					break;
+				}
 			}
-			value = strtol(str, &ptr, 10);
 		}
-		str = param;
-		value = strtol(str, &ptr, 10);
-		for (int i = 0; i < count; ++i) {
-			if (*ptr == SET_DELIMETER) {
-				str = ptr + 1;
-			}
-			dInputs[i] = GetDigitalInputByNumber(strtol(str, &ptr, 10));
-		}
-		break;
+		break; /* END INPUT SET */
 	case CHANNEL_RANGE: /* INPUT_RANGE */
 		start = 0U;
 		end = 0U;
-		value1 = strtol(param, &ptr, 10); /* We know these can potentially loose data...it would be invalid anyway */
-		value2 = strtol((ptr + 1), NULL, 10);
+		value1 = (uint8_t) strtol(param, &ptr, 10); /* We know these can potentially loose data...it would be invalid anyway */
+		value2 = (uint8_t) strtol((ptr + 1), NULL, 10);
+
 		if (value1 != 0L) {
-			start = (uint8_t) value1;
-			if (value2 != 0L) {
-				end = (uint8_t) value2;
-			} else {
-				end = NUM_DIGITAL_INPUTS;
-			}
+			start = value1;
 		} else {
 			start = 0U;
 		}
-		count = end - start + 1U;
+		if (value2 != 0L) {
+			end = value2;
+		} else {
+			end = NUM_DIGITAL_INPUTS;
+		}
+
+		count = end - start + 1;
 		for (int i = 0; i < count; ++i) {
 			dInputs[i] = GetDigitalInputByNumber(start + i); /* Some of these may be NULL, this is OK. */
 		}
-		break; /* END INPUT_RANGE */
+		break;
 	case ALL_CHANNELS: /* ALL_CHANNELS */
 		count = NUM_DIGITAL_INPUTS;
 		for (int i = 0; i < count; ++i) {
@@ -1035,51 +1035,51 @@ static void BuildDigitalOutputList(Channel_List_t list_type, char* param) {
 		dOutputs[0] = GetDigitalOutputByNumber(channel);
 		break;
 	case CHANNEL_SET:
-		value = 0L;
-		str = param;
-		value = strtol(str, &ptr, 10);
-		while (value != 0L) {
-			++count;
-			if (*ptr == SET_DELIMETER) {
-				str = ptr + 1;
+		if (param != NULL) {
+			str = param;
+			while (TRUE) {
+				if (*ptr == SET_DELIMETER) {
+					str = ptr + 1;
+				}
+				value = strtol(str, &ptr, 10);
+				if (value < NUM_DIGITAL_OUTPUTS && value >= 0L) {
+					dOutputs[value] = GetDigitalOutputByNumber(value);
+					++count;
+				}
+				if (*ptr == NULL) {
+					break;
+				}
 			}
-			value = strtol(str, &ptr, 10);
 		}
-		str = param;
-		value = strtol(str, &ptr, 10);
-		for (int i = 0; i < count; ++i) {
-			if (*ptr == SET_DELIMETER) {
-				str = ptr + 1;
-			}
-			dOutputs[i] = GetDigitalOutputByNumber(strtol(str, &ptr, 10));
-		}
-		break;
+		break; /* END INPUT SET */
 	case CHANNEL_RANGE:
-		start = 0;
-		end = 0;
-		value1 = strtol(param, &ptr, 10);
-		value2 = strtol((ptr + 1), NULL, 10);
+		start = 0U;
+		end = 0U;
+		value1 = (uint8_t) strtol(param, &ptr, 10); /* We know these can potentially loose data...it would be invalid anyway */
+		value2 = (uint8_t) strtol((ptr + 1), NULL, 10);
+
 		if (value1 != 0L) {
-			start = (uint8_t) value1;
-			if (value2 != 0L) {
-				end = (uint8_t) value2;
-			} else {
-				end = NUM_DIGITAL_OUTPUTS;
-			}
+			start = value1;
 		} else {
-			start = 0;
+			start = 0U;
 		}
+		if (value2 != 0L) {
+			end = value2;
+		} else {
+			end = NUM_DIGITAL_OUTPUTS;
+		}
+
 		count = end - start + 1;
 		for (int i = 0; i < count; ++i) {
 			dOutputs[i] = GetDigitalOutputByNumber(start + i); /* Some of these may be NULL, this is OK. */
 		}
-		break;
-	case ALL_CHANNELS:
+		break; /* END CHANNEL RANGE */
+	case ALL_CHANNELS: /* ALL_CHANNELS */
 		count = NUM_DIGITAL_OUTPUTS;
 		for (int i = 0; i < count; ++i) {
 			dOutputs[i] = GetDigitalOutputByNumber(i); /* Some of these may be NULL, this is OK. */
 		}
-		break;
+		break; /* END ALL_CHANNELS */
 	default:
 #ifdef COMMAND_DEBUG
 		printf("[Command Interpreter] The specified input range is invalid.\n\r");
