@@ -127,7 +127,7 @@ const char* READ_ANALOG_INPUT_PARAMS[NUM_READ_ANALOG_INPUT_PARAMS] = { PARAMETER
  * List of all parameters for the ADD_ANALOG_INPUT command.
  */
 const char* ADD_ANALOG_INPUT_PARAMS[NUM_ADD_ANALOG_INPUT_PARAMS] = { PARAMETER_INPUT, PARAMETER_BUFFER, PARAMETER_RATE, PARAMETER_GAIN,
-		PARAMETER_NAME };
+PARAMETER_NAME };
 
 /**
  * List of all parameters for the REMOVE_ANALOG_INPUT command.
@@ -859,20 +859,21 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 		aInputs[0] = GetAnalogInputByNumber(channel);
 		break;
 	case CHANNEL_SET: /* CHANNEL_SET */
-		value = strtol(param, &ptr, 10);
-		while (value != 0L) {
-			++count;
-			if (*ptr == SET_DELIMETER) {
-				str = ptr + 1;
+		if (param != NULL) {
+			str = param;
+			while (TRUE) {
+				if (*ptr == SET_DELIMETER) {
+					str = ptr + 1;
+				}
+				value = strtol(str, &ptr, 10);
+				if (value < NUM_ANALOG_INPUTS && value >= 0L) {
+					aInputs[value] = GetAnalogInputByNumber(value);
+					++count;
+				}
+				if (*ptr == NULL) {
+					break;
+				}
 			}
-			value = strtol(str, &ptr, 10);
-		}
-		value = strtol(param, &ptr, 10);
-		for (int i = 0; i < count; ++i) {
-			if (*ptr == SET_DELIMETER) {
-				str = ptr + 1;
-			}
-			aInputs[i] = GetAnalogInputByNumber(strtol(str, &ptr, 10));
 		}
 		break;
 	case CHANNEL_RANGE: /* INPUT_RANGE */
