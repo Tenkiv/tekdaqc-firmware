@@ -29,7 +29,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="signature_logo_100x100.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Tekdaqc Firmware
    &#160;<span id="projectnumber">1.0.1.0</span>
@@ -696,64 +695,66 @@ $(document).ready(function(){initNavTree('_tekdaqc___b_s_p_8h_source.html','');}
 <div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define CAL_TEMP_STEP_ADDR          (CAL_TEMP_HIGH_ADDR + 4)</span></div>
 <div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define CAL_TEMP_CNT_ADDR           (CAL_TEMP_STEP_ADDR + 4)</span></div>
 <div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define CAL_VALID_ADDR              (CAL_TEMP_CNT_ADDR + 4)</span></div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define CAL_DATA_START_ADDR         (CAL_VALID_ADDR + 1)</span></div>
-<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;<span class="comment">/* EEPROM start address in Flash */</span></div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;<span class="preprocessor">#define EEPROM_START_ADDRESS  ((uint32_t)0x080A0000) </span><span class="comment">/* EEPROM emulation start address:</span></div>
-<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;<span class="comment">                                                  from sector2 : after 16KByte of used</span></div>
-<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;<span class="comment">                                                  Flash memory */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;<span class="comment">/* Define the size of the sectors to be used */</span></div>
-<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;<span class="preprocessor">#define PAGE_SIZE             ((uint32_t) 0x20000)  </span><span class="comment">/* Page size = 128KByte */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;<span class="comment">/* Pages 0 and 1 base and end addresses */</span></div>
-<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;<span class="preprocessor">#define PAGE0_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x0000))</span></div>
-<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PAGE0_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (PAGE_SIZE - 1)))</span></div>
-<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PAGE0_ID              (FLASH_Sector_9)</span></div>
-<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;<span class="preprocessor">#define PAGE1_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + PAGE_SIZE))</span></div>
-<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PAGE1_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (2 * PAGE_SIZE - 1)))</span></div>
-<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PAGE1_ID              (FLASH_Sector_10)</span></div>
-<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;<span class="preprocessor">#define NUM_EEPROM_ADDRESSES            4</span></div>
+<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define COLD_JUNCTION_OFFSET_ADDR   (CAL_VALID_ADDR + 1)</span></div>
+<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define COLD_JUNCTION_GAIN_ADDR     (COLD_JUNCTION_OFFSET_ADDR + 1)</span></div>
+<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define CAL_DATA_START_ADDR         (COLD_JUNCTION_GAIN_ADDR + 1)</span></div>
+<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;<span class="comment">/* EEPROM start address in Flash */</span></div>
+<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;<span class="preprocessor">#define EEPROM_START_ADDRESS  ((uint32_t)0x080A0000) </span><span class="comment">/* EEPROM emulation start address:</span></div>
+<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;<span class="comment">                                                  from sector2 : after 16KByte of used</span></div>
+<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;<span class="comment">                                                  Flash memory */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;<span class="comment">/* Define the size of the sectors to be used */</span></div>
+<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;<span class="preprocessor">#define PAGE_SIZE             ((uint32_t) 0x20000)  </span><span class="comment">/* Page size = 128KByte */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;<span class="comment">/* Pages 0 and 1 base and end addresses */</span></div>
+<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;<span class="preprocessor">#define PAGE0_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x0000))</span></div>
+<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PAGE0_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (PAGE_SIZE - 1)))</span></div>
+<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PAGE0_ID              (FLASH_Sector_9)</span></div>
+<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;<span class="preprocessor">#define PAGE1_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + PAGE_SIZE))</span></div>
+<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PAGE1_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (2 * PAGE_SIZE - 1)))</span></div>
+<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PAGE1_ID              (FLASH_Sector_10)</span></div>
 <div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;<span class="preprocessor">#define ADDR_BOARD_MAX_TEMP_HIGH        0x0000</span></div>
-<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ADDR_BOARD_MAX_TEMP_LOW         0x0001</span></div>
-<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ADDR_BOARD_MIN_TEMP_HIGH        0x0002</span></div>
-<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ADDR_BOARD_MIN_TEMP_LOW         0x0003</span></div>
-<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;<span class="comment">/* Virtual address defined by the user: 0xFFFF value is prohibited */</span></div>
-<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;<span class="keyword">extern</span> uint16_t EEPROM_ADDRESSES[NUM_EEPROM_ADDRESSES];</div>
-<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;</div>
-<div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;<span class="preprocessor"></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;    PIN1 = 0, PIN2 = 1, PIN3 = 2, PIN4 = 3</div>
-<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;} TestPin_TypeDef;</div>
-<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;</div>
-<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;<span class="preprocessor">#define TEST_PINn                        4</span></div>
-<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;<span class="preprocessor">#define TEST_PIN1                        (GPIO_Pin_6)</span></div>
-<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN1_GPIO_PORT              (GPIOG)</span></div>
-<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN1_GPIO_CLK               (RCC_AHB1Periph_GPIOG)</span></div>
-<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;<span class="preprocessor">#define TEST_PIN2                        (GPIO_Pin_8)</span></div>
-<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN2_GPIO_PORT              (GPIOG)</span></div>
-<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN2_GPIO_CLK               (RCC_AHB1Periph_GPIOG)</span></div>
-<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;<span class="preprocessor">#define TEST_PIN3                        (GPIO_Pin_8)</span></div>
-<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN3_GPIO_PORT              (GPIOI)</span></div>
-<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN3_GPIO_CLK               (RCC_AHB1Periph_GPIOI)</span></div>
-<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;<span class="preprocessor">#define TEST_PIN4                        (GPIO_Pin_10)</span></div>
-<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN4_GPIO_PORT              (GPIOI)</span></div>
-<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN4_GPIO_CLK               (RCC_AHB1Periph_GPIOI)</span></div>
-<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* TEKDAQC_BSP_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;<span class="preprocessor">#define NUM_EEPROM_ADDRESSES            4</span></div>
+<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;<span class="preprocessor">#define ADDR_BOARD_MAX_TEMP_HIGH        0x0000</span></div>
+<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ADDR_BOARD_MAX_TEMP_LOW         0x0001</span></div>
+<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ADDR_BOARD_MIN_TEMP_HIGH        0x0002</span></div>
+<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ADDR_BOARD_MIN_TEMP_LOW         0x0003</span></div>
+<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;<span class="comment">/* Virtual address defined by the user: 0xFFFF value is prohibited */</span></div>
+<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;<span class="keyword">extern</span> uint16_t EEPROM_ADDRESSES[NUM_EEPROM_ADDRESSES];</div>
+<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;</div>
+<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;<span class="preprocessor"></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;    PIN1 = 0, PIN2 = 1, PIN3 = 2, PIN4 = 3</div>
+<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;} TestPin_TypeDef;</div>
+<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;</div>
+<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;<span class="preprocessor">#define TEST_PINn                        4</span></div>
+<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;<span class="preprocessor">#define TEST_PIN1                        (GPIO_Pin_6)</span></div>
+<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN1_GPIO_PORT              (GPIOG)</span></div>
+<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN1_GPIO_CLK               (RCC_AHB1Periph_GPIOG)</span></div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;<span class="preprocessor">#define TEST_PIN2                        (GPIO_Pin_8)</span></div>
+<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN2_GPIO_PORT              (GPIOG)</span></div>
+<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN2_GPIO_CLK               (RCC_AHB1Periph_GPIOG)</span></div>
+<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;<span class="preprocessor">#define TEST_PIN3                        (GPIO_Pin_8)</span></div>
+<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN3_GPIO_PORT              (GPIOI)</span></div>
+<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN3_GPIO_CLK               (RCC_AHB1Periph_GPIOI)</span></div>
+<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;<span class="preprocessor">#define TEST_PIN4                        (GPIO_Pin_10)</span></div>
+<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN4_GPIO_PORT              (GPIOI)</span></div>
+<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TEST_PIN4_GPIO_CLK               (RCC_AHB1Periph_GPIOI)</span></div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* TEKDAQC_BSP_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="group__board__channel__constants_html_ggab0f30599ceb99e5ba3b2908d8e9bd131aaee2b8395093e69408a16f6981d07fa9"><div class="ttname"><a href="group__board__channel__constants.html#ggab0f30599ceb99e5ba3b2908d8e9bd131aaee2b8395093e69408a16f6981d07fa9">CHANNEL_ADDED</a></div><div class="ttdef"><b>Definition:</b> <a href="_tekdaqc___b_s_p_8h_source.html#l00284">Tekdaqc_BSP.h:284</a></div></div>
 <div class="ttc" id="_tekdaqc___debug_8h_html"><div class="ttname"><a href="_tekdaqc___debug_8h.html">Tekdaqc_Debug.h</a></div><div class="ttdoc">Header file to define precompiler variables for debugging sections of code. </div></div>
 <div class="ttc" id="group__board__channel__constants_html_ggaee574a0d48c41a3e5426ffbf8ac4c5c4ad49fd7cec8a5997c9347759048470fc9"><div class="ttname"><a href="group__board__channel__constants.html#ggaee574a0d48c41a3e5426ffbf8ac4c5c4ad49fd7cec8a5997c9347759048470fc9">LOGIC_HIGH</a></div><div class="ttdef"><b>Definition:</b> <a href="_tekdaqc___b_s_p_8h_source.html#l00275">Tekdaqc_BSP.h:275</a></div></div>
@@ -767,7 +768,7 @@ $(document).ready(function(){initNavTree('_tekdaqc___b_s_p_8h_source.html','');}
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_da411aab950102a7c87084f4501853eb.html">TekDAQC_Libraries_Firmware</a></li><li class="navelem"><a class="el" href="dir_88d5fee1f3a2431f8b61c607d983c39a.html">inc</a></li><li class="navelem"><a class="el" href="_tekdaqc___b_s_p_8h.html">Tekdaqc_BSP.h</a></li>
-    <li class="footer">Generated on Fri Mar 21 2014 16:31:01 for Tekdaqc Firmware by
+    <li class="footer">Generated on Wed Apr 16 2014 21:24:44 for Tekdaqc Firmware by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

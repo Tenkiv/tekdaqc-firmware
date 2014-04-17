@@ -8,7 +8,7 @@ var group__digital__input =
       [ "timestamp", "struct_digital___input__t.html#a465bef81f6478756e5443025b1f2ddfa", null ]
     ] ],
     [ "MAX_DIGITAL_INPUT_NAME_LENGTH", "group__digital__input.html#gaf48b39ba82663f6926d1a02d1e501926", null ],
-    [ "AddDigitalInput", "group__digital__input.html#ga2f7815dc130460ff54b2f21d0864bf8f", null ],
+    [ "AddDigitalInput", "group__digital__input.html#ga654bd56de221fbfe0426cb0a18917beb", null ],
     [ "CreateDigitalInput", "group__digital__input.html#ga5b4bb29221f6aafe926340eafcf7f722", null ],
     [ "DigitalInputsInit", "group__digital__input.html#gacf4e27adc3b6643e12e01e4d1000db63", null ],
     [ "GetDigitalInputByNumber", "group__digital__input.html#gadfa62573aaa64c6bdcbb94c164099154", null ],
