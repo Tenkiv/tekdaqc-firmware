@@ -339,7 +339,7 @@ static void ProcessFunctionError(void);
  * @internal
  * @brief Process the raw key/value pair string to extract the key/values.
  */
-static void ParseKeyValuePairs(char raw_args[][MAX_COMMANDPART_LENGTH], char keys[][MAX_COMMANDPART_LENGTH],
+static bool ParseKeyValuePairs(char raw_args[][MAX_COMMANDPART_LENGTH], char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /**
@@ -570,8 +570,13 @@ static void ProcessCommand(char* command, char raw_args[][MAX_COMMANDPART_LENGTH
 	Command_t command_type = ParseCommand(command); /* Determine which command this is */
 	char keys[MAX_NUM_ARGUMENTS][MAX_COMMANDPART_LENGTH];
 	char values[MAX_NUM_ARGUMENTS][MAX_COMMANDPART_LENGTH];
-	ParseKeyValuePairs(raw_args, keys, values, arg_count); /* Parse the argument key/value pairs. */
-	Tekdaqc_Command_Error_t error = ExecuteCommand(command_type, keys, values, arg_count); /* Execute the command */
+	Tekdaqc_Command_Error_t error = ERR_COMMAND_OK;
+	bool success = ParseKeyValuePairs(raw_args, keys, values, arg_count); /* Parse the argument key/value pairs. */
+	if (success == TRUE) {
+		error = ExecuteCommand(command_type, keys, values, arg_count); /* Execute the command */
+	} else {
+		error = ERR_COMMAND_PARSE_ERROR;
+	}
 	ProcessCommandError(error); /* Handle any errors. */
 }
 
@@ -744,11 +749,13 @@ static void ProcessFunctionError(void) {
  * @param keys char[][] Array of C-Strings to store the parsed keys in.
  * @param values char[][] Array of C-Strings to store the parsed values in.
  * @param count uint8_t The number of arguments passed.
+ * @retval bool TRUE if the parsing was successful.
  */
-static void ParseKeyValuePairs(char raw_args[][MAX_COMMANDPART_LENGTH], char keys[][MAX_COMMANDPART_LENGTH],
+static bool ParseKeyValuePairs(char raw_args[][MAX_COMMANDPART_LENGTH], char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	char* raw;
 	char temp[MAX_COMMANDPART_LENGTH];
+	bool retval = TRUE;
 	for (int i = 0; i < count; ++i) {
 		raw = raw_args[i];
 		if (strncmp(raw, KEY_VALUE_PAIR_FLAG, 2) == 0) {
@@ -769,8 +776,11 @@ static void ParseKeyValuePairs(char raw_args[][MAX_COMMANDPART_LENGTH], char key
 #ifdef COMMAND_DEBUG
 			printf("[Command Interpreter] Key/value pair %i (%s) was not properly formatted.\n\r", i, raw);
 #endif
+			retval = FALSE;
+			break;
 		}
 	}
+	return retval;
 }
 
 /**
@@ -1394,7 +1404,7 @@ static Tekdaqc_Command_Error_t Ex_AddAnalogInput(char keys[][MAX_COMMANDPART_LEN
 #ifdef COMMAND_DEBUG
 			printf("[Command Interpreter] Provided arguments are not valid for creation of a new analog input.\n\r");
 #endif
-			retval = ERR_COMMAND_OK;
+			retval = ERR_COMMAND_PARSE_ERROR;
 		}
 	} else {
 		retval = ERR_COMMAND_ADC_INVALID_OPERATION;
