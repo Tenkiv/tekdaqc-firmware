@@ -11,7 +11,7 @@
  - __Date:__    3/19/2014
  - __Brief:__   Initial release.
  - __Notes:__   N/A
- - __Link:__   [v1.0.0.0](https://github.com/Tenkiv/Tekdaqc-Firmware/releases/tag/v1.0.0.0.0)
+ - __Link:__   [v1.0.0.0](https://github.com/Tenkiv/Tekdaqc-Firmware/releases/tag/v1.0.0.0)
 
  ###Release: 1.0.1.0
  - __Date:__    4/16/2014
@@ -25,4 +25,4 @@
   - Bug fixes and improvements for analog input calibration.
   - Fixes a bug in analog input multisampling.
   - Fixes a parsing bug in all READ_* commands when specifying a set or range.
- - __Link:__   [v1.0.0.0](https://github.com/Tenkiv/Tekdaqc-Firmware/releases/tag/v1.0.0.0.0)
+ - __Link:__   [v1.0.1.0](https://github.com/Tenkiv/Tekdaqc-Firmware/releases/tag/v1.0.1.0)
