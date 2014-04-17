@@ -1,4 +1,4 @@
-Version structure: A.B.C.D:
+#Version structure: A.B.C.D:
 
 A: Major Version: Incremented for hardware changes, re-architectures, and major functionality differences.
 
@@ -8,9 +8,10 @@ C: Build Number: Incremented for bug fixes and minor improvements within the cur
 
 D: Special Build: 0 unless the build is customized for some particular purpose such as hardware verification or experimental testing.
 
-Release history:
+#Release history:
 
-Release: 1.0.0.0
-Date:    3/19/2014
-Brief:   Initial release.
-Notes:   N/A
+###Release: 1.0.0.0
+ - __Date:__    3/19/2014
+ - __Brief:__   Initial release.
+ - __Notes:__   N/A
+ - __Link:__   [v1.0.0.0](https://github.com/Tenkiv/Tekdaqc-Firmware/releases/tag/v1.0.0.0.0)
