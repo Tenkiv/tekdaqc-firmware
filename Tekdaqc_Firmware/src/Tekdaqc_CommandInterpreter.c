@@ -90,7 +90,6 @@
  */
 #define KEY_VALUE_PAIR_DELIMETER		"="
 
-
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -286,8 +285,8 @@ static Tekdaqc_Function_Error_t lastFunctionError = ERR_FUNCTION_OK;
  */
 typedef enum {
 	SINGLE_CHANNEL, /**< A single channel is selected. */
-	CHANNEL_RANGE,  /**< A range of channels is selected. */
-	CHANNEL_SET,  /**< A set of channels is selected. */
+	CHANNEL_RANGE, /**< A range of channels is selected. */
+	CHANNEL_SET, /**< A set of channels is selected. */
 	ALL_CHANNELS /**< All added channels are selected. */
 } Channel_List_t;
 
@@ -548,9 +547,8 @@ static Tekdaqc_Command_Error_t Ex_SetStaticIP(char keys[][MAX_COMMANDPART_LENGTH
  * @internal
  * @brief Execute the GET_CALIBRATION_STATUS command with the provided parameters.
  */
-static Tekdaqc_Command_Error_t Ex_GetCalibrationStatus(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
-
-
+static Tekdaqc_Command_Error_t Ex_GetCalibrationStatus(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count);
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
@@ -592,7 +590,7 @@ static void Command_ParseLine(void) {
 	uint8_t count = 0U;
 	char command[MAX_COMMANDPART_LENGTH];
 	pch = strpbrk(interpreter.command_buffer, COMMAND_DELIMETER);
-	while (pch != NULL ) {
+	while (pch != NULL) {
 		++count;
 		pch = strpbrk(pch + 1, COMMAND_DELIMETER);
 	}
@@ -615,7 +613,7 @@ static void Command_ParseLine(void) {
 			strcpy(command, pch);
 			for (int i = 0; i < count; ++i) {
 				pch = strtok(NULL, COMMAND_DELIMETER);
-				if (pch == NULL ) {
+				if (pch == NULL) {
 					break;
 				}
 				strcpy(*(raw_args + i), pch);
@@ -760,7 +758,7 @@ static void ParseKeyValuePairs(char raw_args[][MAX_COMMANDPART_LENGTH], char key
 			ToUpperCase(raw);
 			strcpy(keys[i], raw);
 			raw = strtok(NULL, KEY_VALUE_PAIR_DELIMETER);
-			if (raw != NULL ) {
+			if (raw != NULL) {
 				ToUpperCase(raw);
 				strcpy(values[i], raw);
 			} else {
@@ -817,9 +815,9 @@ static bool InputArgsCheck(char keys[][MAX_COMMANDPART_LENGTH], char values[][MA
 static Channel_List_t GetChannelListType(char* arg) {
 	if (strcmp(arg, ALL_CHANNELS_STRING) == 0) {
 		return ALL_CHANNELS;
-	} else if (strchr(arg, SET_DELIMETER) != NULL ) {
+	} else if (strchr(arg, SET_DELIMETER) != NULL) {
 		return CHANNEL_SET;
-	} else if (strchr(arg, RANGE_DELIMETER) != NULL ) {
+	} else if (strchr(arg, RANGE_DELIMETER) != NULL) {
 		return CHANNEL_RANGE;
 	} else {
 		return SINGLE_CHANNEL;
@@ -882,16 +880,18 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 		end = 0U;
 		value1 = (uint8_t) strtol(param, &ptr, 10); /* We know these can potentially loose data...it would be invalid anyway */
 		value2 = (uint8_t) strtol((ptr + 1), NULL, 10);
+
 		if (value1 != 0L) {
 			start = value1;
-			if (value2 != 0L) {
-				end = value2;
-			} else {
-				end = NUM_ANALOG_INPUTS;
-			}
 		} else {
 			start = 0U;
 		}
+		if (value2 != 0L) {
+			end = value2;
+		} else {
+			end = NUM_ANALOG_INPUTS;
+		}
+
 		count = end - start + 1;
 		for (int i = 0; i < count; ++i) {
 			aInputs[i] = GetAnalogInputByNumber(start + i); /* Some of these may be NULL, this is OK. */
@@ -1191,7 +1191,7 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 		break;
 	case COMMAND_UPGRADE:
 		/* Write the update flag to the backup register */
-		RTC_WriteBackupRegister(UPDATE_FLAG_REGISTER, (RTC_ReadBackupRegister(UPDATE_FLAG_REGISTER ) | UPDATE_FLAG_ENABLED));
+		RTC_WriteBackupRegister(UPDATE_FLAG_REGISTER, (RTC_ReadBackupRegister(UPDATE_FLAG_REGISTER) | UPDATE_FLAG_ENABLED));
 		/* Close the telnet connection */
 		TelnetClose();
 		/* Reset the processor */
@@ -1260,7 +1260,6 @@ static Tekdaqc_Command_Error_t Ex_ListAnalogInputs(char keys[][MAX_COMMANDPART_L
 	}
 	return retval;
 }
-
 
 /**
  * Execute the READ_ADC_REGISTERS command.
@@ -1920,9 +1919,9 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 			}
 		}
 		if (retval == ERR_COMMAND_OK) { /* If an error occurred, don't bother continuing */
-			BuildAnalogInputList(ALL_CHANNELS, NULL );
-			BuildDigitalInputList(ALL_CHANNELS, NULL );
-			BuildDigitalOutputList(ALL_CHANNELS, NULL );
+			BuildAnalogInputList(ALL_CHANNELS, NULL);
+			BuildDigitalInputList(ALL_CHANNELS, NULL);
+			BuildDigitalOutputList(ALL_CHANNELS, NULL);
 			ADC_Machine_Input_Sample(aInputs, numSamples, false);
 			DI_Machine_Input_Sample(dInputs, numSamples, false);
 			DO_Machine_Output_Sample(dOutputs, numSamples, false);
@@ -1958,14 +1957,14 @@ static Tekdaqc_Command_Error_t Ex_Identify(void) {
 	uint32_t version = Tekdaqc_GetLocatorVersion();
 	uint32_t count = 0;
 	count = snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "Board Identity");
-	count += snprintf(TOSTRING_BUFFER + count, 51*sizeof(char), "\n\r\tSerial Number: %s", serial);
+	count += snprintf(TOSTRING_BUFFER + count, 51 * sizeof(char), "\n\r\tSerial Number: %s", serial);
 	count -= 2;
-	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER), "\n\r\tBoard Revision: %c\n\r\tFirmware Version: %lu.%lu.%lu.%lu", (char) type,
-			(version & 0xff), ((version >> 8) & 0xff), ((version >> 16) & 0xff), ((version >> 24) & 0xff));
-	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER), "\n\r\tIP Address: %lu.%lu.%lu.%lu", ip & 0xff, (ip >> 8) & 0xff, (ip >> 16) & 0xff,
-			(ip >> 24) & 0xff);
-	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER), "\n\r\tMAC Address: %02X:%02X:%02X:%02X:%02X:%02X\n\r", *MAC, *(MAC+1), *(MAC+2),
-			*(MAC+3), *(MAC+4), *(MAC+5));
+	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER), "\n\r\tBoard Revision: %c\n\r\tFirmware Version: %lu.%lu.%lu.%lu",
+			(char) type, (version & 0xff), ((version >> 8) & 0xff), ((version >> 16) & 0xff), ((version >> 24) & 0xff));
+	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER), "\n\r\tIP Address: %lu.%lu.%lu.%lu", ip & 0xff, (ip >> 8) & 0xff,
+			(ip >> 16) & 0xff, (ip >> 24) & 0xff);
+	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER), "\n\r\tMAC Address: %02X:%02X:%02X:%02X:%02X:%02X\n\r", *MAC,
+			*(MAC + 1), *(MAC + 2), *(MAC + 3), *(MAC + 4), *(MAC + 5));
 	TelnetWriteStatusMessage(TOSTRING_BUFFER);
 	return retval;
 }
@@ -2026,7 +2025,8 @@ static Tekdaqc_Command_Error_t Ex_SetStaticIP(char keys[][MAX_COMMANDPART_LENGTH
  * @param count uint8_t The number of command parameters.
  * @retval Tekdaqc_Command_Error_t The command error status.
  */
-static Tekdaqc_Command_Error_t Ex_GetCalibrationStatus(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+static Tekdaqc_Command_Error_t Ex_GetCalibrationStatus(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	bool valid = isTekdaqc_CalibrationValid();
 	count = snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "Calibration Status: %s", (valid == true) ? "VALID" : "INVALID");
