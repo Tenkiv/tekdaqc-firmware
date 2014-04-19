@@ -64,7 +64,7 @@ int main(void) {
 	DebugComPort_Init();
 #endif
 #ifdef DEBUG
-	printf("Serial Port Initialized.\n\r");
+	printf("\n\rSerial Port Initialized.\n\r");
 #endif
 
 	/* Enable the PWR APB1 Clock Interface */
