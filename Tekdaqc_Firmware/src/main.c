@@ -206,6 +206,7 @@ static void Tekdaqc_Init(void) {
 	/* Set the write functions */
 	SetAnalogInputWriteFunction(&TelnetWriteString);
 	SetDigitalInputWriteFunction(&TelnetWriteString);
+	SetDigitalOutputWriteFunction(&TelnetWriteString);
 
 	/* Initialize the FLASH disk */
 	FlashDiskInit();

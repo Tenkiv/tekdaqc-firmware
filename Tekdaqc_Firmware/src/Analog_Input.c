@@ -487,7 +487,7 @@ void WriteAnalogInput(Analog_Input_t* input) {
 					ADS1256_StringFromSPS(input->rate), ADS1256_StringFromBuffer(input->buffer));
 			writer(TOSTRING_BUFFER);
 		}
-		retval = sprintf(TOSTRING_BUFFER, "%" PRIu64 ", %" PRIi32 "\n\r", input->timestamps[input->bufferReadIdx],
+		retval = sprintf(TOSTRING_BUFFER, "%" PRIu64 ", %" PRIi32 "\x1F\n\r", input->timestamps[input->bufferReadIdx],
 				input->values[input->bufferReadIdx]);
 		input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
 		if (retval >= 0) {

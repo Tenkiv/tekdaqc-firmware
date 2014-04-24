@@ -191,6 +191,7 @@ void DigitalOutputsInit(void) {
  */
 Tekdaqc_Function_Error_t ListDigitalOutputs(void) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
+	ClearToStringBuffer();
 	uint8_t n = snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\n\r----------\n\rAdded Digital Outputs\n\r----------\n\r");
 	if (n <= 0) {
 #ifdef DIGITALOUTPUT_DEBUG
