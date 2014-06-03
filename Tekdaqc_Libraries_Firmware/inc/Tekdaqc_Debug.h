@@ -137,7 +137,7 @@ extern "C" {
  * @def TELNET_DEBUG
  * @brief Used to turn on debugging `printf` statements for the telnet server.
  */
-/*#define TELNET_DEBUG */
+/* #define TELNET_DEBUG */
 
 /**
  * @internal

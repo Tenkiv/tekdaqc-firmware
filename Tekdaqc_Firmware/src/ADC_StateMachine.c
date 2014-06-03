@@ -305,6 +305,8 @@ static void ADC_Machine_Service_Sampling(void) {
 	/* Check if data is ready */
 	if (ADS1256_IsDataReady(false)) {
 		/* We need to read it */
+		printf("Reading ADC Sample.\n\r");
+		ADS1256_PrintRegs();
 		uint8_t writeIndex = samplingInputs[currentSamplingInput]->bufferWriteIdx;
 		samplingInputs[currentSamplingInput]->values[writeIndex] = ADS1256_GetMeasurement();
 		samplingInputs[currentSamplingInput]->bufferWriteIdx = (writeIndex + 1) % ANALOG_INPUT_BUFFER_SIZE;
@@ -394,15 +396,8 @@ static void ADC_Machine_Service_Muxing(void) {
 		/* We need to begin a temperature sample */
 		ADS1256_Sync(true);
 		SelectColdJunctionInput();
-		Analog_Input_t* cold = GetAnalogInputByNumber(COLD_JUNCTION);
+		Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
 		BeginNextConversion(cold);
-		/* Set sampling parameters */
-		/*ADS1256_SetDataRate(input->rate);
-		ADS1256_SetPGASetting(input->gain);
-		ADS1256_SetInputBufferSetting(input->buffer);
-		ApplyCalibrationParameters(input);
-		ADS1256_Wakeup();
-		input->timestamps[input->bufferWriteIdx] = GetLocalTime();*/
 		waitingOnTemp = true;
 	} else {
 		/* We are waiting for a temperature sample to complete */
@@ -451,6 +446,7 @@ static void ConvertCalibrationToBytes(uint8_t bytes[], uint32_t cal) {
 static void ApplyCalibrationParameters(Analog_Input_t* input) {
 	uint32_t offset_cal;
 	uint32_t gain_cal;
+	printf("Applying calibration parameters for input: %s\n\r", input->name);
 	if (input->physicalInput == IN_COLD_JUNCTION) {
 		offset_cal = Tekdaqc_GetColdJunctionOffsetCalibration();
 		gain_cal = Tekdaqc_GetColdJunctionGainCalibration();
@@ -458,6 +454,7 @@ static void ApplyCalibrationParameters(Analog_Input_t* input) {
 		offset_cal = Tekdaqc_GetOffsetCalibration(input->rate, input->gain, input->buffer);
 		gain_cal = Tekdaqc_GetGainCalibration(input->rate, input->gain, input->buffer, getBoardTemperature());
 	}
+	printf("Calibration params: Offset: 0x%" PRIx32 " Gain: 0x%" PRIx32 "\n\r", offset_cal, gain_cal);
 	ConvertCalibrationToBytes(scratch_bytes, offset_cal);
 	ADS1256_SetOffsetCalSetting(scratch_bytes);
 	ConvertCalibrationToBytes(scratch_bytes, gain_cal);
