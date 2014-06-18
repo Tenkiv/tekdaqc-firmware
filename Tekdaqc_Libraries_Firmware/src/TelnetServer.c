@@ -211,7 +211,7 @@ static err_t TelnetAccept(void *arg, struct tcp_pcb *pcb, err_t err) {
 	tcp_write(pcb, TelnetInit, sizeof(TelnetInit), 1);
 	tcp_output(pcb);
 
-	TelnetWriteStatusMessage("[TELNET] Telnet Server Connected. Welcome.");
+	TelnetWriteDebugMessage("[TELNET] Telnet Server Connected. Welcome.");
 
 	/* Return a success code. */
 	ret_err = ERR_OK;

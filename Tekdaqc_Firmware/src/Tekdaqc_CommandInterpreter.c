@@ -725,11 +725,11 @@ static void ProcessCommandError(const Tekdaqc_Command_Error_t error) {
 		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "ERROR - %s", error_string);
 		break;
 	}
-	if (isErrored == TRUE) {
-		TelnetWriteErrorMessage(TOSTRING_BUFFER);
-	} else {
+	//if (isErrored == TRUE) {
+	//	TelnetWriteErrorMessage(TOSTRING_BUFFER);
+	//} else {
 		TelnetWriteStatusMessage(TOSTRING_BUFFER);
-	}
+	//}
 }
 
 /**
