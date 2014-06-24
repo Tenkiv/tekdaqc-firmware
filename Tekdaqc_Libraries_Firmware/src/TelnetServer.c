@@ -971,3 +971,24 @@ void TelnetWriteDebugMessage(char* message) {
 		}
 	}
 }
+
+/**
+ * Print a message to the telnet connection formatted as a command data.
+ *
+ * @param message char* Pointer to the string to send
+ * @retval none
+ */
+void TelnetWriteCommandDataMessage(char* message) {
+	if (TelnetIsConnected() == true) {
+		ClearToMessageBuffer();
+		char* character = message;
+		while (*character) {
+			character++;
+		}
+		uint8_t count = character - message;
+		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(COMMAND_DATA_MESSAGE_HEADER) + count - 2, COMMAND_DATA_MESSAGE_HEADER, message);
+		if (n > 0) {
+			TelnetWriteString(MESSAGE_BUFFER);
+		}
+	}
+}

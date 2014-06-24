@@ -76,7 +76,7 @@
  * @def ADS1256_REGISTERS_TOSTRING_HEADER
  * @brief Used as a header for each block of analog measurement printing to string.
  */
-#define ADS1256_REGISTERS_TOSTRING_HEADER "------------------------------\n\r[ADS1256] Register Contents:\n\r------------------------------\n\r"
+#define ADS1256_REGISTERS_TOSTRING_HEADER "[ADS1256] Register Contents:\n\r"
 
 
 

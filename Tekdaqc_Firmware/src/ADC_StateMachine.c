@@ -235,6 +235,8 @@ static void ADC_Machine_Service_Calibrating(void) {
 #endif
 	} else {
 		/* The calibration is complete */
+		printf("[ADC STATE MACHINE] Calibration Completed.\n\r");
+		TelnetWriteStatusMessage("[ADC STATE MACHINE] Calibration Completed.\n\r");
 		ADC_Machine_Idle();
 	}
 }

@@ -1287,7 +1287,8 @@ static Tekdaqc_Command_Error_t Ex_ReadADCRegisters(char keys[][MAX_COMMANDPART_L
 		ClearToStringBuffer();
 		ADS1256_RegistersToString();
 		if (TOSTRING_BUFFER[0] != '\0') {
-			TelnetWriteString(TOSTRING_BUFFER);
+			//TelnetWriteString(TOSTRING_BUFFER);
+			TelnetWriteCommandDataMessage(TOSTRING_BUFFER);
 			ClearToStringBuffer();
 		} else {
 			/* An error occurred */

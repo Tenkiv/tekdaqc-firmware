@@ -255,6 +255,11 @@ void TelnetWriteStatusMessage(char* message);
 void TelnetWriteDebugMessage(char* message);
 
 /**
+ * @brief Print a message to the telnet connection formatted as a command data message.
+ */
+void TelnetWriteCommandDataMessage(char* message);
+
+/**
  * @}
  */
 
