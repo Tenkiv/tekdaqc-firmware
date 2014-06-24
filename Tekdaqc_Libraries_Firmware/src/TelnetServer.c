@@ -572,24 +572,26 @@ void TelnetWrite(const char character) {
 #endif
 	}
 
-	/* Write this character into the output buffer.  Disable Ethernet
-	 interrupts during this process in order to prevent an intervening
-	 interrupt from corrupting the output buffer. */
+	/* Write this character into the output buffer. */
 	//TODO: Disable Ethernet interrupts and reenable. Note: This may not be necessary.
 	telnet_server.buffer[telnet_server.length++] = character;
 }
 
 /**
- * Writes a string to the specified Telnet server.
+ * Writes a string to the specified Telnet server. Disables Ethernet
+ * interrupts during this process in order to prevent an intervening
+ * interrupt from corrupting the output buffer.
  *
  * @param string char* Pointer to a C-String to write to the interface.
  * @retval none
  */
 void TelnetWriteString(char* string) {
+	Eth_EXTI_Disable();
 	while (*string) {
 		TelnetWrite(*string);
 		++string;
 	}
+	Eth_EXTI_Enable();
 }
 
 /**

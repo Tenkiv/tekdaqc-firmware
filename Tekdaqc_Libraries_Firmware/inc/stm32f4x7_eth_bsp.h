@@ -54,6 +54,8 @@
 void  ETH_BSP_Config(void);
 uint32_t Eth_Link_PHYITConfig(uint16_t PHYAddress);
 void Eth_Link_EXTIConfig(void);
+void Eth_EXTI_Enable(void);
+void Eth_EXTI_Disable(void);
 void Eth_Link_ITHandler(uint16_t PHYAddress);
 void ETH_link_callback(struct netif *netif);
 
