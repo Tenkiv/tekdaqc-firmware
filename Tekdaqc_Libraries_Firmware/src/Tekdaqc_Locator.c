@@ -297,7 +297,7 @@ void Tekdaqc_LocatorVersionSet(uint32_t version) {
  * @param title const char* Pointer to a C-String containing the application title string.
  * @retval none
  */
-void LocatorAppTitleSet(const unsigned char *title) {
+void Tekdaqc_LocatorAppTitleSet(const unsigned char *title) {
 	uint32_t count;
 
 	/* Copy the application title string into the response data. */
