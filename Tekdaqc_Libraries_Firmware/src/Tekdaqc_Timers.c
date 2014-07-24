@@ -64,7 +64,7 @@ void Timer_Config(void) {
 	/* Configure Systick clock source as HCLK */
 	SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);
 
-	/* SystTick configuration: an interrupt every 10ms */
+	/* SystTick configuration: an interrupt every 1ms */
 	RCC_GetClocksFreq(&RCC_Clocks);
 	SysTick_Config(RCC_Clocks.HCLK_Frequency / SYSTEMTICK_DIVIDER);
 
