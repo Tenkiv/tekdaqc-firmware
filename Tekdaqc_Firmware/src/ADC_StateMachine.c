@@ -178,13 +178,13 @@ static inline const char* ADCMachine_StringFromState(ADC_State_t machine_state) 
  * @param input Analog_Input to begin conversion for. It is assumed the switch has been made.
  */
 static void BeginNextConversion(Analog_Input_t* input) {
-	printf("Initiating Next Conversion at time %" PRIi64 "\n\r", GetLocalTime());
+	//printf("Initiating Next Conversion at time %" PRIi64 "\n\r", GetLocalTime());
 	/* Set sampling parameters */
 	ADS1256_SetDataRate(input->rate);
 	ADS1256_SetPGASetting(input->gain);
 	ADS1256_SetInputBufferSetting(input->buffer);
 	ApplyCalibrationParameters(input);
-	ADS1256_PrintRegs();
+	//ADS1256_PrintRegs();
 	ADS1256_Wakeup();
 	input->timestamps[input->bufferWriteIdx] = GetLocalTime();
 }
@@ -546,6 +546,7 @@ void ADC_Calibrate(void) {
 
 		/* Select the calibration input */
 		SelectCalibrationInput();
+		Delay_ms(EXTERNAL_MUX_DELAY);
 	}
 }
 
