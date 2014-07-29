@@ -75,19 +75,22 @@ static char MESSAGE_BUFFER[SIZE_TOSTRING_BUFFER];
  * @brief The error message provided when an attempt is made to play the game when
  *         it is already being played over a different interface.
  */
-static const char ErrorMessage[53] = "The Tekdaqc is already in use...try again later!\r\n";
+static const char ErrorMessage[53] =
+		"The Tekdaqc is already in use...try again later!\r\n";
 
 /**
  * @internal
  * @brief The initialization sequence sent to a remote telnet client when it first connects to the telnet server.
  */
-static const char TelnetInit[] = { TELNET_IAC, TELNET_DO, TELNET_OPT_SUPPRESS_GA, TELNET_IAC, TELNET_WILL, TELNET_OPT_ECHO };
+static const char TelnetInit[] = { TELNET_IAC, TELNET_DO,
+TELNET_OPT_SUPPRESS_GA, TELNET_IAC, TELNET_WILL, TELNET_OPT_ECHO };
 
 /**
  * @internal
  * @brief This telnet server will always suppress go ahead generation, regardless of this setting.
  */
-static TelnetOpts_t TelnetOptions[] = { { .option = TELNET_OPT_SUPPRESS_GA, .flags = (0x01 << OPT_FLAG_WILL) }, { .option = TELNET_OPT_ECHO,
+static TelnetOpts_t TelnetOptions[] = { { .option = TELNET_OPT_SUPPRESS_GA,
+		.flags = (0x01 << OPT_FLAG_WILL) }, { .option = TELNET_OPT_ECHO,
 		.flags = (1 << OPT_FLAG_DO) } };
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -102,7 +105,8 @@ static err_t TelnetAccept(void *arg, struct tcp_pcb *pcb, err_t err);
 /**
  * @brief Called when the lwIP TCP/IP stack has an incoming packet to be processed.
  */
-static err_t TelnetReceive(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err);
+static err_t TelnetReceive(void *arg, struct tcp_pcb *pcb, struct pbuf *p,
+		err_t err);
 
 /**
  * @brief Called when the lwIP TCP/IP stack has received an acknowledge for data that has been transmitted.
@@ -229,40 +233,43 @@ static err_t TelnetAccept(void *arg, struct tcp_pcb *pcb, err_t err) {
  * @param err lwIP err_t with the current error status.
  * @retval err lwIP err_t with the result of the this function.
  */
-static err_t TelnetReceive(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err) {
+static err_t TelnetReceive(void *arg, struct tcp_pcb *pcb, struct pbuf *p,
+		err_t err) {
 	struct pbuf *q;
 	unsigned long ulIdx;
 	unsigned char *pucData;
 	TelnetServer_t* server;
 	if (arg != NULL) {
 		server = (TelnetServer_t*) arg;
+
+		/* Process the incoming packet. */
+		if ((err == ERR_OK) && (p != NULL)) {
+#ifdef TELNET_DEBUG
+			printf("[Telnet Server] Processing received packet.\n\r");
+#endif
+			/* Accept the packet from TCP. */
+			tcp_recved(pcb, p->tot_len);
+			/* Loop through the pbufs in this packet. */
+			for (q = p, pucData = (unsigned char*) q->payload; q != NULL;
+					q = q->next) {
+				/* Loop through the bytes in this pbuf. */
+				for (ulIdx = 0; ulIdx < q->len; ulIdx++) {
+					/* Process this character. */
+					TelnetProcessCharacter(pucData[ulIdx]);
+				}
+			}
+			/* Free the pbuf. */
+			pbuf_free(p);
+		} else if ((err == ERR_OK) && (p == NULL)) {
+			/* If a null packet is passed in, close the connection. */
+			server->length = 0;
+			TelnetClose();
+		}
 	} else {
 #ifdef TELNET_DEBUG
 		printf("[Telnet Server] Could not cast receive args to telnet server struct because they were null.\n\r");
 		return ERR_VAL;
 #endif
-	}
-	/* Process the incoming packet. */
-	if ((err == ERR_OK) && (p != NULL)) {
-#ifdef TELNET_DEBUG
-		printf("[Telnet Server] Processing received packet.\n\r");
-#endif
-		/* Accept the packet from TCP. */
-		tcp_recved(pcb, p->tot_len);
-		/* Loop through the pbufs in this packet. */
-		for (q = p, pucData = (unsigned char*) q->payload; q != NULL; q = q->next) {
-			/* Loop through the bytes in this pbuf. */
-			for (ulIdx = 0; ulIdx < q->len; ulIdx++) {
-				/* Process this character. */
-				TelnetProcessCharacter(pucData[ulIdx]);
-			}
-		}
-		/* Free the pbuf. */
-		pbuf_free(p);
-	} else if ((err == ERR_OK) && (p == NULL)) {
-		/* If a null packet is passed in, close the connection. */
-		server->length = 0;
-		TelnetClose();
 	}
 	/* Return okay. */
 	return (ERR_OK);
@@ -367,6 +374,11 @@ static void ClearToMessageBuffer(void) {
  * @retval none
  */
 TelnetStatus_t InitializeTelnetServer(void) {
+	telnet_server.length = 0;
+	telnet_server.outstanding = 0;
+	for (uint_fast16_t i = 0; i < sizeof(telnet_server.buffer); ++i) {
+		telnet_server.buffer[i] = 0;
+	}
 	/* Create a new tcp pcb */
 #ifdef TELNET_DEBUG
 	printf("[Telnet Server] Creating TCP port for Telnet server.\n\r");
@@ -429,6 +441,9 @@ void TelnetClose(void) {
 	/* Close tcp connection */
 	tcp_close(pcb);
 	IsConnected = FALSE;
+
+	/* Re-initialize the Telnet Server */
+	InitializeTelnetServer();
 }
 
 /**
@@ -509,15 +524,18 @@ void TelnetRecvBufferWrite(char character) {
 	}
 
 	/* Ignore this character if it is the second part of a CR/LF or LF/CR sequence. */
-	if (((character == '\r') && (telnet_server.previous == '\n')) || ((character == '\n') && (telnet_server.previous == '\r'))) {
+	if (((character == '\r') && (telnet_server.previous == '\n'))
+			|| ((character == '\n') && (telnet_server.previous == '\r'))) {
 		return;
 	}
 
 	/* Store this character into the receive buffer if there is space for it. */
 	ulWrite = telnet_server.recvWrite;
-	if (((ulWrite + 1) % sizeof(telnet_server.recvBuffer)) != telnet_server.recvRead) {
+	if (((ulWrite + 1) % sizeof(telnet_server.recvBuffer))
+			!= telnet_server.recvRead) {
 		telnet_server.recvBuffer[ulWrite] = character;
-		telnet_server.recvWrite = (ulWrite + 1) % sizeof(telnet_server.recvBuffer);
+		telnet_server.recvWrite = (ulWrite + 1)
+				% sizeof(telnet_server.recvBuffer);
 #ifdef TELNET_CHAR_DEBUG
 		for (int i = 0; i <= telnet_server.recvWrite; ++i) {
 			printf("%c", telnet_server.recvBuffer[i]);
@@ -572,7 +590,6 @@ void TelnetWrite(const char character) {
 	}
 
 	/* Write this character into the output buffer. */
-	//TODO: Disable Ethernet interrupts and reenable. Note: This may not be necessary.
 	telnet_server.buffer[telnet_server.length++] = character;
 }
 
@@ -585,12 +602,14 @@ void TelnetWrite(const char character) {
  * @retval none
  */
 void TelnetWriteString(char* string) {
-	Eth_EXTI_Disable();
-	while (*string) {
-		TelnetWrite(*string);
-		++string;
+	if (TelnetIsConnected() == TRUE) {
+		Eth_EXTI_Disable();
+		while (*string) {
+			TelnetWrite(*string);
+			++string;
+		}
+		Eth_EXTI_Enable();
 	}
-	Eth_EXTI_Enable();
 }
 
 /**
@@ -610,13 +629,15 @@ void TelnetProcessWill(char option) {
 	printf("[Telnet Server] Processing WILL command with option: %c/0x%02X\n\r", option, option);
 #endif
 	/* Loop through the known options. */
-	for (ulIdx = 0; ulIdx < (sizeof(TelnetOptions) / sizeof(TelnetOptions[0])); ulIdx++) {
+	for (ulIdx = 0; ulIdx < (sizeof(TelnetOptions) / sizeof(TelnetOptions[0]));
+			ulIdx++) {
 		/* See if this option matches the option in question. */
 		if (TelnetOptions[ulIdx].option == option) {
 			/* See if the WILL flag for this option has already been set. */
 			if (((TelnetOptions[ulIdx].flags >> OPT_FLAG_WILL) & 0x01) == 0) {
 				/* Set the WILL flag for this option. */
-				TelnetOptions[ulIdx].flags = (TelnetOptions[ulIdx].flags & 0xFD) | (0x01 << OPT_FLAG_WILL);
+				TelnetOptions[ulIdx].flags = (TelnetOptions[ulIdx].flags & 0xFD)
+						| (0x01 << OPT_FLAG_WILL);
 				/* Send a DO response to this option. */
 				telnet_server.buffer[telnet_server.length++] = TELNET_IAC;
 				telnet_server.buffer[telnet_server.length++] = TELNET_DO;
@@ -651,13 +672,15 @@ void TelnetProcessWont(char option) {
 	printf("[Telnet Server] Processing WONT command with option: %c/0x%02X\n\r", option, option);
 #endif
 	/* Loop through the known options. */
-	for (ulIdx = 0; ulIdx < (sizeof(TelnetOptions) / sizeof(TelnetOptions[0])); ulIdx++) {
+	for (ulIdx = 0; ulIdx < (sizeof(TelnetOptions) / sizeof(TelnetOptions[0]));
+			ulIdx++) {
 		/* See if this option matches the option in question. */
 		if (TelnetOptions[ulIdx].option == option) {
 			/* See if the WILL flag for this option is currently set. */
 			if (((TelnetOptions[ulIdx].flags >> OPT_FLAG_WILL) & 0x01) == 1) {
 				/* Clear the WILL flag for this option. */
-				TelnetOptions[ulIdx].flags = (TelnetOptions[ulIdx].flags & 0xFD) | 0x00;
+				TelnetOptions[ulIdx].flags = (TelnetOptions[ulIdx].flags & 0xFD)
+						| 0x00;
 				/* Send a DONT response to this option. */
 				telnet_server.buffer[telnet_server.length++] = TELNET_IAC;
 				telnet_server.buffer[telnet_server.length++] = TELNET_DONT;
@@ -691,13 +714,15 @@ void TelnetProcessDo(char option) {
 	printf("[Telnet Server] Processing DO command with option: %c/0x%02X\n\r", option, option);
 #endif
 	/* Loop through the known options. */
-	for (ulIdx = 0; ulIdx < (sizeof(TelnetOptions) / sizeof(TelnetOptions[0])); ulIdx++) {
+	for (ulIdx = 0; ulIdx < (sizeof(TelnetOptions) / sizeof(TelnetOptions[0]));
+			ulIdx++) {
 		/* See if this option matches the option in question. */
 		if (TelnetOptions[ulIdx].option == option) {
 			/* See if the DO flag for this option has already been set. */
 			if (((TelnetOptions[ulIdx].flags >> OPT_FLAG_DO) & 0x01) == 0) {
 				/* Set the DO flag for this option. */
-				TelnetOptions[ulIdx].flags = (TelnetOptions[ulIdx].flags & 0xFB) | (0x01 << OPT_FLAG_DO);
+				TelnetOptions[ulIdx].flags = (TelnetOptions[ulIdx].flags & 0xFB)
+						| (0x01 << OPT_FLAG_DO);
 				/* Send a WILL response to this option. */
 				telnet_server.buffer[telnet_server.length++] = TELNET_IAC;
 				telnet_server.buffer[telnet_server.length++] = TELNET_WILL;
@@ -731,13 +756,15 @@ void TelnetProcessDont(char option) {
 	printf("[Telnet Server] Processing DONT command with option: %c/0x%02X\n\r", option, option);
 #endif
 	/* Loop through the known options. */
-	for (ulIdx = 0; ulIdx < (sizeof(TelnetOptions) / sizeof(TelnetOptions[0])); ulIdx++) {
+	for (ulIdx = 0; ulIdx < (sizeof(TelnetOptions) / sizeof(TelnetOptions[0]));
+			ulIdx++) {
 		/* See if this option matches the option in question. */
 		if (TelnetOptions[ulIdx].option == option) {
 			/* See if the DO flag for this option is currently set. */
 			if (((TelnetOptions[ulIdx].flags >> OPT_FLAG_DO) & 0x01) == 1) {
 				/* Clear the DO flag for this option. */
-				TelnetOptions[ulIdx].flags = (TelnetOptions[ulIdx].flags & 0xFB) | 0x00;
+				TelnetOptions[ulIdx].flags = (TelnetOptions[ulIdx].flags & 0xFB)
+						| 0x00;
 				/* Send a WONT response to this option. */
 				telnet_server.buffer[telnet_server.length++] = TELNET_IAC;
 				telnet_server.buffer[telnet_server.length++] = TELNET_WONT;
@@ -779,7 +806,7 @@ void TelnetProcessCharacter(char character) {
 			/* Write this character to the receive buffer. */
 			TelnetRecvBufferWrite(character);
 			/* Echo this character */
-			TelnetWrite(character);                                                                                                                                            //Echo the character back
+			TelnetWrite(character);                    //Echo the character back
 		}
 		break;
 	}
@@ -920,8 +947,8 @@ void TelnetWriteErrorMessage(char* message) {
 		while (*character) {
 			character++;
 		}
-		uint8_t count = character - message;
-		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(MESSAGE_BUFFER), ERROR_MESSAGE_HEADER, message);
+		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(MESSAGE_BUFFER),
+		ERROR_MESSAGE_HEADER, message);
 		if (n > 0) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
@@ -943,7 +970,8 @@ void TelnetWriteStatusMessage(char* message) {
 			++character;
 			++count;
 		}
-		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(MESSAGE_BUFFER), STATUS_MESSAGE_HEADER, message);
+		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(MESSAGE_BUFFER),
+		STATUS_MESSAGE_HEADER, message);
 		if (n > 0) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
@@ -965,7 +993,8 @@ void TelnetWriteDebugMessage(char* message) {
 			++character;
 			++count;
 		}
-		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(MESSAGE_BUFFER), DEBUG_MESSAGE_HEADER, message);
+		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(MESSAGE_BUFFER),
+		DEBUG_MESSAGE_HEADER, message);
 		if (n > 0) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
@@ -987,7 +1016,8 @@ void TelnetWriteCommandDataMessage(char* message) {
 			++character;
 			++count;
 		}
-		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(MESSAGE_BUFFER), COMMAND_DATA_MESSAGE_HEADER, message);
+		uint16_t n = snprintf(MESSAGE_BUFFER, sizeof(MESSAGE_BUFFER),
+		COMMAND_DATA_MESSAGE_HEADER, message);
 		if (n > 0) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
