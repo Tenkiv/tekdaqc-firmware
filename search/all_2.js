@@ -23,6 +23,7 @@ var searchData=
   ['cominit',['COMInit',['../group__tekdaqc__configuration.html#gaec08ef6f9e4d5e29da8f7af0490930b7',1,'COMInit(COM_TypeDef COM, USART_InitTypeDef *USART_InitStruct):&#160;Tekdaqc_Config.c'],['../group__tekdaqc__configuration.html#gaec08ef6f9e4d5e29da8f7af0490930b7',1,'COMInit(COM_TypeDef COM, USART_InitTypeDef *USART_InitStruct):&#160;Tekdaqc_Config.c']]],
   ['command_5faddchar',['Command_AddChar',['../group__command__interpreter.html#gae17b8153644216734412b48e52b760d3',1,'Command_AddChar(const char character):&#160;Tekdaqc_CommandInterpreter.c'],['../group__command__interpreter.html#gae17b8153644216734412b48e52b760d3',1,'Command_AddChar(const char character):&#160;Tekdaqc_CommandInterpreter.c']]],
   ['command_5fbuffer',['command_buffer',['../struct_tekdaqc___command_interpreter__t.html#a80b2496e0ec37858a3a015b964b11eda',1,'Tekdaqc_CommandInterpreter_t']]],
+  ['command_5fdata_5fmessage_5fheader',['COMMAND_DATA_MESSAGE_HEADER',['../group__tekdaqc__communication.html#ga95b3bdb3aedb1c7a2a27f0aa3c81b845',1,'Tekdaqc_MessageHeaders.h']]],
   ['command_5fdebug',['COMMAND_DEBUG',['../group__driver__debug.html#ga4271519e9ee5565b70175ae766253c65',1,'Tekdaqc_Debug.h']]],
   ['command_20interpreter',['Command Interpreter',['../group__command__interpreter.html',1,'']]],
   ['command_20parser',['Command Parser',['../group__command__parser.html',1,'']]],

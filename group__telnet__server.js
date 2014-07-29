@@ -50,6 +50,7 @@ var group__telnet__server =
     [ "TelnetRead", "group__telnet__server.html#gaff55b8914481cb32d621a855a69a5635", null ],
     [ "TelnetRecvBufferWrite", "group__telnet__server.html#ga93c1e298d9778f890b6df05b35072988", null ],
     [ "TelnetWrite", "group__telnet__server.html#gaa2f418e9d287a2863fe1198e3c75f4ad", null ],
+    [ "TelnetWriteCommandDataMessage", "group__telnet__server.html#ga7f3d87d181908e8353a67bbaf15fac50", null ],
     [ "TelnetWriteDebugMessage", "group__telnet__server.html#ga7d350b6355ef213d4aa15e9b80c3d15e", null ],
     [ "TelnetWriteErrorMessage", "group__telnet__server.html#ga0660c325387baca6c54fe699ac048907", null ],
     [ "TelnetWriteStatusMessage", "group__telnet__server.html#ga0afb5de5ce2d81cdc5322e0534bae1d8", null ],

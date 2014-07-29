@@ -1,5 +1,8 @@
 var NAVTREEINDEX5 =
 {
+"group__ads1256__driver.html#ga4a1749dfc2cad3986a2f29cbe6e63b87":[0,1,0,53],
+"group__ads1256__driver.html#ga4df06f2662792cc9eff4ac7f97e35026":[0,1,0,21],
+"group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334":[0,1,0,73],
 "group__ads1256__driver.html#ga55a9f5e79ef35937961a7ec254558010":[0,1,0,12],
 "group__ads1256__driver.html#ga587084017ba4b239ffb8d90376921c2c":[0,1,0,22],
 "group__ads1256__driver.html#ga59c2fb71d5fac95ab30f4c66c0e4a9e2":[0,1,0,92],
@@ -170,12 +173,12 @@ var NAVTREEINDEX5 =
 "group__analog__input__multiplexer.html#ga03f66c16ea15a425062a4b09c0bceba1":[0,0,2,0],
 "group__analog__input__multiplexer.html#ga5b4aed86c91b3b4bbdc4c7e03f6923ef":[0,1,8,3],
 "group__analog__input__multiplexer.html#ga5b4aed86c91b3b4bbdc4c7e03f6923ef":[0,0,2,3],
-"group__analog__input__multiplexer.html#ga719b0357a9dca76e01dcc6a511cd8b7f":[0,1,8,5],
 "group__analog__input__multiplexer.html#ga719b0357a9dca76e01dcc6a511cd8b7f":[0,0,2,5],
+"group__analog__input__multiplexer.html#ga719b0357a9dca76e01dcc6a511cd8b7f":[0,1,8,5],
 "group__analog__input__multiplexer.html#ga7f67e83c34a57a26b88716b132d78c9f":[0,1,8,1],
 "group__analog__input__multiplexer.html#ga7f67e83c34a57a26b88716b132d78c9f":[0,0,2,1],
-"group__analog__input__multiplexer.html#ga82dce77857c1a4197599b5e53d4c4baf":[0,0,2,2],
 "group__analog__input__multiplexer.html#ga82dce77857c1a4197599b5e53d4c4baf":[0,1,8,2],
+"group__analog__input__multiplexer.html#ga82dce77857c1a4197599b5e53d4c4baf":[0,0,2,2],
 "group__analog__input__multiplexer.html#ga9452ba5ad241ec1be905a8683f3aa893":[0,1,8,4],
 "group__analog__input__multiplexer.html#ga9452ba5ad241ec1be905a8683f3aa893":[0,0,2,4],
 "group__analog__input__multiplexer.html#gab5cea2fc9723db50fa8b7c18c0ec0679":[0,1,8,9],
@@ -246,8 +249,5 @@ var NAVTREEINDEX5 =
 "group__command__interpreter.html#gaafcaaef444e34052e8d96c863c90543f":[0,0,10,26],
 "group__command__interpreter.html#gab114f1bb247754ff4bbc705b92f53222":[0,0,10,54],
 "group__command__interpreter.html#gab349c2970503a44eb4e57436974a2bf9":[0,0,10,59],
-"group__command__interpreter.html#gab5824d68d182fb33e2aebc616288f06a":[0,0,10,7],
-"group__command__interpreter.html#gab61f2dda81ab965fb510863070474767":[0,0,10,27],
-"group__command__interpreter.html#gab8e88e0e75930f03474e1ff9e232ef63":[0,0,10,65],
-"group__command__interpreter.html#gac419882cd49159e3078f1fedfe7f1d9d":[0,0,10,16]
+"group__command__interpreter.html#gab5824d68d182fb33e2aebc616288f06a":[0,0,10,7]
 };

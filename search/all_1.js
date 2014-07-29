@@ -4,7 +4,7 @@ var searchData=
   ['board_20temperature_20monitor',['Board Temperature Monitor',['../group__board__temperature.html',1,'']]],
   ['boardtemperature_2ec',['BoardTemperature.c',['../_board_temperature_8c.html',1,'']]],
   ['boardtemperature_2eh',['BoardTemperature.h',['../_board_temperature_8h.html',1,'']]],
-  ['bool',['bool',['../group__data__types.html#ga0ecf26b576b9a54eca656b9be7ba6a06',1,'bool():&#160;boolean.h'],['../group__data__types.html#gad2f8ed01c1733d4eab0932d970abaa4c',1,'BOOL():&#160;boolean.h']]],
+  ['bool',['BOOL',['../group__data__types.html#gad2f8ed01c1733d4eab0932d970abaa4c',1,'BOOL():&#160;boolean.h'],['../group__data__types.html#ga0ecf26b576b9a54eca656b9be7ba6a06',1,'bool():&#160;boolean.h']]],
   ['boolean_2eh',['boolean.h',['../boolean_8h.html',1,'']]],
   ['buffer',['buffer',['../struct_analog___input__t.html#ac2c90c98d6a3c3e9dcd1d462078add38',1,'Analog_Input_t::buffer()'],['../struct_telnet_server__t.html#a2153306d0b7676b5fbe604eb2d5d8dd9',1,'TelnetServer_t::buffer()']]],
   ['buffer_5findex',['buffer_index',['../struct_calibration_state__t.html#a2359bfa4a10109d5dcc2e002cb8ece47',1,'CalibrationState_t']]],
