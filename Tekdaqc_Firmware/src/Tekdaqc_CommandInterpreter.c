@@ -945,7 +945,7 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 					aInputs[value] = GetAnalogInputByNumber(value);
 					++count;
 				}
-				if (*ptr == NULL) {
+				if (ptr == NULL) {
 					break;
 				}
 			}
@@ -1035,7 +1035,7 @@ static void BuildDigitalInputList(Channel_List_t list_type, char* param) {
 					dInputs[value] = GetDigitalInputByNumber(value);
 					++count;
 				}
-				if (*ptr == NULL) {
+				if (ptr == NULL) {
 					break;
 				}
 			}
@@ -1125,7 +1125,7 @@ static void BuildDigitalOutputList(Channel_List_t list_type, char* param) {
 					dOutputs[value] = GetDigitalOutputByNumber(value);
 					++count;
 				}
-				if (*ptr == NULL) {
+				if (ptr == NULL) {
 					break;
 				}
 			}
@@ -1704,6 +1704,17 @@ static Tekdaqc_Command_Error_t Ex_ReadDigitalInput(
 			}
 			if (retval != ERR_COMMAND_OK) { /* If there was an error, don't both continuing. */
 				break;
+			}
+		}
+		if (retval == ERR_COMMAND_OK) { /* If an error occurred, don't bother continuing */
+			for (uint_fast8_t i = 0; i < NUM_DIGITAL_INPUTS; ++i) {
+				if (dInputs[i] != NULL) {
+					if (dInputs[i]->added == CHANNEL_NOTADDED) {
+						retval = ERR_COMMAND_FUNCTION_ERROR;
+						lastFunctionError = ERR_DIN_INPUT_NOT_FOUND;
+						break;
+					}
+				}
 			}
 		}
 		if (retval == ERR_COMMAND_OK) {
