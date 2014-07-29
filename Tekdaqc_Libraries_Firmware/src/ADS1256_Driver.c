@@ -76,7 +76,7 @@
  * @def ADS1256_REGISTERS_TOSTRING_HEADER
  * @brief Used as a header for each block of analog measurement printing to string.
  */
-#define ADS1256_REGISTERS_TOSTRING_HEADER "------------------------------\n\r[ADS1256] Register Contents:\n\r------------------------------\n\r"
+#define ADS1256_REGISTERS_TOSTRING_HEADER "[ADS1256] Register Contents:\n\r"
 
 
 
@@ -1747,18 +1747,29 @@ static uint8_t ADS1256_GetRegisterBits(ADS1256_Register_t reg, uint8_t index, ui
  *
  * @param reg ADS1256_Register_t The register to set the bits of.
  * @param index uint8_t The starting bit to retrieve.
- * @param count uint8_t The number of bits to retieve. Must be 8 or less.
- * 	Behavior is undefined if this maximum is exceeded following ISO 9899:1999 6.5.7.
+ * @param count uint8_t The number of bits to retrieve. index + count must be less than 8 or the function will
+ * 		clamp the range to avoid overruning the register.
+ * @param value uint8_t The value to set the bits to. It is expected that this will be right justified.
  */
 static void ADS1256_SetRegisterBits(ADS1256_Register_t reg, uint8_t index, uint8_t count, uint8_t value) {
+	/* Ensure that the count will not overrun the register */
+	if ((count - index) >= 8U) {
+		count = 7U - index;
+	}
+	/* Ensure that there is no extraneous data in value */
+	value &= ~(0xFF << count);
 	/* Get the most recent value of the register */
 	uint8_t byte = ADS1256_GetRegister(reg);
 	/* If the value to be set is identical to the existing one, no action. */
 	if (ADS1256_GetRegisterBits(reg, index, count) == value) {
 		return;
 	}
-	uint8_t mask = (uint8_t)((0xFFU >> count) << index); /* Create the mask, all 1's shifted left by the starting bit index */
-	byte = (byte & (~mask)) | (value << index);
+	uint8_t mask = 0x00;
+	for (uint_fast8_t i = 0; i < count; ++i) {
+		mask |= 0x01 << (index + i);
+	}
+	//uint8_t mask = (uint8_t)((0xFFU >> count) << index); /* Create the mask, all 1's shifted left by the starting bit index */
+	byte = (byte & ~mask) | (value << index);
 	ADS1256_SetRegister(reg, byte);
 }
 

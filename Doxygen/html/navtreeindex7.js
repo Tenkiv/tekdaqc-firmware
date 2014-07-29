@@ -1,8 +1,14 @@
 var NAVTREEINDEX7 =
 {
+"group__telnet__server.html#ga0afb5de5ce2d81cdc5322e0534bae1d8":[0,1,20,26],
+"group__telnet__server.html#ga0e9795e3bb758850785e6ebc676ab01b":[0,1,20,3],
+"group__telnet__server.html#ga26f786d2e47e4bb5f180d2740eebc957":[0,1,20,12],
+"group__telnet__server.html#ga348f2b04116a013b6eabfa72c926a25f":[0,1,20,15],
+"group__telnet__server.html#ga579198334cf97874ecc89e3b29351066":[0,1,20,27],
 "group__telnet__server.html#ga6509e0047d80aea0570ec903a1e10887":[0,1,20,13],
 "group__telnet__server.html#ga6a34decdb77d8c9df8ead5420ea8d326":[0,1,20,9],
-"group__telnet__server.html#ga7d350b6355ef213d4aa15e9b80c3d15e":[0,1,20,23],
+"group__telnet__server.html#ga7d350b6355ef213d4aa15e9b80c3d15e":[0,1,20,24],
+"group__telnet__server.html#ga7f3d87d181908e8353a67bbaf15fac50":[0,1,20,23],
 "group__telnet__server.html#ga8779bc1d2c7943063104c8624a877d8b":[0,1,20,18],
 "group__telnet__server.html#ga87cde070c7f961821be5f38065c6a4a0":[0,1,20,5],
 "group__telnet__server.html#ga8946efc99077a959cb1cad3e059f9071":[0,1,20,14],

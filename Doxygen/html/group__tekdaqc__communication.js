@@ -1,5 +1,6 @@
 var group__tekdaqc__communication =
 [
+    [ "COMMAND_DATA_MESSAGE_HEADER", "group__tekdaqc__communication.html#ga95b3bdb3aedb1c7a2a27f0aa3c81b845", null ],
     [ "DEBUG_MESSAGE_HEADER", "group__tekdaqc__communication.html#ga9c4bc7a3b0d3be416cbbb1af90028590", null ],
     [ "ERROR_MESSAGE_HEADER", "group__tekdaqc__communication.html#ga6ea1aa40205a4de746a611315727ab7d", null ],
     [ "LOCATOR_PORT", "group__tekdaqc__communication.html#ga5a136fbad6cb2fa002bd9fd5a9288336", null ],

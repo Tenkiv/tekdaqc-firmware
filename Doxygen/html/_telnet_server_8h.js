@@ -33,6 +33,7 @@ var _telnet_server_8h =
     [ "TelnetRead", "_telnet_server_8h.html#gaff55b8914481cb32d621a855a69a5635", null ],
     [ "TelnetRecvBufferWrite", "_telnet_server_8h.html#ga93c1e298d9778f890b6df05b35072988", null ],
     [ "TelnetWrite", "_telnet_server_8h.html#gaa2f418e9d287a2863fe1198e3c75f4ad", null ],
+    [ "TelnetWriteCommandDataMessage", "_telnet_server_8h.html#ga7f3d87d181908e8353a67bbaf15fac50", null ],
     [ "TelnetWriteDebugMessage", "_telnet_server_8h.html#ga7d350b6355ef213d4aa15e9b80c3d15e", null ],
     [ "TelnetWriteErrorMessage", "_telnet_server_8h.html#ga0660c325387baca6c54fe699ac048907", null ],
     [ "TelnetWriteStatusMessage", "_telnet_server_8h.html#ga0afb5de5ce2d81cdc5322e0534bae1d8", null ],

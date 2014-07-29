@@ -17,8 +17,7 @@ void \hyperlink{group__tekdaqc__locator_gaedcc9e5e10826ca40b253bdc274e65cf}{Tekd
 \begin{DoxyCompactList}\small\item\em Sets the M\-A\-C address in the locator response packet. \end{DoxyCompactList}\item 
 void \hyperlink{group__tekdaqc__locator_ga852fe5c43e378a8621913254a3e00bd1}{Tekdaqc\-\_\-\-Locator\-Version\-Set} (uint32\-\_\-t version)
 \begin{DoxyCompactList}\small\item\em Sets the firmware version in the locator response packet. \end{DoxyCompactList}\item 
-\hypertarget{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}{void \hyperlink{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}{Tekdaqc\-\_\-\-Locator\-App\-Title\-Set} (const unsigned char $\ast$title)}\label{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}
-
+void \hyperlink{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}{Tekdaqc\-\_\-\-Locator\-App\-Title\-Set} (const unsigned char $\ast$title)
 \begin{DoxyCompactList}\small\item\em Sets the application title in the locator response packet. \end{DoxyCompactList}\item 
 uint8\-\_\-t \hyperlink{group__tekdaqc__locator_ga573f8960093dc2ab0cc4c88b8f8c6ff9}{Tekdaqc\-\_\-\-Get\-Locator\-Board\-Type} (void)
 \begin{DoxyCompactList}\small\item\em Retrieves the board type from the locator packet data. \end{DoxyCompactList}\item 
@@ -150,6 +149,29 @@ Retrieves the board firmware version number from the locator packet data.
 
 
 Definition at line 366 of file Tekdaqc\-\_\-\-Locator.\-c.
+
+\hypertarget{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Locator\-App\-Title\-Set@{Tekdaqc\-\_\-\-Locator\-App\-Title\-Set}}
+\index{Tekdaqc\-\_\-\-Locator\-App\-Title\-Set@{Tekdaqc\-\_\-\-Locator\-App\-Title\-Set}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}
+\subsubsection[{Tekdaqc\-\_\-\-Locator\-App\-Title\-Set}]{\setlength{\rightskip}{0pt plus 5cm}void Tekdaqc\-\_\-\-Locator\-App\-Title\-Set (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{title}
+\end{DoxyParamCaption}
+)}}\label{group__tekdaqc__locator_gadcd8af9370fe58374d5355c66651b620}
+This function sets the application title in the locator response packet. The string is truncated at 64 characters if it is longer (without a terminating 0), and is zero-\/filled to 64 characters if it is shorter.
+
+
+\begin{DoxyParams}{Parameters}
+{\em title} & const char$\ast$ Pointer to a C-\/\-String containing the application title string. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line 300 of file Tekdaqc\-\_\-\-Locator.\-c.
 
 \hypertarget{group__tekdaqc__locator_ga668d2bf16094e0046055c231a3c2174c}{\index{Tekdaqc Locator Service@{Tekdaqc Locator Service}!Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set@{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set}}
 \index{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set@{Tekdaqc\-\_\-\-Locator\-Board\-Type\-Set}!Tekdaqc Locator Service@{Tekdaqc Locator Service}}

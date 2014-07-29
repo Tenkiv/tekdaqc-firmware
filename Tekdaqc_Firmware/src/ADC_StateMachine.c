@@ -228,13 +228,15 @@ static void ADC_Machine_Service_Calibrating(void) {
 		}
 #ifdef ADC_STATE_MACHINE_DEBUG
 		static uint32_t total = NUM_PGA_SETTINGS * NUM_SAMPLE_RATES * NUM_BUFFER_SETTINGS;
-		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %f%.\n\r",
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %f\%.\n\r",
 				((float) calibrationState.finished_count / total) * 100.0f);
-		//printf("[ADC STATE MACHINE] Calibration progress: %f%.\n\r", ((float) calibrationState.finished_count / total) * 100.0f);
+		printf("%s", TOSTRING_BUFFER);
 		TelnetWriteStatusMessage(TOSTRING_BUFFER);
 #endif
 	} else {
 		/* The calibration is complete */
+		printf("[ADC STATE MACHINE] Calibration Completed.\n\r");
+		TelnetWriteStatusMessage("[ADC STATE MACHINE] Calibration Completed.\n\r");
 		ADC_Machine_Idle();
 	}
 }
@@ -263,22 +265,30 @@ static void ADC_Machine_Service_Idle(void) {
 	/* If a temperature reading is ready, update the board temperature */
 	if (ADS1256_IsDataReady(false)) {
 		Analog_Input_t* input = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+		ADS1256_Sync(true);
 		waitingOnTemp = false;
 		/* We need to read it */
 		input->values[input->bufferWriteIdx] = ADS1256_GetMeasurement();
 		/* Update temperature */
 		updateBoardTemperature(input, input->values[input->bufferWriteIdx]);
 		++(input->bufferWriteIdx);
+		input->timestamps[input->bufferWriteIdx] = GetLocalTime();
+		ADS1256_Wakeup();
 #ifdef BOARD_TEMPERATURE_DEBUG
 		printf("[ADC STATE MACHINE] Cold junction temperature sample is complete.\n\r");
 #endif
 		/* Check the buffer positions for errors/roll over */
-		if (((input->bufferWriteIdx - 1U) == input->bufferReadIdx) && ((input->bufferWriteIdx - 1U) > 0U)) {
-			/* This means we wrote over some data */
+		if (input->bufferWriteIdx == input->bufferReadIdx) {
+			/* Check the buffer positions for errors/roll over */
 #ifdef BOARD_TEMPERATURE_DEBUG
 			printf("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
-			TelnetWriteErrorMessage("Cold junction sampling overwrote data before it could be read.");
+			TelnetWriteErrorMessage("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
 #endif
+			/* Buffer is full, overwrite */
+			input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
+		}
+		if (((input->bufferWriteIdx - 1U) == input->bufferReadIdx) && ((input->bufferWriteIdx - 1U) > 0U)) {
+			/* This means we wrote over some data */
 		}
 		if (input->bufferWriteIdx == ANALOG_INPUT_BUFFER_SIZE) {
 			/* We have reached the end of the buffer and need to start writing to the beginning */
@@ -297,6 +307,8 @@ static void ADC_Machine_Service_Sampling(void) {
 	/* Check if data is ready */
 	if (ADS1256_IsDataReady(false)) {
 		/* We need to read it */
+		printf("Reading ADC Sample.\n\r");
+		ADS1256_PrintRegs();
 		uint8_t writeIndex = samplingInputs[currentSamplingInput]->bufferWriteIdx;
 		samplingInputs[currentSamplingInput]->values[writeIndex] = ADS1256_GetMeasurement();
 		samplingInputs[currentSamplingInput]->bufferWriteIdx = (writeIndex + 1) % ANALOG_INPUT_BUFFER_SIZE;
@@ -386,13 +398,8 @@ static void ADC_Machine_Service_Muxing(void) {
 		/* We need to begin a temperature sample */
 		ADS1256_Sync(true);
 		SelectColdJunctionInput();
-		/* Set sampling parameters */
-		ADS1256_SetDataRate(input->rate);
-		ADS1256_SetPGASetting(input->gain);
-		ADS1256_SetInputBufferSetting(input->buffer);
-		ApplyCalibrationParameters(input);
-		ADS1256_Wakeup();
-		input->timestamps[input->bufferWriteIdx] = GetLocalTime();
+		Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+		BeginNextConversion(cold);
 		waitingOnTemp = true;
 	} else {
 		/* We are waiting for a temperature sample to complete */
@@ -441,6 +448,7 @@ static void ConvertCalibrationToBytes(uint8_t bytes[], uint32_t cal) {
 static void ApplyCalibrationParameters(Analog_Input_t* input) {
 	uint32_t offset_cal;
 	uint32_t gain_cal;
+	printf("Applying calibration parameters for input: %s\n\r", input->name);
 	if (input->physicalInput == IN_COLD_JUNCTION) {
 		offset_cal = Tekdaqc_GetColdJunctionOffsetCalibration();
 		gain_cal = Tekdaqc_GetColdJunctionGainCalibration();
@@ -448,6 +456,7 @@ static void ApplyCalibrationParameters(Analog_Input_t* input) {
 		offset_cal = Tekdaqc_GetOffsetCalibration(input->rate, input->gain, input->buffer);
 		gain_cal = Tekdaqc_GetGainCalibration(input->rate, input->gain, input->buffer, getBoardTemperature());
 	}
+	printf("Calibration params: Offset: 0x%" PRIx32 " Gain: 0x%" PRIx32 "\n\r", offset_cal, gain_cal);
 	ConvertCalibrationToBytes(scratch_bytes, offset_cal);
 	ADS1256_SetOffsetCalSetting(scratch_bytes);
 	ConvertCalibrationToBytes(scratch_bytes, gain_cal);
@@ -535,6 +544,7 @@ void ADC_Calibrate(void) {
 
 		/* Select the calibration input */
 		SelectCalibrationInput();
+		Delay_ms(EXTERNAL_MUX_DELAY);
 	}
 }
 

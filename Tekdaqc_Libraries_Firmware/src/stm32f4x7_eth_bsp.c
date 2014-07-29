@@ -77,7 +77,7 @@ void ETH_BSP_Config(void) {
 	ETH_MACDMA_Config();
 
 	/* Get Ethernet link status*/
-	if (ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR ) & 1) {
+	if (ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1) {
 		EthStatus |= ETH_LINK_FLAG;
 	}
 
@@ -173,52 +173,52 @@ void ETH_GPIO_Config(void) {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
 	// Configure the MAC for RMII mode
-	SYSCFG_ETH_MediaInterfaceConfig(SYSCFG_ETH_MediaInterface_RMII );
+	SYSCFG_ETH_MediaInterfaceConfig(SYSCFG_ETH_MediaInterface_RMII);
 
 	// Configure ETH_MDIO
 	GPIO_InitStructure.GPIO_Pin = ETH_MDIO_PIN;
 	GPIO_Init(ETH_MDIO_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_MDIO_GPIO_PORT, ETH_MDIO_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_MDIO_GPIO_PORT, ETH_MDIO_SOURCE, GPIO_AF_ETH);
 
 	// Configure ETH_MDC
 	GPIO_InitStructure.GPIO_Pin = ETH_MDC_PIN;
 	GPIO_Init(ETH_MDC_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_MDC_GPIO_PORT, ETH_MDC_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_MDC_GPIO_PORT, ETH_MDC_SOURCE, GPIO_AF_ETH);
 
 	// Configure ETH_RMII_REF_CLK
 	GPIO_InitStructure.GPIO_Pin = ETH_RMII_REF_CLK_PIN;
 	GPIO_Init(ETH_RMII_REF_CLK_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_RMII_REF_CLK_GPIO_PORT, ETH_RMII_REF_CLK_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_RMII_REF_CLK_GPIO_PORT, ETH_RMII_REF_CLK_SOURCE, GPIO_AF_ETH);
 
 	// Configure ETH_RMII_CRS_DV
 	GPIO_InitStructure.GPIO_Pin = ETH_RMII_CRS_DV_PIN;
 	GPIO_Init(ETH_RMII_CRS_DV_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_RMII_CRS_DV_GPIO_PORT, ETH_RMII_CRS_DV_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_RMII_CRS_DV_GPIO_PORT, ETH_RMII_CRS_DV_SOURCE, GPIO_AF_ETH);
 
 	// Configure ETH_RMII_RXD0
 	GPIO_InitStructure.GPIO_Pin = ETH_RMII_RXD0_PIN;
 	GPIO_Init(ETH_RMII_RXD0_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_RMII_RXD0_GPIO_PORT, ETH_RMII_RXD0_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_RMII_RXD0_GPIO_PORT, ETH_RMII_RXD0_SOURCE, GPIO_AF_ETH);
 
 	// Configure ETH_RMII_RXD1
 	GPIO_InitStructure.GPIO_Pin = ETH_RMII_RXD1_PIN;
 	GPIO_Init(ETH_RMII_RXD1_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_RMII_RXD1_GPIO_PORT, ETH_RMII_RXD1_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_RMII_RXD1_GPIO_PORT, ETH_RMII_RXD1_SOURCE, GPIO_AF_ETH);
 
 	// Configure ETH_RMII_TX_EN
 	GPIO_InitStructure.GPIO_Pin = ETH_RMII_TX_EN_PIN;
 	GPIO_Init(ETH_RMII_TX_EN_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_RMII_TX_EN_GPIO_PORT, ETH_RMII_TX_EN_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_RMII_TX_EN_GPIO_PORT, ETH_RMII_TX_EN_SOURCE, GPIO_AF_ETH);
 
 	// Configure ETH_RMII_TXD0
 	GPIO_InitStructure.GPIO_Pin = ETH_RMII_TXD0_PIN;
 	GPIO_Init(ETH_RMII_TXD0_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_RMII_TXD0_GPIO_PORT, ETH_RMII_TXD0_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_RMII_TXD0_GPIO_PORT, ETH_RMII_TXD0_SOURCE, GPIO_AF_ETH);
 
 	// Configure ETH_RMII_TXD1
 	GPIO_InitStructure.GPIO_Pin = ETH_RMII_TXD1_PIN;
 	GPIO_Init(ETH_RMII_TXD1_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_PinAFConfig(ETH_RMII_TXD1_GPIO_PORT, ETH_RMII_TXD1_SOURCE, GPIO_AF_ETH );
+	GPIO_PinAFConfig(ETH_RMII_TXD1_GPIO_PORT, ETH_RMII_TXD1_SOURCE, GPIO_AF_ETH);
 }
 
 /**
@@ -230,26 +230,26 @@ uint32_t Eth_Link_PHYITConfig(uint16_t PHYAddress) {
 	uint16_t tmpreg = 0;
 
 	/* Read MICR register */
-	tmpreg = ETH_ReadPHYRegister(PHYAddress, PHY_MICR );
+	tmpreg = ETH_ReadPHYRegister(PHYAddress, PHY_MICR);
 
 	/* Enable output interrupt events to signal via the INT pin */
-	tmpreg |= (uint16_t) (PHY_MICR_INT_EN | PHY_MICR_INT_OE );
+	tmpreg |= (uint16_t) (PHY_MICR_INT_EN | PHY_MICR_INT_OE);
 	if (!(ETH_WritePHYRegister(PHYAddress, PHY_MICR, tmpreg))) {
 		/* Return ERROR in case of write timeout */
-		return ETH_ERROR ;
+		return ETH_ERROR;
 	}
 
 	/* Read MISR register */
-	tmpreg = ETH_ReadPHYRegister(PHYAddress, PHY_MISR );
+	tmpreg = ETH_ReadPHYRegister(PHYAddress, PHY_MISR);
 
 	/* Enable Interrupt on change of link status */
 	tmpreg |= (uint16_t) PHY_MISR_LINK_INT_EN;
 	if (!(ETH_WritePHYRegister(PHYAddress, PHY_MISR, tmpreg))) {
 		/* Return ERROR in case of write timeout */
-		return ETH_ERROR ;
+		return ETH_ERROR;
 	}
 	/* Return SUCCESS */
-	return ETH_SUCCESS ;
+	return ETH_SUCCESS;
 }
 
 /**
@@ -273,7 +273,7 @@ void Eth_Link_EXTIConfig(void) {
 	GPIO_Init(ETH_LINK_GPIO_PORT, &GPIO_InitStructure);
 
 	/* Connect EXTI Line to INT Pin */
-	SYSCFG_EXTILineConfig(ETH_LINK_EXTI_PORT_SOURCE, ETH_LINK_EXTI_PIN_SOURCE );
+	SYSCFG_EXTILineConfig(ETH_LINK_EXTI_PORT_SOURCE, ETH_LINK_EXTI_PIN_SOURCE);
 
 	/* Configure EXTI line */
 	EXTI_InitStructure.EXTI_Line = ETH_LINK_EXTI_LINE;
@@ -289,6 +289,14 @@ void Eth_Link_EXTIConfig(void) {
 	NVIC_Init(&NVIC_InitStructure);
 }
 
+void Eth_EXTI_Enable(void) {
+	NVIC_EnableIRQ(EXTI15_10_IRQn);
+}
+
+void Eth_EXTI_Disable(void) {
+	NVIC_DisableIRQ(EXTI15_10_IRQn);
+}
+
 /**
  * @brief  This function handles Ethernet link status.
  * @param  None
@@ -296,8 +304,8 @@ void Eth_Link_EXTIConfig(void) {
  */
 void Eth_Link_ITHandler(uint16_t PHYAddress) {
 	/* Check whether the link interrupt has occurred or not */
-	if (((ETH_ReadPHYRegister(PHYAddress, PHY_MISR )) & PHY_LINK_STATUS )!= 0){
-		if ((ETH_ReadPHYRegister(PHYAddress, PHY_SR ) & 1)) {
+	if (((ETH_ReadPHYRegister(PHYAddress, PHY_MISR)) & PHY_LINK_STATUS) != 0) {
+		if ((ETH_ReadPHYRegister(PHYAddress, PHY_SR) & 1)) {
 			netif_set_link_up(&gnetif);
 		} else {
 			netif_set_link_down(&gnetif);
@@ -323,34 +331,34 @@ void ETH_link_callback(struct netif *netif) {
 
 	if (netif_is_link_up(netif)) {
 		/* Restart the autonegotiation */
-		if (ETH_InitStructure.ETH_AutoNegotiation != ETH_AutoNegotiation_Disable ) {
+		if (ETH_InitStructure.ETH_AutoNegotiation != ETH_AutoNegotiation_Disable) {
 			/* Reset Timeout counter */
 			timeout = 0;
 
 			/* Enable Auto-Negotiation */
-			ETH_WritePHYRegister(DP83848_PHY_ADDRESS, PHY_BCR, PHY_AutoNegotiation );
+			ETH_WritePHYRegister(DP83848_PHY_ADDRESS, PHY_BCR, PHY_AutoNegotiation);
 
 			/* Wait until the auto-negotiation will be completed */
 			do {
 				timeout++;
-			} while (!(ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_BSR) & PHY_AutoNego_Complete )&& (timeout < (uint32_t)PHY_READ_TO));
+			} while (!(ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_BSR) & PHY_AutoNego_Complete) && (timeout < (uint32_t) PHY_READ_TO));
 
 			/* Reset Timeout counter */
 			timeout = 0U;
 
 			/* Read the result of the auto-negotiation */
-			RegValue = ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR );
+			RegValue = ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR);
 
 			/* Configure the MAC with the Duplex Mode fixed by the auto-negotiation process */
-			if ((RegValue & PHY_DUPLEX_STATUS )!= (uint32_t)RESET){
-			/* Set Ethernet duplex mode to Full-duplex following the auto-negotiation */
-			ETH_InitStructure.ETH_Mode = ETH_Mode_FullDuplex;
-		} else {
-			/* Set Ethernet duplex mode to Half-duplex following the auto-negotiation */
-			ETH_InitStructure.ETH_Mode = ETH_Mode_HalfDuplex;
-		}
+			if ((RegValue & PHY_DUPLEX_STATUS) != (uint32_t) RESET) {
+				/* Set Ethernet duplex mode to Full-duplex following the auto-negotiation */
+				ETH_InitStructure.ETH_Mode = ETH_Mode_FullDuplex;
+			} else {
+				/* Set Ethernet duplex mode to Half-duplex following the auto-negotiation */
+				ETH_InitStructure.ETH_Mode = ETH_Mode_HalfDuplex;
+			}
 			/* Configure the MAC with the speed fixed by the auto-negotiation process */
-			if (RegValue & PHY_SPEED_STATUS ) {
+			if (RegValue & PHY_SPEED_STATUS) {
 				/* Set Ethernet speed to 10M following the auto-negotiation */
 				ETH_InitStructure.ETH_Speed = ETH_Speed_10M;
 			} else {
@@ -360,17 +368,17 @@ void ETH_link_callback(struct netif *netif) {
 
 			/*------------------------ ETHERNET MACCR Re-Configuration --------------------*/
 			/* Get the ETHERNET MACCR value */
-			tmpreg = ETH ->MACCR;
+			tmpreg = ETH->MACCR;
 
 			/* Set the FES bit according to ETH_Speed value */
 			/* Set the DM bit according to ETH_Mode value */
 			tmpreg |= (uint32_t) (ETH_InitStructure.ETH_Speed | ETH_InitStructure.ETH_Mode);
 
-			/* Write to ETHERNET MACCR */ETH ->MACCR = (uint32_t) tmpreg;
+			/* Write to ETHERNET MACCR */ETH->MACCR = (uint32_t) tmpreg;
 
-			_eth_delay_(ETH_REG_WRITE_DELAY );
-			tmpreg = ETH ->MACCR;
-			ETH ->MACCR = tmpreg;
+			_eth_delay_(ETH_REG_WRITE_DELAY);
+			tmpreg = ETH->MACCR;
+			ETH->MACCR = tmpreg;
 		}
 
 		/* Restart MAC interface */

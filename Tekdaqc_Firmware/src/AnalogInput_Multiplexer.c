@@ -88,6 +88,7 @@ static void SelectExternalInput(ExternalMuxedInput_t input, bool doMuxDelay) {
 	}
 	/* Make the switch */
 	SelectInternalInput(EXTERNAL_ANALOG_IN);
+	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, EXT_ANALOG_SELECT);
 	GPIO_Write(EXT_ANALOG_IN_MUX_PORT, (input | (GPIO_ReadOutputData(EXT_ANALOG_IN_MUX_PORT ) & EXT_ANALOG_IN_BITMASK )));
 
 	if (doMuxDelay == true) {
@@ -207,7 +208,7 @@ void InputMultiplexerInit(void) {
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz; /* At most the multiplexer can handle a few hundred Hz */
 	GPIO_Init(OCAL_CONTROL_GPIO_PORT, &GPIO_InitStructure);
-	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, OCAL_SELECT); /* TODO: This is temporary until the REV D boards arrive. Should be EXT_ANALOG_SELECT */
+	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, OCAL_SELECT);
 
 	/* Enable the DEMUX GPIO Clock */
 	RCC_AHB1PeriphClockCmd(EXT_ANALOG_IN_GPIO_CLK, ENABLE);
@@ -292,7 +293,9 @@ void SelectPhysicalInput(PhysicalAnalogInput_t input, bool doMuxDelay) {
  * @retval none
  */
 void SelectCalibrationInput(void) {
-	SelectExternalInput(EXTERN_0, true);
+	//SelectExternalInput(EXTERN_0, true);
+	SelectInternalInput(EXTERNAL_ANALOG_IN);
+	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, OCAL_SELECT);
 }
 
 /**
@@ -314,6 +317,7 @@ void SelectColdJunctionInput(void) {
  * @retval none
  */
 void ResetSelectedInput(void) {
+	//FIXME: What if selected input was an internal input?
 	/*if (CurrentInput != NULL ) {
 		if (CurrentInput->physicalInput == IN_COLD_JUNCTION) {
 			SelectAnalogInput(CurrentInput, false);

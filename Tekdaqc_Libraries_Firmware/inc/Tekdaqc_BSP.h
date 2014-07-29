@@ -347,8 +347,8 @@ typedef enum {
 #define OCAL_CONTROL_PIN					(GPIO_Pin_12)
 #define OCAL_CONTROL_GPIO_PORT				(GPIOH)
 #define OCAL_CONTROL_GPIO_CLK				(RCC_AHB1Periph_GPIOH)
-#define OCAL_SELECT							(Bit_SET)
-#define EXT_ANALOG_SELECT					(Bit_RESET)
+#define OCAL_SELECT							(Bit_RESET)
+#define EXT_ANALOG_SELECT					(Bit_SET)
 
 /**
  * @}

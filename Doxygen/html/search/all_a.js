@@ -12,7 +12,6 @@ var searchData=
   ['locator_5fdata_5flength',['LOCATOR_DATA_LENGTH',['../_tekdaqc___locator_8c.html#ab46e92a2b73bcc701b497bed347d410c',1,'Tekdaqc_Locator.c']]],
   ['locator_5fdebug',['LOCATOR_DEBUG',['../group__driver__debug.html#gad565c3e1604db6f3110eafa8b0c71f39',1,'Tekdaqc_Debug.h']]],
   ['locator_5fport',['LOCATOR_PORT',['../group__tekdaqc__communication.html#ga5a136fbad6cb2fa002bd9fd5a9288336',1,'Tekdaqc_BSP.h']]],
-  ['locatorapptitleset',['LocatorAppTitleSet',['../_tekdaqc___locator_8c.html#a9404d8297647f20b2c1cf4736380c4ee',1,'Tekdaqc_Locator.c']]],
   ['logic_5fhigh',['LOGIC_HIGH',['../group__board__channel__constants.html#ggaee574a0d48c41a3e5426ffbf8ac4c5c4ad49fd7cec8a5997c9347759048470fc9',1,'Tekdaqc_BSP.h']]],
   ['logic_5flow',['LOGIC_LOW',['../group__board__channel__constants.html#ggaee574a0d48c41a3e5426ffbf8ac4c5c4ab4d04526d504d52286c0125def0faef4',1,'Tekdaqc_BSP.h']]]
 ];

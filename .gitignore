@@ -170,3 +170,5 @@ pip-log.txt
 TekDAQC_Libraries_Firmware/.csdata/
 TekDAQC_Firmware/.csdata/ci/TekDAQC_Firmware.cip
 TekDAQC_Firmware/.csdata/
+*.o
+*.su

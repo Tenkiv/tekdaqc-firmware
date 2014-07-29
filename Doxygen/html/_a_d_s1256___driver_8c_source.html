@@ -31,7 +31,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Tekdaqc Firmware
-   &#160;<span id="projectnumber">1.0.1.0</span>
+   &#160;<span id="projectnumber">1.0.2.0</span>
    </div>
    <div id="projectbrief">The firmware of the Tekdaqc.</div>
   </td>
@@ -150,7 +150,7 @@ $(document).ready(function(){initNavTree('_a_d_s1256___driver_8c_source.html',''
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="_a_d_s1256___driver_8c.html#a09f71f7cdf36c3dee470ee38edc8431e">   72</a></span>&#160;<span class="preprocessor">#define ADS1256_REGISTERS_DEBUG_FORMATTER &quot;[ADS1256] Register %2d %6s: 0x%02X\n\r&quot;</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="_a_d_s1256___driver_8c.html#aaa23b199dae1b52d4b78b56328e5509b">   79</a></span>&#160;<span class="preprocessor">#define ADS1256_REGISTERS_TOSTRING_HEADER &quot;------------------------------\n\r[ADS1256] Register Contents:\n\r------------------------------\n\r&quot;</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="_a_d_s1256___driver_8c.html#aaa23b199dae1b52d4b78b56328e5509b">   79</a></span>&#160;<span class="preprocessor">#define ADS1256_REGISTERS_TOSTRING_HEADER &quot;[ADS1256] Register Contents:\n\r&quot;</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
@@ -1343,87 +1343,97 @@ $(document).ready(function(){initNavTree('_a_d_s1256___driver_8c_source.html',''
 <div class="line"><a name="l01742"></a><span class="lineno"> 1742</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">return</span> byte;</div>
 <div class="line"><a name="l01743"></a><span class="lineno"> 1743</span>&#160;}</div>
 <div class="line"><a name="l01744"></a><span class="lineno"> 1744</span>&#160;</div>
-<div class="line"><a name="l01753"></a><span class="lineno"> 1753</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_SetRegisterBits(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t index, uint8_t count, uint8_t value) {</div>
-<div class="line"><a name="l01754"></a><span class="lineno"> 1754</span>&#160;    <span class="comment">/* Get the most recent value of the register */</span></div>
-<div class="line"><a name="l01755"></a><span class="lineno"> 1755</span>&#160;    uint8_t byte = ADS1256_GetRegister(reg);</div>
-<div class="line"><a name="l01756"></a><span class="lineno"> 1756</span>&#160;    <span class="comment">/* If the value to be set is identical to the existing one, no action. */</span></div>
-<div class="line"><a name="l01757"></a><span class="lineno"> 1757</span>&#160;    <span class="keywordflow">if</span> (ADS1256_GetRegisterBits(reg, index, count) == value) {</div>
-<div class="line"><a name="l01758"></a><span class="lineno"> 1758</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l01759"></a><span class="lineno"> 1759</span>&#160;    }</div>
-<div class="line"><a name="l01760"></a><span class="lineno"> 1760</span>&#160;    uint8_t mask = (uint8_t)((0xFFU &gt;&gt; count) &lt;&lt; index); <span class="comment">/* Create the mask, all 1&#39;s shifted left by the starting bit index */</span></div>
-<div class="line"><a name="l01761"></a><span class="lineno"> 1761</span>&#160;    byte = (byte &amp; (~mask)) | (value &lt;&lt; index);</div>
-<div class="line"><a name="l01762"></a><span class="lineno"> 1762</span>&#160;    ADS1256_SetRegister(reg, byte);</div>
-<div class="line"><a name="l01763"></a><span class="lineno"> 1763</span>&#160;}</div>
-<div class="line"><a name="l01764"></a><span class="lineno"> 1764</span>&#160;</div>
-<div class="line"><a name="l01772"></a><span class="lineno"> 1772</span>&#160;<span class="keyword">static</span> uint8_t ADS1256_GetRegister(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg) {</div>
-<div class="line"><a name="l01773"></a><span class="lineno"> 1773</span>&#160;    <span class="keywordflow">return</span> ADS1256_Registers[reg];</div>
+<div class="line"><a name="l01754"></a><span class="lineno"> 1754</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_SetRegisterBits(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t index, uint8_t count, uint8_t value) {</div>
+<div class="line"><a name="l01755"></a><span class="lineno"> 1755</span>&#160;    <span class="comment">/* Ensure that the count will not overrun the register */</span></div>
+<div class="line"><a name="l01756"></a><span class="lineno"> 1756</span>&#160;    <span class="keywordflow">if</span> ((count - index) &gt;= 8U) {</div>
+<div class="line"><a name="l01757"></a><span class="lineno"> 1757</span>&#160;        count = 7U - index;</div>
+<div class="line"><a name="l01758"></a><span class="lineno"> 1758</span>&#160;    }</div>
+<div class="line"><a name="l01759"></a><span class="lineno"> 1759</span>&#160;    <span class="comment">/* Ensure that there is no extraneous data in value */</span></div>
+<div class="line"><a name="l01760"></a><span class="lineno"> 1760</span>&#160;    value &amp;= ~(0xFF &lt;&lt; count);</div>
+<div class="line"><a name="l01761"></a><span class="lineno"> 1761</span>&#160;    <span class="comment">/* Get the most recent value of the register */</span></div>
+<div class="line"><a name="l01762"></a><span class="lineno"> 1762</span>&#160;    uint8_t byte = ADS1256_GetRegister(reg);</div>
+<div class="line"><a name="l01763"></a><span class="lineno"> 1763</span>&#160;    <span class="comment">/* If the value to be set is identical to the existing one, no action. */</span></div>
+<div class="line"><a name="l01764"></a><span class="lineno"> 1764</span>&#160;    <span class="keywordflow">if</span> (ADS1256_GetRegisterBits(reg, index, count) == value) {</div>
+<div class="line"><a name="l01765"></a><span class="lineno"> 1765</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l01766"></a><span class="lineno"> 1766</span>&#160;    }</div>
+<div class="line"><a name="l01767"></a><span class="lineno"> 1767</span>&#160;    uint8_t mask = 0x00;</div>
+<div class="line"><a name="l01768"></a><span class="lineno"> 1768</span>&#160;    <span class="keywordflow">for</span> (uint_fast8_t i = 0; i &lt; count; ++i) {</div>
+<div class="line"><a name="l01769"></a><span class="lineno"> 1769</span>&#160;        mask |= 0x01 &lt;&lt; (index + i);</div>
+<div class="line"><a name="l01770"></a><span class="lineno"> 1770</span>&#160;    }</div>
+<div class="line"><a name="l01771"></a><span class="lineno"> 1771</span>&#160;    <span class="comment">//uint8_t mask = (uint8_t)((0xFFU &gt;&gt; count) &lt;&lt; index); /* Create the mask, all 1&#39;s shifted left by the starting bit index */</span></div>
+<div class="line"><a name="l01772"></a><span class="lineno"> 1772</span>&#160;    byte = (byte &amp; ~mask) | (value &lt;&lt; index);</div>
+<div class="line"><a name="l01773"></a><span class="lineno"> 1773</span>&#160;    ADS1256_SetRegister(reg, byte);</div>
 <div class="line"><a name="l01774"></a><span class="lineno"> 1774</span>&#160;}</div>
 <div class="line"><a name="l01775"></a><span class="lineno"> 1775</span>&#160;</div>
-<div class="line"><a name="l01783"></a><span class="lineno"> 1783</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_SetRegister(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t value) {</div>
-<div class="line"><a name="l01784"></a><span class="lineno"> 1784</span>&#160;    ADS1256_SetRegisters(reg, 1, &amp;value);</div>
+<div class="line"><a name="l01783"></a><span class="lineno"> 1783</span>&#160;<span class="keyword">static</span> uint8_t ADS1256_GetRegister(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg) {</div>
+<div class="line"><a name="l01784"></a><span class="lineno"> 1784</span>&#160;    <span class="keywordflow">return</span> ADS1256_Registers[reg];</div>
 <div class="line"><a name="l01785"></a><span class="lineno"> 1785</span>&#160;}</div>
 <div class="line"><a name="l01786"></a><span class="lineno"> 1786</span>&#160;</div>
-<div class="line"><a name="l01795"></a><span class="lineno"> 1795</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_SetRegisters(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t count, uint8_t* values) {</div>
-<div class="line"><a name="l01796"></a><span class="lineno"> 1796</span>&#160;    <span class="keywordflow">for</span> (uint_fast8_t i = 0; i &lt; count; ++i) {</div>
-<div class="line"><a name="l01797"></a><span class="lineno"> 1797</span>&#160;        ADS1256_Registers[reg + i] = values[i];</div>
-<div class="line"><a name="l01798"></a><span class="lineno"> 1798</span>&#160;    }</div>
-<div class="line"><a name="l01799"></a><span class="lineno"> 1799</span>&#160;    ADS1256_WriteRegisters(reg, count);</div>
-<div class="line"><a name="l01800"></a><span class="lineno"> 1800</span>&#160;}</div>
-<div class="line"><a name="l01801"></a><span class="lineno"> 1801</span>&#160;</div>
-<div class="line"><a name="l01808"></a><span class="lineno"> 1808</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_ReadRegister(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg) {</div>
-<div class="line"><a name="l01809"></a><span class="lineno"> 1809</span>&#160;    ADS1256_ReadRegisters(reg, 1);</div>
-<div class="line"><a name="l01810"></a><span class="lineno"> 1810</span>&#160;}</div>
-<div class="line"><a name="l01811"></a><span class="lineno"> 1811</span>&#160;</div>
-<div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_ReadRegisters(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t count) {</div>
-<div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160;    ADS1256_CS_LOW();</div>
-<div class="line"><a name="l01821"></a><span class="lineno"> 1821</span>&#160;    ADS1256_Reg_Command(<a class="code" href="group__ads1256__driver.html#ggadb203fb3b246881a33160b5b25822d42aee3ef8f7acb16ce684bfd531f1c79ab6">ADS1256_RREG</a>, reg, count);</div>
-<div class="line"><a name="l01822"></a><span class="lineno"> 1822</span>&#160;    <a class="code" href="group__tekdaqc__timers.html#ga5ec7c1ff1d0645d24d030f36382e9417">Delay_us</a>(50 * ADS1256_CLK_PERIOD_US); <span class="comment">/* timing characteristic t6 */</span></div>
-<div class="line"><a name="l01823"></a><span class="lineno"> 1823</span>&#160;    <a class="code" href="group__ads1256__driver.html#gadadfc4d298fad4e9833975340b7eeaae">ADS1256_ReceiveBytes</a>(ADS1256_Registers + reg, count);</div>
-<div class="line"><a name="l01824"></a><span class="lineno"> 1824</span>&#160;    <a class="code" href="group__ads1256__driver.html#ga0c9c039ac03ad1280102b1f05c056071">ADS1256_CS_HIGH</a>();</div>
-<div class="line"><a name="l01825"></a><span class="lineno"> 1825</span>&#160;    <a class="code" href="group__tekdaqc__timers.html#ga5ec7c1ff1d0645d24d030f36382e9417">Delay_us</a>(4 * ADS1256_CLK_PERIOD_US); <span class="comment">/* timing characteristic t11 */</span></div>
-<div class="line"><a name="l01826"></a><span class="lineno"> 1826</span>&#160;    <span class="keywordflow">if</span> (reg == <a class="code" href="group__ads1256__driver.html#gga03b6f97db2c7988af4c239575cc88fdea861808fe9ebfaefd3b40f35d785f76ad">ADS1256_STATUS</a>) {</div>
-<div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160;        <span class="comment">/* We just read the status register, lets make sure things match up */</span></div>
-<div class="line"><a name="l01828"></a><span class="lineno"> 1828</span>&#160;        <span class="keywordflow">if</span> (ID == 0xFF) {</div>
-<div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160;            <span class="comment">/* This is the first read */</span></div>
-<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;            ID = ADS1256_GetRegisterBits(<a class="code" href="group__ads1256__driver.html#gga03b6f97db2c7988af4c239575cc88fdea861808fe9ebfaefd3b40f35d785f76ad">ADS1256_STATUS</a>, <a class="code" href="group__status__register.html#ga14da33a69f54e320a00c3e33e9dcf44a">ADS1256_ID_BIT</a>, <a class="code" href="group__status__register.html#ga4b89c536e185cfdbd9fa248a3e3772b7">ADS1256_ID_SPAN</a>);</div>
-<div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;<span class="preprocessor">#ifdef ADS1256_DEBUG</span></div>
-<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;<span class="preprocessor"></span>            printf(<span class="stringliteral">&quot;[ADS1256] Setting ADC ID: 0x%02X\n\r&quot;</span>, ID);</div>
-<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;<span class="preprocessor"></span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;            <span class="comment">/* This is a subsequent read */</span></div>
-<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;            uint8_t tempID = ADS1256_GetRegisterBits(<a class="code" href="group__ads1256__driver.html#gga03b6f97db2c7988af4c239575cc88fdea861808fe9ebfaefd3b40f35d785f76ad">ADS1256_STATUS</a>,</div>
-<div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;                    <a class="code" href="group__status__register.html#ga14da33a69f54e320a00c3e33e9dcf44a">ADS1256_ID_BIT</a>, <a class="code" href="group__status__register.html#ga4b89c536e185cfdbd9fa248a3e3772b7">ADS1256_ID_SPAN</a>);</div>
-<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;            <span class="keywordflow">if</span> (tempID != ID) {</div>
-<div class="line"><a name="l01839"></a><span class="lineno"> 1839</span>&#160;                <span class="comment">/* There was a problem, reset the ADC */</span></div>
-<div class="line"><a name="l01840"></a><span class="lineno"> 1840</span>&#160;<span class="preprocessor">#ifdef ADS1256_DEBUG</span></div>
-<div class="line"><a name="l01841"></a><span class="lineno"> 1841</span>&#160;<span class="preprocessor"></span>                printf(<span class="stringliteral">&quot;[ADS1256] The ADC did not return the same ID, resetting and reprogramming it.\n\r&quot;</span>);</div>
-<div class="line"><a name="l01842"></a><span class="lineno"> 1842</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l01843"></a><span class="lineno"> 1843</span>&#160;<span class="preprocessor"></span>                <a class="code" href="group__ads1256__driver.html#ga16dbb214bb63f6051170ee4f8964beb6">ADS1256_ResetAndReprogram</a>();</div>
-<div class="line"><a name="l01844"></a><span class="lineno"> 1844</span>&#160;            }</div>
-<div class="line"><a name="l01845"></a><span class="lineno"> 1845</span>&#160;        }</div>
-<div class="line"><a name="l01846"></a><span class="lineno"> 1846</span>&#160;    }</div>
-<div class="line"><a name="l01847"></a><span class="lineno"> 1847</span>&#160;}</div>
-<div class="line"><a name="l01848"></a><span class="lineno"> 1848</span>&#160;</div>
-<div class="line"><a name="l01855"></a><span class="lineno"> 1855</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_WriteRegister(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg) {</div>
-<div class="line"><a name="l01856"></a><span class="lineno"> 1856</span>&#160;    ADS1256_WriteRegisters(reg, 1);</div>
-<div class="line"><a name="l01857"></a><span class="lineno"> 1857</span>&#160;}</div>
-<div class="line"><a name="l01858"></a><span class="lineno"> 1858</span>&#160;</div>
-<div class="line"><a name="l01866"></a><span class="lineno"> 1866</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_WriteRegisters(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t count) {</div>
-<div class="line"><a name="l01867"></a><span class="lineno"> 1867</span>&#160;    ADS1256_CS_LOW();</div>
-<div class="line"><a name="l01868"></a><span class="lineno"> 1868</span>&#160;    ADS1256_Reg_Command(<a class="code" href="group__ads1256__driver.html#ggadb203fb3b246881a33160b5b25822d42a15d3f34090137e08b2a38765214a1153">ADS1256_WREG</a>, reg, count);</div>
-<div class="line"><a name="l01869"></a><span class="lineno"> 1869</span>&#160;    <a class="code" href="group__tekdaqc__timers.html#ga5ec7c1ff1d0645d24d030f36382e9417">Delay_us</a>(50 * ADS1256_CLK_PERIOD_US); <span class="comment">/* timing characteristic t6 */</span></div>
-<div class="line"><a name="l01870"></a><span class="lineno"> 1870</span>&#160;    <a class="code" href="group__ads1256__driver.html#ga0eecf15939442deb9f23a1f9758539f9">ADS1256_SendBytes</a>(ADS1256_Registers + reg, count);</div>
-<div class="line"><a name="l01871"></a><span class="lineno"> 1871</span>&#160;    <a class="code" href="group__ads1256__driver.html#ga0c9c039ac03ad1280102b1f05c056071">ADS1256_CS_HIGH</a>();</div>
-<div class="line"><a name="l01872"></a><span class="lineno"> 1872</span>&#160;    <a class="code" href="group__tekdaqc__timers.html#ga5ec7c1ff1d0645d24d030f36382e9417">Delay_us</a>(4 * ADS1256_CLK_PERIOD_US); <span class="comment">/* timing characteristic t11 */</span></div>
-<div class="line"><a name="l01873"></a><span class="lineno"> 1873</span>&#160;}</div>
-<div class="line"><a name="l01874"></a><span class="lineno"> 1874</span>&#160;</div>
-<div class="line"><a name="l01881"></a><span class="lineno"><a class="line" href="group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334"> 1881</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334">ADS1256_SCLK_LOW</a>(<span class="keywordtype">void</span>) {</div>
-<div class="line"><a name="l01882"></a><span class="lineno"> 1882</span>&#160;    GPIO_ResetBits(ADS1256_SPI_SCK_GPIO_PORT, ADS1256_SPI_SCK_PIN );</div>
-<div class="line"><a name="l01883"></a><span class="lineno"> 1883</span>&#160;}</div>
-<div class="line"><a name="l01884"></a><span class="lineno"> 1884</span>&#160;</div>
-<div class="line"><a name="l01891"></a><span class="lineno"><a class="line" href="group__ads1256__driver.html#ga13b51a0fb626ff6f592fc7ce425e8046"> 1891</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__ads1256__driver.html#ga13b51a0fb626ff6f592fc7ce425e8046">ADS1256_SCLK_HIGH</a>(<span class="keywordtype">void</span>) {</div>
-<div class="line"><a name="l01892"></a><span class="lineno"> 1892</span>&#160;    GPIO_SetBits(ADS1256_SPI_SCK_GPIO_PORT, ADS1256_SPI_SCK_PIN );</div>
-<div class="line"><a name="l01893"></a><span class="lineno"> 1893</span>&#160;}</div>
+<div class="line"><a name="l01794"></a><span class="lineno"> 1794</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_SetRegister(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t value) {</div>
+<div class="line"><a name="l01795"></a><span class="lineno"> 1795</span>&#160;    ADS1256_SetRegisters(reg, 1, &amp;value);</div>
+<div class="line"><a name="l01796"></a><span class="lineno"> 1796</span>&#160;}</div>
+<div class="line"><a name="l01797"></a><span class="lineno"> 1797</span>&#160;</div>
+<div class="line"><a name="l01806"></a><span class="lineno"> 1806</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_SetRegisters(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t count, uint8_t* values) {</div>
+<div class="line"><a name="l01807"></a><span class="lineno"> 1807</span>&#160;    <span class="keywordflow">for</span> (uint_fast8_t i = 0; i &lt; count; ++i) {</div>
+<div class="line"><a name="l01808"></a><span class="lineno"> 1808</span>&#160;        ADS1256_Registers[reg + i] = values[i];</div>
+<div class="line"><a name="l01809"></a><span class="lineno"> 1809</span>&#160;    }</div>
+<div class="line"><a name="l01810"></a><span class="lineno"> 1810</span>&#160;    ADS1256_WriteRegisters(reg, count);</div>
+<div class="line"><a name="l01811"></a><span class="lineno"> 1811</span>&#160;}</div>
+<div class="line"><a name="l01812"></a><span class="lineno"> 1812</span>&#160;</div>
+<div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_ReadRegister(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg) {</div>
+<div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160;    ADS1256_ReadRegisters(reg, 1);</div>
+<div class="line"><a name="l01821"></a><span class="lineno"> 1821</span>&#160;}</div>
+<div class="line"><a name="l01822"></a><span class="lineno"> 1822</span>&#160;</div>
+<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_ReadRegisters(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t count) {</div>
+<div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;    ADS1256_CS_LOW();</div>
+<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;    ADS1256_Reg_Command(<a class="code" href="group__ads1256__driver.html#ggadb203fb3b246881a33160b5b25822d42aee3ef8f7acb16ce684bfd531f1c79ab6">ADS1256_RREG</a>, reg, count);</div>
+<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;    <a class="code" href="group__tekdaqc__timers.html#ga5ec7c1ff1d0645d24d030f36382e9417">Delay_us</a>(50 * ADS1256_CLK_PERIOD_US); <span class="comment">/* timing characteristic t6 */</span></div>
+<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;    <a class="code" href="group__ads1256__driver.html#gadadfc4d298fad4e9833975340b7eeaae">ADS1256_ReceiveBytes</a>(ADS1256_Registers + reg, count);</div>
+<div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;    <a class="code" href="group__ads1256__driver.html#ga0c9c039ac03ad1280102b1f05c056071">ADS1256_CS_HIGH</a>();</div>
+<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;    <a class="code" href="group__tekdaqc__timers.html#ga5ec7c1ff1d0645d24d030f36382e9417">Delay_us</a>(4 * ADS1256_CLK_PERIOD_US); <span class="comment">/* timing characteristic t11 */</span></div>
+<div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;    <span class="keywordflow">if</span> (reg == <a class="code" href="group__ads1256__driver.html#gga03b6f97db2c7988af4c239575cc88fdea861808fe9ebfaefd3b40f35d785f76ad">ADS1256_STATUS</a>) {</div>
+<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;        <span class="comment">/* We just read the status register, lets make sure things match up */</span></div>
+<div class="line"><a name="l01839"></a><span class="lineno"> 1839</span>&#160;        <span class="keywordflow">if</span> (ID == 0xFF) {</div>
+<div class="line"><a name="l01840"></a><span class="lineno"> 1840</span>&#160;            <span class="comment">/* This is the first read */</span></div>
+<div class="line"><a name="l01841"></a><span class="lineno"> 1841</span>&#160;            ID = ADS1256_GetRegisterBits(<a class="code" href="group__ads1256__driver.html#gga03b6f97db2c7988af4c239575cc88fdea861808fe9ebfaefd3b40f35d785f76ad">ADS1256_STATUS</a>, <a class="code" href="group__status__register.html#ga14da33a69f54e320a00c3e33e9dcf44a">ADS1256_ID_BIT</a>, <a class="code" href="group__status__register.html#ga4b89c536e185cfdbd9fa248a3e3772b7">ADS1256_ID_SPAN</a>);</div>
+<div class="line"><a name="l01842"></a><span class="lineno"> 1842</span>&#160;<span class="preprocessor">#ifdef ADS1256_DEBUG</span></div>
+<div class="line"><a name="l01843"></a><span class="lineno"> 1843</span>&#160;<span class="preprocessor"></span>            printf(<span class="stringliteral">&quot;[ADS1256] Setting ADC ID: 0x%02X\n\r&quot;</span>, ID);</div>
+<div class="line"><a name="l01844"></a><span class="lineno"> 1844</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l01845"></a><span class="lineno"> 1845</span>&#160;<span class="preprocessor"></span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01846"></a><span class="lineno"> 1846</span>&#160;            <span class="comment">/* This is a subsequent read */</span></div>
+<div class="line"><a name="l01847"></a><span class="lineno"> 1847</span>&#160;            uint8_t tempID = ADS1256_GetRegisterBits(<a class="code" href="group__ads1256__driver.html#gga03b6f97db2c7988af4c239575cc88fdea861808fe9ebfaefd3b40f35d785f76ad">ADS1256_STATUS</a>,</div>
+<div class="line"><a name="l01848"></a><span class="lineno"> 1848</span>&#160;                    <a class="code" href="group__status__register.html#ga14da33a69f54e320a00c3e33e9dcf44a">ADS1256_ID_BIT</a>, <a class="code" href="group__status__register.html#ga4b89c536e185cfdbd9fa248a3e3772b7">ADS1256_ID_SPAN</a>);</div>
+<div class="line"><a name="l01849"></a><span class="lineno"> 1849</span>&#160;            <span class="keywordflow">if</span> (tempID != ID) {</div>
+<div class="line"><a name="l01850"></a><span class="lineno"> 1850</span>&#160;                <span class="comment">/* There was a problem, reset the ADC */</span></div>
+<div class="line"><a name="l01851"></a><span class="lineno"> 1851</span>&#160;<span class="preprocessor">#ifdef ADS1256_DEBUG</span></div>
+<div class="line"><a name="l01852"></a><span class="lineno"> 1852</span>&#160;<span class="preprocessor"></span>                printf(<span class="stringliteral">&quot;[ADS1256] The ADC did not return the same ID, resetting and reprogramming it.\n\r&quot;</span>);</div>
+<div class="line"><a name="l01853"></a><span class="lineno"> 1853</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l01854"></a><span class="lineno"> 1854</span>&#160;<span class="preprocessor"></span>                <a class="code" href="group__ads1256__driver.html#ga16dbb214bb63f6051170ee4f8964beb6">ADS1256_ResetAndReprogram</a>();</div>
+<div class="line"><a name="l01855"></a><span class="lineno"> 1855</span>&#160;            }</div>
+<div class="line"><a name="l01856"></a><span class="lineno"> 1856</span>&#160;        }</div>
+<div class="line"><a name="l01857"></a><span class="lineno"> 1857</span>&#160;    }</div>
+<div class="line"><a name="l01858"></a><span class="lineno"> 1858</span>&#160;}</div>
+<div class="line"><a name="l01859"></a><span class="lineno"> 1859</span>&#160;</div>
+<div class="line"><a name="l01866"></a><span class="lineno"> 1866</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_WriteRegister(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg) {</div>
+<div class="line"><a name="l01867"></a><span class="lineno"> 1867</span>&#160;    ADS1256_WriteRegisters(reg, 1);</div>
+<div class="line"><a name="l01868"></a><span class="lineno"> 1868</span>&#160;}</div>
+<div class="line"><a name="l01869"></a><span class="lineno"> 1869</span>&#160;</div>
+<div class="line"><a name="l01877"></a><span class="lineno"> 1877</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> ADS1256_WriteRegisters(<a class="code" href="group__ads1256__driver.html#ga03b6f97db2c7988af4c239575cc88fde">ADS1256_Register_t</a> reg, uint8_t count) {</div>
+<div class="line"><a name="l01878"></a><span class="lineno"> 1878</span>&#160;    ADS1256_CS_LOW();</div>
+<div class="line"><a name="l01879"></a><span class="lineno"> 1879</span>&#160;    ADS1256_Reg_Command(<a class="code" href="group__ads1256__driver.html#ggadb203fb3b246881a33160b5b25822d42a15d3f34090137e08b2a38765214a1153">ADS1256_WREG</a>, reg, count);</div>
+<div class="line"><a name="l01880"></a><span class="lineno"> 1880</span>&#160;    <a class="code" href="group__tekdaqc__timers.html#ga5ec7c1ff1d0645d24d030f36382e9417">Delay_us</a>(50 * ADS1256_CLK_PERIOD_US); <span class="comment">/* timing characteristic t6 */</span></div>
+<div class="line"><a name="l01881"></a><span class="lineno"> 1881</span>&#160;    <a class="code" href="group__ads1256__driver.html#ga0eecf15939442deb9f23a1f9758539f9">ADS1256_SendBytes</a>(ADS1256_Registers + reg, count);</div>
+<div class="line"><a name="l01882"></a><span class="lineno"> 1882</span>&#160;    <a class="code" href="group__ads1256__driver.html#ga0c9c039ac03ad1280102b1f05c056071">ADS1256_CS_HIGH</a>();</div>
+<div class="line"><a name="l01883"></a><span class="lineno"> 1883</span>&#160;    <a class="code" href="group__tekdaqc__timers.html#ga5ec7c1ff1d0645d24d030f36382e9417">Delay_us</a>(4 * ADS1256_CLK_PERIOD_US); <span class="comment">/* timing characteristic t11 */</span></div>
+<div class="line"><a name="l01884"></a><span class="lineno"> 1884</span>&#160;}</div>
+<div class="line"><a name="l01885"></a><span class="lineno"> 1885</span>&#160;</div>
+<div class="line"><a name="l01892"></a><span class="lineno"><a class="line" href="group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334"> 1892</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334">ADS1256_SCLK_LOW</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l01893"></a><span class="lineno"> 1893</span>&#160;    GPIO_ResetBits(ADS1256_SPI_SCK_GPIO_PORT, ADS1256_SPI_SCK_PIN );</div>
+<div class="line"><a name="l01894"></a><span class="lineno"> 1894</span>&#160;}</div>
+<div class="line"><a name="l01895"></a><span class="lineno"> 1895</span>&#160;</div>
+<div class="line"><a name="l01902"></a><span class="lineno"><a class="line" href="group__ads1256__driver.html#ga13b51a0fb626ff6f592fc7ce425e8046"> 1902</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__ads1256__driver.html#ga13b51a0fb626ff6f592fc7ce425e8046">ADS1256_SCLK_HIGH</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l01903"></a><span class="lineno"> 1903</span>&#160;    GPIO_SetBits(ADS1256_SPI_SCK_GPIO_PORT, ADS1256_SPI_SCK_PIN );</div>
+<div class="line"><a name="l01904"></a><span class="lineno"> 1904</span>&#160;}</div>
 <div class="ttc" id="group__ads1256__driver_html_gadadfc4d298fad4e9833975340b7eeaae"><div class="ttname"><a href="group__ads1256__driver.html#gadadfc4d298fad4e9833975340b7eeaae">ADS1256_ReceiveBytes</a></div><div class="ttdeci">void ADS1256_ReceiveBytes(uint8_t *data, uint8_t n)</div><div class="ttdoc">Receive an array of bytes over the SPI line. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___s_p_i___controller_8c_source.html#l00308">ADS1256_SPI_Controller.c:308</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ggab0437f81aad031aadf3e05dd5fe0a731a5146cfab8c3f5a4229a192d7f6c75fee"><div class="ttname"><a href="group__ads1256__driver.html#ggab0437f81aad031aadf3e05dd5fe0a731a5146cfab8c3f5a4229a192d7f6c75fee">ADS1256_SPS_50</a></div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8h_source.html#l00372">ADS1256_Driver.h:372</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ggadb203fb3b246881a33160b5b25822d42a4fba878e65192a50066360cc328630c6"><div class="ttname"><a href="group__ads1256__driver.html#ggadb203fb3b246881a33160b5b25822d42a4fba878e65192a50066360cc328630c6">ADS1256_RDATA</a></div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8h_source.html#l00495">ADS1256_Driver.h:495</a></div></div>
@@ -1507,7 +1517,7 @@ $(document).ready(function(){initNavTree('_a_d_s1256___driver_8c_source.html',''
 <div class="ttc" id="group__ads1256__driver_html_ga91d8582f9d5cb52b54fb801644e05e21"><div class="ttname"><a href="group__ads1256__driver.html#ga91d8582f9d5cb52b54fb801644e05e21">ADS1256_ReadData</a></div><div class="ttdeci">void ADS1256_ReadData(uint8_t *data)</div><div class="ttdoc">Start reading the 3-byte data. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l00713">ADS1256_Driver.c:713</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ga6f362fc42d375f4aec10bd2115dfd85d"><div class="ttname"><a href="group__ads1256__driver.html#ga6f362fc42d375f4aec10bd2115dfd85d">ADS1256_GetDataOutputBitOrder</a></div><div class="ttdeci">ADS1256_ORDER_t ADS1256_GetDataOutputBitOrder(void)</div><div class="ttdoc">Retrieves the current data output order. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l01278">ADS1256_Driver.c:1278</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ga420b194968282731c912be5ccad0d30c"><div class="ttname"><a href="group__ads1256__driver.html#ga420b194968282731c912be5ccad0d30c">ADS1256_SetOffsetCalSetting</a></div><div class="ttdeci">void ADS1256_SetOffsetCalSetting(uint8_t *value)</div><div class="ttdoc">Set the offset calibration value. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l01645">ADS1256_Driver.c:1645</a></div></div>
-<div class="ttc" id="group__ads1256__driver_html_ga525f292542208f8309ee79c912b77334"><div class="ttname"><a href="group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334">ADS1256_SCLK_LOW</a></div><div class="ttdeci">void ADS1256_SCLK_LOW(void)</div><div class="ttdoc">Send the SPI Clock pin low. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l01881">ADS1256_Driver.c:1881</a></div></div>
+<div class="ttc" id="group__ads1256__driver_html_ga525f292542208f8309ee79c912b77334"><div class="ttname"><a href="group__ads1256__driver.html#ga525f292542208f8309ee79c912b77334">ADS1256_SCLK_LOW</a></div><div class="ttdeci">void ADS1256_SCLK_LOW(void)</div><div class="ttdoc">Send the SPI Clock pin low. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l01892">ADS1256_Driver.c:1892</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_gaa3102e98865ba4e72463676779cd62d4"><div class="ttname"><a href="group__ads1256__driver.html#gaa3102e98865ba4e72463676779cd62d4">ADS1256_SENSOR_DETECT_t</a></div><div class="ttdeci">ADS1256_SENSOR_DETECT_t</div><div class="ttdoc">Sensor detect current source setting enumeration. Defines the different possible current source outpu...</div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8h_source.html#l00311">ADS1256_Driver.h:311</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ggab0437f81aad031aadf3e05dd5fe0a731ac08e0021f65ebc828e467da3713964ed"><div class="ttname"><a href="group__ads1256__driver.html#ggab0437f81aad031aadf3e05dd5fe0a731ac08e0021f65ebc828e467da3713964ed">ADS1256_SPS_3750</a></div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8h_source.html#l00366">ADS1256_Driver.h:366</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ga3615e2e1ba70971dcdd5f7e54ffe5606"><div class="ttname"><a href="group__ads1256__driver.html#ga3615e2e1ba70971dcdd5f7e54ffe5606">ADS1256_ORDER_t</a></div><div class="ttdeci">ADS1256_ORDER_t</div><div class="ttdoc">Data output order flag enumeration. Defines the two possible states of the ADS1256 data output order ...</div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8h_source.html#l00244">ADS1256_Driver.h:244</a></div></div>
@@ -1572,7 +1582,7 @@ $(document).ready(function(){initNavTree('_a_d_s1256___driver_8c_source.html',''
 <div class="ttc" id="group__ads1256__driver_html_gafdd4555dcde566f72adf2d9d51f4a883"><div class="ttname"><a href="group__ads1256__driver.html#gafdd4555dcde566f72adf2d9d51f4a883">ADS1256_Reset_By_Command</a></div><div class="ttdeci">void ADS1256_Reset_By_Command(void)</div><div class="ttdoc">Reset the ADS1256 ADC via SPI command. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l00571">ADS1256_Driver.c:571</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ga2388b60ca886620f0daba1efc69c940a"><div class="ttname"><a href="group__ads1256__driver.html#ga2388b60ca886620f0daba1efc69c940a">ADS1256_Wakeup</a></div><div class="ttdeci">void ADS1256_Wakeup(void)</div><div class="ttdoc">Wakeup the ADC from SYNC/PWDN. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l00787">ADS1256_Driver.c:787</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ggab0437f81aad031aadf3e05dd5fe0a731a04ee81dece7d46e4d4db5ed37f358b0d"><div class="ttname"><a href="group__ads1256__driver.html#ggab0437f81aad031aadf3e05dd5fe0a731a04ee81dece7d46e4d4db5ed37f358b0d">ADS1256_SPS_7500</a></div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8h_source.html#l00365">ADS1256_Driver.h:365</a></div></div>
-<div class="ttc" id="group__ads1256__driver_html_ga13b51a0fb626ff6f592fc7ce425e8046"><div class="ttname"><a href="group__ads1256__driver.html#ga13b51a0fb626ff6f592fc7ce425e8046">ADS1256_SCLK_HIGH</a></div><div class="ttdeci">void ADS1256_SCLK_HIGH(void)</div><div class="ttdoc">Send the SPI Clock pin high. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l01891">ADS1256_Driver.c:1891</a></div></div>
+<div class="ttc" id="group__ads1256__driver_html_ga13b51a0fb626ff6f592fc7ce425e8046"><div class="ttname"><a href="group__ads1256__driver.html#ga13b51a0fb626ff6f592fc7ce425e8046">ADS1256_SCLK_HIGH</a></div><div class="ttdeci">void ADS1256_SCLK_HIGH(void)</div><div class="ttdoc">Send the SPI Clock pin high. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l01902">ADS1256_Driver.c:1902</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_gaa44ba74c5036ac42b24ce84eafaf56f2"><div class="ttname"><a href="group__ads1256__driver.html#gaa44ba74c5036ac42b24ce84eafaf56f2">ADS1256_RequestMeasurement</a></div><div class="ttdeci">void ADS1256_RequestMeasurement(void)</div><div class="ttdoc">Initiate a measurement. </div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8c_source.html#l00703">ADS1256_Driver.c:703</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ga81371e39460504d1badd6291ef5ba2f7"><div class="ttname"><a href="group__ads1256__driver.html#ga81371e39460504d1badd6291ef5ba2f7">ADS1256_SendByte</a></div><div class="ttdeci">uint8_t ADS1256_SendByte(uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___s_p_i___controller_8c_source.html#l00255">ADS1256_SPI_Controller.c:255</a></div></div>
 <div class="ttc" id="group__ads1256__driver_html_ggadb203fb3b246881a33160b5b25822d42a364c3ff9b43a6bd1a5bc716ee2327e8b"><div class="ttname"><a href="group__ads1256__driver.html#ggadb203fb3b246881a33160b5b25822d42a364c3ff9b43a6bd1a5bc716ee2327e8b">ADS1256_SYSOCAL</a></div><div class="ttdef"><b>Definition:</b> <a href="_a_d_s1256___driver_8h_source.html#l00503">ADS1256_Driver.h:503</a></div></div>
@@ -1607,7 +1617,7 @@ $(document).ready(function(){initNavTree('_a_d_s1256___driver_8c_source.html',''
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_da411aab950102a7c87084f4501853eb.html">TekDAQC_Libraries_Firmware</a></li><li class="navelem"><a class="el" href="dir_802ae1d07bfa9b99d65804b276995b48.html">src</a></li><li class="navelem"><a class="el" href="_a_d_s1256___driver_8c.html">ADS1256_Driver.c</a></li>
-    <li class="footer">Generated on Wed Apr 16 2014 21:24:43 for Tekdaqc Firmware by
+    <li class="footer">Generated on Mon Jul 28 2014 23:42:39 for Tekdaqc Firmware by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

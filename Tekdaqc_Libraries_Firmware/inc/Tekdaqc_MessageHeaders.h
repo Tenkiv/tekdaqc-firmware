@@ -65,6 +65,12 @@ extern "C" {
 #define STATUS_MESSAGE_HEADER "\n\r--------------------\n\rStatus Message\n\r\tMessage: %s\n\r--------------------\n\r\x1E"
 
 /**
+ * @def COMMAND_DATA_MESSAGE_HEADER
+ * @brief The printf format string for sending status messages.
+ */
+#define COMMAND_DATA_MESSAGE_HEADER "\n\r--------------------\n\rCommand Data Message\n\r\tMessage: %s\n\r--------------------\n\r\x1E"
+
+/**
  * @}
  */
 
