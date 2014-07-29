@@ -205,14 +205,12 @@ void SysTick_Handler(void)
   * @param  None
   * @retval None
   */
-void EXTI15_10_IRQHandler(void)
-{
-  if(EXTI_GetITStatus(ETH_LINK_EXTI_LINE) != RESET)
-  {
-    Eth_Link_ITHandler(DP83848_PHY_ADDRESS);
-    /* Clear interrupt pending bit */
-    EXTI_ClearITPendingBit(ETH_LINK_EXTI_LINE);
-  }
+void EXTI15_10_IRQHandler(void) {
+	if (EXTI_GetITStatus(ETH_LINK_EXTI_LINE) != RESET) {
+		Eth_Link_ITHandler(DP83848_PHY_ADDRESS);
+		/* Clear interrupt pending bit */
+		EXTI_ClearITPendingBit(ETH_LINK_EXTI_LINE);
+	}
 }
 
 /******************************************************************************/

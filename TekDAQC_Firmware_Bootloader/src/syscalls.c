@@ -76,11 +76,6 @@ int _write(int32_t file, uint8_t *ptr, int32_t len) {
 		while (USART_GetFlagStatus(COM2_USART, USART_FLAG_TC) == RESET) {
 		}
 	}
-#elif defined(SWV_DEBUG)
-	int i=0;
-	for(i=0 ; i<len ; i++) {
-		ITM_SendChar((*ptr++));
-	}
 #endif
 	return len;
 }
