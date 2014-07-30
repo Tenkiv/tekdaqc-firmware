@@ -544,7 +544,7 @@ void ADC_Calibrate(void) {
 
 		/* Select the calibration input */
 		SelectCalibrationInput();
-		Delay_ms(EXTERNAL_MUX_DELAY);
+		Delay_us(EXTERNAL_MUX_DELAY);
 	}
 }
 
