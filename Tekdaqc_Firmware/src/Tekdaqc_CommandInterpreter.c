@@ -1369,7 +1369,8 @@ static Tekdaqc_Command_Error_t Ex_ReadAnalogInput(char keys[][MAX_COMMANDPART_LE
 				break; /* If an error occurred, don't bother continuing */
 			}
 		}
-		if (retval == ERR_COMMAND_OK) { /* If an error occurred, don't bother continuing */
+		/* If an error occurred, don't bother continuing */
+		if (retval == ERR_COMMAND_OK && list_type != ALL_CHANNELS) {
 			for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i) {
 				if (aInputs[i] != NULL) {
 					if (aInputs[i]->added == CHANNEL_NOTADDED) {
@@ -1617,7 +1618,8 @@ static Tekdaqc_Command_Error_t Ex_ReadDigitalInput(char keys[][MAX_COMMANDPART_L
 				break;
 			}
 		}
-		if (retval == ERR_COMMAND_OK) { /* If an error occurred, don't bother continuing */
+		/* If an error occurred, don't bother continuing */
+		if (retval == ERR_COMMAND_OK && list_type != ALL_CHANNELS) {
 			for (uint_fast8_t i = 0; i < NUM_DIGITAL_INPUTS; ++i) {
 				if (dInputs[i] != NULL) {
 					if (dInputs[i]->added == CHANNEL_NOTADDED) {
