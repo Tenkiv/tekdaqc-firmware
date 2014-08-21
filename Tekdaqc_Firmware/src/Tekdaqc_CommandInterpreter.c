@@ -46,6 +46,7 @@
 #include "boolean.h"
 #include "Tekdaqc_Locator.h"
 #include <stdlib.h>
+#include <inttypes.h>
 
 #ifdef PRINTF_OUTPUT
 #include <stdio.h>
@@ -103,7 +104,7 @@ static const char COMMAND_DELIMETER[] = {0x20, 0x00};
  * List of all command strings the Tekdaqc recognizes.
  */
 static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_ADC_REGISTERS", "READ_ANALOG_INPUT",
-		"ADD_ANALOG_INPUT", "REMOVE_ANALOG_INPUT", "CHECK_ANALOG_INPUT", "SYSTEM_GCAL", "SYSTEM_CAL",
+		"ADD_ANALOG_INPUT", "REMOVE_ANALOG_INPUT", "CHECK_ANALOG_INPUT", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SYSTEM_GCAL",
 		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
 		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT",
 		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT", "UPGRADE", "IDENTIFY", "SAMPLE", "HALT",
@@ -145,15 +146,20 @@ const char* CHECK_ANALOG_INPUT_PARAMS[NUM_CHECK_ANALOG_INPUT_PARAMS] = {
 PARAMETER_INPUT};
 
 /**
+ * List of all parameters for the SYSTEM_CAL command.
+ */
+const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS] = {};
+
+/**
  * List of all parameters for the SYSTEM_GCAL command.
  */
 const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS] = {PARAMETER_BUFFER,
 PARAMETER_RATE, PARAMETER_GAIN, PARAMETER_INPUT};
 
 /**
- * List of all parameters for the SYSTEM_CAL command.
+ * List of all parameters for the READ_SYSTEM_GCAL command.
  */
-const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS] = {};
+const char* READ_SYSTEM_GCAL_PARAMS[NUM_READ_SYSTEM_GCAL_PARAMS] = {};
 
 /**
  * List of all the parameters for the LIST_DIGITAL_INPUT command.
@@ -461,6 +467,13 @@ static Tekdaqc_Command_Error_t Ex_SystemGainCal(char keys[][MAX_COMMANDPART_LENG
  */
 static Tekdaqc_Command_Error_t Ex_SystemCal(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the READ_SYSTEM_GCAL command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_ReadSystemGCal(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /**
  * @internal
@@ -1179,11 +1192,14 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 		case COMMAND_CHECK_ANALOG_INPUT:
 			retval = Ex_CheckAnalogInput(keys, values, count);
 			break;
+		case COMMAND_SYSTEM_CAL:
+			retval = Ex_SystemCal(keys, values, count);
+			break;
 		case COMMAND_SYSTEM_GCAL:
 			retval = Ex_SystemGainCal(keys, values, count);
 			break;
-		case COMMAND_SYSTEM_CAL:
-			retval = Ex_SystemCal(keys, values, count);
+		case COMMAND_READ_SYSTEM_GCAL:
+			retval = Ex_ReadSystemGCal(keys, values, count);
 			break;
 		case COMMAND_LIST_DIGITAL_INPUTS:
 			retval = Ex_ListDigitalInputs(keys, values, count);
@@ -1543,6 +1559,23 @@ static Tekdaqc_Command_Error_t Ex_SystemCal(char keys[][MAX_COMMANDPART_LENGTH],
 		lastFunctionError = status;
 		retval = ERR_COMMAND_FUNCTION_ERROR;
 	}
+	return retval;
+}
+
+/**
+ * Execute the READ_SYSTEM_GCAL command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_ReadSystemGCal(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	uint32_t calibration = ADS1256_GetGainCalSetting();
+	snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "Gain calibration value: 0x%" PRIX32, calibration);
+	TelnetWriteCommandDataMessage(TOSTRING_BUFFER);
 	return retval;
 }
 
