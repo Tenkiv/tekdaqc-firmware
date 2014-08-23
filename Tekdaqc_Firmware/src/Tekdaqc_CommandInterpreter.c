@@ -40,6 +40,7 @@
 #include "TelnetServer.h"
 #include "ADS1256_Driver.h"
 #include "Tekdaqc_Calibration.h"
+#include "Tekdaqc_CalibrationTable.h"
 #include "CommandState.h"
 #include "Tekdaqc_BSP.h"
 #include "Tekdaqc_Error.h"
@@ -104,11 +105,12 @@ static const char COMMAND_DELIMETER[] = {0x20, 0x00};
  * List of all command strings the Tekdaqc recognizes.
  */
 static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_ADC_REGISTERS", "READ_ANALOG_INPUT",
-		"ADD_ANALOG_INPUT", "REMOVE_ANALOG_INPUT", "CHECK_ANALOG_INPUT", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SYSTEM_GCAL",
-		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
-		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT",
-		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT", "UPGRADE", "IDENTIFY", "SAMPLE", "HALT",
-		"SET_RTC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS", "NONE"};
+		"ADD_ANALOG_INPUT", "REMOVE_ANALOG_INPUT", "CHECK_ANALOG_INPUT", "SET_ANALOG_INPUT_SCALE",
+		"GET_ANALOG_INPUT_SCALE", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SYSTEM_GCAL", "LIST_DIGITAL_INPUTS",
+		"READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT", "LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT",
+		"READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT", "REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT",
+		"UPGRADE", "IDENTIFY", "SAMPLE", "HALT", "SET_RTC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
+		"NONE"};
 
 /**
  * List of all parameters for the LIST_ANALOG_INPUTS command.
@@ -144,6 +146,16 @@ PARAMETER_INPUT};
  */
 const char* CHECK_ANALOG_INPUT_PARAMS[NUM_CHECK_ANALOG_INPUT_PARAMS] = {
 PARAMETER_INPUT};
+
+/**
+ * List of all parameters for the SET_ANALOG_INPUT_SCALE command.
+ */
+const char* SET_ANALOG_INPUT_SCALE_PARAMS[NUM_SET_ANALOG_INPUT_SCALE_PARAMS] = {PARAMETER_STATE};
+
+/**
+ * List of all parameters for the GET_ANALOG_INPUT_SCALE command.
+ */
+const char* GET_ANALOG_INPUT_SCALE_PARAMS[NUM_GET_ANALOG_INPUT_SCALE_PARAMS] = {};
 
 /**
  * List of all parameters for the SYSTEM_CAL command.
@@ -452,6 +464,20 @@ static Tekdaqc_Command_Error_t Ex_RemoveAnalogInput(char keys[][MAX_COMMANDPART_
  * @brief Execute the CHECK_ANALOG_INPUT command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_CheckAnalogInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the SET_ANALOG_INPUT_SCALE command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_SetAnalogInputScale(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the gET_ANALOG_INPUT_SCALE command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_GetAnalogInputScale(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /**
@@ -1173,6 +1199,7 @@ static void ToUpperCase(char* string) {
 static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	//TODO: Convert this to a function pointer lookup table
 	switch (command) {
 		case COMMAND_LIST_ANALOG_INPUTS:
 			retval = Ex_ListAnalogInputs(keys, values, count);
@@ -1191,6 +1218,12 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 			break;
 		case COMMAND_CHECK_ANALOG_INPUT:
 			retval = Ex_CheckAnalogInput(keys, values, count);
+			break;
+		case COMMAND_SET_ANALOG_INPUT_SCALE:
+			retval = Ex_SetAnalogInputScale(keys, values, count);
+			break;
+		case COMMAND_GET_ANALOG_INPUT_SCALE:
+			retval = Ex_GetAnalogInputScale(keys, values, count);
 			break;
 		case COMMAND_SYSTEM_CAL:
 			retval = Ex_SystemCal(keys, values, count);
@@ -1513,6 +1546,60 @@ static Tekdaqc_Command_Error_t Ex_CheckAnalogInput(char keys[][MAX_COMMANDPART_L
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	/* TODO: Fill in this method */
+	return retval;
+}
+
+/**
+ * Execute the SET_ANALOG_INPUT_SCALE command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_SetAnalogInputScale(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_SET_ANALOG_INPUT_SCALE_PARAMS, SET_ANALOG_INPUT_SCALE_PARAMS)) {
+		int8_t index = -1;
+		for (int i = 0; i < NUM_SET_ANALOG_INPUT_SCALE_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, SET_ANALOG_INPUT_SCALE_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (i) { /* Switch on the key not position in arguments list */
+					case 0: /* STATE key */
+#ifdef COMMAND_DEBUG
+						printf("Processing STATE key\n\r");
+#endif
+						ANALOG_INPUT_SCALE_t scale = Tekdaqc_StringToAnalogInputScale(values[index]);
+						Tekdaqc_SetAnalogInputScale(scale);
+						break;
+					default:
+						/* Return an error */
+						retval = ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+			if (retval != ERR_COMMAND_OK) {
+				break; /* If an error occurred, don't bother continuing */
+			}
+		}
+	}
+	return retval;
+}
+
+/**
+ * Execute the GET_ANALOG_INPUT_SCALE command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_GetAnalogInputScale(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	const char* scale = Tekdaqc_AnalogInputScaleToString(Tekdaqc_GetAnalogInputScale());
+	snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "Current Analog Input Voltage Scale: %s", scale);
+	TelnetWriteCommandDataMessage(TOSTRING_BUFFER);
 	return retval;
 }
 

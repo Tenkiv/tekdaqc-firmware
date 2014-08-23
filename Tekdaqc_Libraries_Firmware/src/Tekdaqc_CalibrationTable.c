@@ -49,6 +49,9 @@
 /* PRIVATE VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
 
+/* The human readable string representations of the analog input scales. */
+static const char* strings[3] = {"ANALOG 0-5V", "ANALOG 0-400V", "Invalid Scale"};
+
 /* The highest temperature that calibration data exists for */
 static float CAL_TEMP_HIGH = 0.0f;
 
@@ -78,6 +81,9 @@ static uint32_t COLD_JUNCTION_OFFSET_CAL = 0xFFFFFFFFU;
 
 /* The cold junction gain calibration value. Cached in RAM to prevent lookup delays */
 static uint32_t COLD_JUNCTION_GAIN_CAL = 0xFFFFFFFFU;
+
+/* The current analog input voltage scale being used. Defaulting to 400V range since the boards will be configured that way */
+static ANALOG_INPUT_SCALE_t CURRENT_ANALOG_SCALE = ANALOG_SCALE_400V;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
@@ -262,6 +268,66 @@ bool Tekdaqc_CalibrationInit(void) {
 	COLD_JUNCTION_GAIN_CAL = (*(__IO uint32_t*) COLD_JUNCTION_GAIN_CAL);
 	CALIBRATION_VALID = (*(__IO uint8_t*) CAL_VALID_ADDR) != 0xFF;
 	return TRUE;
+}
+
+/**
+ * Set the current operating scale of the analog inputs on the board.
+ *
+ * @param scale {@link ANALOG_INPUT_SCALE_t} The scale setting to apply.
+ * @retval none.
+ */
+void Tekdaqc_SetAnalogInputScale(ANALOG_INPUT_SCALE_t scale) {
+	CURRENT_ANALOG_SCALE = scale;
+}
+
+/**
+ * Retrieve the current operating scale of the analog inputs on the board.
+ *
+ * @param none.
+ * @retval {@link ANALOG_INPUT_SCALE_t} The currently applied scale setting.
+ */
+ANALOG_INPUT_SCALE_t Tekdaqc_GetAnalogInputScale(void) {
+	return CURRENT_ANALOG_SCALE;
+}
+
+/**
+ * Retrieves the {@link ANALOG_INPUT_SCALE_t} value represented by the human readable string provided .
+ *
+ * @param str C-String to retrieve the {@link ANALOG_INPUT_SCALE_t} for.
+ * @retval {@link ANALOG_INPUT_SCALE_t}.
+ */
+ANALOG_INPUT_SCALE_t Tekdaqc_StringToAnalogInputScale(char* str) {
+	ANALOG_INPUT_SCALE_t scale = INVALID_SCALE; /* Assume invalid */
+	if (strcmp(str, ANALOG_SCALE_5V_STRING) == 0) {
+		/* This is ANALOG_SCALE_5V */
+		scale = ANALOG_SCALE_5V;
+	} else if (strcmp(str, ANALOG_SCALE_400V_STRING) == 0) {
+		/* This is ANALOG_SCALE_400V */
+		scale = ANALOG_SCALE_400V;
+	}
+	return scale;
+}
+
+/**
+ * Retrieves a human readable string name for the provided {@link ANALOG_INPUT_SCALE_t}.
+ *
+ * @param scale {@link ANALOG_INPUT_SCALE_t} The scale value to retrieve the string for.
+ * @retval const char* Human readable C-String.
+ */
+const char* Tekdaqc_AnalogInputScaleToString(ANALOG_INPUT_SCALE_t scale) {
+	const char* str = NULL;
+	switch (scale) {
+		case ANALOG_SCALE_5V:
+			str = strings[0];
+			break;
+		case ANALOG_SCALE_400V:
+			str = strings[1];
+			break;
+		default:
+			str = strings[2];
+			break;
+	}
+	return str;
 }
 
 /**

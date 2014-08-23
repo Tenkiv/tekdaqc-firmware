@@ -42,10 +42,30 @@ extern "C" {
 /* PUBLIC METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * @brief Initializes the Tekdaqc's calibration table for read access.
  */
 bool Tekdaqc_CalibrationInit(void);
+
+/**
+ * @brief Sets the current operating scale of the analog inputs.
+ */
+void Tekdaqc_SetAnalogInputScale(ANALOG_INPUT_SCALE_t scale);
+
+/**
+ * @brief Retrieves the current operating scale of the analog inputs.
+ */
+ANALOG_INPUT_SCALE_t Tekdaqc_GetAnalogInputScale(void);
+
+/**
+ * @brief Converts a human readable string into its corresponding analog input scale.
+ */
+ANALOG_INPUT_SCALE_t Tekdaqc_StringToAnalogInputScale(char* str);
+
+/**
+ * @brief Retrieves the human readable string for the specified analog input scale.
+ */
+const char* Tekdaqc_AnalogInputScaleToString(ANALOG_INPUT_SCALE_t scale);
 
 /**
  * @brief Retrieves a gain calibration value for the specified parameters.

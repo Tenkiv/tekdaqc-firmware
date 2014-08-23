@@ -146,6 +146,13 @@ extern "C" {
 #define CALIBRATION_VALID_MAX_TEMP	(50.0f)
 #define CALIBRATION_VALID_MIN_TEMP  (0.0f)
 
+#define ANALOG_SCALE_5V_STRING		"ANALOG_SCALE_5V"
+#define ANALOG_SCALE_400V_STRING	"ANAlOG_SCALE_400V"
+
+typedef enum {
+	ANALOG_SCALE_5V, ANALOG_SCALE_400V, INVALID_SCALE
+} ANALOG_INPUT_SCALE_t;
+
 /**
  * @def NULL_CHANNEL
  * @brief Value to represent that an channel is not being used.
@@ -609,7 +616,7 @@ typedef enum {
 #define MAC_ADDR0   0U
 #define MAC_ADDR1   25U
 #define MAC_ADDR2   13U
-#define MAC_ADDR3   0U
+#define MAC_ADDR3   8U
 #define MAC_ADDR4   0U
 #define MAC_ADDR5   0U
 
