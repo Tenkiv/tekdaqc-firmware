@@ -37,6 +37,7 @@
 #include "lwip/debug.h"
 #include "lwip/stats.h"
 #include "lwip/tcp.h"
+#include "netconf.h"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -587,6 +588,8 @@ void TelnetWrite(const char character) {
 #ifdef TELNET_DEBUG
 		printf("[Telnet Server] Telnet buffer is full!\n\r");
 #endif
+		/* Handle periodic timers for LwIP */
+		LwIP_Periodic_Handle(GetLocalTime());
 	}
 
 	/* Write this character into the output buffer. */
