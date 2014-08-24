@@ -102,8 +102,8 @@ static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor);
 /**
  * @brief Computes the indecies for the RAM gain and offset lookup tables based on the sampling parameters.
  */
-static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t* buffer_index, ADS1256_SPS_t rate, ADS1256_PGA_t gain,
-		ADS1256_BUFFER_t buffer);
+static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t* buffer_index, ADS1256_SPS_t rate,
+		ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer);
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE METHODS */
@@ -122,18 +122,34 @@ static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t
 static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature) {
 	uint32_t offset = 0;
 	switch (buffer) {
-	case ADS1256_BUFFER_ENABLED:
-		offset += CALIBRATION_BUFFER_OFFSET;
-		break;
-	case ADS1256_BUFFER_DISABLED:
-		/* No offset, do nothing */
-		break;
-	default:
-		snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
-				"Error computing lookup offset in calibration table for rate: %s, gain: %s, buffer: %s and temperature: %f Deg C.",
-				ADS1256_StringFromSPS(rate), ADS1256_StringFromPGA(gain), ADS1256_StringFromBuffer(buffer), temperature);
-		TelnetWriteErrorMessage(TOSTRING_BUFFER);
-		break;
+		case ADS1256_BUFFER_ENABLED:
+			offset += CALIBRATION_BUFFER_OFFSET;
+			break;
+		case ADS1256_BUFFER_DISABLED:
+			/* No offset, do nothing */
+			break;
+		default:
+			snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
+					"Error computing lookup offset in calibration table for rate: %s, gain: %s, buffer: %s and temperature: %f Deg C.",
+					ADS1256_StringFromSPS(rate), ADS1256_StringFromPGA(gain), ADS1256_StringFromBuffer(buffer),
+					temperature);
+			TelnetWriteErrorMessage(TOSTRING_BUFFER);
+			break;
+	}
+	switch (CURRENT_ANALOG_SCALE) {
+		case ANALOG_SCALE_5V:
+			offset += CALIBRATION_INPUT_RANGE_OFFSET;
+			break;
+		case ANALOG_SCALE_400V:
+			/* No offset, do nothing */
+			break;
+		default:
+			snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
+					"Error computing lookup offset in calibration table for rate: %s, gain: %s, buffer: %s and temperature: %f Deg C.",
+					ADS1256_StringFromSPS(rate), ADS1256_StringFromPGA(gain), ADS1256_StringFromBuffer(buffer),
+					temperature);
+			TelnetWriteErrorMessage(TOSTRING_BUFFER);
+			break;
 	}
 	return offset;
 }
@@ -152,8 +168,8 @@ static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor) {
 	return value;
 }
 
-static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_t* buffer_index, ADS1256_SPS_t rate, ADS1256_PGA_t gain,
-		ADS1256_BUFFER_t buffer) {
+static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_t* buffer_index, ADS1256_SPS_t rate,
+		ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer) {
 	if (buffer == ADS1256_BUFFER_ENABLED) {
 		*buffer_index = 0U;
 	} else {
@@ -161,90 +177,90 @@ static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_
 	}
 
 	switch (gain) {
-	case ADS1256_PGAx1:
-		*gain_index = 0U;
-		break;
-	case ADS1256_PGAx2:
-		*gain_index = 1U;
-		break;
-	case ADS1256_PGAx4:
-		*gain_index = 2U;
-		break;
-	case ADS1256_PGAx8:
-		*gain_index = 3U;
-		break;
-	case ADS1256_PGAx16:
-		*gain_index = 4U;
-		break;
-	case ADS1256_PGAx32:
-		*gain_index = 5U;
-		break;
-	case ADS1256_PGAx64:
-		*gain_index = 6U;
-		break;
-	default:
-		*gain_index = 0U;
+		case ADS1256_PGAx1:
+			*gain_index = 0U;
+			break;
+		case ADS1256_PGAx2:
+			*gain_index = 1U;
+			break;
+		case ADS1256_PGAx4:
+			*gain_index = 2U;
+			break;
+		case ADS1256_PGAx8:
+			*gain_index = 3U;
+			break;
+		case ADS1256_PGAx16:
+			*gain_index = 4U;
+			break;
+		case ADS1256_PGAx32:
+			*gain_index = 5U;
+			break;
+		case ADS1256_PGAx64:
+			*gain_index = 6U;
+			break;
+		default:
+			*gain_index = 0U;
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] The requested gain was out of range, defaulting to x1.\n\r");
+			printf("[Calibration Table] The requested gain was out of range, defaulting to x1.\n\r");
 #endif
-		break;
+			break;
 	}
 
 	switch (rate) {
-	case ADS1256_SPS_30000:
-		*rate_index = 0U;
-		break;
-	case ADS1256_SPS_15000:
-		*rate_index = 1U;
-		break;
-	case ADS1256_SPS_7500:
-		*rate_index = 2U;
-		break;
-	case ADS1256_SPS_3750:
-		*rate_index = 3U;
-		break;
-	case ADS1256_SPS_2000:
-		*rate_index = 4U;
-		break;
-	case ADS1256_SPS_1000:
-		*rate_index = 5U;
-		break;
-	case ADS1256_SPS_500:
-		*rate_index = 6U;
-		break;
-	case ADS1256_SPS_100:
-		*rate_index = 7U;
-		break;
-	case ADS1256_SPS_60:
-		*rate_index = 8U;
-		break;
-	case ADS1256_SPS_50:
-		*rate_index = 9U;
-		break;
-	case ADS1256_SPS_30:
-		*rate_index = 10U;
-		break;
-	case ADS1256_SPS_25:
-		*rate_index = 11U;
-		break;
-	case ADS1256_SPS_15:
-		*rate_index = 12U;
-		break;
-	case ADS1256_SPS_10:
-		*rate_index = 13U;
-		break;
-	case ADS1256_SPS_5:
-		*rate_index = 14U;
-		break;
-	case ADS1256_SPS_2_5:
-		*rate_index = 15U;
-		break;
-	default:
-		rate_index = 0U;
+		case ADS1256_SPS_30000:
+			*rate_index = 0U;
+			break;
+		case ADS1256_SPS_15000:
+			*rate_index = 1U;
+			break;
+		case ADS1256_SPS_7500:
+			*rate_index = 2U;
+			break;
+		case ADS1256_SPS_3750:
+			*rate_index = 3U;
+			break;
+		case ADS1256_SPS_2000:
+			*rate_index = 4U;
+			break;
+		case ADS1256_SPS_1000:
+			*rate_index = 5U;
+			break;
+		case ADS1256_SPS_500:
+			*rate_index = 6U;
+			break;
+		case ADS1256_SPS_100:
+			*rate_index = 7U;
+			break;
+		case ADS1256_SPS_60:
+			*rate_index = 8U;
+			break;
+		case ADS1256_SPS_50:
+			*rate_index = 9U;
+			break;
+		case ADS1256_SPS_30:
+			*rate_index = 10U;
+			break;
+		case ADS1256_SPS_25:
+			*rate_index = 11U;
+			break;
+		case ADS1256_SPS_15:
+			*rate_index = 12U;
+			break;
+		case ADS1256_SPS_10:
+			*rate_index = 13U;
+			break;
+		case ADS1256_SPS_5:
+			*rate_index = 14U;
+			break;
+		case ADS1256_SPS_2_5:
+			*rate_index = 15U;
+			break;
+		default:
+			rate_index = 0U;
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] The requested rate was out of range, defaulting to 30000.\n\r");
+			printf("[Calibration Table] The requested rate was out of range, defaulting to 30000.\n\r");
 #endif
-		break;
+			break;
 	}
 }
 
@@ -348,15 +364,18 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 
 	if (CALIBRATION_VALID != TRUE) {
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] The calibration table is not valid, returning ADC calibration only (0x%" PRIX32 ").\n\r", baseGain);
+		printf(
+				"[Calibration Table] The calibration table is not valid, returning ADC calibration only (0x%" PRIX32 ").\n\r",
+				baseGain);
 #endif
 		return baseGain;
 	}
 	if (temperature < CAL_TEMP_LOW || temperature > CAL_TEMP_HIGH) {
 		/* The temperature is out of range, we will return the closest */
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] The requested temperature %f was out of range. Minimum is %f and maximum is %f.\n\r", temperature,
-				CAL_TEMP_LOW, CAL_TEMP_HIGH);
+		printf(
+				"[Calibration Table] The requested temperature %f was out of range. Minimum is %f and maximum is %f.\n\r",
+				temperature, CAL_TEMP_LOW, CAL_TEMP_HIGH);
 #endif
 		snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
 				"Error fetching the gain calibration value for temperature: %f Deg C. Temperature out of range. Allowable range is %f to %f Deg C",
@@ -374,13 +393,13 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 	float high_temp = CAL_TEMP_HIGH * num_temp_steps;
 	float factor = (temperature - CAL_TEMP_LOW) / CAL_TEMP_STEP;
 
-	uint32_t offset = ComputeOffset(rate, gain, buffer, low_temp);                                                                                                                                            //Add one for the move to gain
-	uint32_t Address = CAL_DATA_START_ADDR + 4 * offset;                                                                                                                                            //Multiply offset by 4 because entries are 4bytes long
+	uint32_t offset = ComputeOffset(rate, gain, buffer, low_temp);                        //Add one for the move to gain
+	uint32_t Address = CAL_DATA_START_ADDR + 4 * offset;          //Multiply offset by 4 because entries are 4bytes long
 
 	uint32_t data_low = (*(__IO uint32_t*) Address);
 
-	offset = ComputeOffset(rate, gain, buffer, high_temp);                                                                                                                                            //Add one for the move to gain
-	Address = CAL_DATA_START_ADDR + 4 * offset;                                                                                                                                            //Multiply offset by 4 because entries are 4bytes long
+	offset = ComputeOffset(rate, gain, buffer, high_temp);                                //Add one for the move to gain
+	Address = CAL_DATA_START_ADDR + 4 * offset;                   //Multiply offset by 4 because entries are 4bytes long
 
 	uint32_t data_high = (*(__IO uint32_t*) Address);
 	return (baseGain + InterpolateValue(data_low, data_high, factor));
@@ -448,7 +467,9 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 	FLASH_Unlock();
 
 	/* Clear pending flags (if any) */
-	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
+	FLASH_ClearFlag(
+			FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR
+					| FLASH_FLAG_PGSERR);
 
 	FLASH_Status status = FLASH_COMPLETE;
 
@@ -596,7 +617,8 @@ FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp) {
  * @param temperature float The temperature value to write for.
  * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
  */
-FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature) {
+FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
+		float temperature) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
