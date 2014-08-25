@@ -93,7 +93,8 @@ typedef enum {
 	ERR_DOUT_OUTPUT_UNSPECIFIED	=	19U, /**< The function failed due to an unspecified digital output. */
 	ERR_DOUT_OUTPUT_EXISTS		=	20U, /**< The function failed because the specified digital output already exists. */
 	ERR_DOUT_DOES_NOT_EXIST		= 	21U, /**< The function failed because the specified digital output does not exist. */
-	ERR_DOUT_FAILED_WRITE		=	22U /**< The function failed due to a failure to write digital output data to a string buffer. */
+	ERR_DOUT_FAILED_WRITE		=	22U, /**< The function failed due to a failure to write digital output data to a string buffer. */
+	ERR_CALIBRATION_MODE_FAILED	=	23U /**< The function failed due to a failure to initiate the calibration mode in flash. */
 } Tekdaqc_Function_Error_t;
 
 /*--------------------------------------------------------------------------------------------------------*/

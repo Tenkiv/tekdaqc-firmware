@@ -110,7 +110,7 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT", "LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT",
 		"READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT", "REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT",
 		"UPGRADE", "IDENTIFY", "SAMPLE", "HALT", "SET_RTC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
-		"NONE"};
+		"ENTER_CALIBRATION_MODE", "NONE"};
 
 /**
  * List of all parameters for the LIST_ANALOG_INPUTS command.
@@ -150,7 +150,7 @@ PARAMETER_INPUT};
 /**
  * List of all parameters for the SET_ANALOG_INPUT_SCALE command.
  */
-const char* SET_ANALOG_INPUT_SCALE_PARAMS[NUM_SET_ANALOG_INPUT_SCALE_PARAMS] = {PARAMETER_STATE};
+const char* SET_ANALOG_INPUT_SCALE_PARAMS[NUM_SET_ANALOG_INPUT_SCALE_PARAMS] = {PARAMETER_SCALE};
 
 /**
  * List of all parameters for the GET_ANALOG_INPUT_SCALE command.
@@ -275,6 +275,11 @@ const char* SET_STATIC_IP_PARAMS[NUM_SET_STATIC_IP_PARAMS] = {PARAMETER_VALUE};
  * List of all parameters for the GET_CALIBRATION_STATUS command.
  */
 const char* GET_CALIBRATION_STATUS_PARAMS[NUM_GET_CALIBRATION_STATUS_PARAMS] = {};
+
+/**
+ * List of all parameters for the ENTER_CALIBRATION_MODE command.
+ */
+const char* ENTER_CALIBRATION_MODE_PARAMS[NUM_ENTER_CALIBRATION_MODE_PARAMS] = {};
 
 /**
  * List of all parameters for the NONE command.
@@ -610,6 +615,13 @@ static Tekdaqc_Command_Error_t Ex_SetStaticIP(char keys[][MAX_COMMANDPART_LENGTH
  * @brief Execute the GET_CALIBRATION_STATUS command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_GetCalibrationStatus(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the ENTER_CALIBRATION_MODE command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_EnterCalibrationMode(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -1298,6 +1310,8 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 		case COMMAND_GET_CALIBRATION_STATUS:
 			retval = Ex_GetCalibrationStatus(keys, values, count);
 			break;
+		case COMMAND_ENTER_CALIBRATION_MODE:
+			retval = Ex_EnterCalibrationMode(keys, values, count);
 		case COMMAND_NONE:
 			/* Do nothing */
 			break;
@@ -1568,7 +1582,7 @@ static Tekdaqc_Command_Error_t Ex_SetAnalogInputScale(char keys[][MAX_COMMANDPAR
 				switch (i) { /* Switch on the key not position in arguments list */
 					case 0: /* STATE key */
 #ifdef COMMAND_DEBUG
-						printf("Processing STATE key\n\r");
+						printf("Processing SCALE key\n\r");
 #endif
 						ANALOG_INPUT_SCALE_t scale = Tekdaqc_StringToAnalogInputScale(values[index]);
 						Tekdaqc_SetAnalogInputScale(scale);
@@ -2224,6 +2238,25 @@ static Tekdaqc_Command_Error_t Ex_GetCalibrationStatus(char keys[][MAX_COMMANDPA
 	count = snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "Calibration Status: %s",
 			(valid == true) ? "VALID" : "INVALID");
 	TelnetWriteStatusMessage(TOSTRING_BUFFER);
+	return retval;
+}
+
+/**
+ * Execute the ENTER_CALIBRATION_MODE command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_EnterCalibrationMode(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	bool valid = (Tekdaqc_SetCalibrationMode() == FLASH_COMPLETE);
+	if (valid != true) {
+		retval = ERR_COMMAND_FUNCTION_ERROR;
+		lastFunctionError = ERR_CALIBRATION_MODE_FAILED;
+	}
 	return retval;
 }
 

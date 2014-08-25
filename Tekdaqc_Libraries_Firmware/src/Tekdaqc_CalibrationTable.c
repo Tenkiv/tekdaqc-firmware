@@ -486,18 +486,6 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 		return status;
 	}
 
-	/* Program the user Flash area word by word area defined by FLASH_USER_START_ADDR and FLASH_USER_END_ADDR */
-	uint32_t Address = ADDR_CALIBRATION_BASE;
-
-	while (Address < ADDR_CALIBRATION_END) {
-		status = FLASH_ProgramWord(Address, CALIBRATION_ERASE_DATA);
-		if (status == FLASH_COMPLETE) {
-			Address = Address + 4;
-		} else {
-			return status;
-		}
-	}
-
 	/* Enable write protection for this sector */
 	/*FLASH_OB_WRPConfig(CALIBRATION_WPSECTOR, ENABLE);
 

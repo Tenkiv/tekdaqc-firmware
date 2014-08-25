@@ -113,10 +113,16 @@ extern "C" {
 #define PARAMETER_VALUE			"VALUE"
 
 /**
+ * @def PARAMETER_SCALE
+ * @brief String constant definition for the SCALE parameter.
+ */
+#define PARAMETER_SCALE			"SCALE"
+
+/**
  * @def NUM_COMMANDS
  * @brief The total number of commands known by this board.
  */
-#define NUM_COMMANDS 31
+#define NUM_COMMANDS 32
 
 /**
  * @def TELNET_EOF
@@ -163,7 +169,8 @@ typedef enum {
 	COMMAND_SET_USER_MAC = 27,
 	COMMAND_SET_STATIC_IP = 28,
 	COMMAND_GET_CALIBRATION_STATUS = 29,
-	COMMAND_NONE = 30
+	COMMAND_ENTER_CALIBRATION_MODE = 30,
+	COMMAND_NONE = 31
 } Command_t;
 
 /**
@@ -417,6 +424,14 @@ extern const char* SET_STATIC_IP_PARAMS[NUM_SET_STATIC_IP_PARAMS];
 #define NUM_GET_CALIBRATION_STATUS_PARAMS 0
 /* Prototype the GET_CALIBRATION_STATUS command params array */
 extern const char* GET_CALIBRATION_STATUS_PARAMS[NUM_GET_CALIBRATION_STATUS_PARAMS];
+
+/**
+ * @def NUM_ENTER_CALIBRATION_MODE_PARAMS
+ * @brief The number of parameters for the ENTER_CALIBRATION_MODE command.
+ */
+#define NUM_ENTER_CALIBRATION_MODE_PARAMS 0
+/* Prototype the NONE command params array */
+extern const char* ENTER_CALIBRATION_MODE_PARAMS[NUM_ENTER_CALIBRATION_MODE_PARAMS];
 
 /**
  * @def NUM_NONE_PARAMS
