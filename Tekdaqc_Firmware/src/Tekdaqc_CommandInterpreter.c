@@ -47,6 +47,8 @@
 #include "boolean.h"
 #include "Tekdaqc_Locator.h"
 #include <stdlib.h>
+#include <errno.h>
+#include <stdio.h>
 #include <inttypes.h>
 
 #ifdef PRINTF_OUTPUT
@@ -110,7 +112,8 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT", "LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT",
 		"READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT", "REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT",
 		"UPGRADE", "IDENTIFY", "SAMPLE", "HALT", "SET_RTC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
-		"ENTER_CALIBRATION_MODE", "NONE"};
+		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP",
+		"WRITE_CALIBRATION_MAX_TEMP", "WRITE_CALIBRATION_DELTA_TEMP", "NONE"};
 
 /**
  * List of all parameters for the LIST_ANALOG_INPUTS command.
@@ -280,6 +283,27 @@ const char* GET_CALIBRATION_STATUS_PARAMS[NUM_GET_CALIBRATION_STATUS_PARAMS] = {
  * List of all parameters for the ENTER_CALIBRATION_MODE command.
  */
 const char* ENTER_CALIBRATION_MODE_PARAMS[NUM_ENTER_CALIBRATION_MODE_PARAMS] = {};
+
+/**
+ * List of all parameters for the WRITE_GAIN_CALIBRATION_VALUE command.
+ */
+const char* WRITE_GAIN_CALIBRATION_VALUE_PARAMS[NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS] = {PARAMETER_VALUE,
+PARAMETER_GAIN, PARAMETER_RATE, PARAMETER_BUFFER, PARAMETER_SCALE, PARAMETER_TEMPERATURE};
+
+/**
+ * List of all parameters for the WRITE_CALIBRATION_MIN_TEMP command.
+ */
+const char* WRITE_CALIBRATION_MIN_TEMP_PARAMS[NUM_WRITE_CALIBRATION_MIN_TEMP_PARAMS] = {PARAMETER_TEMPERATURE};
+
+/**
+ * List of all parameters for the WRITE_CALIBRATION_MAX_TEMP command.
+ */
+const char* WRITE_CALIBRATION_MAX_TEMP_PARAMS[NUM_WRITE_CALIBRATION_MAX_TEMP_PARAMS] = {PARAMETER_TEMPERATURE};
+
+/**
+ * List of all parameters for the WRITE_CALIBRATION_DELTA_TEMP command.
+ */
+const char* WRITE_CALIBRATION_DELTA_TEMP_PARAMS[NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS] = {PARAMETER_TEMPERATURE};
 
 /**
  * List of all parameters for the NONE command.
@@ -622,6 +646,34 @@ static Tekdaqc_Command_Error_t Ex_GetCalibrationStatus(char keys[][MAX_COMMANDPA
  * @brief Execute the ENTER_CALIBRATION_MODE command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_EnterCalibrationMode(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the WRITE_GAIN_CALIBRATION_VALUE command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteGainCalibrationValue(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the WRITE_CALIBRATION_MIN_TEMP command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteCalibrationMinTemp(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the WRITE_CALIBRATION_MAX_TEMP command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteCalibrationMaxTemp(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the WRITE_CALIBRATION_DELTA_TEMP command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteCalibrationDeltaTemp(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -1312,6 +1364,19 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 			break;
 		case COMMAND_ENTER_CALIBRATION_MODE:
 			retval = Ex_EnterCalibrationMode(keys, values, count);
+			break;
+		case COMMAND_WRITE_GAIN_CAL_VALUE:
+			retval = Ex_WriteGainCalibrationValue(keys, values, count);
+			break;
+		case COMMAND_WRITE_CAL_MIN_TEMP:
+			retval = Ex_WriteCalibrationMinTemp(keys, values, count);
+			break;
+		case COMMAND_WRITE_CAL_MAX_TEMP:
+			retval = Ex_WriteCalibrationMaxTemp(keys, values, count);
+			break;
+		case COMMAND_WRITE_CAL_DELTA_TEMP:
+			retval = Ex_WriteCalibrationDeltaTemp(keys, values, count);
+			break;
 		case COMMAND_NONE:
 			/* Do nothing */
 			break;
@@ -1580,7 +1645,7 @@ static Tekdaqc_Command_Error_t Ex_SetAnalogInputScale(char keys[][MAX_COMMANDPAR
 			index = GetIndexOfArgument(keys, SET_ANALOG_INPUT_SCALE_PARAMS[i], count);
 			if (index >= 0) { /* We found the key in the list */
 				switch (i) { /* Switch on the key not position in arguments list */
-					case 0: /* STATE key */
+					case 0: /* SCALE key */
 #ifdef COMMAND_DEBUG
 						printf("Processing SCALE key\n\r");
 #endif
@@ -2256,6 +2321,157 @@ static Tekdaqc_Command_Error_t Ex_EnterCalibrationMode(char keys[][MAX_COMMANDPA
 	if (valid != true) {
 		retval = ERR_COMMAND_FUNCTION_ERROR;
 		lastFunctionError = ERR_CALIBRATION_MODE_FAILED;
+	}
+	return retval;
+}
+
+/**
+ * Execute the WRITE_GAIN_CALIBRATION_VALUE command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteGainCalibrationValue(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+
+}
+
+/**
+ * Execute the WRITE_CALIBRATION_MIN_TEMP command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteCalibrationMinTemp(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_WRITE_CALIBRATION_MIN_TEMP_PARAMS, WRITE_CALIBRATION_MIN_TEMP_PARAMS)) {
+		int8_t index = -1;
+		for (int i = 0; i < NUM_WRITE_CALIBRATION_MIN_TEMP_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, WRITE_CALIBRATION_MIN_TEMP_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (i) { /* Switch on the key not position in arguments list */
+					case 0: /* TEMPERATURE key */
+#ifdef COMMAND_DEBUG
+						printf("Processing TEMPERATURE key\n\r");
+#endif
+						errno = 0;
+						const float temp = strtof(values[index], NULL);
+						if (errno != 0) {
+							retval = ERR_COMMAND_PARSE_ERROR;
+							break;
+						}
+						bool valid = (Tekdaqc_SetCalibrationLowTemperature(temp) == FLASH_COMPLETE);
+						if (valid != true) {
+							retval = ERR_COMMAND_FUNCTION_ERROR;
+							lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
+						}
+						break;
+					default:
+						/* Return an error */
+						retval = ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+			if (retval != ERR_COMMAND_OK) {
+				break; /* If an error occurred, don't bother continuing */
+			}
+		}
+	}
+	return retval;
+}
+
+/**
+ * Execute the WRITE_CALIBRATION_MAX_TEMP command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteCalibrationMaxTemp(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_WRITE_CALIBRATION_MAX_TEMP_PARAMS, WRITE_CALIBRATION_MAX_TEMP_PARAMS)) {
+		int8_t index = -1;
+		for (int i = 0; i < NUM_WRITE_CALIBRATION_MAX_TEMP_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, WRITE_CALIBRATION_MAX_TEMP_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (i) { /* Switch on the key not position in arguments list */
+					case 0: /* TEMPERATURE key */
+#ifdef COMMAND_DEBUG
+						printf("Processing TEMPERATURE key\n\r");
+#endif
+						errno = 0;
+						const float temp = strtof(values[index], NULL);
+						if (errno != 0) {
+							retval = ERR_COMMAND_PARSE_ERROR;
+							break;
+						}
+						bool valid = (Tekdaqc_SetCalibrationHighTemperature(temp) == FLASH_COMPLETE);
+						if (valid != true) {
+							retval = ERR_COMMAND_FUNCTION_ERROR;
+							lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
+						}
+						break;
+					default:
+						/* Return an error */
+						retval = ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+			if (retval != ERR_COMMAND_OK) {
+				break; /* If an error occurred, don't bother continuing */
+			}
+		}
+	}
+	return retval;
+}
+
+/**
+ * Execute the WRITE_CALIBRATION_DELTA_TEMP command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteCalibrationDeltaTemp(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS, WRITE_CALIBRATION_DELTA_TEMP_PARAMS)) {
+		int8_t index = -1;
+		for (int i = 0; i < NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, WRITE_CALIBRATION_DELTA_TEMP_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (i) { /* Switch on the key not position in arguments list */
+					case 0: /* TEMPERATURE key */
+#ifdef COMMAND_DEBUG
+						printf("Processing TEMPERATURE key\n\r");
+#endif
+						errno = 0;
+						const float temp = strtof(values[index], NULL);
+						if (errno != 0) {
+							retval = ERR_COMMAND_PARSE_ERROR;
+							break;
+						}
+						bool valid = (Tekdaqc_SetCalibrationStepTemperature(temp) == FLASH_COMPLETE);
+						if (valid != true) {
+							retval = ERR_COMMAND_FUNCTION_ERROR;
+							lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
+						}
+						break;
+					default:
+						/* Return an error */
+						retval = ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+			if (retval != ERR_COMMAND_OK) {
+				break; /* If an error occurred, don't bother continuing */
+			}
+		}
 	}
 	return retval;
 }

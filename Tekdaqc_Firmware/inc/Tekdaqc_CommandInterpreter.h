@@ -119,10 +119,16 @@ extern "C" {
 #define PARAMETER_SCALE			"SCALE"
 
 /**
+ * @def PARAMETER_TEMPERATURE
+ * @brief String constant definition for the TEMPERATURE parameter.
+ */
+#define PARAMETER_TEMPERATURE	"TEMPERATURE"
+
+/**
  * @def NUM_COMMANDS
  * @brief The total number of commands known by this board.
  */
-#define NUM_COMMANDS 32
+#define NUM_COMMANDS 36
 
 /**
  * @def TELNET_EOF
@@ -170,7 +176,11 @@ typedef enum {
 	COMMAND_SET_STATIC_IP = 28,
 	COMMAND_GET_CALIBRATION_STATUS = 29,
 	COMMAND_ENTER_CALIBRATION_MODE = 30,
-	COMMAND_NONE = 31
+	COMMAND_WRITE_GAIN_CAL_VALUE = 31,
+	COMMAND_WRITE_CAL_MIN_TEMP = 32,
+	COMMAND_WRITE_CAL_MAX_TEMP = 33,
+	COMMAND_WRITE_CAL_DELTA_TEMP = 34,
+	COMMAND_NONE = 35
 } Command_t;
 
 /**
@@ -430,8 +440,40 @@ extern const char* GET_CALIBRATION_STATUS_PARAMS[NUM_GET_CALIBRATION_STATUS_PARA
  * @brief The number of parameters for the ENTER_CALIBRATION_MODE command.
  */
 #define NUM_ENTER_CALIBRATION_MODE_PARAMS 0
-/* Prototype the NONE command params array */
+/* Prototype the ENTER_CALIBRATION_MODE command params array */
 extern const char* ENTER_CALIBRATION_MODE_PARAMS[NUM_ENTER_CALIBRATION_MODE_PARAMS];
+
+/**
+ * @def NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS
+ * @brief The number of parameters for the WRITE_GAIN_CALIBRATION_VALUE command.
+ */
+#define NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS 6
+/* Prototype the WRITE_GAIN_CALIBRATION_VALUE command params array */
+extern const char* WRITE_GAIN_CALIBRATION_VALUE_PARAMS[NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS];
+
+/**
+ * @def NUM_WRITE_CALIBRATION_MIN_TEMP_PARAMS
+ * @brief The number of parameters for the WRITE_CALIBRATION_MIN_TEMP command.
+ */
+#define NUM_WRITE_CALIBRATION_MIN_TEMP_PARAMS 1
+/* Prototype the WRITE_CALIBRATION_MIN_TEMP command params array */
+extern const char* WRITE_CALIBRATION_MIN_TEMP_PARAMS[NUM_WRITE_CALIBRATION_MIN_TEMP_PARAMS];
+
+/**
+ * @def NUM_WRITE_CALIBRATION_MAX_TEMP_PARAMS
+ * @brief The number of parameters for the WRITE_CALIBRATION_MAX_TEMP command.
+ */
+#define NUM_WRITE_CALIBRATION_MAX_TEMP_PARAMS 1
+/* Prototype the WRITE_CALIBRATION_MAX_TEMP command params array */
+extern const char* WRITE_CALIBRATION_MAX_TEMP_PARAMS[NUM_WRITE_CALIBRATION_MAX_TEMP_PARAMS];
+
+/**
+ * @def NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS
+ * @brief The number of parameters for the WRITE_CALIBRATION_DELTA_TEMP command.
+ */
+#define NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS 1
+/* Prototype the NONE command params array */
+extern const char* WRITE_CALIBRATION_DELTA_TEMP_PARAMS[NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS];
 
 /**
  * @def NUM_NONE_PARAMS

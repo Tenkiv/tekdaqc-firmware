@@ -71,30 +71,31 @@ typedef enum {
  * Defines the possible error codes returned by sub-functions of a Tekdaqc command handler.
  */
 typedef enum {
-	ERR_FUNCTION_OK				=	0U, /**< The function completed normally. No error present. */
-	ERR_AIN_INPUT_OUTOFRANGE	=	1U, /**< The function failed due to an analog input specified out of range. */
-	ERR_AIN_PARSE_MISSING_KEY	=	2U, /**< The function failed due to a missing required key in the analog input command. */
-	ERR_AIN_INPUT_NOT_FOUND		=	3U, /**< The function failed due to the specified analog input not being found. */
-	ERR_AIN_PARSE_ERROR			=	4U, /**< The function failed due to an analog input parsing error. */
-	ERR_AIN_INPUT_UNSPECIFIED	=	5U, /**< The function failed due to an unspecified analog input. */
-	ERR_AIN_INPUT_EXISTS		=	6U, /**< The function failed because the specified analog input already exists. */
-	ERR_AIN_FAILED_WRITE		=	7U, /**< The function failed due to a failure to write analog input data to a string buffer. */
-	ERR_DIN_INPUT_OUTOFRANGE	=	8U, /**< The function failed due to a digital input specified out of range. */
-	ERR_DIN_PARSE_MISSING_KEY	=	9U, /**< The function failed due to a missing required key in the digital input command. */
-	ERR_DIN_INPUT_NOT_FOUND		=	10U, /**< The function failed due to the specified digital input not being found. */
-	ERR_DIN_PARSE_ERROR			=	11U, /**< The function failed due to a digital input parsing error. */
-	ERR_DIN_INPUT_UNSPECIFIED	=	12U, /**< The function failed due to an unspecified digital input. */
-	ERR_DIN_INPUT_EXISTS		=	13U, /**< The function failed because the specified analog input already exists. */
-	ERR_DIN_FAILED_WRITE		=	14U, /**< The function failed due to a failure to write digital input data to a string buffer. */
-	ERR_DOUT_OUTPUT_OUTOFRANGE	=	15U, /**< The function failed due to a digital output specified out of range. */
-	ERR_DOUT_PARSE_MISSING_KEY	=	16U, /**< The function failed due to a missing required key in the digital output command. */
-	ERR_DOUT_OUTPUT_NOT_FOUND	=	17U, /**< The function failed due to the specified digital output not being found. */
-	ERR_DOUT_PARSE_ERROR		=	18U, /**< The function failed due to a digital output parsing error. */
-	ERR_DOUT_OUTPUT_UNSPECIFIED	=	19U, /**< The function failed due to an unspecified digital output. */
-	ERR_DOUT_OUTPUT_EXISTS		=	20U, /**< The function failed because the specified digital output already exists. */
-	ERR_DOUT_DOES_NOT_EXIST		= 	21U, /**< The function failed because the specified digital output does not exist. */
-	ERR_DOUT_FAILED_WRITE		=	22U, /**< The function failed due to a failure to write digital output data to a string buffer. */
-	ERR_CALIBRATION_MODE_FAILED	=	23U /**< The function failed due to a failure to initiate the calibration mode in flash. */
+	ERR_FUNCTION_OK					=	0U, /**< The function completed normally. No error present. */
+	ERR_AIN_INPUT_OUTOFRANGE		=	1U, /**< The function failed due to an analog input specified out of range. */
+	ERR_AIN_PARSE_MISSING_KEY		=	2U, /**< The function failed due to a missing required key in the analog input command. */
+	ERR_AIN_INPUT_NOT_FOUND			=	3U, /**< The function failed due to the specified analog input not being found. */
+	ERR_AIN_PARSE_ERROR				=	4U, /**< The function failed due to an analog input parsing error. */
+	ERR_AIN_INPUT_UNSPECIFIED		=	5U, /**< The function failed due to an unspecified analog input. */
+	ERR_AIN_INPUT_EXISTS			=	6U, /**< The function failed because the specified analog input already exists. */
+	ERR_AIN_FAILED_WRITE			=	7U, /**< The function failed due to a failure to write analog input data to a string buffer. */
+	ERR_DIN_INPUT_OUTOFRANGE		=	8U, /**< The function failed due to a digital input specified out of range. */
+	ERR_DIN_PARSE_MISSING_KEY		=	9U, /**< The function failed due to a missing required key in the digital input command. */
+	ERR_DIN_INPUT_NOT_FOUND			=	10U, /**< The function failed due to the specified digital input not being found. */
+	ERR_DIN_PARSE_ERROR				=	11U, /**< The function failed due to a digital input parsing error. */
+	ERR_DIN_INPUT_UNSPECIFIED		=	12U, /**< The function failed due to an unspecified digital input. */
+	ERR_DIN_INPUT_EXISTS			=	13U, /**< The function failed because the specified analog input already exists. */
+	ERR_DIN_FAILED_WRITE			=	14U, /**< The function failed due to a failure to write digital input data to a string buffer. */
+	ERR_DOUT_OUTPUT_OUTOFRANGE		=	15U, /**< The function failed due to a digital output specified out of range. */
+	ERR_DOUT_PARSE_MISSING_KEY		=	16U, /**< The function failed due to a missing required key in the digital output command. */
+	ERR_DOUT_OUTPUT_NOT_FOUND		=	17U, /**< The function failed due to the specified digital output not being found. */
+	ERR_DOUT_PARSE_ERROR			=	18U, /**< The function failed due to a digital output parsing error. */
+	ERR_DOUT_OUTPUT_UNSPECIFIED		=	19U, /**< The function failed due to an unspecified digital output. */
+	ERR_DOUT_OUTPUT_EXISTS			=	20U, /**< The function failed because the specified digital output already exists. */
+	ERR_DOUT_DOES_NOT_EXIST			= 	21U, /**< The function failed because the specified digital output does not exist. */
+	ERR_DOUT_FAILED_WRITE			=	22U, /**< The function failed due to a failure to write digital output data to a string buffer. */
+	ERR_CALIBRATION_MODE_FAILED		=	23U, /**< The function failed due to a failure to initiate the calibration mode in flash. */
+	ERR_CALIBRATION_WRITE_FAILED	=	24U /**< The function failed due to a failure to write the calibration value in flash. */
 } Tekdaqc_Function_Error_t;
 
 /*--------------------------------------------------------------------------------------------------------*/

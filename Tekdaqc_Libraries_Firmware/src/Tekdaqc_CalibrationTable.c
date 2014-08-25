@@ -39,6 +39,7 @@
 #include "Tekdaqc_BSP.h"
 #include "TelnetServer.h"
 #include <string.h>
+#include <stdio.h>
 #include <inttypes.h>
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -556,8 +557,11 @@ FLASH_Status Tekdaqc_SetCalibrationLowTemperature(float temp) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
-
-	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_LOW_ADDR, temp);
+#ifdef CALIBRATION_TABLE_DEBUG
+		printf("[Calibration Table] Programming calibration table low temperature: %f at location 0x%08" PRIX32 ".\n\r", temp, CAL_TEMP_LOW_ADDR);
+#endif
+	uint32_t* value = (uint32_t*) ((void*) &temp);
+	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_LOW_ADDR, *value);
 	return status;
 }
 
@@ -573,8 +577,11 @@ FLASH_Status Tekdaqc_SetCalibrationHighTemperature(float temp) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
-
-	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_HIGH_ADDR, temp);
+#ifdef CALIBRATION_TABLE_DEBUG
+		printf("[Calibration Table] Programming calibration table high temperature: %f at location 0x%08" PRIX32 ".\n\r", temp, CAL_TEMP_HIGH_ADDR);
+#endif
+		uint32_t* value = (uint32_t*) ((void*) &temp);
+	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_HIGH_ADDR, *value);
 	return status;
 }
 
@@ -589,8 +596,11 @@ FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
-
-	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_STEP_ADDR, temp);
+#ifdef CALIBRATION_TABLE_DEBUG
+		printf("[Calibration Table] Programming calibration table temperature step: %f at location 0x%08" PRIX32 ".\n\r", temp, CAL_TEMP_STEP_ADDR);
+#endif
+		uint32_t* value = (uint32_t*) ((void*) &temp);
+	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_STEP_ADDR, *value);
 	return status;
 }
 
