@@ -112,8 +112,8 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT", "LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT",
 		"READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT", "REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT",
 		"UPGRADE", "IDENTIFY", "SAMPLE", "HALT", "SET_RTC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
-		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP",
-		"WRITE_CALIBRATION_MAX_TEMP", "WRITE_CALIBRATION_DELTA_TEMP", "NONE"};
+		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP", "WRITE_CALIBRATION_MAX_TEMP",
+		"WRITE_CALIBRATION_DELTA_TEMP", "WRITE_CALIBRATION_VALID", "EXIT_CALIBRATION_MODE", "NONE"};
 
 /**
  * List of all parameters for the LIST_ANALOG_INPUTS command.
@@ -304,6 +304,16 @@ const char* WRITE_CALIBRATION_MAX_TEMP_PARAMS[NUM_WRITE_CALIBRATION_MAX_TEMP_PAR
  * List of all parameters for the WRITE_CALIBRATION_DELTA_TEMP command.
  */
 const char* WRITE_CALIBRATION_DELTA_TEMP_PARAMS[NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS] = {PARAMETER_TEMPERATURE};
+
+/**
+ * List of all parameters for the WRITE_CAL_VALID command.
+ */
+const char* WRITE_CAL_VALID_PARAMS[NUM_WRITE_CAL_VALID_PARAMS] = {};
+
+/**
+ * List of all parameters for the EXIT_CALIBRATION_MODE command.
+ */
+const char* EXIT_CALIBRATION_MODE_PARAMS[NUM_EXIT_CALIBRATION_MODE_PARAMS] = {};
 
 /**
  * List of all parameters for the NONE command.
@@ -674,6 +684,20 @@ static Tekdaqc_Command_Error_t Ex_WriteCalibrationMaxTemp(char keys[][MAX_COMMAN
  * @brief Execute the WRITE_CALIBRATION_DELTA_TEMP command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_WriteCalibrationDeltaTemp(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the WRITE_CALIBRATION_VALID command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteCalibrationValid(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the EXIT_CALIBRATION_MODE command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_ExitCalibrationMode(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -1376,6 +1400,12 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 			break;
 		case COMMAND_WRITE_CAL_DELTA_TEMP:
 			retval = Ex_WriteCalibrationDeltaTemp(keys, values, count);
+			break;
+		case COMMAND_WRITE_CAL_VALID:
+			retval = Ex_WriteCalibrationValid(keys, values, count);
+			break;
+		case COMMAND_EXIT_CALIBRATION_MODE:
+			retval = Ex_ExitCalibrationMode(keys, values, count);
 			break;
 		case COMMAND_NONE:
 			/* Do nothing */
@@ -2495,6 +2525,40 @@ static Tekdaqc_Command_Error_t Ex_WriteCalibrationDeltaTemp(char keys[][MAX_COMM
 			}
 		}
 	}
+	return retval;
+}
+
+/**
+ * Execute the WRITE_CALIBRATION_VALID command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_WriteCalibrationValid(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	bool valid = (Tekdaqc_SetCalibrationValid() == FLASH_COMPLETE);
+	if (valid != true) {
+		retval = ERR_COMMAND_FUNCTION_ERROR;
+		lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
+	}
+	return retval;
+}
+
+/**
+ * Execute the EXIT_CALIBRATION_MODE command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_ExitCalibrationMode(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	Tekdaqc_EndCalibrationMode();
 	return retval;
 }
 

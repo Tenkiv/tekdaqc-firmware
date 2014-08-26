@@ -128,7 +128,7 @@ extern "C" {
  * @def NUM_COMMANDS
  * @brief The total number of commands known by this board.
  */
-#define NUM_COMMANDS 36
+#define NUM_COMMANDS 38
 
 /**
  * @def TELNET_EOF
@@ -180,7 +180,9 @@ typedef enum {
 	COMMAND_WRITE_CAL_MIN_TEMP = 32,
 	COMMAND_WRITE_CAL_MAX_TEMP = 33,
 	COMMAND_WRITE_CAL_DELTA_TEMP = 34,
-	COMMAND_NONE = 35
+	COMMAND_WRITE_CAL_VALID = 35,
+	COMMAND_EXIT_CALIBRATION_MODE = 36,
+	COMMAND_NONE = 37
 } Command_t;
 
 /**
@@ -472,8 +474,24 @@ extern const char* WRITE_CALIBRATION_MAX_TEMP_PARAMS[NUM_WRITE_CALIBRATION_MAX_T
  * @brief The number of parameters for the WRITE_CALIBRATION_DELTA_TEMP command.
  */
 #define NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS 1
-/* Prototype the NONE command params array */
+/* Prototype the WRITE_CALIBRATION_DELTA_TEMP command params array */
 extern const char* WRITE_CALIBRATION_DELTA_TEMP_PARAMS[NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS];
+
+/**
+ * @def NUM_WRITE_CAL_VALID_PARAMS
+ * @brief The number of parameters for the WRITE_CAL_VALID command.
+ */
+#define NUM_WRITE_CAL_VALID_PARAMS 0
+/* Prototype the WRITE_CAL_VALID command params array */
+extern const char* WRITE_CAL_VALID_PARAMS[NUM_WRITE_CAL_VALID_PARAMS];
+
+/**
+ * @def NUM_EXIT_CALIBRATION_MODE_PARAMS
+ * @brief The number of parameters for the EXIT_CALIBRATION_MODE command.
+ */
+#define NUM_EXIT_CALIBRATION_MODE_PARAMS 0
+/* Prototype the EXIT_CALIBRATION_MODE command params array */
+extern const char* EXIT_CALIBRATION_MODE_PARAMS[NUM_EXIT_CALIBRATION_MODE_PARAMS];
 
 /**
  * @def NUM_NONE_PARAMS

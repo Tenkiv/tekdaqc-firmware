@@ -118,6 +118,11 @@ FLASH_Status Tekdaqc_SetCalibrationHighTemperature(float temp);
 FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp);
 
 /**
+ * @brief Marks the calibration table to indicate that it is valid.
+ */
+FLASH_Status Tekdaqc_SetCalibrationValid(void);
+
+/**
  * @brief Sets the gain calibration value for the specified parameters.
  */
 FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,

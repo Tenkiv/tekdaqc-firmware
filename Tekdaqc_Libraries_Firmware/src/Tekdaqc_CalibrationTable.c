@@ -62,9 +62,6 @@ static float calTempLow = 0.0f;
 /* The temperature step for the calibration data */
 static float calTempStep = 0.0f;
 
-/* The number of calibration temperatures */
-static uint32_t calTempCount = 0;
-
 /* Does valid calibration data exist */
 static bool isCalibrationValid = false;
 
@@ -270,10 +267,10 @@ bool Tekdaqc_CalibrationInit(void) {
 	calTempLow = (*(__IO float*) CAL_TEMP_LOW_ADDR);
 	calTempHigh = (*(__IO float*) CAL_TEMP_HIGH_ADDR);
 	calTempStep = (*(__IO float*) CAL_TEMP_STEP_ADDR);
-	calTempCount = (*(__IO uint32_t*) CAL_TEMP_CNT_ADDR);
 	calColdJunctionOffset = (*(__IO uint32_t*) COLD_JUNCTION_OFFSET_ADDR);
 	calColdJunctionGain = (*(__IO uint32_t*) COLD_JUNCTION_GAIN_ADDR);
-	isCalibrationValid = (*(__IO uint8_t*) CAL_VALID_ADDR) != 0xFF;
+	isCalibrationValid = ((*(__IO uint8_t*) CAL_VALID_ADDR_LO_ADDR) == CAL_VALID_ADDR_LO_ADDR)
+			&& ((*(__IO uint8_t*) CAL_VALID_ADDR_HI_ADDR) == CAL_VALID_ADDR_HI_ADDR);
 	return TRUE;
 }
 
@@ -560,7 +557,8 @@ FLASH_Status Tekdaqc_SetCalibrationLowTemperature(float temp) {
 	/* Convert the floating point value into a byte equivilant uint32_t */
 	uint32_t* value = (uint32_t*) ((void*) &temp);
 	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_LOW_ADDR, *value);
-	if (status == FLASH_COMPLETE) calTempLow = temp;
+	if (status == FLASH_COMPLETE)
+		calTempLow = temp;
 	return status;
 }
 
@@ -583,7 +581,8 @@ FLASH_Status Tekdaqc_SetCalibrationHighTemperature(float temp) {
 	/* Convert the floating point value into a byte equivilant uint32_t */
 	uint32_t* value = (uint32_t*) ((void*) &temp);
 	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_HIGH_ADDR, *value);
-	if (status == FLASH_COMPLETE) calTempHigh = temp;
+	if (status == FLASH_COMPLETE)
+		calTempHigh = temp;
 	return status;
 }
 
@@ -605,7 +604,28 @@ FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp) {
 	/* Convert the floating point value into a byte equivilant uint32_t */
 	uint32_t* value = (uint32_t*) ((void*) &temp);
 	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_STEP_ADDR, *value);
-	if (status == FLASH_COMPLETE) calTempStep = temp;
+	if (status == FLASH_COMPLETE)
+		calTempStep = temp;
+	return status;
+}
+
+/**
+ * Marks the calibration table as valid so running code can determine if the values should be used or not.
+ *
+ * @param None.
+ * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
+ */
+FLASH_Status Tekdaqc_SetCalibrationValid(void) {
+	if (CalibrationModeEnabled == false) {
+		return FLASH_ERROR_WRP;
+	}
+#ifdef CALIBRATION_TABLE_DEBUG
+	printf("[Calibration Table] Marking calibration table as valid.\n\r");
+#endif
+	FLASH_Status
+	status = FLASH_ProgramByte(CAL_VALID_ADDR_LO_ADDR, CALIBRATION_VALID_LO_BYTE);
+	if (status == FLASH_COMPLETE) status = FLASH_ProgramByte(CAL_VALID_ADDR_HI_ADDR, CALIBRATION_VALID_HI_BYTE);
+	isCalibrationValid = (status == FLASH_COMPLETE) ? true : false;
 	return status;
 }
 
