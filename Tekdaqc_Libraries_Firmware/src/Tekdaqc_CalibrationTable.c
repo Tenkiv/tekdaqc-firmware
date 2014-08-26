@@ -54,19 +54,19 @@
 static const char* strings[3] = {"ANALOG 0-5V", "ANALOG 0-400V", "Invalid Scale"};
 
 /* The highest temperature that calibration data exists for */
-static float CAL_TEMP_HIGH = 0.0f;
+static float calTempHigh = 0.0f;
 
 /* The lowest temperature that calibration data exists for */
-static float CAL_TEMP_LOW = 0.0f;
+static float calTempLow = 0.0f;
 
 /* The temperature step for the calibration data */
-static float CAL_TEMP_STEP = 0.0f;
+static float calTempStep = 0.0f;
 
 /* The number of calibration temperatures */
-static uint32_t CAL_TEMP_CNT = 0;
+static uint32_t calTempCount = 0;
 
 /* Does valid calibration data exist */
-static bool CALIBRATION_VALID = false;
+static bool isCalibrationValid = false;
 
 /* If calibration mode has been enabled */
 static bool CalibrationModeEnabled = false;
@@ -78,10 +78,10 @@ static uint32_t offsetCalibrations[NUM_SAMPLE_RATES][NUM_PGA_SETTINGS][NUM_BUFFE
 static uint32_t baseGainCalibrations[NUM_SAMPLE_RATES][NUM_PGA_SETTINGS][NUM_BUFFER_SETTINGS];
 
 /* The cold junction offset calibration value. Cached in RAM to prevent lookup delays */
-static uint32_t COLD_JUNCTION_OFFSET_CAL = 0xFFFFFFFFU;
+static uint32_t calColdJunctionOffset = 0xFFFFFFFFU;
 
 /* The cold junction gain calibration value. Cached in RAM to prevent lookup delays */
-static uint32_t COLD_JUNCTION_GAIN_CAL = 0xFFFFFFFFU;
+static uint32_t calColdJunctionGain = 0xFFFFFFFFU;
 
 /* The current analog input voltage scale being used. Defaulting to 400V range since the boards will be configured that way */
 static ANALOG_INPUT_SCALE_t CURRENT_ANALOG_SCALE = ANALOG_SCALE_400V;
@@ -93,7 +93,8 @@ static ANALOG_INPUT_SCALE_t CURRENT_ANALOG_SCALE = ANALOG_SCALE_400V;
 /**
  * @brief Computes the address offset for the offset calibration value with the specified parameters.
  */
-static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
+static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
+		ANALOG_INPUT_SCALE_t scale, float temperature);
 
 /**
  * @brief Interpolates two calibration values with the specified interpolation factor.
@@ -103,8 +104,8 @@ static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor);
 /**
  * @brief Computes the indecies for the RAM gain and offset lookup tables based on the sampling parameters.
  */
-static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t* buffer_index, ADS1256_SPS_t rate,
-		ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer);
+static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t* buffer_index, uint8_t* scale_index,
+		ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, ANALOG_INPUT_SCALE_t scale);
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE METHODS */
@@ -120,38 +121,30 @@ static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t
  * @param temperature float The temperature value to lookup for.
  * @retval The computed address offset.
  */
-static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature) {
-	uint32_t offset = 0;
-	switch (buffer) {
-		case ADS1256_BUFFER_ENABLED:
-			offset += CALIBRATION_BUFFER_OFFSET;
-			break;
-		case ADS1256_BUFFER_DISABLED:
-			/* No offset, do nothing */
-			break;
-		default:
-			snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
-					"Error computing lookup offset in calibration table for rate: %s, gain: %s, buffer: %s and temperature: %f Deg C.",
-					ADS1256_StringFromSPS(rate), ADS1256_StringFromPGA(gain), ADS1256_StringFromBuffer(buffer),
-					temperature);
-			TelnetWriteErrorMessage(TOSTRING_BUFFER);
-			break;
-	}
-	switch (CURRENT_ANALOG_SCALE) {
-		case ANALOG_SCALE_5V:
-			offset += CALIBRATION_INPUT_RANGE_OFFSET;
-			break;
-		case ANALOG_SCALE_400V:
-			/* No offset, do nothing */
-			break;
-		default:
-			snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
-					"Error computing lookup offset in calibration table for rate: %s, gain: %s, buffer: %s and temperature: %f Deg C.",
-					ADS1256_StringFromSPS(rate), ADS1256_StringFromPGA(gain), ADS1256_StringFromBuffer(buffer),
-					temperature);
-			TelnetWriteErrorMessage(TOSTRING_BUFFER);
-			break;
-	}
+static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
+		ANALOG_INPUT_SCALE_t scale, float temperature) {
+	uint32_t offset = 0U;
+	uint8_t rateIDX = 0U;
+	uint8_t gainIDX = 0U;
+	uint8_t bufferIDX = 0U;
+	uint8_t scaleIDX = 0U;
+
+	ComputeTableIndices(&rateIDX, &gainIDX, &bufferIDX, &scaleIDX, rate, gain, buffer, scale);
+#ifdef CALIBRATION_TABLE_DEBUG
+	printf("[Calibration Table] Computed table indices - Rate: %i, Gain: %i, Buffer: %i, Scale: %i\n\r", rateIDX,
+			gainIDX, bufferIDX, scaleIDX);
+#endif
+	uint8_t num_cal_steps = (temperature - calTempLow) / calTempStep;
+#ifdef CALIBRATION_TABLE_DEBUG
+	printf("[Calibration Table] Computed number of temperature steps: %i\n\r", num_cal_steps);
+#endif
+	offset = (num_cal_steps * CALIBRATION_TEMP_OFFSET)
+			+ rateIDX * NUM_PGA_SETTINGS * (NUM_INPUT_RANGES + NUM_BUFFER_SETTINGS)
+			+ gainIDX * (NUM_INPUT_RANGES + NUM_BUFFER_SETTINGS) + bufferIDX * NUM_BUFFER_SETTINGS + scaleIDX;
+	offset *= 4; /* Multiply by 4 because these are word values */
+#ifdef CALIBRATION_TABLE_DEBUG
+	printf("[Calibration Table] Computed table offset: %" PRIu32 "\n\r", offset);
+#endif
 	return offset;
 }
 
@@ -169,13 +162,10 @@ static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor) {
 	return value;
 }
 
-static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_t* buffer_index, ADS1256_SPS_t rate,
-		ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer) {
-	if (buffer == ADS1256_BUFFER_ENABLED) {
-		*buffer_index = 0U;
-	} else {
-		*buffer_index = 1U;
-	}
+static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_t* buffer_index, uint8_t* scale_index,
+		ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, ANALOG_INPUT_SCALE_t scale) {
+	*buffer_index = (buffer == ADS1256_BUFFER_ENABLED) ? 0U : 1U;
+	*scale_index = (scale == ANALOG_SCALE_5V) ? 0U : 1U;
 
 	switch (gain) {
 		case ADS1256_PGAx1:
@@ -277,13 +267,13 @@ static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_
  */
 bool Tekdaqc_CalibrationInit(void) {
 	FLASH_SetLatency(CALIBRATION_LATENCY);
-	CAL_TEMP_LOW = (*(__IO float*) CAL_TEMP_LOW_ADDR);
-	CAL_TEMP_HIGH = (*(__IO float*) CAL_TEMP_HIGH_ADDR);
-	CAL_TEMP_STEP = (*(__IO float*) CAL_TEMP_STEP_ADDR);
-	CAL_TEMP_CNT = (*(__IO uint32_t*) CAL_TEMP_CNT_ADDR);
-	COLD_JUNCTION_OFFSET_CAL = (*(__IO uint32_t*) COLD_JUNCTION_OFFSET_ADDR);
-	COLD_JUNCTION_GAIN_CAL = (*(__IO uint32_t*) COLD_JUNCTION_GAIN_CAL);
-	CALIBRATION_VALID = (*(__IO uint8_t*) CAL_VALID_ADDR) != 0xFF;
+	calTempLow = (*(__IO float*) CAL_TEMP_LOW_ADDR);
+	calTempHigh = (*(__IO float*) CAL_TEMP_HIGH_ADDR);
+	calTempStep = (*(__IO float*) CAL_TEMP_STEP_ADDR);
+	calTempCount = (*(__IO uint32_t*) CAL_TEMP_CNT_ADDR);
+	calColdJunctionOffset = (*(__IO uint32_t*) COLD_JUNCTION_OFFSET_ADDR);
+	calColdJunctionGain = (*(__IO uint32_t*) COLD_JUNCTION_GAIN_ADDR);
+	isCalibrationValid = (*(__IO uint8_t*) CAL_VALID_ADDR) != 0xFF;
 	return TRUE;
 }
 
@@ -340,6 +330,9 @@ const char* Tekdaqc_AnalogInputScaleToString(ANALOG_INPUT_SCALE_t scale) {
 		case ANALOG_SCALE_400V:
 			str = strings[1];
 			break;
+		case INVALID_SCALE:
+			str = strings[2];
+			break;
 		default:
 			str = strings[2];
 			break;
@@ -360,10 +353,12 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 	uint8_t rate_index = 0U;
 	uint8_t gain_index = 0U;
 	uint8_t buffer_index = 0U;
-	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, rate, gain, buffer);
+	uint8_t range_index = 0U;
+	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, &range_index, rate, gain, buffer,
+			CURRENT_ANALOG_SCALE);
 	uint32_t baseGain = baseGainCalibrations[rate_index][gain_index][buffer_index];
 
-	if (CALIBRATION_VALID != TRUE) {
+	if (isCalibrationValid != TRUE) {
 #ifdef CALIBRATION_TABLE_DEBUG
 		printf(
 				"[Calibration Table] The calibration table is not valid, returning ADC calibration only (0x%" PRIX32 ").\n\r",
@@ -371,36 +366,36 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 #endif
 		return baseGain;
 	}
-	if (temperature < CAL_TEMP_LOW || temperature > CAL_TEMP_HIGH) {
+	if (temperature < calTempLow || temperature > calTempHigh) {
 		/* The temperature is out of range, we will return the closest */
 #ifdef CALIBRATION_TABLE_DEBUG
 		printf(
 				"[Calibration Table] The requested temperature %f was out of range. Minimum is %f and maximum is %f.\n\r",
-				temperature, CAL_TEMP_LOW, CAL_TEMP_HIGH);
+				temperature, calTempLow, calTempHigh);
 #endif
 		snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
 				"Error fetching the gain calibration value for temperature: %f Deg C. Temperature out of range. Allowable range is %f to %f Deg C",
-				temperature, CAL_TEMP_LOW, CAL_TEMP_HIGH);
+				temperature, calTempLow, calTempHigh);
 		TelnetWriteErrorMessage(TOSTRING_BUFFER);
-		if (temperature < CAL_TEMP_LOW) {
-			temperature = CAL_TEMP_LOW;
+		if (temperature < calTempLow) {
+			temperature = calTempLow;
 		} else {
-			temperature = CAL_TEMP_HIGH;
+			temperature = calTempHigh;
 		}
 	}
 
-	uint8_t num_temp_steps = (uint8_t) (temperature / CAL_TEMP_STEP);
-	float low_temp = CAL_TEMP_LOW * num_temp_steps;
-	float high_temp = CAL_TEMP_HIGH * num_temp_steps;
-	float factor = (temperature - CAL_TEMP_LOW) / CAL_TEMP_STEP;
+	uint8_t num_temp_steps = (uint8_t) (temperature / calTempStep);
+	float low_temp = calTempLow * num_temp_steps;
+	float high_temp = calTempLow + calTempStep * num_temp_steps;
+	float factor = (temperature - calTempLow) / calTempStep;
 
-	uint32_t offset = ComputeOffset(rate, gain, buffer, low_temp);                        //Add one for the move to gain
-	uint32_t Address = CAL_DATA_START_ADDR + 4 * offset;          //Multiply offset by 4 because entries are 4bytes long
+	uint32_t offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, low_temp); /* Add one for the move to gain */
+	uint32_t Address = CAL_DATA_START_ADDR + 4 * offset; /* Multiply offset by 4 because entries are 4bytes long */
 
 	uint32_t data_low = (*(__IO uint32_t*) Address);
 
-	offset = ComputeOffset(rate, gain, buffer, high_temp);                                //Add one for the move to gain
-	Address = CAL_DATA_START_ADDR + 4 * offset;                   //Multiply offset by 4 because entries are 4bytes long
+	offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, high_temp); /* Add one for the move to gain */
+	Address = CAL_DATA_START_ADDR + 4 * offset; /* Multiply offset by 4 because entries are 4bytes long */
 
 	uint32_t data_high = (*(__IO uint32_t*) Address);
 	return (baseGain + InterpolateValue(data_low, data_high, factor));
@@ -418,7 +413,9 @@ uint32_t Tekdaqc_GetOffsetCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, AD
 	uint8_t rate_index;
 	uint8_t gain_index;
 	uint8_t buffer_index;
-	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, rate, gain, buffer);
+	uint8_t scale_index;
+	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, &scale_index, rate, gain, buffer,
+			CURRENT_ANALOG_SCALE);
 
 	return offsetCalibrations[rate_index][gain_index][buffer_index];
 }
@@ -431,10 +428,10 @@ uint32_t Tekdaqc_GetOffsetCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, AD
  */
 uint32_t Tekdaqc_GetColdJunctionOffsetCalibration(void) {
 	uint32_t cal;
-	if (COLD_JUNCTION_OFFSET_CAL == 0xFFFFFFFFU) {
+	if (calColdJunctionOffset == 0xFFFFFFFFU) {
 		cal = Tekdaqc_GetOffsetCalibration(ADS1256_SPS_30000, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED);
 	} else {
-		cal = COLD_JUNCTION_OFFSET_CAL;
+		cal = calColdJunctionOffset;
 	}
 
 	return cal;
@@ -448,10 +445,10 @@ uint32_t Tekdaqc_GetColdJunctionOffsetCalibration(void) {
  */
 uint32_t Tekdaqc_GetColdJunctionGainCalibration(void) {
 	uint32_t cal;
-	if (COLD_JUNCTION_GAIN_CAL == 0xFFFFFFFFU) {
+	if (calColdJunctionGain == 0xFFFFFFFFU) {
 		cal = Tekdaqc_GetGainCalibration(ADS1256_SPS_30000, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED, 25.0f);
 	} else {
-		cal = COLD_JUNCTION_GAIN_CAL;
+		cal = calColdJunctionGain;
 	}
 
 	return cal;
@@ -469,8 +466,7 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 
 	/* Clear pending flags (if any) */
 	FLASH_ClearFlag(
-			FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR
-					| FLASH_FLAG_PGSERR);
+	FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
 	FLASH_Status status = FLASH_COMPLETE;
 
@@ -558,10 +554,13 @@ FLASH_Status Tekdaqc_SetCalibrationLowTemperature(float temp) {
 		return FLASH_ERROR_WRP;
 	}
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] Programming calibration table low temperature: %f at location 0x%08" PRIX32 ".\n\r", temp, CAL_TEMP_LOW_ADDR);
+	printf("[Calibration Table] Programming calibration table low temperature: %f at location 0x%08" PRIX32 ".\n\r",
+			temp, CAL_TEMP_LOW_ADDR);
 #endif
+	/* Convert the floating point value into a byte equivilant uint32_t */
 	uint32_t* value = (uint32_t*) ((void*) &temp);
 	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_LOW_ADDR, *value);
+	if (status == FLASH_COMPLETE) calTempLow = temp;
 	return status;
 }
 
@@ -578,10 +577,13 @@ FLASH_Status Tekdaqc_SetCalibrationHighTemperature(float temp) {
 		return FLASH_ERROR_WRP;
 	}
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] Programming calibration table high temperature: %f at location 0x%08" PRIX32 ".\n\r", temp, CAL_TEMP_HIGH_ADDR);
+	printf("[Calibration Table] Programming calibration table high temperature: %f at location 0x%08" PRIX32 ".\n\r",
+			temp, CAL_TEMP_HIGH_ADDR);
 #endif
-		uint32_t* value = (uint32_t*) ((void*) &temp);
+	/* Convert the floating point value into a byte equivilant uint32_t */
+	uint32_t* value = (uint32_t*) ((void*) &temp);
 	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_HIGH_ADDR, *value);
+	if (status == FLASH_COMPLETE) calTempHigh = temp;
 	return status;
 }
 
@@ -597,10 +599,13 @@ FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp) {
 		return FLASH_ERROR_WRP;
 	}
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf("[Calibration Table] Programming calibration table temperature step: %f at location 0x%08" PRIX32 ".\n\r", temp, CAL_TEMP_STEP_ADDR);
+	printf("[Calibration Table] Programming calibration table temperature step: %f at location 0x%08" PRIX32 ".\n\r",
+			temp, CAL_TEMP_STEP_ADDR);
 #endif
-		uint32_t* value = (uint32_t*) ((void*) &temp);
+	/* Convert the floating point value into a byte equivilant uint32_t */
+	uint32_t* value = (uint32_t*) ((void*) &temp);
 	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_STEP_ADDR, *value);
+	if (status == FLASH_COMPLETE) calTempStep = temp;
 	return status;
 }
 
@@ -612,16 +617,21 @@ FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp) {
  * @param rate ADS1256_SPS_t The sample rate to write for.
  * @param gain ADS1256_PGA_t The gain to write for.
  * @param buffer ADS1256_BUFFER_t The buffer setting to write for.
+ * @param scale ANALOG_INPUT_SCALE_t The input scale setting to write for.
  * @param temperature float The temperature value to write for.
  * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
  */
 FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
-		float temperature) {
+		ANALOG_INPUT_SCALE_t scale, float temperature) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
 
-	uint32_t addr = ComputeOffset(rate, gain, buffer, temperature);
+	uint32_t addr = CAL_DATA_START_ADDR + ComputeOffset(rate, gain, buffer, scale, temperature);
+#ifdef CALIBRATION_TABLE_DEBUG
+	printf("[Calibration Table] Programming calibration table value: 0x%08" PRIX32 " at location 0x%08" PRIX32 ".\n\r",
+			cal, addr);
+#endif
 	FLASH_Status status = FLASH_ProgramWord(addr, cal);
 	return status;
 }
@@ -672,7 +682,9 @@ void Tekdaqc_SetOffsetCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_
 	uint8_t rate_index;
 	uint8_t gain_index;
 	uint8_t buffer_index;
-	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, rate, gain, buffer);
+	uint8_t scale_index;
+	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, &scale_index, rate, gain, buffer,
+			CURRENT_ANALOG_SCALE);
 
 	offsetCalibrations[rate_index][gain_index][buffer_index] = cal;
 }
@@ -691,7 +703,9 @@ void Tekdaqc_SetBaseGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PG
 	uint8_t rate_index;
 	uint8_t gain_index;
 	uint8_t buffer_index;
-	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, rate, gain, buffer);
+	uint8_t scale_index;
+	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, &scale_index, rate, gain, buffer,
+			CURRENT_ANALOG_SCALE);
 
 	baseGainCalibrations[rate_index][gain_index][buffer_index] = cal;
 }

@@ -2335,7 +2335,28 @@ static Tekdaqc_Command_Error_t Ex_EnterCalibrationMode(char keys[][MAX_COMMANDPA
  */
 static Tekdaqc_Command_Error_t Ex_WriteGainCalibrationValue(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
-
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS,
+			WRITE_GAIN_CALIBRATION_VALUE_PARAMS) == true) {
+		/* Create a new input */
+		Tekdaqc_Function_Error_t status = Tekdaqc_WriteGainCalibrationValue(keys, values, count);
+		if (status != ERR_FUNCTION_OK) {
+			/* Something went wrong with creating the input */
+#ifdef COMMAND_DEBUG
+			printf("[Command Interpreter] Writing gain calibration value failed with error: %s.\n\r",
+					Tekdaqc_FunctionError_ToString(status));
+#endif
+			lastFunctionError = status;
+			retval = ERR_COMMAND_FUNCTION_ERROR;
+		}
+	} else {
+		/* We can't create a new input */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for writing a gain calibration value.\n\r");
+#endif
+		retval = ERR_COMMAND_PARSE_ERROR;
+	}
+	return retval;
 }
 
 /**
@@ -2359,7 +2380,7 @@ static Tekdaqc_Command_Error_t Ex_WriteCalibrationMinTemp(char keys[][MAX_COMMAN
 #ifdef COMMAND_DEBUG
 						printf("Processing TEMPERATURE key\n\r");
 #endif
-						errno = 0;
+						errno = 0; /* Set the global error number to 0 so we get a valid check */
 						const float temp = strtof(values[index], NULL);
 						if (errno != 0) {
 							retval = ERR_COMMAND_PARSE_ERROR;
@@ -2405,7 +2426,7 @@ static Tekdaqc_Command_Error_t Ex_WriteCalibrationMaxTemp(char keys[][MAX_COMMAN
 #ifdef COMMAND_DEBUG
 						printf("Processing TEMPERATURE key\n\r");
 #endif
-						errno = 0;
+						errno = 0; /* Set the global error number to 0 so we get a valid check */
 						const float temp = strtof(values[index], NULL);
 						if (errno != 0) {
 							retval = ERR_COMMAND_PARSE_ERROR;
@@ -2441,7 +2462,8 @@ static Tekdaqc_Command_Error_t Ex_WriteCalibrationMaxTemp(char keys[][MAX_COMMAN
 static Tekdaqc_Command_Error_t Ex_WriteCalibrationDeltaTemp(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
-	if (InputArgsCheck(keys, values, count, NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS, WRITE_CALIBRATION_DELTA_TEMP_PARAMS)) {
+	if (InputArgsCheck(keys, values, count, NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS,
+			WRITE_CALIBRATION_DELTA_TEMP_PARAMS)) {
 		int8_t index = -1;
 		for (int i = 0; i < NUM_WRITE_CALIBRATION_DELTA_TEMP_PARAMS; ++i) {
 			index = GetIndexOfArgument(keys, WRITE_CALIBRATION_DELTA_TEMP_PARAMS[i], count);
@@ -2451,7 +2473,7 @@ static Tekdaqc_Command_Error_t Ex_WriteCalibrationDeltaTemp(char keys[][MAX_COMM
 #ifdef COMMAND_DEBUG
 						printf("Processing TEMPERATURE key\n\r");
 #endif
-						errno = 0;
+						errno = 0; /* Set the global error number to 0 so we get a valid check */
 						const float temp = strtof(values[index], NULL);
 						if (errno != 0) {
 							retval = ERR_COMMAND_PARSE_ERROR;

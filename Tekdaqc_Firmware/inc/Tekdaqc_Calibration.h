@@ -66,6 +66,12 @@ Tekdaqc_Function_Error_t PerformSystemCalibration(void);
 bool isTekdaqc_CalibrationValid(void);
 
 /**
+ * @brief Writes a gain calibration value into the calibration table with the specified parameters.
+ */
+Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
  * @}
  */
 

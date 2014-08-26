@@ -95,7 +95,9 @@ typedef enum {
 	ERR_DOUT_DOES_NOT_EXIST			= 	21U, /**< The function failed because the specified digital output does not exist. */
 	ERR_DOUT_FAILED_WRITE			=	22U, /**< The function failed due to a failure to write digital output data to a string buffer. */
 	ERR_CALIBRATION_MODE_FAILED		=	23U, /**< The function failed due to a failure to initiate the calibration mode in flash. */
-	ERR_CALIBRATION_WRITE_FAILED	=	24U /**< The function failed due to a failure to write the calibration value in flash. */
+	ERR_CALIBRATION_WRITE_FAILED	=	24U, /**< The function failed due to a failure to write the calibration value in flash. */
+	ERR_CALIBRATION_PARSE_ERROR		=	25U, /**< The function failed due to a failure to parse the calibration arguments. */
+	ERR_CALIBRATION_MISSING_KEY		=	26U, /**< The function failed due to a missing required key in the command. */
 } Tekdaqc_Function_Error_t;
 
 /*--------------------------------------------------------------------------------------------------------*/

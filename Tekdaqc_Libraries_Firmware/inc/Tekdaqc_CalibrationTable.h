@@ -120,7 +120,8 @@ FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp);
 /**
  * @brief Sets the gain calibration value for the specified parameters.
  */
-FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
+FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
+		ANALOG_INPUT_SCALE_t scale, float temperature);
 
 /**
  * @brief Sets the offset calibration value to be used for the cold junction sensor.
