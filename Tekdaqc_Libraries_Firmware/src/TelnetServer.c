@@ -33,6 +33,7 @@
 #include "Tekdaqc_Debug.h"
 #include "TelnetServer.h"
 #include "Tekdaqc_Config.h"
+#include "Tekdaqc_Timers.h"
 #include "stm32f4xx.h"
 #include "lwip/debug.h"
 #include "lwip/stats.h"

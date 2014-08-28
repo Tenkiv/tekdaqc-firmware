@@ -621,6 +621,9 @@ typedef enum {
 #define MAC_ADDR4   0U
 #define MAC_ADDR5   0U
 
+#define USE_DEFAULT_MAC 				0x0000
+#define USE_USER_MAC					0x0001
+
 /* Static IP ADDRESS: IP_ADDR0.IP_ADDR1.IP_ADDR2.IP_ADDR3 */
 #define IP_ADDR0   192U
 #define IP_ADDR1   168U
@@ -765,12 +768,19 @@ typedef enum {
 #define PAGE1_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (2 * PAGE_SIZE - 1)))
 #define PAGE1_ID              (FLASH_Sector_10)
 
-#define NUM_EEPROM_ADDRESSES			4
+#define NUM_EEPROM_ADDRESSES			10
 
 #define ADDR_BOARD_MAX_TEMP_HIGH		0x0000
 #define ADDR_BOARD_MAX_TEMP_LOW			0x0001
 #define ADDR_BOARD_MIN_TEMP_HIGH		0x0002
 #define ADDR_BOARD_MIN_TEMP_LOW			0x0003
+#define ADDR_USER_MAC_LOW				0x0004
+#define ADDR_USER_MAC_MID				0x0005
+#define ADDR_USER_MAC_HIGH				0x0006
+#define ADDR_USE_USER_MAC				0x0007
+#define ADDR_SHOULD_UPGRADE				0x0008
+#define ADDR_STATIC_IP_LOW				0x0009
+#define ADDR_STATIC_IP_HIGH				0x000A
 
 /* Virtual address defined by the user: 0xFFFF value is prohibited */
 extern uint16_t EEPROM_ADDRESSES[NUM_EEPROM_ADDRESSES];

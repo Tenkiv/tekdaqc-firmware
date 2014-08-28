@@ -45,6 +45,7 @@
 #include "Tekdaqc_BSP.h"
 #include "Tekdaqc_Error.h"
 #include "boolean.h"
+#include "eeprom.h"
 #include "Tekdaqc_Locator.h"
 #include <stdlib.h>
 #include <errno.h>
@@ -111,8 +112,8 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"GET_ANALOG_INPUT_SCALE", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SELF_GCAL", "READ_SYSTEM_GCAL",
 		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
 		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT",
-		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT", "UPGRADE", "IDENTIFY", "SAMPLE", "HALT",
-		"SET_RTC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS", "ENTER_CALIBRATION_MODE",
+		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT", "REBOOT", "UPGRADE", "IDENTIFY", "SAMPLE",
+		"HALT", "SET_RTC", "CLEAR_USER_MAC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS", "ENTER_CALIBRATION_MODE",
 		"WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP", "WRITE_CALIBRATION_MAX_TEMP",
 		"WRITE_CALIBRATION_DELTA_TEMP", "WRITE_CALIBRATION_VALID", "EXIT_CALIBRATION_MODE", "NONE"};
 
@@ -1361,10 +1362,15 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 			/* Close the telnet connection */
 			TelnetClose();
 			break;
+		case COMMAND_REBOOT:
+			/* Close the telnet connection */
+			TelnetClose();
+			/* Reset the processor */
+			NVIC_SystemReset();
+			break;
 		case COMMAND_UPGRADE:
 			/* Write the update flag to the backup register */
-			RTC_WriteBackupRegister(UPDATE_FLAG_REGISTER,
-					(RTC_ReadBackupRegister(UPDATE_FLAG_REGISTER) | UPDATE_FLAG_ENABLED));
+			EE_WriteVariable(ADDR_USE_USER_MAC, UPDATE_FLAG_ENABLED);
 			/* Close the telnet connection */
 			TelnetClose();
 			/* Reset the processor */
@@ -1381,6 +1387,10 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 			break;
 		case COMMAND_SET_RTC:
 			retval = Ex_SetRTC(keys, values, count);
+			break;
+		case COMMAND_CLEAR_USER_MAC:
+			/* Clear the USE_USER_MAC variable */
+			EE_WriteVariable(ADDR_USE_USER_MAC, USE_DEFAULT_MAC);
 			break;
 		case COMMAND_SET_USER_MAC:
 			retval = Ex_SetUserMac(keys, values, count);
@@ -2333,9 +2343,51 @@ static Tekdaqc_Command_Error_t Ex_SetRTC(char keys[][MAX_COMMANDPART_LENGTH], ch
 static Tekdaqc_Command_Error_t Ex_SetUserMac(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
-
-	/* TODO: Clear user MAC */
-
+	if (InputArgsCheck(keys, values, count, NUM_SET_USER_MAC_PARAMS, SET_USER_MAC_PARAMS)) {
+		int8_t index = -1;
+		for (int i = 0; i < NUM_SET_USER_MAC_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, SET_USER_MAC_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (i) { /* Switch on the key not position in arguments list */
+					case 0: /* VALUE key */
+#ifdef COMMAND_DEBUG
+						printf("Processing VALUE key\n\r");
+#endif
+						uint64_t mac = strtoull(values[i], NULL, 16);
+#ifdef COMMAND_DEBUG
+						printf("Decoded MAC address: 0x%012" PRIX64 "\n\r", mac);
+#endif
+						uint16_t low = mac & 0xFFFF;
+						uint16_t mid = (mac >> 16) & 0xFFFF;
+						uint16_t high = (mac >> 32) & 0xFFFF;
+#ifdef COMMAND_DEBUG
+						printf("MAC Address:\n\r\tHIGH: %" PRIX16 "\n\r\tMID: %" PRIX16 "\n\r\tLOW: %" PRIX16 "\n\r", high, mid, low);
+#endif
+						EE_WriteVariable(ADDR_USER_MAC_LOW, low);
+						EE_WriteVariable(ADDR_USER_MAC_MID, mid);
+						EE_WriteVariable(ADDR_USER_MAC_HIGH, high);
+						EE_WriteVariable(ADDR_USE_USER_MAC, USE_USER_MAC);
+						break;
+					default:
+						/* Return an error */
+						retval = ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+			if (retval != ERR_COMMAND_OK) {
+				break; /* If an error occurred, don't bother continuing */
+			}
+		}
+		/* If an error occurred, don't bother continuing */
+		if (retval == ERR_COMMAND_OK) {
+			// TODO SET MAC
+		}
+	} else {
+		/* We can't create a new input */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for setting the user MAC Address.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
 	return retval;
 }
 

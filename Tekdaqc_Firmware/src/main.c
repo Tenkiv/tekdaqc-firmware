@@ -187,6 +187,9 @@ static void Init_Locator() {
  * @retval none
  */
 static void Tekdaqc_Init(void) {
+	/* Initialize the FLASH disk */
+	FlashDiskInit();
+
 	/* Initialize the Tekdaqc's communication methods */
 	Communication_Init();
 
@@ -208,8 +211,6 @@ static void Tekdaqc_Init(void) {
 	SetDigitalInputWriteFunction(&TelnetWriteString);
 	SetDigitalOutputWriteFunction(&TelnetWriteString);
 
-	/* Initialize the FLASH disk */
-	FlashDiskInit();
 
 	/* Initialize the calibration table and fetch the board serial number */
 	Tekdaqc_CalibrationInit();
