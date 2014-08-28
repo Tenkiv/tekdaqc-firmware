@@ -68,6 +68,11 @@ ANALOG_INPUT_SCALE_t Tekdaqc_StringToAnalogInputScale(char* str);
 const char* Tekdaqc_AnalogInputScaleToString(ANALOG_INPUT_SCALE_t scale);
 
 /**
+ * @brief Retrieves a self gain calibration value for the specified parameters.
+ */
+uint32_t Tekdaqc_GetBaseGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer);
+
+/**
  * @brief Retrieves a gain calibration value for the specified parameters.
  */
 uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);

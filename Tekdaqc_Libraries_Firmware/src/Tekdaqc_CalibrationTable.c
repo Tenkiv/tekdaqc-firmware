@@ -338,6 +338,24 @@ const char* Tekdaqc_AnalogInputScaleToString(ANALOG_INPUT_SCALE_t scale) {
 }
 
 /**
+ * Retrieve the base gain calibration value for the specified sampling parameters.
+ *
+ * @param rate ADS1256_SPS_t The sample rate to lookup for.
+ * @param gain ADS1256_PGA_t The gain to lookup for.
+ * @param buffer ADS1256_BUFFER_t The buffer setting to lookup for.
+ * @retval The determined calibration value.
+ */
+uint32_t Tekdaqc_GetBaseGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer) {
+	uint8_t rate_index = 0U;
+	uint8_t gain_index = 0U;
+	uint8_t buffer_index = 0U;
+	uint8_t range_index = 0U;
+	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, &range_index, rate, gain, buffer,
+			CURRENT_ANALOG_SCALE);
+	return baseGainCalibrations[rate_index][gain_index][buffer_index];
+}
+
+/**
  * Retrieve the gain calibration value for the specified sampling parameters.
  *
  * @param rate ADS1256_SPS_t The sample rate to lookup for.
@@ -622,9 +640,9 @@ FLASH_Status Tekdaqc_SetCalibrationValid(void) {
 #ifdef CALIBRATION_TABLE_DEBUG
 	printf("[Calibration Table] Marking calibration table as valid.\n\r");
 #endif
-	FLASH_Status
-	status = FLASH_ProgramByte(CAL_VALID_ADDR_LO_ADDR, CALIBRATION_VALID_LO_BYTE);
-	if (status == FLASH_COMPLETE) status = FLASH_ProgramByte(CAL_VALID_ADDR_HI_ADDR, CALIBRATION_VALID_HI_BYTE);
+	FLASH_Status status = FLASH_ProgramByte(CAL_VALID_ADDR_LO_ADDR, CALIBRATION_VALID_LO_BYTE);
+	if (status == FLASH_COMPLETE)
+		status = FLASH_ProgramByte(CAL_VALID_ADDR_HI_ADDR, CALIBRATION_VALID_HI_BYTE);
 	isCalibrationValid = (status == FLASH_COMPLETE) ? true : false;
 	return status;
 }

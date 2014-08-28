@@ -108,11 +108,12 @@ static const char COMMAND_DELIMETER[] = {0x20, 0x00};
  */
 static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_ADC_REGISTERS", "READ_ANALOG_INPUT",
 		"ADD_ANALOG_INPUT", "REMOVE_ANALOG_INPUT", "CHECK_ANALOG_INPUT", "SET_ANALOG_INPUT_SCALE",
-		"GET_ANALOG_INPUT_SCALE", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SYSTEM_GCAL", "LIST_DIGITAL_INPUTS",
-		"READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT", "LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT",
-		"READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT", "REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT",
-		"UPGRADE", "IDENTIFY", "SAMPLE", "HALT", "SET_RTC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
-		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP", "WRITE_CALIBRATION_MAX_TEMP",
+		"GET_ANALOG_INPUT_SCALE", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SELF_GCAL", "READ_SYSTEM_GCAL",
+		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
+		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT",
+		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT", "UPGRADE", "IDENTIFY", "SAMPLE", "HALT",
+		"SET_RTC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS", "ENTER_CALIBRATION_MODE",
+		"WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP", "WRITE_CALIBRATION_MAX_TEMP",
 		"WRITE_CALIBRATION_DELTA_TEMP", "WRITE_CALIBRATION_VALID", "EXIT_CALIBRATION_MODE", "NONE"};
 
 /**
@@ -128,27 +129,24 @@ const char* READ_ADC_REGISTERS_PARAMS[NUM_READ_ADC_REGISTERS_PARAMS] = {};
 /**
  * List of all parameters for the READ_ANALOG_INPUT command.
  */
-const char* READ_ANALOG_INPUT_PARAMS[NUM_READ_ANALOG_INPUT_PARAMS] = {
-PARAMETER_INPUT, PARAMETER_NUMBER};
+const char* READ_ANALOG_INPUT_PARAMS[NUM_READ_ANALOG_INPUT_PARAMS] = {PARAMETER_INPUT, PARAMETER_NUMBER};
 
 /**
  * List of all parameters for the ADD_ANALOG_INPUT command.
  */
-const char* ADD_ANALOG_INPUT_PARAMS[NUM_ADD_ANALOG_INPUT_PARAMS] = {
-PARAMETER_INPUT, PARAMETER_BUFFER, PARAMETER_RATE, PARAMETER_GAIN,
+const char* ADD_ANALOG_INPUT_PARAMS[NUM_ADD_ANALOG_INPUT_PARAMS] = {PARAMETER_INPUT, PARAMETER_BUFFER, PARAMETER_RATE,
+PARAMETER_GAIN,
 PARAMETER_NAME};
 
 /**
  * List of all parameters for the REMOVE_ANALOG_INPUT command.
  */
-const char* REMOVE_ANALOG_INPUT_PARAMS[NUM_REMOVE_ANALOG_INPUT_PARAMS] = {
-PARAMETER_INPUT};
+const char* REMOVE_ANALOG_INPUT_PARAMS[NUM_REMOVE_ANALOG_INPUT_PARAMS] = {PARAMETER_INPUT};
 
 /**
  * List of all parameters for the CHECK_ANALOG_INPUT command.
  */
-const char* CHECK_ANALOG_INPUT_PARAMS[NUM_CHECK_ANALOG_INPUT_PARAMS] = {
-PARAMETER_INPUT};
+const char* CHECK_ANALOG_INPUT_PARAMS[NUM_CHECK_ANALOG_INPUT_PARAMS] = {PARAMETER_INPUT};
 
 /**
  * List of all parameters for the SET_ANALOG_INPUT_SCALE command.
@@ -168,8 +166,13 @@ const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS] = {};
 /**
  * List of all parameters for the SYSTEM_GCAL command.
  */
-const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS] = {PARAMETER_BUFFER,
-PARAMETER_RATE, PARAMETER_GAIN, PARAMETER_INPUT};
+const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS] = {PARAMETER_BUFFER, PARAMETER_RATE, PARAMETER_GAIN,
+PARAMETER_INPUT};
+
+/**
+ * List of all parameters for the READ_SELF_GCAL command.
+ */
+const char* READ_SELF_GCAL_PARAMS[NUM_READ_SELF_GCAL_PARAMS] = {PARAMETER_BUFFER, PARAMETER_RATE, PARAMETER_GAIN};
 
 /**
  * List of all parameters for the READ_SYSTEM_GCAL command.
@@ -184,20 +187,17 @@ const char* LIST_DIGITAL_INPUTS_PARAMS[NUM_LIST_DIGITAL_INPUTS_PARAMS] = {};
 /**
  * List of all parameters for the READ_DIGITAL_INPUT command.
  */
-const char* READ_DIGITAL_INPUT_PARAMS[NUM_READ_DIGITAL_INPUT_PARAMS] = {
-PARAMETER_INPUT, PARAMETER_NUMBER};
+const char* READ_DIGITAL_INPUT_PARAMS[NUM_READ_DIGITAL_INPUT_PARAMS] = {PARAMETER_INPUT, PARAMETER_NUMBER};
 
 /**
  * List of all parameters for the ADD_DIGITAL_INPUT command.
  */
-const char* ADD_DIGITAL_INPUT_PARAMS[NUM_ADD_DIGITAL_INPUT_PARAMS] = {
-PARAMETER_INPUT, PARAMETER_NAME};
+const char* ADD_DIGITAL_INPUT_PARAMS[NUM_ADD_DIGITAL_INPUT_PARAMS] = {PARAMETER_INPUT, PARAMETER_NAME};
 
 /**
  * List of all parameters for the REMOVE_DIGITAL_INPUT command.
  */
-const char* REMOVE_DIGITAL_INPUT_PARAMS[NUM_REMOVE_DIGITAL_INPUT_PARAMS] = {
-PARAMETER_INPUT};
+const char* REMOVE_DIGITAL_INPUT_PARAMS[NUM_REMOVE_DIGITAL_INPUT_PARAMS] = {PARAMETER_INPUT};
 
 /**
  * List of all parameters for the LIST_DIGITAL_OUTPUTS command.
@@ -207,32 +207,27 @@ const char* LIST_DIGITAL_OUTPUTS_PARAMS[NUM_LIST_DIGITAL_OUTPUTS_PARAMS] = {};
 /**
  * List of all parameters for the SET_DIGITAL_OUTPUT command.
  */
-const char* SET_DIGITAL_OUTPUT_PARAMS[NUM_SET_DIGITAL_OUTPUT_PARAMS] = {
-PARAMETER_OUTPUT, PARAMETER_STATE};
+const char* SET_DIGITAL_OUTPUT_PARAMS[NUM_SET_DIGITAL_OUTPUT_PARAMS] = {PARAMETER_OUTPUT, PARAMETER_STATE};
 
 /**
  * List of all parameters for the READ_DIGITAL_OUTPUT command.
  */
-const char* READ_DIGITAL_OUTPUT_PARAMS[NUM_READ_DIGITAL_OUTPUT_PARAMS] = {
-PARAMETER_OUTPUT, PARAMETER_NUMBER};
+const char* READ_DIGITAL_OUTPUT_PARAMS[NUM_READ_DIGITAL_OUTPUT_PARAMS] = {PARAMETER_OUTPUT, PARAMETER_NUMBER};
 
 /**
  * List of all parameters for the ADD_DIGITAL_OUTPUT command.
  */
-const char* ADD_DIGITAL_OUTPUT_PARAMS[NUM_ADD_DIGITAL_OUTPUT_PARAMS] = {
-PARAMETER_OUTPUT, PARAMETER_NAME};
+const char* ADD_DIGITAL_OUTPUT_PARAMS[NUM_ADD_DIGITAL_OUTPUT_PARAMS] = {PARAMETER_OUTPUT, PARAMETER_NAME};
 
 /**
  * List of all parameters for the REMOVE_DIGITAL_OUTPUT command.
  */
-const char* REMOVE_DIGITAL_OUTPUT_PARAMS[NUM_REMOVE_DIGITAL_OUTPUT_PARAMS] = {
-PARAMETER_OUTPUT};
+const char* REMOVE_DIGITAL_OUTPUT_PARAMS[NUM_REMOVE_DIGITAL_OUTPUT_PARAMS] = {PARAMETER_OUTPUT};
 
 /**
  * List of all parameters for the CLEAR_DIGITAL_OUTPUT command.
  */
-const char* CLEAR_DIG_OUTPUT_FAULT_PARAMS[NUM_CLEAR_DIG_OUTPUT_FAULT_PARAMS] = {
-PARAMETER_OUTPUT};
+const char* CLEAR_DIG_OUTPUT_FAULT_PARAMS[NUM_CLEAR_DIG_OUTPUT_FAULT_PARAMS] = {PARAMETER_OUTPUT};
 
 /**
  * List of all parameters for the DISCONNECT command.
@@ -532,6 +527,13 @@ static Tekdaqc_Command_Error_t Ex_SystemGainCal(char keys[][MAX_COMMANDPART_LENG
  */
 static Tekdaqc_Command_Error_t Ex_SystemCal(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the READ_SELF_GCAL command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_ReadSelfGCal(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /**
  * @internal
@@ -1319,6 +1321,9 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 		case COMMAND_SYSTEM_GCAL:
 			retval = Ex_SystemGainCal(keys, values, count);
 			break;
+		case COMMAND_READ_SELF_GCAL:
+			retval = Ex_ReadSelfGCal(keys, values, count);
+			break;
 		case COMMAND_READ_SYSTEM_GCAL:
 			retval = Ex_ReadSystemGCal(keys, values, count);
 			break;
@@ -1759,6 +1764,38 @@ static Tekdaqc_Command_Error_t Ex_SystemCal(char keys[][MAX_COMMANDPART_LENGTH],
 }
 
 /**
+ * Execute the READ_SELF_GCAL command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_ReadSelfGCal(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_READ_SELF_GCAL_PARAMS, READ_SELF_GCAL_PARAMS)) {
+		/* Retrieve the self gain calibration value */
+		uint32_t calibration;
+		Tekdaqc_Function_Error_t status = GetSelfGainCalibration(&calibration, keys, values, count);
+		if (status != ERR_FUNCTION_OK) {
+			lastFunctionError = status;
+			retval = ERR_COMMAND_FUNCTION_ERROR;
+		} else {
+			snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "Gain calibration value: 0x%" PRIX32, calibration);
+			TelnetWriteCommandDataMessage(TOSTRING_BUFFER);
+		}
+	} else {
+#ifdef COMMAND_DEBUG
+		printf(
+				"[Command Interpreter] Provided arguments are not valid for fetching a self gain calibration value.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
  * Execute the READ_SYSTEM_GCAL command.
  *
  * @param keys char[][] C-String of the command parameter keys.
@@ -1769,6 +1806,7 @@ static Tekdaqc_Command_Error_t Ex_SystemCal(char keys[][MAX_COMMANDPART_LENGTH],
 static Tekdaqc_Command_Error_t Ex_ReadSystemGCal(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	lastFunctionError = ERR_FUNCTION_OK;
 	uint32_t calibration = ADS1256_GetGainCalSetting();
 	snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "Gain calibration value: 0x%" PRIX32, calibration);
 	TelnetWriteCommandDataMessage(TOSTRING_BUFFER);

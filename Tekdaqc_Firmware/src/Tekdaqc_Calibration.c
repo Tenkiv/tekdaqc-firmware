@@ -182,6 +182,50 @@ bool isTekdaqc_CalibrationValid(void) {
 	return valid;
 }
 
+Tekdaqc_Function_Error_t GetSelfGainCalibration(uint32_t* cal, char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
+	char* param;
+	int8_t index = -1;
+	/* Set the default parameters */
+	ADS1256_BUFFER_t buffer;
+	ADS1256_SPS_t rate;
+	ADS1256_PGA_t gain;
+	uint_fast8_t i = 0U;
+	for (; i < NUM_READ_SELF_GCAL_PARAMS; ++i) {
+		index = GetIndexOfArgument(keys, READ_SELF_GCAL_PARAMS[i], count);
+		if (index >= 0) { /* We found the key in the list */
+			param = values[index]; /* We use the discovered index for this key */
+			switch (i) { /* Switch on the key not position in arguments list */
+				case 0U: /* BUFFER key */
+					buffer = ADS1256_StringToBuffer(param);
+					break;
+				case 1U: /* RATE key */
+					rate = ADS1256_StringToDataRate(param);
+					break;
+				case 2U: /* GAIN key */
+					gain = ADS1256_StringToPGA(param);
+					break;
+				default:
+					retval = ERR_CALIBRATION_PARSE_ERROR;
+			}
+		} else {
+			/* Somehow an error happened */
+#ifdef CALIBRATION_DEBUG
+			printf("[Calibration Process] Unable to locate required key: %s\n\r", GET_SELF_GCAL_PARAMS[i]);
+#endif
+			retval = ERR_CALIBRATION_MISSING_KEY; /* Failed to locate a key */
+		}
+		if (retval != ERR_FUNCTION_OK) {
+			break;
+		}
+	}
+	if (retval == ERR_FUNCTION_OK) {
+		*cal = Tekdaqc_GetBaseGainCalibration(rate, gain, buffer);
+	}
+	return retval; /* Return the status */
+}
+
 Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
