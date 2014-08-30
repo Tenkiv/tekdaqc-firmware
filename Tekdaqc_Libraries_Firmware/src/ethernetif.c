@@ -93,12 +93,13 @@ static void low_level_init(struct netif *netif) {
 		EE_ReadVariable(ADDR_USER_MAC_LOW, &low);
 		EE_ReadVariable(ADDR_USER_MAC_MID, &mid);
 		EE_ReadVariable(ADDR_USER_MAC_HIGH, &high);
-		M0 = (low >> 8) & 0xFF;
-		M1 = low & 0xFF;
+		/* The high bytes are the first bytes in the MAC address from the perspective of the user */
+		M0 = (high >> 8) & 0xFF;
+		M1 = high & 0xFF;
 		M2 = (mid >> 8) & 0xFF;
 		M3 = mid & 0xFF;
-		M4 = (high >> 8) & 0xFF;
-		M5 = high & 0xFF;
+		M4 = (low >> 8) & 0xFF;
+		M5 = low & 0xFF;
 	} else {
 		/* We should try to use the factory programmed MAC Address */
 		M0 = *((uint8_t *) FACTORY_MAC_ADDR0);

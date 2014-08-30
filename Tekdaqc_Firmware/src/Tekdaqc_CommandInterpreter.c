@@ -2713,7 +2713,7 @@ static Tekdaqc_Command_Error_t Ex_SetFactoryMACAddr(char keys[][MAX_COMMANDPART_
 						mid = (mac >> 16) & 0xFFFF;
 						high = (mac >> 32) & 0xFFFF;
 #ifdef COMMAND_DEBUG
-						printf("MAC Address:\n\r\tHIGH: %" PRIX16 "\n\r\tMID: %" PRIX16 "\n\r\tLOW: %" PRIX16 "\n\r",
+						printf("MAC Address:\n\r\tHIGH: 0x%04" PRIX16 "\n\r\tMID: 0x%04" PRIX16 "\n\r\tLOW: 0x%04" PRIX16 "\n\r",
 								high, mid, low);
 #endif
 						break;
@@ -2744,17 +2744,21 @@ static Tekdaqc_Command_Error_t Ex_SetFactoryMACAddr(char keys[][MAX_COMMANDPART_
 				lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
 				retval = ERR_COMMAND_FUNCTION_ERROR;
 			} else {
-				status = FLASH_ProgramByte(FACTORY_MAC_ADDR0, (low >> 8) & 0xFF);
+				/* The high bytes are the first bytes in the MAC address from the perspective of the user */
+				status = FLASH_ProgramByte(FACTORY_MAC_ADDR0, (high >> 8) & 0xFF);
 				if (status == FLASH_COMPLETE)
-					status = FLASH_ProgramByte(FACTORY_MAC_ADDR1, low & 0xFF);
+					status = FLASH_ProgramByte(FACTORY_MAC_ADDR1, high & 0xFF);
 				if (status == FLASH_COMPLETE)
 					status = FLASH_ProgramByte(FACTORY_MAC_ADDR2, (mid >> 8) & 0xFF);
 				if (status == FLASH_COMPLETE)
 					status = FLASH_ProgramByte(FACTORY_MAC_ADDR3, mid & 0xFF);
 				if (status == FLASH_COMPLETE)
-					status = FLASH_ProgramByte(FACTORY_MAC_ADDR4, (high >> 8) & 0xFF);
+					status = FLASH_ProgramByte(FACTORY_MAC_ADDR4, (low >> 8) & 0xFF);
 				if (status == FLASH_COMPLETE)
-					status = FLASH_ProgramByte(FACTORY_MAC_ADDR5, high & 0xFF);
+					status = FLASH_ProgramByte(FACTORY_MAC_ADDR5, low & 0xFF);
+				if (status == FLASH_COMPLETE)
+					/* Lock the Factory MAC Address Block */
+					status = FLASH_ProgramByte(FACTORY_MAC_LOCK_ADDR, 0x00);
 				if (status != FLASH_COMPLETE) {
 					/* An error occurred in writing the bytes */
 					lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
