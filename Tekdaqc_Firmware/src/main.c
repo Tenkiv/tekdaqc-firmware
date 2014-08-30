@@ -158,7 +158,7 @@ static void program_loop(void) {
 		}
 
 		/* Check to see if any faults have occurred */
-		Tekdaqc_CheckStatus();
+		/*Tekdaqc_CheckStatus();*/ //TODO: Re-enable when digital output faults work
 
 		/* Reload the IWDG Counter to prevent reset */
 		IWDG_ReloadCounter();

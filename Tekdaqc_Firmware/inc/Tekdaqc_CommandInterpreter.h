@@ -128,7 +128,7 @@ extern "C" {
  * @def NUM_COMMANDS
  * @brief The total number of commands known by this board.
  */
-#define NUM_COMMANDS 41
+#define NUM_COMMANDS 43
 
 /**
  * @def TELNET_EOF
@@ -185,7 +185,9 @@ typedef enum {
 	COMMAND_WRITE_CAL_DELTA_TEMP = 37,
 	COMMAND_WRITE_CAL_VALID = 38,
 	COMMAND_EXIT_CALIBRATION_MODE = 39,
-	COMMAND_NONE = 40
+	COMMAND_SET_FACTORY_MAC_ADDR = 40,
+	COMMAND_SET_BOARD_SERIAL_NUM = 41,
+	COMMAND_NONE = 42
 } Command_t;
 
 /**
@@ -276,7 +278,7 @@ extern const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS];
  * @def NUM_SYSTEM_GCAL_PARAMS
  * @brief The number of parameters for the SYSTEM_GCAL command.
  */
-#define NUM_SYSTEM_GCAL_PARAMS 4
+#define NUM_SYSTEM_GCAL_PARAMS 1
 /* Prototype the SYSTEM_GCAL command params array */
 extern const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS];
 
@@ -503,6 +505,22 @@ extern const char* WRITE_CAL_VALID_PARAMS[NUM_WRITE_CAL_VALID_PARAMS];
 #define NUM_EXIT_CALIBRATION_MODE_PARAMS 0
 /* Prototype the EXIT_CALIBRATION_MODE command params array */
 extern const char* EXIT_CALIBRATION_MODE_PARAMS[NUM_EXIT_CALIBRATION_MODE_PARAMS];
+
+/**
+ * @def NUM_SET_FACTORY_MAC_ADDR_PARAMS
+ * @brief The number of parameters for the SET_FACTORY_MAC_ADDR command.
+ */
+#define NUM_SET_FACTORY_MAC_ADDR_PARAMS 1
+/* Prototype the SET_FACTORY_MAC_ADDR command params array */
+extern const char* SET_FACTORY_MAC_ADDR_PARAMS[NUM_SET_FACTORY_MAC_ADDR_PARAMS];
+
+/**
+ * @def NUM_SET_BOARD_SERIAL_NUM_PARAMS
+ * @brief The number of parameters for the SET_FACTORY_MAC_ADDR command.
+ */
+#define NUM_SET_BOARD_SERIAL_NUM_PARAMS 1
+/* Prototype the SET_BOARD_SERIAL_NUM command params array */
+extern const char* SET_BOARD_SERIAL_NUM_PARAMS[NUM_SET_BOARD_SERIAL_NUM_PARAMS];
 
 /**
  * @def NUM_NONE_PARAMS

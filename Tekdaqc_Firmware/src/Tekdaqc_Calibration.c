@@ -144,21 +144,18 @@ Tekdaqc_Function_Error_t PerformSystemGainCalibration(char keys[][MAX_COMMANDPAR
 		index = GetIndexOfArgument(keys, SYSTEM_GCAL_PARAMS[i], count);
 		if (index >= 0) { /* We found the key in the list */
 			switch (i) { /* Switch on the key not position in arguments list */
-				case 3: /* INPUT key */
+				case 0: /* INPUT key */
 					input = ADS1256_StringToBuffer(values[index]);
 					break;
 				default:
-					retval = ERR_AIN_PARSE_ERROR;
+					retval = ERR_CALIBRATION_PARSE_ERROR;
 			}
-		} else if (i == 0 || i == 1 || i == 2) {
-			/* The GAIN, RATE and BUFFER keys are not strictly required */
-			continue;
 		} else {
 			/* Somehow an error happened */
 #ifdef CALIBRATION_DEBUG
 			printf("[Command Interpreter] Unable to locate key: %s\n\r", READ_ANALOG_KEYS[i]);
 #endif
-			retval = ERR_AIN_PARSE_MISSING_KEY; /* Failed to locate a key */
+			retval = ERR_CALIBRATION_MISSING_KEY; /* Failed to locate a key */
 		}
 	}
 	ADC_GainCalibrate(input);

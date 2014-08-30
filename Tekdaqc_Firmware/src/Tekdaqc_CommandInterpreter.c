@@ -113,9 +113,10 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
 		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT",
 		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT", "REBOOT", "UPGRADE", "IDENTIFY", "SAMPLE",
-		"HALT", "SET_RTC", "CLEAR_USER_MAC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS", "ENTER_CALIBRATION_MODE",
-		"WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP", "WRITE_CALIBRATION_MAX_TEMP",
-		"WRITE_CALIBRATION_DELTA_TEMP", "WRITE_CALIBRATION_VALID", "EXIT_CALIBRATION_MODE", "NONE"};
+		"HALT", "SET_RTC", "CLEAR_USER_MAC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
+		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP",
+		"WRITE_CALIBRATION_MAX_TEMP", "WRITE_CALIBRATION_DELTA_TEMP", "WRITE_CALIBRATION_VALID",
+		"EXIT_CALIBRATION_MODE", "SET_FACTORY_MAC_ADDR", "SET_BOARD_SERIAL_NUM", "NONE"};
 
 /**
  * List of all parameters for the LIST_ANALOG_INPUTS command.
@@ -167,8 +168,7 @@ const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS] = {};
 /**
  * List of all parameters for the SYSTEM_GCAL command.
  */
-const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS] = {PARAMETER_BUFFER, PARAMETER_RATE, PARAMETER_GAIN,
-PARAMETER_INPUT};
+const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS] = {PARAMETER_INPUT};
 
 /**
  * List of all parameters for the READ_SELF_GCAL command.
@@ -310,6 +310,16 @@ const char* WRITE_CAL_VALID_PARAMS[NUM_WRITE_CAL_VALID_PARAMS] = {};
  * List of all parameters for the EXIT_CALIBRATION_MODE command.
  */
 const char* EXIT_CALIBRATION_MODE_PARAMS[NUM_EXIT_CALIBRATION_MODE_PARAMS] = {};
+
+/**
+ * List of all parameters for the SET_FACTORY_MAC_ADDR command.
+ */
+const char* SET_FACTORY_MAC_ADDR_PARAMS[NUM_SET_FACTORY_MAC_ADDR_PARAMS] = {PARAMETER_VALUE};
+
+/**
+ * List of all parameters for the SET_BOARD_SERIAL_NUM command.
+ */
+const char* SET_BOARD_SERIAL_NUM_PARAMS[NUM_SET_BOARD_SERIAL_NUM_PARAMS] = {PARAMETER_VALUE};
 
 /**
  * List of all parameters for the NONE command.
@@ -701,6 +711,20 @@ static Tekdaqc_Command_Error_t Ex_WriteCalibrationValid(char keys[][MAX_COMMANDP
  * @brief Execute the EXIT_CALIBRATION_MODE command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_ExitCalibrationMode(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the SET_FACTORY_MAC_ADDR command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_SetFactoryMACAddr(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the SET_BOARD_SERIAL_NUM command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -1421,6 +1445,12 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 			break;
 		case COMMAND_EXIT_CALIBRATION_MODE:
 			retval = Ex_ExitCalibrationMode(keys, values, count);
+			break;
+		case COMMAND_SET_FACTORY_MAC_ADDR:
+			retval = Ex_SetFactoryMACAddr(keys, values, count);
+			break;
+		case COMMAND_SET_BOARD_SERIAL_NUM:
+			retval = Ex_SetBoardSerialNum(keys, values, count);
 			break;
 		case COMMAND_NONE:
 			/* Do nothing */
@@ -2361,7 +2391,8 @@ static Tekdaqc_Command_Error_t Ex_SetUserMac(char keys[][MAX_COMMANDPART_LENGTH]
 						uint16_t mid = (mac >> 16) & 0xFFFF;
 						uint16_t high = (mac >> 32) & 0xFFFF;
 #ifdef COMMAND_DEBUG
-						printf("MAC Address:\n\r\tHIGH: %" PRIX16 "\n\r\tMID: %" PRIX16 "\n\r\tLOW: %" PRIX16 "\n\r", high, mid, low);
+						printf("MAC Address:\n\r\tHIGH: %" PRIX16 "\n\r\tMID: %" PRIX16 "\n\r\tLOW: %" PRIX16 "\n\r",
+								high, mid, low);
 #endif
 						EE_WriteVariable(ADDR_USER_MAC_LOW, low);
 						EE_WriteVariable(ADDR_USER_MAC_MID, mid);
@@ -2650,6 +2681,110 @@ static Tekdaqc_Command_Error_t Ex_ExitCalibrationMode(char keys[][MAX_COMMANDPAR
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	Tekdaqc_EndCalibrationMode();
 	return retval;
+}
+
+/**
+ * Execute the SET_FACTORY_MAC_ADDR command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_SetFactoryMACAddr(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	uint16_t low, mid, high;
+	if (InputArgsCheck(keys, values, count, NUM_SET_FACTORY_MAC_ADDR_PARAMS, SET_FACTORY_MAC_ADDR_PARAMS)) {
+		int8_t index = -1;
+		for (int i = 0; i < NUM_SET_FACTORY_MAC_ADDR_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, SET_FACTORY_MAC_ADDR_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (i) { /* Switch on the key not position in arguments list */
+					case 0: /* VALUE key */
+#ifdef COMMAND_DEBUG
+						printf("Processing VALUE key\n\r");
+#endif
+						uint64_t mac = strtoull(values[i], NULL, 16);
+#ifdef COMMAND_DEBUG
+						printf("Decoded MAC address: 0x%012" PRIX64 "\n\r", mac);
+#endif
+						low = mac & 0xFFFF;
+						mid = (mac >> 16) & 0xFFFF;
+						high = (mac >> 32) & 0xFFFF;
+#ifdef COMMAND_DEBUG
+						printf("MAC Address:\n\r\tHIGH: %" PRIX16 "\n\r\tMID: %" PRIX16 "\n\r\tLOW: %" PRIX16 "\n\r",
+								high, mid, low);
+#endif
+						break;
+					default:
+						/* Return an error */
+						retval = ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+			if (retval != ERR_COMMAND_OK) {
+				break; /* If an error occurred, don't bother continuing */
+			}
+		}
+		/* If an error occurred, don't bother continuing */
+		if (retval == ERR_COMMAND_OK) {
+
+			FLASH_Unlock();
+
+			/* Clear pending flags (if any), observed post flashing */
+			FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
+			FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
+
+			/* Wait for last operation to be completed */
+			FLASH_Status status = FLASH_WaitForLastOperation();
+			if (status != FLASH_COMPLETE) {
+#ifdef COMMAND_DEBUG
+				printf("Failed to unlock OTP region.\n\r");
+#endif
+				lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
+				retval = ERR_COMMAND_FUNCTION_ERROR;
+			} else {
+				status = FLASH_ProgramByte(FACTORY_MAC_ADDR0, (low >> 8) & 0xFF);
+				if (status == FLASH_COMPLETE)
+					status = FLASH_ProgramByte(FACTORY_MAC_ADDR1, low & 0xFF);
+				if (status == FLASH_COMPLETE)
+					status = FLASH_ProgramByte(FACTORY_MAC_ADDR2, (mid >> 8) & 0xFF);
+				if (status == FLASH_COMPLETE)
+					status = FLASH_ProgramByte(FACTORY_MAC_ADDR3, mid & 0xFF);
+				if (status == FLASH_COMPLETE)
+					status = FLASH_ProgramByte(FACTORY_MAC_ADDR4, (high >> 8) & 0xFF);
+				if (status == FLASH_COMPLETE)
+					status = FLASH_ProgramByte(FACTORY_MAC_ADDR5, high & 0xFF);
+				if (status != FLASH_COMPLETE) {
+					/* An error occurred in writing the bytes */
+					lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
+					retval = ERR_COMMAND_FUNCTION_ERROR;
+				}
+			}
+
+			FLASH_Lock();
+		}
+	} else {
+		/* We can't create a new input */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for setting the factory MAC Address.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
+ * Execute the SET_BOARD_SERIAL_NUM command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+
 }
 
 /*--------------------------------------------------------------------------------------------------------*/

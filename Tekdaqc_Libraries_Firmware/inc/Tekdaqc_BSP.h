@@ -70,9 +70,24 @@ extern "C" {
 /* #define TEKDAQC_BOARD_TYPE ((char) 'C') */
 #define TEKDAQC_BOARD_TYPE ((char) 'D')
 
+/** @addtogroup flash_parameters FLASH Parameters
+ * @{
+ */
+
+#define FLASH_VOLTAGE_RANGE			(VoltageRange_3)
+#define FLASH_LATENCY				(FLASH_Latency_5)
+#define OTP_BLOCK_SIZE				0x20 /* 32 Bytes */
+#define OTP_BLOCK_COUNT				0x10 /* 16 Blocks */
+#define OTP_BASE_ADDRESS			0x1FFF7800
+#define OTP_LOCK_BASE_ADDRESS		0x1FFF7A00
+
+/**
+ * @}
+ */
+
 /** @addtogroup command_parser Command Parser
-  * @{
-  */
+ * @{
+ */
 
 #define SIZE_TOSTRING_BUFFER 512U
 
@@ -92,8 +107,8 @@ extern "C" {
  */
 
 /** @addtogroup tekdaqc_communication Tekdaqc Communication
-  * @{
-  */
+ * @{
+ */
 
 /**
  * @def LOCATOR_PORT
@@ -112,8 +127,8 @@ extern "C" {
  */
 
 /** @addtogroup update_rtc_driver Update/RTC Driver
-  * @{
-  */
+ * @{
+ */
 
 #define UPDATE_FLAG_REGISTER		(RTC_BKP_DR19)
 #define UPDATE_FLAG_ENABLED			0x00000001U
@@ -126,8 +141,8 @@ extern "C" {
  */
 
 /** @addtogroup analog_input_constants Analog Input Constants
-  * @{
-  */
+ * @{
+ */
 
 #define EXTERNAL_MUX_DELAY 2000
 
@@ -167,8 +182,8 @@ typedef enum {
  */
 
 /** @addtogroup analog_input_multiplexer Analog Input Multiplexer
-  * @{
-  */
+ * @{
+ */
 
 /* The external input settings for the internal MUX */
 #define EXTERNAL_ANALOG_IN_AINP (ADS1256_AIN0)
@@ -272,8 +287,8 @@ typedef enum {
  */
 
 /** @addtogroup board_channel_constants General Board IO Channel Constants
-  * @{
-  */
+ * @{
+ */
 
 /**
  * @brief Tekdaqc logic level enumeration.
@@ -298,8 +313,8 @@ typedef enum {
  */
 
 /** @addtogroup ads1256_driver ADS1256 Driver
-  * @{
-  */
+ * @{
+ */
 
 /**
  * @def ADS1256_CLK_FREQ
@@ -363,8 +378,8 @@ typedef enum {
  */
 
 /** @addtogroup tle7232_driver TLE7232 Driver
-  * @{
-  */
+ * @{
+ */
 
 /* SPIDER TLE7232 SPI Interface pins  */
 #define NUMBER_TLE7232_CHIPS				2
@@ -434,8 +449,8 @@ typedef enum {
  */
 
 /** @addtogroup digital_input_driver Digital Input Driver
-  * @{
-  */
+ * @{
+ */
 
 /* Digital Input Interface pins  */
 /* GPI0 */
@@ -557,8 +572,8 @@ typedef enum {
  */
 
 /** @addtogroup ethernet_driver Ethernet Driver
-  * @{
-  */
+ * @{
+ */
 
 /* Ethernet defines */
 #define USE_DHCP       					/* enable DHCP, if disabled static address is used */
@@ -617,9 +632,18 @@ typedef enum {
 #define MAC_ADDR0   0U
 #define MAC_ADDR1   25U
 #define MAC_ADDR2   13U
-#define MAC_ADDR3   8U
+#define MAC_ADDR3   16U
 #define MAC_ADDR4   0U
 #define MAC_ADDR5   0U
+
+#define FACTORY_MAC_BLOCK				0x00 /* Block */
+
+#define FACTORY_MAC_ADDR0				(OTP_BASE_ADDRESS + FACTORY_MAC_BLOCK * OTP_BLOCK_SIZE)
+#define FACTORY_MAC_ADDR1				(FACTORY_MAC_ADDR0 + 1)
+#define FACTORY_MAC_ADDR2				(FACTORY_MAC_ADDR1 + 1)
+#define FACTORY_MAC_ADDR3				(FACTORY_MAC_ADDR2 + 1)
+#define FACTORY_MAC_ADDR4				(FACTORY_MAC_ADDR3 + 1)
+#define FACTORY_MAC_ADDR5				(FACTORY_MAC_ADDR4 + 1)
 
 #define USE_DEFAULT_MAC 				0x0000
 #define USE_USER_MAC					0x0001
@@ -657,8 +681,8 @@ typedef enum {
 #define CAN_TX_SOURCE              (GPIO_PinSource1)
 
 /** @addtogroup com_port_driver COM Port Driver
-  * @{
-  */
+ * @{
+ */
 
 typedef enum {
 	COM1 = 0, COM2 = 1
@@ -715,11 +739,10 @@ typedef enum {
  */
 
 /** @addtogroup calibration_table Calibration Table
-  * @{
-  */
+ * @{
+ */
 
-#define CALIBRATION_LATENCY			(FLASH_Latency_5)
-#define FLASH_VOLTAGE_RANGE			(VoltageRange_3)
+#define CALIBRATION_LATENCY			(FLASH_LATENCY)
 
 #define CALIBRATION_SECTOR			(FLASH_Sector_11) /* 128KB */
 #define CALIBRATION_WPSECTOR		(OB_WRP_Sector_11)
@@ -728,13 +751,14 @@ typedef enum {
 
 #define CALIBRATION_TEMP_OFFSET		((NUM_INPUT_RANGES + NUM_BUFFER_SETTINGS) * NUM_PGA_SETTINGS * NUM_SAMPLE_RATES)
 
-#define BOARD_SERIAL_NUM_ADDR		(ADDR_CALIBRATION_BASE)
+#define BOARD_SERIAL_OTP_BLOCK		0x00 /* Block */
+#define BOARD_SERIAL_NUM_ADDR		(OTP_BASE_ADDRESS + BOARD_SERIAL_OTP_BLOCK * OTP_BLOCK_SIZE)
 #define BOARD_SERIAL_NUM_LENGTH		32 /* Serial number is 32 bytes long (32 chars) */
 
 #define CALIBRATION_VALID_LO_BYTE	('O')
 #define CALIBRATION_VALID_HI_BYTE	('K')
 
-#define CAL_TEMP_LOW_ADDR			(BOARD_SERIAL_NUM_ADDR + BOARD_SERIAL_NUM_LENGTH)
+#define CAL_TEMP_LOW_ADDR			(ADDR_CALIBRATION_BASE)
 #define CAL_TEMP_HIGH_ADDR			(CAL_TEMP_LOW_ADDR + 4)
 #define CAL_TEMP_STEP_ADDR			(CAL_TEMP_HIGH_ADDR + 4)
 #define CAL_VALID_ADDR_LO_ADDR		(CAL_TEMP_STEP_ADDR + 4)
@@ -748,8 +772,8 @@ typedef enum {
  */
 
 /** @addtogroup flash_disk_driver FLASH Disk Driver
-  * @{
-  */
+ * @{
+ */
 
 /* EEPROM start address in Flash */
 #define EEPROM_START_ADDRESS  ((uint32_t)0x080A0000) /* EEPROM emulation start address:
@@ -790,8 +814,8 @@ extern uint16_t EEPROM_ADDRESSES[NUM_EEPROM_ADDRESSES];
  */
 
 /** @addtogroup debug_constants Debug Constants
-  * @{
-  */
+ * @{
+ */
 
 #ifdef DEBUG
 typedef enum {

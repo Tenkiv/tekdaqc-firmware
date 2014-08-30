@@ -84,6 +84,7 @@ static void low_level_init(struct netif *netif) {
 	netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
 	/* set MAC hardware address */
+	uint8_t M0, M1, M2, M3, M4, M5;
 	uint16_t isUserMacValid = 0;
 	EE_ReadVariable(ADDR_USE_USER_MAC, &isUserMacValid);
 	if (isUserMacValid != 0) {
@@ -92,21 +93,37 @@ static void low_level_init(struct netif *netif) {
 		EE_ReadVariable(ADDR_USER_MAC_LOW, &low);
 		EE_ReadVariable(ADDR_USER_MAC_MID, &mid);
 		EE_ReadVariable(ADDR_USER_MAC_HIGH, &high);
-		netif->hwaddr[0] = low & 0xFF;
-		netif->hwaddr[1] = (low >> 8) & 0xFF;
-		netif->hwaddr[2] = mid & 0xFF;
-		netif->hwaddr[3] = (mid >> 8) & 0xFF;
-		netif->hwaddr[4] = high & 0xFF;
-		netif->hwaddr[5] = (high >> 8) & 0xFF;
+		M0 = (low >> 8) & 0xFF;
+		M1 = low & 0xFF;
+		M2 = (mid >> 8) & 0xFF;
+		M3 = mid & 0xFF;
+		M4 = (high >> 8) & 0xFF;
+		M5 = high & 0xFF;
 	} else {
-		/* We should use the default MAC address */
-		netif->hwaddr[0] = MAC_ADDR0;
-		netif->hwaddr[1] = MAC_ADDR1;
-		netif->hwaddr[2] = MAC_ADDR2;
-		netif->hwaddr[3] = MAC_ADDR3;
-		netif->hwaddr[4] = MAC_ADDR4;
-		netif->hwaddr[5] = MAC_ADDR5;
+		/* We should try to use the factory programmed MAC Address */
+		M0 = *((uint8_t *) FACTORY_MAC_ADDR0);
+		M1 = *((uint8_t *) FACTORY_MAC_ADDR1);
+		M2 = *((uint8_t *) FACTORY_MAC_ADDR2);
+		M3 = *((uint8_t *) FACTORY_MAC_ADDR3);
+		M4 = *((uint8_t *) FACTORY_MAC_ADDR4);
+		M5 = *((uint8_t *) FACTORY_MAC_ADDR5);
+
+		if (M0 == 0xFF && M1 == 0xFF && M1 == 0xFF && M2 == 0xFF && M3 == 0xFF && M4 == 0xFF && M5 == 0xFF) {
+			/* We should use the default hard coded MAC address */
+			M0 = MAC_ADDR0;
+			M1 = MAC_ADDR1;
+			M2 = MAC_ADDR2;
+			M3 = MAC_ADDR3;
+			M4 = MAC_ADDR4;
+			M5 = MAC_ADDR5;
+		}
 	}
+	netif->hwaddr[0] = M0;
+	netif->hwaddr[1] = M1;
+	netif->hwaddr[2] = M2;
+	netif->hwaddr[3] = M3;
+	netif->hwaddr[4] = M4;
+	netif->hwaddr[5] = M5;
 
 	/* initialize MAC address in ethernet MAC */
 	ETH_MACAddressConfig(ETH_MAC_Address0, netif->hwaddr);
