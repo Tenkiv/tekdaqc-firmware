@@ -2713,7 +2713,8 @@ static Tekdaqc_Command_Error_t Ex_SetFactoryMACAddr(char keys[][MAX_COMMANDPART_
 						mid = (mac >> 16) & 0xFFFF;
 						high = (mac >> 32) & 0xFFFF;
 #ifdef COMMAND_DEBUG
-						printf("MAC Address:\n\r\tHIGH: 0x%04" PRIX16 "\n\r\tMID: 0x%04" PRIX16 "\n\r\tLOW: 0x%04" PRIX16 "\n\r",
+						printf(
+								"MAC Address:\n\r\tHIGH: 0x%04" PRIX16 "\n\r\tMID: 0x%04" PRIX16 "\n\r\tLOW: 0x%04" PRIX16 "\n\r",
 								high, mid, low);
 #endif
 						break;
@@ -2788,7 +2789,79 @@ static Tekdaqc_Command_Error_t Ex_SetFactoryMACAddr(char keys[][MAX_COMMANDPART_
  */
 static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	char * serial;
+	uint8_t count = 1;
+	if (InputArgsCheck(keys, values, count, NUM_SET_FACTORY_MAC_ADDR_PARAMS, SET_FACTORY_MAC_ADDR_PARAMS)) {
+		int8_t index = -1;
+		for (int i = 0; i < NUM_SET_FACTORY_MAC_ADDR_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, SET_FACTORY_MAC_ADDR_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (i) { /* Switch on the key not position in arguments list */
+					case 0: /* VALUE key */
+#ifdef COMMAND_DEBUG
+						printf("Processing VALUE key\n\r");
+#endif
+#ifdef COMMAND_DEBUG
+						serial = values[i];
+						while (serial[count] != '\0') {
+							++count;
+						}
+						if (count < BOARD_SERIAL_NUM_LENGTH) {
+							retval = ERR_COMMAND_PARSE_ERROR;
+						}
+						break;
+					default:
+						/* Return an error */
+						retval = ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+			if (retval != ERR_COMMAND_OK) {
+				break; /* If an error occurred, don't bother continuing */
+			}
+		}
+		/* If an error occurred, don't bother continuing */
+		if (retval == ERR_COMMAND_OK) {
 
+			FLASH_Unlock();
+
+			/* Clear pending flags (if any), observed post flashing */
+			FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
+			FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
+
+			/* Wait for last operation to be completed */
+			FLASH_Status status = FLASH_WaitForLastOperation();
+			if (status != FLASH_COMPLETE) {
+#ifdef COMMAND_DEBUG
+				printf("Failed to unlock OTP region.\n\r");
+#endif
+				lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
+				retval = ERR_COMMAND_FUNCTION_ERROR;
+			} else {
+				uint8_t idx = 0;
+				/* Program each byte of the serial number sequentially */
+				while (status == FLASH_COMPLETE && idx < count) {
+					status = FLASH_ProgramByte(BOARD_SERIAL_NUM_ADDR + idx, serial[idx]);
+				}
+				/* Lock the Serial Number Address Block */
+				status = FLASH_ProgramByte(BOARD_SERIAL_LOCK_ADDR, 0x00);
+				if (status != FLASH_COMPLETE) {
+					/* An error occurred in writing the bytes */
+					lastFunctionError = ERR_CALIBRATION_WRITE_FAILED;
+					retval = ERR_COMMAND_FUNCTION_ERROR;
+				}
+			}
+
+			FLASH_Lock();
+		}
+	} else {
+		/* We can't create a new input */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for setting the factory MAC Address.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
 }
 
 /*--------------------------------------------------------------------------------------------------------*/

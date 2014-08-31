@@ -165,7 +165,7 @@ extern "C" {
  * @def LOCATOR_DEBUG
  * @brief Used to turn on debugging `printf` statements for the Tekdaqc locator service.
  */
-#define LOCATOR_DEBUG
+/* #define LOCATOR_DEBUG */
 
 /**
  * @internal
