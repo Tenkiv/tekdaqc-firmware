@@ -387,6 +387,14 @@ extern const char* CLEAR_DIG_OUTPUT_FAULT_PARAMS[NUM_CLEAR_DIG_OUTPUT_FAULT_PARA
 extern const char* DISCONNECT_PARAMS[NUM_DISCONNECT_PARAMS];
 
 /**
+ * @def NUM_REBOOT_PARAMS
+ * @brief The number of parameters for the REBOOT command.
+ */
+#define NUM_REBOOT_PARAMS 0
+/* Prototype the REBOOT command params array */
+extern const char* REBOOT_PARAMS[NUM_REBOOT_PARAMS];
+
+/**
  * @def NUM_UPGRADE_PARAMS
  * @brief The number of parameters for the UPGRADE command.
  */
@@ -433,6 +441,14 @@ extern const char* SET_RTC_PARAMS[NUM_SET_RTC_PARAMS];
 #define NUM_SET_USER_MAC_PARAMS 1
 /* Prototype the SET_USER_MAC command params array */
 extern const char* SET_USER_MAC_PARAMS[NUM_SET_USER_MAC_PARAMS];
+
+/**
+ * @def NUM_CLEAR_USER_MAC_PARAMS
+ * @brief The number of parameters for the CLEAR_USER_MAC command.
+ */
+#define NUM_CLEAR_USER_MAC_PARAMS 1
+/* Prototype the CLEAR_USER_MAC command params array */
+extern const char* CLEAR_USER_MAC_PARAMS[NUM_CLEAR_USER_MAC_PARAMS];
 
 /**
  * @def NUM_SET_STATIC_IP_PARAMS

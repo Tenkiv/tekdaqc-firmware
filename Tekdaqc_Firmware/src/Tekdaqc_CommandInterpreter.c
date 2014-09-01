@@ -96,6 +96,16 @@
 #define KEY_VALUE_PAIR_DELIMETER		"="
 
 /*--------------------------------------------------------------------------------------------------------*/
+/* PRIVATE TYPEDEFS */
+/*--------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief A common function pointer for all of the command execution functions.
+ */
+typedef Tekdaqc_Function_Error_t (*Ex_Command_Function)(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
 
@@ -236,6 +246,11 @@ const char* CLEAR_DIG_OUTPUT_FAULT_PARAMS[NUM_CLEAR_DIG_OUTPUT_FAULT_PARAMS] = {
 const char* DISCONNECT_PARAMS[NUM_DISCONNECT_PARAMS] = {};
 
 /**
+ * List of all parameters for the REBOOT command.
+ */
+const char* REBOOT_PARAMS[NUM_REBOOT_PARAMS] = {};
+
+/**
  * List of all parameters for the UPGRADE command.
  */
 const char* UPGRADE_PARAMS[NUM_UPGRADE_PARAMS] = {};
@@ -264,6 +279,11 @@ const char* SET_RTC_PARAMS[NUM_SET_RTC_PARAMS] = {PARAMETER_VALUE};
  * List of all parameters for the SET_USER_MAC command.
  */
 const char* SET_USER_MAC_PARAMS[NUM_SET_USER_MAC_PARAMS] = {PARAMETER_VALUE};
+
+/**
+ * List of all parameters for the CLEAR_USER_MAC command.
+ */
+const char* CLEAR_USER_MAC_PARAMS[NUM_CLEAR_USER_MAC_PARAMS] = {};
 
 /**
  * List of all parameters for the SET_STATIC_IP command.
@@ -625,6 +645,34 @@ static Tekdaqc_Command_Error_t Ex_ClearDigitalOutputFault(char keys[][MAX_COMMAN
 
 /**
  * @internal
+ * @brief Execute the DISCONNECT command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_Disconnect(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the REBOOT command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_Reboot(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the UPGRADE command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_Upgrade(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the IDENTIFY command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_Identify(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count);
+
+/**
+ * @internal
  * @brief Execute the SAMPLE command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
@@ -632,9 +680,10 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 
 /**
  * @internal
- * @brief Execute the IDENTIFY command with the provided parameters.
+ * @brief Execute the HALT command with the provided parameters.
  */
-static Tekdaqc_Command_Error_t Ex_Identify(void);
+static Tekdaqc_Command_Error_t Ex_Halt(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count);
 
 /**
  * @internal
@@ -649,6 +698,13 @@ static Tekdaqc_Command_Error_t Ex_SetRTC(char keys[][MAX_COMMANDPART_LENGTH], ch
  */
 static Tekdaqc_Command_Error_t Ex_SetUserMac(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the CLEAR_USER_MAC command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_ClearUserMac(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /**
  * @internal
@@ -726,6 +782,24 @@ static Tekdaqc_Command_Error_t Ex_SetFactoryMACAddr(char keys[][MAX_COMMANDPART_
  */
 static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the NONE command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count);
+
+static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInputs, Ex_ReadAnalogInput,
+		Ex_AddAnalogInput, Ex_RemoveAnalogInput, Ex_CheckAnalogInput, Ex_SetAnalogInputScale,
+		Ex_GetAnalogInputScale, Ex_SystemCal, Ex_ReadSystemGCal, Ex_ListDigitalInputs, Ex_ReadDigitalInput,
+		Ex_AddDigitalInput, Ex_RemoveDigitalInput, Ex_ListDigitalOutputs, Ex_SetDigitalOutput,
+		Ex_ReadDigitalOutput, Ex_AddDigitalOutput, Ex_RemoveDigitalOutput, Ex_ClearDigitalOutputFault,
+		Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt, Ex_SetRTC, Ex_SetUserMac,
+		Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus, Ex_EnterCalibrationMode,
+		Ex_WriteGainCalibrationValue, Ex_WriteCalibrationMinTemp, Ex_WriteCalibrationMaxTemp,
+		Ex_WriteCalibrationDeltaTemp, Ex_WriteCalibrationValid, Ex_ExitCalibrationMode, Ex_SetFactoryMACAddr,
+		Ex_SetBoardSerialNum, Ex_None};
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
@@ -1383,31 +1457,22 @@ static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX
 			retval = Ex_ClearDigitalOutputFault(keys, values, count);
 			break;
 		case COMMAND_DISCONNECT:
-			/* Close the telnet connection */
-			TelnetClose();
+			retval = Ex_Disconnect(keys, values, count);
 			break;
 		case COMMAND_REBOOT:
-			/* Close the telnet connection */
-			TelnetClose();
-			/* Reset the processor */
-			NVIC_SystemReset();
+			retval = Ex_Reboot(keys, values, count);
 			break;
 		case COMMAND_UPGRADE:
-			/* Write the update flag to the backup register */
-			EE_WriteVariable(ADDR_USE_USER_MAC, UPDATE_FLAG_ENABLED);
-			/* Close the telnet connection */
-			TelnetClose();
-			/* Reset the processor */
-			NVIC_SystemReset();
+			retval = Ex_Upgrade(keys, values, count);
 			break;
 		case COMMAND_IDENTIFY:
-			Ex_Identify();
+			Ex_Identify(keys, values, count);
 			break;
 		case COMMAND_SAMPLE:
 			retval = Ex_Sample(keys, values, count);
 			break;
 		case COMMAND_HALT:
-			HaltTasks();
+			retval = Ex_Halt(keys, values, count);
 			break;
 		case COMMAND_SET_RTC:
 			retval = Ex_SetRTC(keys, values, count);
@@ -2260,6 +2325,127 @@ static Tekdaqc_Command_Error_t Ex_ClearDigitalOutputFault(char keys[][MAX_COMMAN
 }
 
 /**
+ * Execute the DISCONNECT command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_Disconnect(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_DISCONNECT_PARAMS, DISCONNECT_PARAMS)) {
+		/* Close the telnet connection */
+		TelnetClose();
+	} else {
+		/* We received some params we weren't expecting */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for disconnecting the Telnet connection.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
+ * Execute the REBOOT command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_Reboot(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_REBOOT_PARAMS, REBOOT_PARAMS)) {
+		/* Close the telnet connection */
+		TelnetClose();
+		/* Reset the processor */
+		NVIC_SystemReset();
+	} else {
+		/* We received some params we weren't expecting */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for rebooting the Tekdaqc.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
+ * Execute the UPGRADE command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_Upgrade(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_UPGRADE_PARAMS, UPGRADE_PARAMS)) {
+		/* Write the update flag to the backup register */
+		EE_WriteVariable(ADDR_USE_USER_MAC, UPDATE_FLAG_ENABLED);
+		/* Close the telnet connection */
+		TelnetClose();
+		/* Reset the processor */
+		NVIC_SystemReset();
+	} else {
+		/* We received some params we weren't expecting */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for rebooting the Tekdaqc.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
+ * Execute the IDENTIFY command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_Identify(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_IDENTIFY_PARAMS, IDENTIFY_PARAMS)) {
+		unsigned char* serial = Tekdaqc_GetLocatorBoardID();
+		if (serial == '\0') {
+			serial = ((unsigned char*) "None");
+		}
+		uint8_t type = Tekdaqc_GetLocatorBoardType();
+		uint32_t ip = Tekdaqc_GetLocatorIp();
+		unsigned char* MAC = Tekdaqc_GetLocatorMAC();
+		uint32_t version = Tekdaqc_GetLocatorVersion();
+		uint32_t count = 0;
+		count = snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "Board Identity");
+		count += snprintf(TOSTRING_BUFFER + count, 51 * sizeof(char), "\n\r\tSerial Number: %s", serial);
+		count -= 2;
+		count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER),
+				"\n\r\tBoard Revision: %c\n\r\tFirmware Version: %lu.%lu.%lu.%lu", (char) type, (version & 0xff),
+				((version >> 8) & 0xff), ((version >> 16) & 0xff), ((version >> 24) & 0xff));
+		count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER), "\n\r\tIP Address: %lu.%lu.%lu.%lu",
+				ip & 0xff, (ip >> 8) & 0xff, (ip >> 16) & 0xff, (ip >> 24) & 0xff);
+		count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER),
+				"\n\r\tMAC Address: %02X:%02X:%02X:%02X:%02X:%02X\n\r", *MAC, *(MAC + 1), *(MAC + 2), *(MAC + 3),
+				*(MAC + 4), *(MAC + 5));
+		TelnetWriteStatusMessage(TOSTRING_BUFFER);
+	} else {
+		/* We can't sample */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for identification.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
  * Execute the SAMPLE command.
  *
  * @param keys char[][] C-String of the command parameter keys.
@@ -2302,9 +2488,9 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 			CommandStateMoveToGeneralSample();
 		}
 	} else {
-		/* We can't create a new input */
+		/* We can't sample */
 #ifdef COMMAND_DEBUG
-		printf("[Command Interpreter] Provided arguments are not valid for read of an analog input.\n\r");
+		printf("[Command Interpreter] Provided arguments are not valid for sampling.\n\r");
 #endif
 		retval = ERR_COMMAND_BAD_PARAM;
 	}
@@ -2312,36 +2498,26 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 }
 
 /**
- * Execute the IDENTIFY command.
+ * Execute the HALT command.
  *
  * @param keys char[][] C-String of the command parameter keys.
  * @param values char[][] C-String of the command parameter values.
  * @param count uint8_t The number of command parameters.
  * @retval Tekdaqc_Command_Error_t The command error status.
  */
-static Tekdaqc_Command_Error_t Ex_Identify(void) {
+static Tekdaqc_Command_Error_t Ex_Halt(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
-	unsigned char* serial = Tekdaqc_GetLocatorBoardID();
-	if (serial == '\0') {
-		serial = ((unsigned char*) "None");
+	if (InputArgsCheck(keys, values, count, NUM_HALT_PARAMS, HALT_PARAMS)) {
+		/* Instruct the command state machine to halt all tasks */
+		HaltTasks();
+	} else {
+		/* We received some params we weren't expecting */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for halting task on the Tekdaqc.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
 	}
-	uint8_t type = Tekdaqc_GetLocatorBoardType();
-	uint32_t ip = Tekdaqc_GetLocatorIp();
-	unsigned char* MAC = Tekdaqc_GetLocatorMAC();
-	uint32_t version = Tekdaqc_GetLocatorVersion();
-	uint32_t count = 0;
-	count = snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "Board Identity");
-	count += snprintf(TOSTRING_BUFFER + count, 51 * sizeof(char), "\n\r\tSerial Number: %s", serial);
-	count -= 2;
-	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER),
-			"\n\r\tBoard Revision: %c\n\r\tFirmware Version: %lu.%lu.%lu.%lu", (char) type, (version & 0xff),
-			((version >> 8) & 0xff), ((version >> 16) & 0xff), ((version >> 24) & 0xff));
-	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER), "\n\r\tIP Address: %lu.%lu.%lu.%lu", ip & 0xff,
-			(ip >> 8) & 0xff, (ip >> 16) & 0xff, (ip >> 24) & 0xff);
-	count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER),
-			"\n\r\tMAC Address: %02X:%02X:%02X:%02X:%02X:%02X\n\r", *MAC, *(MAC + 1), *(MAC + 2), *(MAC + 3),
-			*(MAC + 4), *(MAC + 5));
-	TelnetWriteStatusMessage(TOSTRING_BUFFER);
 	return retval;
 }
 
@@ -2408,14 +2584,33 @@ static Tekdaqc_Command_Error_t Ex_SetUserMac(char keys[][MAX_COMMANDPART_LENGTH]
 				break; /* If an error occurred, don't bother continuing */
 			}
 		}
-		/* If an error occurred, don't bother continuing */
-		if (retval == ERR_COMMAND_OK) {
-			// TODO SET MAC
-		}
 	} else {
 		/* We can't create a new input */
 #ifdef COMMAND_DEBUG
 		printf("[Command Interpreter] Provided arguments are not valid for setting the user MAC Address.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
+ * Execute the CLEAR_USER_MAC command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_ClearUserMac(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_CLEAR_USER_MAC_PARAMS, CLEAR_USER_MAC_PARAMS)) {
+		EE_WriteVariable(ADDR_USE_USER_MAC, USE_DEFAULT_MAC);
+	} else {
+		/* We can't create a new input */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for clearing the user MAC Address.\n\r");
 #endif
 		retval = ERR_COMMAND_BAD_PARAM;
 	}
@@ -2861,6 +3056,19 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 		retval = ERR_COMMAND_BAD_PARAM;
 	}
 	return retval;
+}
+
+/**
+ * Execute the NONE command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
+	return ERR_COMMAND_OK;
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
