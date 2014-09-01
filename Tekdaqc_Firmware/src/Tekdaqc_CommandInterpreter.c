@@ -2791,7 +2791,7 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	char * serial;
-	uint8_t count = 1;
+	uint8_t char_count = 1;
 	if (InputArgsCheck(keys, values, count, NUM_SET_FACTORY_MAC_ADDR_PARAMS, SET_FACTORY_MAC_ADDR_PARAMS)) {
 		int8_t index = -1;
 		for (int i = 0; i < NUM_SET_FACTORY_MAC_ADDR_PARAMS; ++i) {
@@ -2802,12 +2802,11 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 #ifdef COMMAND_DEBUG
 						printf("Processing VALUE key\n\r");
 #endif
-#ifdef COMMAND_DEBUG
 						serial = values[i];
-						while (serial[count] != '\0') {
-							++count;
+						while (serial[char_count] != '\0') {
+							++char_count;
 						}
-						if (count < BOARD_SERIAL_NUM_LENGTH) {
+						if (char_count < BOARD_SERIAL_NUM_LENGTH) {
 							retval = ERR_COMMAND_PARSE_ERROR;
 						}
 						break;
@@ -2840,7 +2839,7 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 			} else {
 				uint8_t idx = 0;
 				/* Program each byte of the serial number sequentially */
-				while (status == FLASH_COMPLETE && idx < count) {
+				while (status == FLASH_COMPLETE && idx < char_count) {
 					status = FLASH_ProgramByte(BOARD_SERIAL_NUM_ADDR + idx, serial[idx]);
 				}
 				/* Lock the Serial Number Address Block */
