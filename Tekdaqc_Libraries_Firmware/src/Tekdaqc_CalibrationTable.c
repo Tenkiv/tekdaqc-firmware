@@ -159,6 +159,20 @@ static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor) {
 	return value;
 }
 
+/**
+ * @internal
+ * Computes the calibration table indices for the calibration value corresponding to the specified parameters.
+ *
+ * @param rate_index uint8_t* Pointer to the variable to store the rate index in.
+ * @param gain_index uint8_t* Pointer to the variable to store the gain index in.
+ * @param buffer_index uint8_t* Pointer to the variable to store the buffer index in.
+ * @param scale_index uint8_t* Pointer to the variable to store the scale index in.
+ * @param rate ADS1256_SPS_t The sample rate to lookup for.
+ * @param gain ADS1256_PGA_t The gain to lookup for.
+ * @param buffer ADS1256_BUFFER_t The buffer setting to lookup for.
+ * @param scale ANALOG_INPUT_SCALE_t The analog input scale to lookup for.
+ * @retval None.
+ */
 static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_t* buffer_index, uint8_t* scale_index,
 		ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, ANALOG_INPUT_SCALE_t scale) {
 	*buffer_index = (buffer == ADS1256_BUFFER_ENABLED) ? 0U : 1U;
@@ -480,10 +494,11 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 	FLASH_Unlock();
 
 	/* Clear pending flags (if any) */
-	FLASH_ClearFlag(
-	FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
+	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
-	FLASH_Status status = FLASH_COMPLETE;
+	FLASH_Status status = FLASH_WaitForLastOperation();
+
+	if (status != FLASH_COMPLETE) return status;
 
 	/* FLASH_OB_Unlock(); */
 

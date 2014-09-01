@@ -11,7 +11,6 @@
  * specific language governing permissions and limitations under the License.
  */
 
-
 /* Includes ------------------------------------------------------------------*/
 #include "Tekdaqc_Config.h"
 #include "stm32f4x7_eth.h"
@@ -35,6 +34,7 @@
 Tekdaqc_CommandInterpreter_t* interpreter;
 char character;
 TelnetStatus_t status;
+bool shouldServiceEthernet = true;
 
 /* Private functions ---------------------------------------------------------*/
 static void program_loop(void);
@@ -73,8 +73,7 @@ int main(void) {
 	/* Allow access to BKP Domain */
 	PWR_BackupAccessCmd(ENABLE);
 
-	if ((RTC_ReadBackupRegister(RTC_CONFIGURED_REG ) & RTC_CONFIGURED)
-			!= RTC_CONFIGURED) {
+	if ((RTC_ReadBackupRegister(RTC_CONFIGURED_REG) & RTC_CONFIGURED) != RTC_CONFIGURED) {
 #ifdef DEBUG
 		printf("[Main] Configuring the RTC domain.\n\r");
 #endif
@@ -93,7 +92,7 @@ int main(void) {
 	/**
 	 * Check if the system has resumed from a WWDG reset
 	 */
-	if (RCC_GetFlagStatus(RCC_FLAG_IWDGRST ) != RESET) {
+	if (RCC_GetFlagStatus(RCC_FLAG_IWDGRST) != RESET) {
 		/* This is a watchdog reset */
 
 		/* Clear the reset flags */
@@ -104,11 +103,11 @@ int main(void) {
 	} else {
 		/* This is not a watchdog reset */
 		/* Do any normal reset stuff here */
-		if (RCC_GetFlagStatus(RCC_FLAG_SFTRST )) {
+		if (RCC_GetFlagStatus(RCC_FLAG_SFTRST)) {
 			/* Software reset */
-		} else if (RCC_GetFlagStatus(RCC_FLAG_PORRST )) {
+		} else if (RCC_GetFlagStatus(RCC_FLAG_PORRST)) {
 			/* Power on Reset/Power down reset */
-		} else if (RCC_GetFlagStatus(RCC_FLAG_PINRST )) {
+		} else if (RCC_GetFlagStatus(RCC_FLAG_PINRST)) {
 			/* Reset pin reset */
 		} else {
 			/* Some other reset */
@@ -140,26 +139,30 @@ static void program_loop(void) {
 		/* Service the inputs/outputs */
 		ServiceTasks();
 
-		/* Check if any packet received */
-		if (ETH_CheckFrameReceived()) {
-			/* Process received ethernet packet */
-			LwIP_Pkt_Handle();
-		}
-
-		/* Handle periodic timers for LwIP */
-		LwIP_Periodic_Handle(GetLocalTime());
-
-		if (TelnetIsConnected() == true) { /* We have an active Telnet connection to service */
-			/* Do server stuff */
-			character = TelnetRead();
-			if (character != '\0') {
-				Command_AddChar(character);
+		if (shouldServiceEthernet == true) {
+			shouldServiceEthernet = false;
+			/* Check if any packet received */
+			if (ETH_CheckFrameReceived()) {
+				/* Process received ethernet packet */
+				LwIP_Pkt_Handle();
 			}
+
+			/* Handle periodic timers for LwIP */
+			LwIP_Periodic_Handle(GetLocalTime());
+
+			if (TelnetIsConnected() == true) { /* We have an active Telnet connection to service */
+				/* Do server stuff */
+				character = TelnetRead();
+				if (character != '\0') {
+					Command_AddChar(character);
+				}
+			}
+		} else {
+			shouldServiceEthernet = true;
 		}
 
 		/* Check to see if any faults have occurred */
 		/*Tekdaqc_CheckStatus();*/ //TODO: Re-enable when digital output faults work
-
 		/* Reload the IWDG Counter to prevent reset */
 		IWDG_ReloadCounter();
 	}
@@ -211,7 +214,6 @@ static void Tekdaqc_Init(void) {
 	SetDigitalInputWriteFunction(&TelnetWriteString);
 	SetDigitalOutputWriteFunction(&TelnetWriteString);
 
-
 	/* Initialize the calibration table and fetch the board serial number */
 	Tekdaqc_CalibrationInit();
 	char data = '\0';
@@ -224,7 +226,7 @@ static void Tekdaqc_Init(void) {
 #endif
 			break; /* Break out to prevent an invalid access */
 		}
-		data = *((__IO char*)Address);
+		data = *((__IO char*) Address);
 		TEKDAQC_BOARD_SERIAL_NUM[i] = data;
 		Address += sizeof(char);
 	}
@@ -247,7 +249,7 @@ static void Tekdaqc_Init(void) {
  */
 void assert_failed(uint8_t* file, uint32_t line) {
 	/* User can add his own implementation to report the file name and line number,
- ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+	 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
 	printf("Wrong parameters value: file %s on line %d\r\n", file, line);
 	/* Infinite loop */

@@ -179,6 +179,15 @@ bool isTekdaqc_CalibrationValid(void) {
 	return valid;
 }
 
+/**
+ * Retrieves the self gain calibration value stored in the base gain calibration table for the specified parameters.
+ *
+ * @param cal uint32_t* Pointer to the variable in which to store the calibration value.
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Function_Error_t The function error status.
+ */
 Tekdaqc_Function_Error_t GetSelfGainCalibration(uint32_t* cal, char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
@@ -223,6 +232,14 @@ Tekdaqc_Function_Error_t GetSelfGainCalibration(uint32_t* cal, char keys[][MAX_C
 	return retval; /* Return the status */
 }
 
+/**
+ * Writes a gain calibration value into the FLASH calibration table.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Function_Error_t The function error status.
+ */
 Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
