@@ -144,7 +144,7 @@ extern "C" {
  * @{
  */
 
-#define EXTERNAL_MUX_DELAY 2000
+#define EXTERNAL_MUX_DELAY 1000
 
 #define V_REFERENCE	((float) 2.5f)
 #define MAX_CODE 8388607U
