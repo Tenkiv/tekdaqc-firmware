@@ -102,8 +102,8 @@
 /**
  * @brief A common function pointer for all of the command execution functions.
  */
-typedef Tekdaqc_Function_Error_t (*Ex_Command_Function)(char keys[][MAX_COMMANDPART_LENGTH],
-		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+typedef Tekdaqc_Command_Error_t (* const Ex_Command_Function)(char [][MAX_COMMANDPART_LENGTH],
+		char [][MAX_COMMANDPART_LENGTH], uint8_t);
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -790,6 +790,10 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count);
 
+/**
+ * @internal
+ * @brief Function lookup table for command execution.
+ */
 static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInputs, Ex_ReadAnalogInput,
 		Ex_AddAnalogInput, Ex_RemoveAnalogInput, Ex_CheckAnalogInput, Ex_SetAnalogInputScale,
 		Ex_GetAnalogInputScale, Ex_SystemCal, Ex_ReadSystemGCal, Ex_ListDigitalInputs, Ex_ReadDigitalInput,
@@ -1388,145 +1392,8 @@ static void ToUpperCase(char* string) {
 static Tekdaqc_Command_Error_t ExecuteCommand(Command_t command, char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
-	//TODO: Convert this to a function pointer lookup table
-	switch (command) {
-		case COMMAND_LIST_ANALOG_INPUTS:
-			retval = Ex_ListAnalogInputs(keys, values, count);
-			break;
-		case COMMAND_READ_ADC_REGISTERS:
-			retval = Ex_ReadADCRegisters(keys, values, count);
-			break;
-		case COMMAND_READ_ANALOG_INPUT:
-			retval = Ex_ReadAnalogInput(keys, values, count);
-			break;
-		case COMMAND_ADD_ANALOG_INPUT:
-			retval = Ex_AddAnalogInput(keys, values, count);
-			break;
-		case COMMAND_REMOVE_ANALOG_INPUT:
-			retval = Ex_RemoveAnalogInput(keys, values, count);
-			break;
-		case COMMAND_CHECK_ANALOG_INPUT:
-			retval = Ex_CheckAnalogInput(keys, values, count);
-			break;
-		case COMMAND_SET_ANALOG_INPUT_SCALE:
-			retval = Ex_SetAnalogInputScale(keys, values, count);
-			break;
-		case COMMAND_GET_ANALOG_INPUT_SCALE:
-			retval = Ex_GetAnalogInputScale(keys, values, count);
-			break;
-		case COMMAND_SYSTEM_CAL:
-			retval = Ex_SystemCal(keys, values, count);
-			break;
-		case COMMAND_SYSTEM_GCAL:
-			retval = Ex_SystemGainCal(keys, values, count);
-			break;
-		case COMMAND_READ_SELF_GCAL:
-			retval = Ex_ReadSelfGCal(keys, values, count);
-			break;
-		case COMMAND_READ_SYSTEM_GCAL:
-			retval = Ex_ReadSystemGCal(keys, values, count);
-			break;
-		case COMMAND_LIST_DIGITAL_INPUTS:
-			retval = Ex_ListDigitalInputs(keys, values, count);
-			break;
-		case COMMAND_READ_DIGITAL_INPUT:
-			retval = Ex_ReadDigitalInput(keys, values, count);
-			break;
-		case COMMAND_ADD_DIGITAL_INPUT:
-			retval = Ex_AddDigitalInput(keys, values, count);
-			break;
-		case COMMAND_REMOVE_DIGITAL_INPUT:
-			retval = Ex_RemoveDigitalInput(keys, values, count);
-			break;
-		case COMMAND_LIST_DIGITAL_OUTPUTS:
-			retval = Ex_ListDigitalOutputs(keys, values, count);
-			break;
-		case COMMAND_SET_DIGITAL_OUTPUT:
-			retval = Ex_SetDigitalOutput(keys, values, count);
-			break;
-		case COMMAND_READ_DIGITAL_OUTPUT:
-			retval = Ex_ReadDigitalOutput(keys, values, count);
-			break;
-		case COMMAND_ADD_DIGITAL_OUTPUT:
-			retval = Ex_AddDigitalOutput(keys, values, count);
-			break;
-		case COMMAND_REMOVE_DIGITAL_OUTPUT:
-			retval = Ex_RemoveDigitalOutput(keys, values, count);
-			break;
-		case COMMAND_CLEAR_DIG_OUTPUT_FAULT:
-			retval = Ex_ClearDigitalOutputFault(keys, values, count);
-			break;
-		case COMMAND_DISCONNECT:
-			retval = Ex_Disconnect(keys, values, count);
-			break;
-		case COMMAND_REBOOT:
-			retval = Ex_Reboot(keys, values, count);
-			break;
-		case COMMAND_UPGRADE:
-			retval = Ex_Upgrade(keys, values, count);
-			break;
-		case COMMAND_IDENTIFY:
-			Ex_Identify(keys, values, count);
-			break;
-		case COMMAND_SAMPLE:
-			retval = Ex_Sample(keys, values, count);
-			break;
-		case COMMAND_HALT:
-			retval = Ex_Halt(keys, values, count);
-			break;
-		case COMMAND_SET_RTC:
-			retval = Ex_SetRTC(keys, values, count);
-			break;
-		case COMMAND_CLEAR_USER_MAC:
-			/* Clear the USE_USER_MAC variable */
-			EE_WriteVariable(ADDR_USE_USER_MAC, USE_DEFAULT_MAC);
-			break;
-		case COMMAND_SET_USER_MAC:
-			retval = Ex_SetUserMac(keys, values, count);
-			break;
-		case COMMAND_SET_STATIC_IP:
-			retval = Ex_SetStaticIP(keys, values, count);
-			break;
-		case COMMAND_GET_CALIBRATION_STATUS:
-			retval = Ex_GetCalibrationStatus(keys, values, count);
-			break;
-		case COMMAND_ENTER_CALIBRATION_MODE:
-			retval = Ex_EnterCalibrationMode(keys, values, count);
-			break;
-		case COMMAND_WRITE_GAIN_CAL_VALUE:
-			retval = Ex_WriteGainCalibrationValue(keys, values, count);
-			break;
-		case COMMAND_WRITE_CAL_MIN_TEMP:
-			retval = Ex_WriteCalibrationMinTemp(keys, values, count);
-			break;
-		case COMMAND_WRITE_CAL_MAX_TEMP:
-			retval = Ex_WriteCalibrationMaxTemp(keys, values, count);
-			break;
-		case COMMAND_WRITE_CAL_DELTA_TEMP:
-			retval = Ex_WriteCalibrationDeltaTemp(keys, values, count);
-			break;
-		case COMMAND_WRITE_CAL_VALID:
-			retval = Ex_WriteCalibrationValid(keys, values, count);
-			break;
-		case COMMAND_EXIT_CALIBRATION_MODE:
-			retval = Ex_ExitCalibrationMode(keys, values, count);
-			break;
-		case COMMAND_SET_FACTORY_MAC_ADDR:
-			retval = Ex_SetFactoryMACAddr(keys, values, count);
-			break;
-		case COMMAND_SET_BOARD_SERIAL_NUM:
-			retval = Ex_SetBoardSerialNum(keys, values, count);
-			break;
-		case COMMAND_NONE:
-			/* Do nothing */
-			break;
-		default:
-			/* Do nothing */
-#ifdef COMMAND_DEBUG
-			printf("[Command Interpreter] Unrecognized command, doing nothing.\n\r");
-#endif
-			retval = ERR_COMMAND_BAD_COMMAND;
-	}
+	Ex_Command_Function function = ExecutionFunctions[command];
+	retval = function(keys, values, count);
 	return retval;
 }
 
