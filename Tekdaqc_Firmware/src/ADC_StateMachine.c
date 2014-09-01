@@ -249,11 +249,7 @@ static void ADC_Machine_Service_Calibrating(void) {
  */
 static void ADC_Machine_Service_GainCalibrating(void) {
 	ADS1256_CalibrateSystem_Gain();
-	/*uint32_t calibration = ADS1256_GetGainCalSetting();
-	ADS1256_SPS_t rate = ADS1256_GetDataRate();
-	ADS1256_PGA_t gain = ADS1256_GetPGASetting();
-	ADS1256_BUFFER_t buffer = ADS1256_GetInputBufferSetting();
-	Tekdaqc_SetBaseGainCalibration(calibration, rate, gain, buffer);*/
+	ADC_Machine_Idle();
 }
 
 /**
