@@ -62,7 +62,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Libraries/STM32F4xx_StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/port/STM32F4x7}&quot;"/>
 								</option>
-								<option id="com.atollic.truestudio.lib.debug.toolchain.gcc.optimization.level.1443077119" name="Optimization Level" superClass="com.atollic.truestudio.lib.debug.toolchain.gcc.optimization.level" value="com.atollic.truestudio.gcc.optimization.level.0fast" valueType="enumerated"/>
+								<option id="com.atollic.truestudio.lib.debug.toolchain.gcc.optimization.level.1443077119" name="Optimization Level" superClass="com.atollic.truestudio.lib.debug.toolchain.gcc.optimization.level" value="com.atollic.truestudio.gcc.optimization.level.0g" valueType="enumerated"/>
 								<inputType id="com.atollic.truestudio.gcc.input.1757703531" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.lib.debug.toolchain.gpp.688285794" name="C++ Compiler" superClass="com.atollic.truestudio.lib.debug.toolchain.gpp">
