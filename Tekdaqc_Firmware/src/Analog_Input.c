@@ -164,7 +164,7 @@ void AnalogInputsInit(void) {
 	Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
 	cold->physicalInput = IN_COLD_JUNCTION;
 	cold->buffer = ADS1256_BUFFER_ENABLED;
-	cold->rate = ADS1256_SPS_30000;
+	cold->rate = ADS1256_SPS_3750;
 	cold->gain = ADS1256_PGAx8;
 	strcpy(cold->name, "COLD JUNCTION");
 	cold->bufferReadIdx = 0U;
@@ -659,6 +659,7 @@ const char* IntAnalogInputToString(InternalAnalogInput_t input) {
 		break;
 	case EXTERNAL_ANALOG_IN:
 		str = "EXTERNAL ANALOG INPUT";
+		break;
 	default:
 		str = "UNKNOWN";
 	}

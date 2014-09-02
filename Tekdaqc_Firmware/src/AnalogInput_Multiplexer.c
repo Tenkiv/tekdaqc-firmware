@@ -89,7 +89,7 @@ static void SelectExternalInput(ExternalMuxedInput_t input, bool doMuxDelay) {
 	/* Make the switch */
 	SelectInternalInput(EXTERNAL_ANALOG_IN);
 	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, EXT_ANALOG_SELECT);
-	GPIO_Write(EXT_ANALOG_IN_MUX_PORT, (input | (GPIO_ReadOutputData(EXT_ANALOG_IN_MUX_PORT ) & EXT_ANALOG_IN_BITMASK )));
+	GPIO_Write(EXT_ANALOG_IN_MUX_PORT, (input | (GPIO_ReadOutputData(EXT_ANALOG_IN_MUX_PORT) & EXT_ANALOG_IN_BITMASK)));
 
 	if (doMuxDelay == true) {
 		/* Wait for the external multiplexing relays to conduct */
@@ -293,9 +293,9 @@ void SelectPhysicalInput(PhysicalAnalogInput_t input, bool doMuxDelay) {
  * @retval none
  */
 void SelectCalibrationInput(void) {
-	//SelectExternalInput(EXTERN_0, true);
-	SelectInternalInput(EXTERNAL_ANALOG_IN);
-	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, OCAL_SELECT);
+	SelectExternalInput(EXTERN_0, true);
+	/*SelectInternalInput(EXTERNAL_ANALOG_IN);
+	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, OCAL_SELECT);*/
 }
 
 /**
