@@ -102,8 +102,8 @@
 /**
  * @brief A common function pointer for all of the command execution functions.
  */
-typedef Tekdaqc_Command_Error_t (* const Ex_Command_Function)(char [][MAX_COMMANDPART_LENGTH],
-		char [][MAX_COMMANDPART_LENGTH], uint8_t);
+typedef Tekdaqc_Command_Error_t (* const Ex_Command_Function)(char[][MAX_COMMANDPART_LENGTH],
+		char[][MAX_COMMANDPART_LENGTH], uint8_t);
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -794,13 +794,13 @@ static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char
  * @internal
  * @brief Function lookup table for command execution.
  */
-static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInputs, Ex_ReadAnalogInput,
-		Ex_AddAnalogInput, Ex_RemoveAnalogInput, Ex_CheckAnalogInput, Ex_SetAnalogInputScale,
-		Ex_GetAnalogInputScale, Ex_SystemCal, Ex_ReadSystemGCal, Ex_ListDigitalInputs, Ex_ReadDigitalInput,
-		Ex_AddDigitalInput, Ex_RemoveDigitalInput, Ex_ListDigitalOutputs, Ex_SetDigitalOutput,
-		Ex_ReadDigitalOutput, Ex_AddDigitalOutput, Ex_RemoveDigitalOutput, Ex_ClearDigitalOutputFault,
-		Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt, Ex_SetRTC, Ex_SetUserMac,
-		Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus, Ex_EnterCalibrationMode,
+static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInputs, Ex_ReadADCRegisters,
+		Ex_ReadAnalogInput, Ex_AddAnalogInput, Ex_RemoveAnalogInput, Ex_CheckAnalogInput, Ex_SetAnalogInputScale,
+		Ex_GetAnalogInputScale, Ex_SystemCal, Ex_SystemGainCal, Ex_ReadSelfGCal, Ex_ReadSystemGCal,
+		Ex_ListDigitalInputs, Ex_ReadDigitalInput, Ex_AddDigitalInput, Ex_RemoveDigitalInput, Ex_ListDigitalOutputs,
+		Ex_SetDigitalOutput, Ex_ReadDigitalOutput, Ex_AddDigitalOutput, Ex_RemoveDigitalOutput,
+		Ex_ClearDigitalOutputFault, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt, Ex_SetRTC,
+		Ex_SetUserMac, Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus, Ex_EnterCalibrationMode,
 		Ex_WriteGainCalibrationValue, Ex_WriteCalibrationMinTemp, Ex_WriteCalibrationMaxTemp,
 		Ex_WriteCalibrationDeltaTemp, Ex_WriteCalibrationValid, Ex_ExitCalibrationMode, Ex_SetFactoryMACAddr,
 		Ex_SetBoardSerialNum, Ex_None};
