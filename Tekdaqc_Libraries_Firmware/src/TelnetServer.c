@@ -957,6 +957,7 @@ void TelnetWriteErrorMessage(char* message) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
 	}
+	printf("[Telnet] Sent error message: %s\n\r", message);
 }
 
 /**
@@ -980,6 +981,7 @@ void TelnetWriteStatusMessage(char* message) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
 	}
+	printf("[Telnet] Sent status message: %s\n\r", message);
 }
 
 /**
@@ -1003,6 +1005,7 @@ void TelnetWriteDebugMessage(char* message) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
 	}
+	printf("[Telnet] Sent debug message: %s\n\r", message);
 }
 
 /**
@@ -1026,4 +1029,5 @@ void TelnetWriteCommandDataMessage(char* message) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
 	}
+	printf("[Telnet] Sent command data message: %s\n\r", message);
 }
