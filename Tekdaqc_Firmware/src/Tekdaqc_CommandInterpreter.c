@@ -123,7 +123,7 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
 		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "ADD_DIGITAL_OUTPUT",
 		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT", "REBOOT", "UPGRADE", "IDENTIFY", "SAMPLE",
-		"HALT", "SET_RTC", "CLEAR_USER_MAC", "SET_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
+		"HALT", "SET_RTC", "SET_USER_MAC", "CLEAR_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
 		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_MIN_TEMP",
 		"WRITE_CALIBRATION_MAX_TEMP", "WRITE_CALIBRATION_DELTA_TEMP", "WRITE_CALIBRATION_VALID",
 		"EXIT_CALIBRATION_MODE", "SET_FACTORY_MAC_ADDR", "SET_BOARD_SERIAL_NUM", "NONE"};
@@ -832,7 +832,13 @@ static void ProcessCommand(char* command, char raw_args[][MAX_COMMANDPART_LENGTH
 	} else {
 		error = ERR_COMMAND_PARSE_ERROR;
 	}
+#ifdef COMMAND_DEBUG
+	printf("[Command Interpreter] Processing command error.\n\r");
+#endif
 	ProcessCommandError(error); /* Handle any errors. */
+#ifdef COMMAND_DEBUG
+	printf("[Command Interpreter] Command processing returning.\n\r");
+#endif
 }
 
 /**
@@ -978,7 +984,11 @@ static void ProcessCommandError(const Tekdaqc_Command_Error_t error) {
 			snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "ERROR - %s", error_string);
 			break;
 	}
-	TelnetWriteStatusMessage(TOSTRING_BUFFER);
+	if (error == ERR_COMMAND_OK) {
+		TelnetWriteStatusMessage(TOSTRING_BUFFER);
+	} else {
+		TelnetWriteErrorMessage(TOSTRING_BUFFER);
+	}
 }
 
 /**
@@ -1108,7 +1118,7 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 
 	switch (list_type) {
 		case SINGLE_CHANNEL: /* SINGLE_CHANNEL */
-			channel = (int8_t) strtol(param, NULL, 10);
+			channel = (int8_t) strtoul(param, NULL, 10);
 			if (channel < 0 || channel > NUM_ANALOG_INPUTS) {
 				/* Input number out of range */
 #ifdef COMMAND_DEBUG
@@ -1125,12 +1135,12 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 					if (*ptr == SET_DELIMETER) {
 						str = ptr + 1;
 					}
-					value = strtol(str, &ptr, 10);
+					value = strtoul(str, &ptr, 10);
 					if (value < NUM_ANALOG_INPUTS && value >= 0L) {
 						aInputs[value] = GetAnalogInputByNumber(value);
 						++count;
 					}
-					if (ptr == NULL) {
+					if (ptr == NULL || (count != 0U && value == 0U)) {
 						break;
 					}
 				}
@@ -1139,8 +1149,8 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 		case CHANNEL_RANGE: /* INPUT_RANGE */
 			start = 0U;
 			end = 0U;
-			value1 = (uint8_t) strtol(param, &ptr, 10); /* We know these can potentially loose data...it would be invalid anyway */
-			value2 = (uint8_t) strtol((ptr + 1), NULL, 10);
+			value1 = (uint8_t) strtoul(param, &ptr, 10); /* We know these can potentially loose data...it would be invalid anyway */
+			value2 = (uint8_t) strtoul((ptr + 1), NULL, 10);
 
 			if (value1 != 0L) {
 				start = value1;
