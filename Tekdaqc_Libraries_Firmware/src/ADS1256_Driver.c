@@ -821,6 +821,7 @@ void ADS1256_CalibrateSelf(void) {
 	ADS1256_Send_Command(ADS1256_SELFCAL); /* Send the self cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 /**
@@ -834,6 +835,7 @@ void ADS1256_CalibrateSelf_Gain(void) {
 	ADS1256_Send_Command(ADS1256_SELFGCAL); /* Send the self gain cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 /**
@@ -847,6 +849,7 @@ void ADS1256_CalibrateSelf_Offset(void) {
 	ADS1256_Send_Command(ADS1256_SELFOCAL); /* Send the self offset cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 /**
@@ -861,6 +864,7 @@ void ADS1256_CalibrateSystem_Gain(void) {
 	ADS1256_Send_Command(ADS1256_SYSGCAL); /* Send the system gain cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 /**
@@ -874,6 +878,7 @@ void ADS1256_CalibrateSystem_Offset(void) {
 	ADS1256_Send_Command(ADS1256_SYSOCAL); /* Send the system offset cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 
