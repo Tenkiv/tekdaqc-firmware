@@ -293,9 +293,9 @@ void SelectPhysicalInput(PhysicalAnalogInput_t input, bool doMuxDelay) {
  * @retval none
  */
 void SelectCalibrationInput(void) {
-	SelectExternalInput(EXTERN_0, true);
-	/*SelectInternalInput(EXTERNAL_ANALOG_IN);
-	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, OCAL_SELECT);*/
+	//SelectExternalInput(EXTERN_0, true);
+	SelectInternalInput(EXTERNAL_ANALOG_IN);
+	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, OCAL_SELECT);
 }
 
 /**
