@@ -143,7 +143,7 @@ static void program_loop(void) {
 			shouldServiceEthernet = false;
 			/* Check if any packet received */
 			if (ETH_CheckFrameReceived()) {
-				/* Process received ethernet packet */
+				/* Process received Ethernet packet */
 				LwIP_Pkt_Handle();
 			}
 
@@ -179,7 +179,6 @@ static void Init_Locator() {
 	version |= (BUILD_NUMBER << 8);
 	version |= SPECIAL_BUILD;
 	Tekdaqc_LocatorVersionSet(version);
-
 	Tekdaqc_LocatorBoardIDSet(TEKDAQC_BOARD_SERIAL_NUM);
 }
 
@@ -219,13 +218,6 @@ static void Tekdaqc_Init(void) {
 	char data = '\0';
 	uint32_t Address = BOARD_SERIAL_NUM_ADDR;
 	for (int i = 0; i < BOARD_SERIAL_NUM_LENGTH; ++i) {
-		if (Address >= CAL_TEMP_LOW_ADDR) {
-			/* We have overflowed and there is a problem in the software */
-#ifdef DEBUG
-			printf("[Config] Reading board serial number overflowed.\n\r");
-#endif
-			break; /* Break out to prevent an invalid access */
-		}
 		data = *((__IO char*) Address);
 		TEKDAQC_BOARD_SERIAL_NUM[i] = data;
 		Address += sizeof(char);

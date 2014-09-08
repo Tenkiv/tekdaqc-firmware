@@ -728,7 +728,7 @@ void ADS1256_ReadData(uint8_t* data) {
 void ADS1256_WaitUntilDataReady(bool useCommand) {
 	uint8_t i = 0U;
 	while (!ADS1256_IsDataReady(useCommand)) { /* Wait in a loop */
-		++i; /* Do a meaningful calculation so the compiler does not remove loop. */
+		//++i; /* Do a meaningful calculation so the compiler does not remove loop. */
 	}
 }
 

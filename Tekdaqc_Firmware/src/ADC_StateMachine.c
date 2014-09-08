@@ -229,7 +229,7 @@ static void ADC_Machine_Service_Calibrating(void) {
 		}
 #ifdef ADC_STATE_MACHINE_DEBUG
 		static uint32_t total = NUM_PGA_SETTINGS * NUM_SAMPLE_RATES * NUM_BUFFER_SETTINGS;
-		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %f\%.\n\r",
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %3.1f%%.\n\r",
 				((float) calibrationState.finished_count / total) * 100.0f);
 		printf("%s", TOSTRING_BUFFER);
 		TelnetWriteStatusMessage(TOSTRING_BUFFER);
@@ -319,7 +319,6 @@ static void ADC_Machine_Service_Sampling(void) {
 					% ANALOG_INPUT_BUFFER_SIZE;
 		}
 
-		//ADS1256_Sync(true); /*Halt conversion */ //TODO: TEMP HALTING
 		/* Select the next input */
 
 		if (numberSamplingInputs > 1) {
@@ -390,9 +389,7 @@ static void ADC_Machine_Service_Sampling(void) {
  */
 static void ADC_Machine_Service_Muxing(void) {
 	Analog_Input_t* input = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-	if (waitingOnTemp == false) {
-
-	} else {
+	if (waitingOnTemp == true) {
 		/* We are waiting for a temperature sample to complete */
 		if (ADS1256_IsDataReady(false)) {
 			/* We need to read it */
@@ -414,7 +411,6 @@ static void ADC_Machine_Service_Muxing(void) {
 #ifdef BOARD_TEMPERATURE_DEBUG
 			printf("[ADC STATE MACHINE] Cold junction temperature sample is complete.\n\r");
 #endif
-			//ADS1256_Sync(false); /*Halt conversion */ //TODO: TEMP HALTING
 		}
 		if ((PreviousState == ADC_CHANNEL_SAMPLING) && (isExternalMuxingComplete() == true)) {
 			/* We need to select external inputs on the internal multiplexer */
@@ -750,9 +746,6 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 		ADS1256_Wakeup(); /* Start Sampling */
 		/* Save the real time clock entry for the sample */
 		input->timestamps[input->bufferWriteIdx] = GetLocalTime();
-	} else {
-		/* We entered the ADC_MUXING state */
-		ADS1256_Sync(false); /* TODO: Is this necessary? It may cause temperature fluctuations */
 	}
 }
 
@@ -794,7 +787,6 @@ void ADC_External_Muxing(void) {
 		PreviousState = CurrentState;
 		CurrentState = ADC_EXTERNAL_MUXING;
 		/* We need to begin a temperature sample */
-		//ADS1256_Sync(true); //TODO: TEMP HALTING
 		SelectColdJunctionInput();
 		Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
 		BeginNextConversion(cold);

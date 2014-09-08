@@ -98,24 +98,24 @@ void HardFault_Handler(void) {
 	stacked_psr = ((unsigned long) hardfault_args[7]);
 
 	printf("[Hard fault handler]\n");
-	printf("R0 = %" PRIx32 "\n", stacked_r0);
-	printf("R1 = %" PRIx32 "\n", stacked_r1);
-	printf("R2 = %" PRIx32 "\n", stacked_r2);
-	printf("R3 = %" PRIx32 "\n", stacked_r3);
-	printf("R12 = %" PRIx32 "\n", stacked_r12);
-	printf("LR = %" PRIx32 "\n", stacked_lr);
-	printf("PC = %" PRIx32 "\n", stacked_pc);
-	printf("PSR = %" PRIx32 "\n", stacked_psr);
-	printf("BFAR = %" PRIx32 "\n", (*((volatile unsigned long *) (0xE000ED38))));
-	printf("CFSR = %" PRIx32 "\n", (*((volatile unsigned long *) (0xE000ED28))));
-	printf("HFSR = %" PRIx32 "\n", (*((volatile unsigned long *) (0xE000ED2C))));
-	printf("SCB->HFSR = 0x%08" PRIx32 "\n", SCB ->HFSR);
-	printf("DFSR = %" PRIx32 "\n", (*((volatile unsigned long *) (0xE000ED30))));
-	printf("AFSR = %" PRIx32 "\n", (*((volatile unsigned long *) (0xE000ED3C))));
+	printf("R0 = %" PRIx32 "\n\r", stacked_r0);
+	printf("R1 = %" PRIx32 "\n\r", stacked_r1);
+	printf("R2 = %" PRIx32 "\n\r", stacked_r2);
+	printf("R3 = %" PRIx32 "\n\r", stacked_r3);
+	printf("R12 = %" PRIx32 "\n\r", stacked_r12);
+	printf("LR = %" PRIx32 "\n\r", stacked_lr);
+	printf("PC = %" PRIx32 "\n\r", stacked_pc);
+	printf("PSR = %" PRIx32 "\n\r", stacked_psr);
+	printf("BFAR = %" PRIx32 "\n\r", (*((volatile unsigned long *) (0xE000ED38))));
+	printf("CFSR = %" PRIx32 "\n\r", (*((volatile unsigned long *) (0xE000ED28))));
+	printf("HFSR = %" PRIx32 "\n\r", (*((volatile unsigned long *) (0xE000ED2C))));
+	printf("SCB->HFSR = 0x%08" PRIx32 "\n\r", SCB ->HFSR);
+	printf("DFSR = %" PRIx32 "\n\r", (*((volatile unsigned long *) (0xE000ED30))));
+	printf("AFSR = %" PRIx32 "\n\r", (*((volatile unsigned long *) (0xE000ED3C))));
 
 	if ((SCB ->HFSR & (1 << 30)) != 0) {
-		printf("Forced Hard Fault\n");
-		printf("SCB->CFSR = 0x%08" PRIx32 "\n", SCB ->CFSR);
+		printf("Forced Hard Fault\n\r");
+		printf("SCB->CFSR = 0x%08" PRIx32 "\n\r", SCB ->CFSR);
 	}
 
 	/* Go to infinite loop when Hard Fault exception occurs */
