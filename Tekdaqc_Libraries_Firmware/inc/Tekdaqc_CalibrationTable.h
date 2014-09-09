@@ -141,7 +141,7 @@ FLASH_Status Tekdaqc_SetColdJunctionOffsetCalibration(uint32_t cal);
 /**
  * @brief Sets the gain calibration value to be used for the cold junction sensor.
  */
-FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal);
+FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal, bool forFLASH);
 
 /**
  * @brief Sets the offset calibration value for the specified parameters.

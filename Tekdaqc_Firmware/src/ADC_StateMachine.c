@@ -167,8 +167,8 @@ static void ApplyCalibrationParameters(Analog_Input_t* input);
  * @retval const char* The human readable string representation.
  */
 static inline const char* ADCMachine_StringFromState(ADC_State_t machine_state) {
-	static const char* strings[] = { "ADC_UNINITIALIZED", "ADC_INITIALIZED", "ADC_CALIBRATING", "ADC_GAIN_CALIBRATING", "ADC_IDLE",
-			"ADC_CHANNEL_SAMPLING", "ADC_RESET", "ADC_EXTERNAL_MUXING" };
+	static const char* strings[] = {"ADC_UNINITIALIZED", "ADC_INITIALIZED", "ADC_CALIBRATING", "ADC_GAIN_CALIBRATING",
+			"ADC_IDLE", "ADC_CHANNEL_SAMPLING", "ADC_RESET", "ADC_EXTERNAL_MUXING"};
 	return strings[machine_state];
 }
 
@@ -195,12 +195,14 @@ static void BeginNextConversion(Analog_Input_t* input) {
  * @retval none
  */
 static void ADC_Machine_Service_Calibrating(void) {
-	static ADS1256_PGA_t gains[] = { ADS1256_PGAx1, ADS1256_PGAx2, ADS1256_PGAx4, ADS1256_PGAx8, ADS1256_PGAx16, ADS1256_PGAx32,
-			ADS1256_PGAx64 };
-	static ADS1256_SPS_t rates[] = { ADS1256_SPS_30000, ADS1256_SPS_15000, ADS1256_SPS_7500, ADS1256_SPS_3750, ADS1256_SPS_2000,
-			ADS1256_SPS_1000, ADS1256_SPS_500, ADS1256_SPS_100, ADS1256_SPS_60, ADS1256_SPS_50, ADS1256_SPS_30, ADS1256_SPS_25,
-			ADS1256_SPS_15, ADS1256_SPS_10, ADS1256_SPS_5, ADS1256_SPS_2_5 };
-	static ADS1256_BUFFER_t buffers[] = { ADS1256_BUFFER_ENABLED, ADS1256_BUFFER_DISABLED };
+	static ADS1256_PGA_t gains[] = {ADS1256_PGAx1, ADS1256_PGAx2, ADS1256_PGAx4, ADS1256_PGAx8, ADS1256_PGAx16,
+			ADS1256_PGAx32, ADS1256_PGAx64};
+	static ADS1256_SPS_t rates[] = {ADS1256_SPS_30000, ADS1256_SPS_15000, ADS1256_SPS_7500, ADS1256_SPS_3750,
+			ADS1256_SPS_2000, ADS1256_SPS_1000, ADS1256_SPS_500, ADS1256_SPS_100, ADS1256_SPS_60, ADS1256_SPS_50,
+			ADS1256_SPS_30, ADS1256_SPS_25, ADS1256_SPS_15, ADS1256_SPS_10, ADS1256_SPS_5, ADS1256_SPS_2_5};
+	static ADS1256_BUFFER_t buffers[] = {ADS1256_BUFFER_ENABLED, ADS1256_BUFFER_DISABLED};
+
+	Analog_Input_t* cold = GetAnalogInputByNumber(COLD_JUNCTION);
 
 	if (calibrationState.finished == false) {
 		if (calibrationState.gain_index < NUM_PGA_SETTINGS) {
@@ -212,6 +214,12 @@ static void ADC_Machine_Service_Calibrating(void) {
 					ADS1256_CalibrateSelf();
 					Tekdaqc_SetBaseGainCalibration(ADS1256_GetGainCalSetting(), rates[calibrationState.rate_index],
 							gains[calibrationState.gain_index], buffers[calibrationState.buffer_index]);
+					if (rates[calibrationState.rate_index] == cold->rate
+							&& gains[calibrationState.gain_index] == cold->gain
+							&& buffers[calibrationState.buffer_index] == cold->buffer) {
+						// We want to save this self gain value
+						Tekdaqc_SetColdJunctionGainCalibration(ADS1256_GetGainCalSetting(), false);
+					}
 					ADS1256_CalibrateSystem_Offset();
 					Tekdaqc_SetOffsetCalibration(ADS1256_GetOffsetCalSetting(), rates[calibrationState.rate_index],
 							gains[calibrationState.gain_index], buffers[calibrationState.buffer_index++]);
@@ -308,15 +316,16 @@ static void ADC_Machine_Service_Sampling(void) {
 		uint8_t writeIndex = samplingInputs[currentSamplingInput]->bufferWriteIdx;
 		samplingInputs[currentSamplingInput]->values[writeIndex] = ADS1256_GetMeasurement();
 		samplingInputs[currentSamplingInput]->bufferWriteIdx = (writeIndex + 1) % ANALOG_INPUT_BUFFER_SIZE;
-		if (samplingInputs[currentSamplingInput]->bufferWriteIdx == samplingInputs[currentSamplingInput]->bufferReadIdx) {
+		if (samplingInputs[currentSamplingInput]->bufferWriteIdx
+				== samplingInputs[currentSamplingInput]->bufferReadIdx) {
 			/* Check the buffer positions for errors/roll over */
 #ifdef ADC_STATE_MACHINE_DEBUG
 			printf("[ADC STATE MACHINE] Analog sampling overwrote data before it could be read.\n\r");
 #endif
 			TelnetWriteErrorMessage("Analog sampling overwrote data before it could be read.");
 			/* Buffer is full, overwrite */
-			samplingInputs[currentSamplingInput]->bufferReadIdx = (samplingInputs[currentSamplingInput]->bufferReadIdx + 1)
-					% ANALOG_INPUT_BUFFER_SIZE;
+			samplingInputs[currentSamplingInput]->bufferReadIdx = (samplingInputs[currentSamplingInput]->bufferReadIdx
+					+ 1) % ANALOG_INPUT_BUFFER_SIZE;
 		}
 
 		/* Select the next input */
@@ -330,7 +339,8 @@ static void ADC_Machine_Service_Sampling(void) {
 					/* We have reached the end of a set */
 					currentSamplingInput = 0U; /* Reset to the start */
 #ifdef ADC_STATE_MACHINE_DEBUG
-					printf("[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r", SampleCurrent + 1, SampleTotal);
+					printf("[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r", SampleCurrent + 1,
+							SampleTotal);
 #endif
 					++SampleCurrent; /* Increment the sample counter */
 				}
@@ -342,23 +352,27 @@ static void ADC_Machine_Service_Sampling(void) {
 				WriteAnalogInput(current);
 			} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
-				printf("[ADC STATE MACHINE] Multi-channel sampling tried to select the currently selected input. Ignoring...\n\r");
+				printf(
+						"[ADC STATE MACHINE] Multi-channel sampling tried to select the currently selected input. Ignoring...\n\r");
 #endif
 				ADS1256_Wakeup(); /* Begin the next sample */
 				/* Save the real time clock entry for the sample */
-				samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] = GetLocalTime();
+				samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] =
+						GetLocalTime();
 			}
 		} else {
 			/* We are single channel sampling */
 #ifdef ADC_STATE_MACHINE_DEBUG
-			snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r",
-					SampleCurrent + 1, SampleTotal);
+			snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER,
+					"[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r", SampleCurrent + 1,
+					SampleTotal);
 			TelnetWriteStatusMessage(TOSTRING_BUFFER);
 #endif
 			++SampleCurrent; /* Increment the sample count */
 			ADS1256_Wakeup(); /* Begin the next sample */
 			/* Save the real time clock entry for the sample */
-			samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] = GetLocalTime();
+			samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] =
+					GetLocalTime();
 		}
 		if ((SampleCurrent == SampleTotal) && !((numberSamplingInputs > 1) && SampleCurrent == 0)) {
 			/* The equality check is because we incremented already */
@@ -418,8 +432,8 @@ static void ADC_Machine_Service_Muxing(void) {
 			/* We need to begin the next conversion */
 			CurrentState = PreviousState; /* Return the state to its previous value */
 			BeginNextConversion(samplingInputs[currentSamplingInput]);
-		} else if (((PreviousState == ADC_IDLE) || (PreviousState == ADC_CALIBRATING) || (PreviousState == ADC_GAIN_CALIBRATING))
-				&& (isExternalMuxingComplete() == true)) {
+		} else if (((PreviousState == ADC_IDLE) || (PreviousState == ADC_CALIBRATING)
+				|| (PreviousState == ADC_GAIN_CALIBRATING)) && (isExternalMuxingComplete() == true)) {
 			CurrentState = PreviousState;
 			ResetSelectedInput();
 		} else {
@@ -479,7 +493,8 @@ void ADC_Machine_Init(void) {
 	/* TODO: Can this be merged into ADC_Machine_Create()? */
 	if ((CurrentState != ADC_UNINITIALIZED)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_INITIALIZED state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_INITIALIZED state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -515,7 +530,8 @@ void ADC_Machine_Init(void) {
 void ADC_Calibrate(void) {
 	if ((CurrentState != ADC_IDLE)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_CALIBRATING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_CALIBRATING state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -548,7 +564,8 @@ void ADC_Calibrate(void) {
 void ADC_GainCalibrate(PhysicalAnalogInput_t input) {
 	if ((CurrentState != ADC_IDLE)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_CALIBRATING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_CALIBRATING state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -579,44 +596,44 @@ void ADC_GainCalibrate(PhysicalAnalogInput_t input) {
 void ADC_Machine_Service(void) {
 	/* Determine the state */
 	switch (CurrentState) {
-	case ADC_UNINITIALIZED:
-		ADC_Machine_Init();
-		break;
-	case ADC_INITIALIZED:
-		ADC_Machine_Idle();
-		break;
-	case ADC_CALIBRATING:
-		ADC_Machine_Service_Calibrating();
-		break;
-	case ADC_GAIN_CALIBRATING:
-		ADC_Machine_Service_GainCalibrating();
-		break;
-	case ADC_IDLE:
-		if (isFirstIdle == true) {
-			isFirstIdle = false;
-			PerformSystemCalibration(); /* Load the offset calibration table */
-		} else {
-			ADC_Machine_Service_Idle();
-		}
-		break;
-	case ADC_CHANNEL_SAMPLING:
-		ADC_Machine_Service_Sampling();
-		break;
-	case ADC_RESET:
-		ADS1256_Full_Reset();
-		SampleCurrent = 0U;
-		SampleTotal = 0U;
-		samplingInputs = NULL;
-		numberSamplingInputs = 0U;
-		currentSamplingInput = NULL_CHANNEL;
-		ADC_Machine_Idle();
-		break;
-	case ADC_EXTERNAL_MUXING:
-		ADC_Machine_Service_Muxing();
-		break;
-	default:
-		/* TODO: Throw an error */
-		break;
+		case ADC_UNINITIALIZED:
+			ADC_Machine_Init();
+			break;
+		case ADC_INITIALIZED:
+			ADC_Machine_Idle();
+			break;
+		case ADC_CALIBRATING:
+			ADC_Machine_Service_Calibrating();
+			break;
+		case ADC_GAIN_CALIBRATING:
+			ADC_Machine_Service_GainCalibrating();
+			break;
+		case ADC_IDLE:
+			if (isFirstIdle == true) {
+				isFirstIdle = false;
+				PerformSystemCalibration(); /* Load the offset calibration table */
+			} else {
+				ADC_Machine_Service_Idle();
+			}
+			break;
+		case ADC_CHANNEL_SAMPLING:
+			ADC_Machine_Service_Sampling();
+			break;
+		case ADC_RESET:
+			ADS1256_Full_Reset();
+			SampleCurrent = 0U;
+			SampleTotal = 0U;
+			samplingInputs = NULL;
+			numberSamplingInputs = 0U;
+			currentSamplingInput = NULL_CHANNEL;
+			ADC_Machine_Idle();
+			break;
+		case ADC_EXTERNAL_MUXING:
+			ADC_Machine_Service_Muxing();
+			break;
+		default:
+			/* TODO: Throw an error */
+			break;
 	}
 }
 
@@ -647,11 +664,13 @@ void ADC_Machine_Halt(void) {
  */
 void ADC_Machine_Idle(void) {
 	/* We use explicit checking here in case other state are added later */
-	if ((CurrentState != ADC_INITIALIZED) && (CurrentState != ADC_CHANNEL_SAMPLING) && (CurrentState != ADC_EXTERNAL_MUXING)
-			&& (CurrentState != ADC_CALIBRATING) && (CurrentState != ADC_GAIN_CALIBRATING)) {
+	if ((CurrentState != ADC_INITIALIZED) && (CurrentState != ADC_CHANNEL_SAMPLING)
+			&& (CurrentState != ADC_EXTERNAL_MUXING) && (CurrentState != ADC_CALIBRATING)
+			&& (CurrentState != ADC_GAIN_CALIBRATING)) {
 		/* We can only enter this state from these states */
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_IDLE state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_IDLE state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -678,14 +697,16 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 	/* We use explicit checking here in case other state are added later */
 	if ((CurrentState != ADC_IDLE)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 		return;
 	}
 	/* Validate the inputs list */
 	if (inputs == NULL) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with a NULL analog input list. Ignoring...\n\r");
+		printf(
+				"[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with a NULL analog input list. Ignoring...\n\r");
 #endif
 		return;
 	}
@@ -698,13 +719,15 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 		/* Validate the input(s) */
 		if (inputs[0] == NULL) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-			printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with a NULL analog input. Ignoring...\n\r");
+			printf(
+					"[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with a NULL analog input. Ignoring...\n\r");
 #endif
 			return;
 		}
 		if (inputs[0]->added == CHANNEL_NOTADDED) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-			printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with an un-added analog input. Ignoring...\n\r");
+			printf(
+					"[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with an un-added analog input. Ignoring...\n\r");
 #endif
 			return;
 		}
@@ -721,7 +744,8 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 		}
 		if (i >= NUM_ANALOG_INPUTS) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-			printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with a NULL analog input. Ignoring...\n\r");
+			printf(
+					"[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state with a NULL analog input. Ignoring...\n\r");
 #endif
 			return;
 		}
@@ -760,7 +784,8 @@ void ADC_Machine_Reset(void) {
 	if ((CurrentState != ADC_IDLE) && (CurrentState != ADC_INITIALIZED) && (CurrentState != ADC_CHANNEL_SAMPLING)
 			&& (CurrentState != ADC_RESET)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_RESET state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_RESET state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 		CurrentState = ADC_RESET;
@@ -778,7 +803,8 @@ void ADC_External_Muxing(void) {
 	if ((CurrentState != ADC_RESET) && (CurrentState != ADC_IDLE) && (CurrentState != ADC_CHANNEL_SAMPLING)
 			&& (CurrentState != ADC_CALIBRATING) && (CurrentState != ADC_GAIN_CALIBRATING)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_EXTERNAL_MUXING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_EXTERNAL_MUXING state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG

@@ -458,7 +458,7 @@ uint32_t Tekdaqc_GetOffsetCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, AD
 uint32_t Tekdaqc_GetColdJunctionOffsetCalibration(void) {
 	uint32_t cal;
 	if (calColdJunctionOffset == 0xFFFFFFFFU) {
-		cal = Tekdaqc_GetOffsetCalibration(ADS1256_SPS_30000, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED);
+		cal = Tekdaqc_GetOffsetCalibration(ADS1256_SPS_3750, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED);
 	} else {
 		cal = calColdJunctionOffset;
 	}
@@ -474,8 +474,13 @@ uint32_t Tekdaqc_GetColdJunctionOffsetCalibration(void) {
  */
 uint32_t Tekdaqc_GetColdJunctionGainCalibration(void) {
 	uint32_t cal;
+	uint8_t gainIDX;
+	uint8_t rateIDX;
+	uint8_t bufferIDX;
+	uint8_t scaleIDX;
+	ComputeTableIndices(&rateIDX, & gainIDX, &bufferIDX, &scaleIDX, ADS1256_SPS_3750, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED, ANALOG_SCALE_5V);
 	if (calColdJunctionGain == 0xFFFFFFFFU) {
-		cal = Tekdaqc_GetGainCalibration(ADS1256_SPS_30000, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED, 25.0f);
+		cal = baseGainCalibrations[rateIDX][gainIDX][bufferIDX];
 	} else {
 		cal = calColdJunctionGain;
 	}
@@ -710,15 +715,21 @@ FLASH_Status Tekdaqc_SetColdJunctionOffsetCalibration(uint32_t cal) {
  * This method requires that the board be in calibration mode and will return FLASH_ERROR_WRP if it is not.
  *
  * @param cal uint32 The calibration value to write.
+ * @param forFLASH bool If true, the value will be stored in FLASH, otherwise in RAM.
  * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
  */
-FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal) {
-	if (CalibrationModeEnabled == false) {
-		return FLASH_ERROR_WRP;
-	}
+FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal, bool forFLASH) {
+	if (forFLASH == true) {
+		calColdJunctionGain = cal;
+		return FLASH_COMPLETE;
+	} else {
+		if (CalibrationModeEnabled == false) {
+			return FLASH_ERROR_WRP;
+		}
 
-	FLASH_Status status = FLASH_ProgramWord(COLD_JUNCTION_GAIN_ADDR, cal);
-	return status;
+		FLASH_Status status = FLASH_ProgramWord(COLD_JUNCTION_GAIN_ADDR, cal);
+		return status;
+	}
 }
 
 /**
