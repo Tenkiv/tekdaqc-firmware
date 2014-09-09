@@ -34,6 +34,8 @@ extern "C" {
 /* INCLUDES */
 /*--------------------------------------------------------------------------------------------------------*/
 
+#include "stm32f4xx.h"
+
 /** @addtogroup tekdaqc_firmware_libraries Tekdaqc Firmware Libraries
  * @{
  */
@@ -188,6 +190,8 @@ extern "C" {
 /**
  * @}
  */
+
+void Debug_Hexdump(char* desc, void* addr, uint32_t length);
 
 #ifdef __cplusplus
 }
