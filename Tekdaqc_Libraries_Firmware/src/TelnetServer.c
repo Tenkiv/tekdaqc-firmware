@@ -39,6 +39,8 @@
 #include "lwip/stats.h"
 #include "lwip/tcp.h"
 #include "netconf.h"
+#include <stdio.h>
+#include <inttypes.h>
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -606,6 +608,7 @@ void TelnetWrite(const char character) {
  * @retval none
  */
 void TelnetWriteString(char* string) {
+	printf("Writing string: %s\n\r", string);
 	if (TelnetIsConnected() == TRUE) {
 		Eth_EXTI_Disable();
 		while (*string) {

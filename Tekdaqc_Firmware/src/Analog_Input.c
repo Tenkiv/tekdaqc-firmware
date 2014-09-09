@@ -199,10 +199,13 @@ Tekdaqc_Function_Error_t ListAnalogInputs(void) {
 			input = Ext_AInputs[i];
 			if (input.added == CHANNEL_ADDED) {
 				/* This input has been added */
-				n = snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\t\tPhysical Input %" PRIi8
-				":\n\r\t\t\tExternal Input: %s\n\r\t\t\tName: %s\n\r\t\t\tGain: %s\n\r\t\t\tRate: %s\n\r\t\t\tBuffer: %s\n\r",
-						input.physicalInput, ExtAnalogInputToString(input.externalInput), input.name, ADS1256_StringFromPGA(input.gain),
-						ADS1256_StringFromSPS(input.rate), ADS1256_StringFromBuffer(input.buffer));
+				n =
+						snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER,
+								"\t\tPhysical Input %" PRIi8
+								":\n\r\t\t\tExternal Input: %s\n\r\t\t\tName: %s\n\r\t\t\tGain: %s\n\r\t\t\tRate: %s\n\r\t\t\tBuffer: %s\n\r",
+								input.physicalInput, ExtAnalogInputToString(input.externalInput), input.name,
+								ADS1256_StringFromPGA(input.gain), ADS1256_StringFromSPS(input.rate),
+								ADS1256_StringFromBuffer(input.buffer));
 				if (n <= 0) {
 #ifdef ANALOGINPUT_DEBUG
 					printf("Failed to write an analog input to the list.\n\r");
@@ -231,11 +234,13 @@ Tekdaqc_Function_Error_t ListAnalogInputs(void) {
 					input = Int_AInputs[i];
 					if (input.added == CHANNEL_ADDED) {
 						/* This input has been added */
-						n = snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\t\tPhysical Input %" PRIi8
-						":\n\r\t\t\tInternal Input: %s\n\r\t\t\tName: %s\n\r\t\t\tGain: %s\n\r\t\t\tRate: %s\n\r\t\t\tBuffer: %s\n\r",
-								input.physicalInput, IntAnalogInputToString(input.internalInput), input.name,
-								ADS1256_StringFromPGA(input.gain), ADS1256_StringFromSPS(input.rate),
-								ADS1256_StringFromBuffer(input.buffer));
+						n =
+								snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER,
+										"\t\tPhysical Input %" PRIi8
+										":\n\r\t\t\tInternal Input: %s\n\r\t\t\tName: %s\n\r\t\t\tGain: %s\n\r\t\t\tRate: %s\n\r\t\t\tBuffer: %s\n\r",
+										input.physicalInput, IntAnalogInputToString(input.internalInput), input.name,
+										ADS1256_StringFromPGA(input.gain), ADS1256_StringFromSPS(input.rate),
+										ADS1256_StringFromBuffer(input.buffer));
 						if (n <= 0) {
 #ifdef ANALOGINPUT_DEBUG
 							printf("Failed to write an analog input to the list.\n\r");
@@ -264,7 +269,8 @@ Tekdaqc_Function_Error_t ListAnalogInputs(void) {
  * @param count uint8_t The number of parameters passed on the command line.
  * @retval uint8_t The error status code.
  */
-Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
 	char* param;
 	int8_t index = -1;
@@ -281,39 +287,39 @@ Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 		if (index >= 0) { /* We found the key in the list */
 			param = values[index]; /* We use the discovered index for this key */
 			switch (i) { /* Switch on the key not position in arguments list */
-			case 0U: { /* INPUT key */
-				char* testPtr = NULL;
-				uint8_t in = (uint8_t) strtol(param, &testPtr, 10);
-				if (testPtr == param) {
-					retval = ERR_AIN_PARSE_ERROR;
-				} else {
-					if (in >= 0U && in <= NUM_ANALOG_INPUTS) {
-						/* A valid input number */
-						input = in;
+				case 0U: { /* INPUT key */
+					char* testPtr = NULL;
+					uint8_t in = (uint8_t) strtol(param, &testPtr, 10);
+					if (testPtr == param) {
+						retval = ERR_AIN_PARSE_ERROR;
 					} else {
-						/* Input number out of range */
+						if (in >= 0U && in <= NUM_ANALOG_INPUTS) {
+							/* A valid input number */
+							input = in;
+						} else {
+							/* Input number out of range */
 #ifdef ANALOGINPUT_DEBUG
-						printf("[Analog Input] The requested input number is invalid.\n\r");
+							printf("[Analog Input] The requested input number is invalid.\n\r");
 #endif
-						retval = ERR_AIN_INPUT_OUTOFRANGE;
+							retval = ERR_AIN_INPUT_OUTOFRANGE;
+						}
 					}
+					break;
 				}
-				break;
-			}
-			case 1U: /* BUFFER key */
-				buffer = ADS1256_StringToBuffer(param);
-				break;
-			case 2U: /* RATE key */
-				rate = ADS1256_StringToDataRate(param);
-				break;
-			case 3U: /* GAIN key */
-				gain = ADS1256_StringToPGA(param);
-				break;
-			case 4U: /* NAME key */
-				strcpy(name, param);
-				break;
-			default:
-				retval = ERR_AIN_PARSE_ERROR;
+				case 1U: /* BUFFER key */
+					buffer = ADS1256_StringToBuffer(param);
+					break;
+				case 2U: /* RATE key */
+					rate = ADS1256_StringToDataRate(param);
+					break;
+				case 3U: /* GAIN key */
+					gain = ADS1256_StringToPGA(param);
+					break;
+				case 4U: /* NAME key */
+					strcpy(name, param);
+					break;
+				default:
+					retval = ERR_AIN_PARSE_ERROR;
 			}
 		} else if (i == 1U || i == 2U || i == 3U || i == 4U || i == 5U) {
 			/* The BUFFER, RATE, GAIN and NAME keys are not strictly required, leave the defaults */
@@ -330,9 +336,9 @@ Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 		}
 	}
 	if (retval == ERR_FUNCTION_OK) {
-		if (input != NULL_CHANNEL ) {
+		if (input != NULL_CHANNEL) {
 			Analog_Input_t* an_input = GetAnalogInputByNumber(input);
-			if (an_input != NULL ) {
+			if (an_input != NULL) {
 				if (an_input->added == CHANNEL_NOTADDED) {
 					an_input->physicalInput = input;
 					an_input->buffer = buffer;
@@ -410,7 +416,8 @@ Tekdaqc_Function_Error_t AddAnalogInput(Analog_Input_t* input) {
  * @param count uint8_t The number of parameters passed on the command line.
  * @retval int The error status code.
  */
-Tekdaqc_Function_Error_t RemoveAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+Tekdaqc_Function_Error_t RemoveAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
 	char* param;
 	int8_t index = -1;
@@ -420,23 +427,23 @@ Tekdaqc_Function_Error_t RemoveAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 		if (index >= 0) { /* We found the key in the list */
 			param = values[index]; /* We use the discovered index for this key */
 			switch (i) { /* Switch on the key not position in arguments list */
-			case 0U: { /* INPUT key */
-				printf("Processing INPUT key\n\r");
-				uint8_t in = (uint8_t) strtol(param, NULL, 10);
-				if (in >= 0U && in <= NUM_ANALOG_INPUTS) {
-					/* A valid input number */
-					RemoveAnalogInputByID(in);
-				} else {
-					/* Input number out of range */
+				case 0U: { /* INPUT key */
+					printf("Processing INPUT key\n\r");
+					uint8_t in = (uint8_t) strtol(param, NULL, 10);
+					if (in >= 0U && in <= NUM_ANALOG_INPUTS) {
+						/* A valid input number */
+						RemoveAnalogInputByID(in);
+					} else {
+						/* Input number out of range */
 #ifdef ANALOGINPUT_DEBUG
-					printf("[Analog Input] The requested input number is invalid.\n\r");
+						printf("[Analog Input] The requested input number is invalid.\n\r");
 #endif
-					retval = ERR_AIN_INPUT_OUTOFRANGE;
+						retval = ERR_AIN_INPUT_OUTOFRANGE;
+					}
+					break;
 				}
-				break;
-			}
-			default:
-				retval = ERR_AIN_PARSE_ERROR;
+				default:
+					retval = ERR_AIN_PARSE_ERROR;
 			}
 		} else {
 			/* Somehow an error happened */
@@ -467,7 +474,7 @@ Analog_Input_t* GetAnalogInputByNumber(uint8_t number) {
 #ifdef ANALOGINPUT_DEBUG
 		printf("[Analog Input] Cannot find the requested analog input. Input does not exist on the board.\n\r");
 #endif
-		return NULL ;
+		return NULL;
 	}
 }
 
@@ -480,33 +487,41 @@ Analog_Input_t* GetAnalogInputByNumber(uint8_t number) {
 void WriteAnalogInput(Analog_Input_t* input) {
 	uint8_t count = 0;
 	uint8_t retval;
-	while (count < SINGLE_ANALOG_WRITE_COUNT && input->bufferReadIdx != input->bufferWriteIdx) {
-		/* We have data to print */
-		if (count == 0) {
-			retval = sprintf(TOSTRING_BUFFER, ANALOG_INPUT_HEADER, input->name, input->physicalInput, ADS1256_StringFromPGA(input->gain),
-					ADS1256_StringFromSPS(input->rate), ADS1256_StringFromBuffer(input->buffer));
-			writer(TOSTRING_BUFFER);
-		}
-		retval = sprintf(TOSTRING_BUFFER, "%" PRIu64 ", %" PRIi32 "\x1F\n\r", input->timestamps[input->bufferReadIdx],
-				input->values[input->bufferReadIdx]);
-		input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
-		if (retval >= 0) {
-			if (writer != 0) {
+	if (writer != 0) {
+		while (count < SINGLE_ANALOG_WRITE_COUNT && input->bufferReadIdx != input->bufferWriteIdx) {
+			/* We have data to print */
+			if (count == 0) {
+				retval = snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, ANALOG_INPUT_HEADER, input->name,
+						input->physicalInput, ADS1256_StringFromPGA(input->gain), ADS1256_StringFromSPS(input->rate),
+						ADS1256_StringFromBuffer(input->buffer));
+				if (retval >= 0) {
+					writer(TOSTRING_BUFFER);
+				} else {
+#ifdef ANALOGINPUT_DEBUG
+					printf("[Analog Input] Error occurred while writing analog input header to string.\n\r");
+#endif
+				}
+			}
+			retval = snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "%" PRIu64 ", %" PRIi32 "\x1F\n\r",
+					input->timestamps[input->bufferReadIdx], input->values[input->bufferReadIdx]);
+			input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
+			if (retval >= 0) {
 				writer(TOSTRING_BUFFER);
 			} else {
 #ifdef ANALOGINPUT_DEBUG
-				printf("[Analog Input] Cannot write analog input to string due to NULL write function.\n\r");
+				printf("[Analog Input] Error occurred while writing analog input to string.\n\r");
 #endif
 			}
-		} else {
-#ifdef ANALOGINPUT_DEBUG
-			printf("[Analog Input] Error occurred while writing analog input to string.\n\r");
-#endif
+			++count;
 		}
-		++count;
-	}
-	if (writer != 0) {
-		writer("\x1E");
+		if (count != 0) {
+			/* Only write the record separator if we output data */
+			writer("\x1E");
+		}
+	} else {
+#ifdef ANALOGINPUT_DEBUG
+		printf("[Analog Input] Cannot write analog input to string due to NULL write function.\n\r");
+#endif
 	}
 }
 
@@ -527,111 +542,111 @@ void SetAnalogInputWriteFunction(WriteFunction writeFunction) {
  * @return const char* The string representation.
  */
 const char* ExtAnalogInputToString(ExternalMuxedInput_t input) {
-	static const char* strings[] = { "External 0", "External 1", "External 2", "External 3", "External 4", "External 5", "External 6",
-			"External 7", "External 8", "External 9", "External 10", "External 11", "External 12", "External 13", "External 14",
-			"External 15", "External 16", "External 17", "External 18", "External 19", "External 20", "External 21", "External 22",
-			"External 23", "External 24", "External 25", "External 26", "External 27", "External 28", "External 29", "External 30",
-			"External 31" };
+	static const char* strings[] = {"External 0", "External 1", "External 2", "External 3", "External 4", "External 5",
+			"External 6", "External 7", "External 8", "External 9", "External 10", "External 11", "External 12",
+			"External 13", "External 14", "External 15", "External 16", "External 17", "External 18", "External 19",
+			"External 20", "External 21", "External 22", "External 23", "External 24", "External 25", "External 26",
+			"External 27", "External 28", "External 29", "External 30", "External 31"};
 	const char* retval = NULL;
 	switch (input) {
-	case EXTERN_0:
-		retval = strings[0];
-		break;
-	case EXTERN_1:
-		retval = strings[1];
-		break;
-	case EXTERN_2:
-		retval = strings[2];
-		break;
-	case EXTERN_3:
-		retval = strings[3];
-		break;
-	case EXTERN_4:
-		retval = strings[4];
-		break;
-	case EXTERN_5:
-		retval = strings[5];
-		break;
-	case EXTERN_6:
-		retval = strings[6];
-		break;
-	case EXTERN_7:
-		retval = strings[7];
-		break;
-	case EXTERN_8:
-		retval = strings[8];
-		break;
-	case EXTERN_9:
-		retval = strings[9];
-		break;
-	case EXTERN_10:
-		retval = strings[10];
-		break;
-	case EXTERN_11:
-		retval = strings[11];
-		break;
-	case EXTERN_12:
-		retval = strings[12];
-		break;
-	case EXTERN_13:
-		retval = strings[13];
-		break;
-	case EXTERN_14:
-		retval = strings[14];
-		break;
-	case EXTERN_15:
-		retval = strings[15];
-		break;
-	case EXTERN_16:
-		retval = strings[16];
-		break;
-	case EXTERN_17:
-		retval = strings[17];
-		break;
-	case EXTERN_18:
-		retval = strings[18];
-		break;
-	case EXTERN_19:
-		retval = strings[19];
-		break;
-	case EXTERN_20:
-		retval = strings[20];
-		break;
-	case EXTERN_21:
-		retval = strings[21];
-		break;
-	case EXTERN_22:
-		retval = strings[22];
-		break;
-	case EXTERN_23:
-		retval = strings[23];
-		break;
-	case EXTERN_24:
-		retval = strings[24];
-		break;
-	case EXTERN_25:
-		retval = strings[25];
-		break;
-	case EXTERN_26:
-		retval = strings[26];
-		break;
-	case EXTERN_27:
-		retval = strings[27];
-		break;
-	case EXTERN_28:
-		retval = strings[28];
-		break;
-	case EXTERN_29:
-		retval = strings[29];
-		break;
-	case EXTERN_30:
-		retval = strings[30];
-		break;
-	case EXTERN_31:
-		retval = strings[31];
-		break;
-	default:
-		retval = NULL;
+		case EXTERN_0:
+			retval = strings[0];
+			break;
+		case EXTERN_1:
+			retval = strings[1];
+			break;
+		case EXTERN_2:
+			retval = strings[2];
+			break;
+		case EXTERN_3:
+			retval = strings[3];
+			break;
+		case EXTERN_4:
+			retval = strings[4];
+			break;
+		case EXTERN_5:
+			retval = strings[5];
+			break;
+		case EXTERN_6:
+			retval = strings[6];
+			break;
+		case EXTERN_7:
+			retval = strings[7];
+			break;
+		case EXTERN_8:
+			retval = strings[8];
+			break;
+		case EXTERN_9:
+			retval = strings[9];
+			break;
+		case EXTERN_10:
+			retval = strings[10];
+			break;
+		case EXTERN_11:
+			retval = strings[11];
+			break;
+		case EXTERN_12:
+			retval = strings[12];
+			break;
+		case EXTERN_13:
+			retval = strings[13];
+			break;
+		case EXTERN_14:
+			retval = strings[14];
+			break;
+		case EXTERN_15:
+			retval = strings[15];
+			break;
+		case EXTERN_16:
+			retval = strings[16];
+			break;
+		case EXTERN_17:
+			retval = strings[17];
+			break;
+		case EXTERN_18:
+			retval = strings[18];
+			break;
+		case EXTERN_19:
+			retval = strings[19];
+			break;
+		case EXTERN_20:
+			retval = strings[20];
+			break;
+		case EXTERN_21:
+			retval = strings[21];
+			break;
+		case EXTERN_22:
+			retval = strings[22];
+			break;
+		case EXTERN_23:
+			retval = strings[23];
+			break;
+		case EXTERN_24:
+			retval = strings[24];
+			break;
+		case EXTERN_25:
+			retval = strings[25];
+			break;
+		case EXTERN_26:
+			retval = strings[26];
+			break;
+		case EXTERN_27:
+			retval = strings[27];
+			break;
+		case EXTERN_28:
+			retval = strings[28];
+			break;
+		case EXTERN_29:
+			retval = strings[29];
+			break;
+		case EXTERN_30:
+			retval = strings[30];
+			break;
+		case EXTERN_31:
+			retval = strings[31];
+			break;
+		default:
+			retval = NULL;
 	}
 	return retval;
 }
@@ -645,23 +660,23 @@ const char* ExtAnalogInputToString(ExternalMuxedInput_t input) {
 const char* IntAnalogInputToString(InternalAnalogInput_t input) {
 	char* str;
 	switch (input) {
-	case SUPPLY_9V:
-		str = "9V SUPPLY";
-		break;
-	case SUPPLY_5V:
-		str = "5V SUPPLY";
-		break;
-	case SUPPLY_3_3V:
-		str = "3.3V SUPPLY";
-		break;
-	case COLD_JUNCTION:
-		str = "COLD JUNCTION";
-		break;
-	case EXTERNAL_ANALOG_IN:
-		str = "EXTERNAL ANALOG INPUT";
-		break;
-	default:
-		str = "UNKNOWN";
+		case SUPPLY_9V:
+			str = "9V SUPPLY";
+			break;
+		case SUPPLY_5V:
+			str = "5V SUPPLY";
+			break;
+		case SUPPLY_3_3V:
+			str = "3.3V SUPPLY";
+			break;
+		case COLD_JUNCTION:
+			str = "COLD JUNCTION";
+			break;
+		case EXTERNAL_ANALOG_IN:
+			str = "EXTERNAL ANALOG INPUT";
+			break;
+		default:
+			str = "UNKNOWN";
 	}
 	return str;
 }
