@@ -33,10 +33,13 @@
 #include "DI_StateMachine.h"
 #include "DO_StateMachine.h"
 #include "TLE7232_RelayDriver.h"
+#include "netconf.h"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
 /*--------------------------------------------------------------------------------------------------------*/
+
+#define SKIP_COUNT	4
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -53,6 +56,9 @@ static bool DISampling = FALSE;
 
 /* Is the DO sampling complete */
 static bool DOSampling = FALSE;
+
+/* Counter for number of service loops to make before sampling DI again */
+static bool DISkipCount;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
@@ -84,56 +90,63 @@ void InitCommandStateHandler(void) {
  */
 void ServiceTasks(void) {
 	switch (CurrentState) {
-	case UNINITIALIZED:
-		ADC_Machine_Service();
-		DI_Machine_Service();
-		DO_Machine_Service();
-		CurrentState = STATE_IDLE;
-		break;
-	case STATE_IDLE:
-		ADC_Machine_Service();
-		DI_Machine_Service();
-		DO_Machine_Service();
-		break;
-	case STATE_ANALOG_INPUT_SAMPLE:
-		if (ADCSampling == TRUE) {
-			/* Service the ADC state machine */
+		case UNINITIALIZED:
 			ADC_Machine_Service();
-		} else {
-			CurrentState = STATE_IDLE;
-		}
-		break;
-	case STATE_DIGITAL_INPUT_SAMPLE:
-		if (DISampling == TRUE) {
-			/* Service the DI state machine */
 			DI_Machine_Service();
-		} else {
-			CurrentState = STATE_IDLE;
-		}
-		break;
-	case STATE_DIGITAL_OUTPUT_SAMPLE:
-		if (DOSampling == TRUE) {
-			/* Service the DO state machine */
 			DO_Machine_Service();
-		} else {
 			CurrentState = STATE_IDLE;
-		}
-		break;
-	case STATE_GENERAL_SAMPLE:
-		if ((ADCSampling == TRUE) || (DISampling == TRUE) || (DOSampling == TRUE)) {
-			/* Service the ADC state machine */
+			break;
+		case STATE_IDLE:
 			ADC_Machine_Service();
-			/* Service the DI state machine */
 			DI_Machine_Service();
-			/* Service the DO state machine */
 			DO_Machine_Service();
-		} else {
-			CurrentState = STATE_IDLE;
-		}
-		break;
-	default:
-		/* TODO: Throw error. */
-		break;
+			break;
+		case STATE_ANALOG_INPUT_SAMPLE:
+			if (ADCSampling == TRUE) {
+				/* Service the ADC state machine */
+				ADC_Machine_Service();
+			} else {
+				CurrentState = STATE_IDLE;
+			}
+			break;
+		case STATE_DIGITAL_INPUT_SAMPLE:
+			if (DISampling == TRUE) {
+				/* Service the DI state machine */
+				DI_Machine_Service();
+			} else {
+				CurrentState = STATE_IDLE;
+			}
+			break;
+		case STATE_DIGITAL_OUTPUT_SAMPLE:
+			if (DOSampling == TRUE) {
+				/* Service the DO state machine */
+				DO_Machine_Service();
+			} else {
+				CurrentState = STATE_IDLE;
+			}
+			break;
+		case STATE_GENERAL_SAMPLE:
+			if ((ADCSampling == TRUE) || (DISampling == TRUE) || (DOSampling == TRUE)) {
+				/* Service the ADC state machine */
+				ADC_Machine_Service();
+				if (DISkipCount > 0) {
+					/* Handle periodic timers for LwIP */
+					LwIP_Periodic_Handle(GetLocalTime());
+					--DISkipCount;
+				} else {
+					/* Service the DI state machine */
+					DI_Machine_Service();
+					DISkipCount = SKIP_COUNT;
+				}
+				/* Service the DO state machine */
+				DO_Machine_Service();
+			} else {
+				CurrentState = STATE_IDLE;
+			}
+			break;
+		default:
+			/* TODO: Throw error. */
+			break;
 	}
 }
 
@@ -147,38 +160,38 @@ void ServiceTasks(void) {
 void HaltTasks(void) {
 	printf("[Command State] Halting all tasks.\n\r");
 	switch (CurrentState) {
-	case UNINITIALIZED:
-		/* There is nothing to halt */
-		break;
-	case STATE_IDLE:
-		/* There is nothing to halt */
-		break;
-	case STATE_ANALOG_INPUT_SAMPLE:
-		printf("[Command State] Halting analog input sampling.\n\r");
-		ADC_Machine_Halt();
-		CurrentState = STATE_IDLE;
-		break;
-	case STATE_DIGITAL_INPUT_SAMPLE:
-		printf("[Command State] Halting digital input sampling.\n\r");
-		DI_Machine_Halt();
-		CurrentState = STATE_IDLE;
-		break;
-	case STATE_DIGITAL_OUTPUT_SAMPLE:
-		printf("[Command State] Halting digital output sampling.\n\r");
-		DO_Machine_Halt();
-		CurrentState = STATE_IDLE;
-		break;
-	case STATE_GENERAL_SAMPLE:
-		printf("[Command State] Halting all sampling.\n\r");
-		ADC_Machine_Halt();
-		DI_Machine_Halt();
-		DO_Machine_Halt();
-		CurrentState = STATE_IDLE;
-		break;
-	default:
-		printf("[Command State] Halt tasks called while in an unknown command state.");
-		/* TODO: Throw error */
-		break;
+		case UNINITIALIZED:
+			/* There is nothing to halt */
+			break;
+		case STATE_IDLE:
+			/* There is nothing to halt */
+			break;
+		case STATE_ANALOG_INPUT_SAMPLE:
+			printf("[Command State] Halting analog input sampling.\n\r");
+			ADC_Machine_Halt();
+			CurrentState = STATE_IDLE;
+			break;
+		case STATE_DIGITAL_INPUT_SAMPLE:
+			printf("[Command State] Halting digital input sampling.\n\r");
+			DI_Machine_Halt();
+			CurrentState = STATE_IDLE;
+			break;
+		case STATE_DIGITAL_OUTPUT_SAMPLE:
+			printf("[Command State] Halting digital output sampling.\n\r");
+			DO_Machine_Halt();
+			CurrentState = STATE_IDLE;
+			break;
+		case STATE_GENERAL_SAMPLE:
+			printf("[Command State] Halting all sampling.\n\r");
+			ADC_Machine_Halt();
+			DI_Machine_Halt();
+			DO_Machine_Halt();
+			CurrentState = STATE_IDLE;
+			break;
+		default:
+			printf("[Command State] Halt tasks called while in an unknown command state.");
+			/* TODO: Throw error */
+			break;
 	}
 }
 
@@ -226,6 +239,7 @@ void CommandStateMoveToGeneralSample(void) {
 	ADCSampling = TRUE;
 	DISampling = TRUE;
 	DOSampling = TRUE;
+	DISkipCount = SKIP_COUNT;
 }
 
 /**
