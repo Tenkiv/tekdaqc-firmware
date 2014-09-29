@@ -41,6 +41,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <math.h>
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -53,20 +54,17 @@
 /* The human readable string representations of the analog input scales. */
 static const char* strings[3] = {"ANALOG 0-5V", "ANALOG 0-400V", "Invalid Scale"};
 
-/* The highest temperature that calibration data exists for */
-static float calTempHigh = 0.0f;
-
-/* The lowest temperature that calibration data exists for */
-static float calTempLow = 0.0f;
-
-/* The temperature step for the calibration data */
-static float calTempStep = 0.0f;
-
 /* Does valid calibration data exist */
 static bool isCalibrationValid = false;
 
 /* If calibration mode has been enabled */
 static bool CalibrationModeEnabled = false;
+
+/* Index of the maximum valid temperature */
+static uint8_t maxValidTempIdx;
+
+/* Calibration temperature array */
+static float calibrationTemps[CAL_NUM_TEMPS];
 
 /* RAM table of offset calibrations */
 static uint32_t offsetCalibrations[NUM_SAMPLE_RATES][NUM_PGA_SETTINGS][NUM_BUFFER_SETTINGS];
@@ -91,7 +89,7 @@ static ANALOG_INPUT_SCALE_t CURRENT_ANALOG_SCALE = ANALOG_SCALE_400V;
  * @brief Computes the address offset for the offset calibration value with the specified parameters.
  */
 static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
-		ANALOG_INPUT_SCALE_t scale, float temperature);
+		ANALOG_INPUT_SCALE_t scale, uint8_t temp_idx);
 
 /**
  * @brief Interpolates two calibration values with the specified interpolation factor.
@@ -119,7 +117,7 @@ static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t
  * @retval The computed address offset.
  */
 static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
-		ANALOG_INPUT_SCALE_t scale, float temperature) {
+		ANALOG_INPUT_SCALE_t scale, uint8_t temp_idx) {
 	uint32_t offset = 0U;
 	uint8_t rateIDX = 0U;
 	uint8_t gainIDX = 0U;
@@ -131,11 +129,7 @@ static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BU
 	printf("[Calibration Table] Computed table indices - Rate: %i, Gain: %i, Buffer: %i, Scale: %i\n\r", rateIDX,
 			gainIDX, bufferIDX, scaleIDX);
 #endif
-	uint8_t num_cal_steps = (temperature - calTempLow) / calTempStep;
-#ifdef CALIBRATION_TABLE_DEBUG
-	printf("[Calibration Table] Computed number of temperature steps: %i\n\r", num_cal_steps);
-#endif
-	offset = (num_cal_steps * CALIBRATION_TEMP_OFFSET)
+	offset = (temp_idx * CALIBRATION_TEMP_OFFSET)
 			+ rateIDX * NUM_PGA_SETTINGS * (NUM_INPUT_RANGES + NUM_BUFFER_SETTINGS)
 			+ gainIDX * (NUM_INPUT_RANGES + NUM_BUFFER_SETTINGS) + bufferIDX * NUM_BUFFER_SETTINGS + scaleIDX;
 	offset *= 4; /* Multiply by 4 because these are word values */
@@ -278,9 +272,13 @@ static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_
  */
 bool Tekdaqc_CalibrationInit(void) {
 	FLASH_SetLatency(CALIBRATION_LATENCY);
-	calTempLow = (*(__IO float*) CAL_TEMP_LOW_ADDR);
-	calTempHigh = (*(__IO float*) CAL_TEMP_HIGH_ADDR);
-	calTempStep = (*(__IO float*) CAL_TEMP_STEP_ADDR);
+	for (uint8_t i = 0; i < CAL_NUM_TEMPS; ++i) {
+		calibrationTemps[i] = (*(__IO float*) (CAL_TEMP_LOW_ADDR + 4 * i));
+		if (*((uint32_t*) ((void *) (calibrationTemps + i))) == CAL_INVALID_TEMP) {
+			maxValidTempIdx = i - 1;
+			break;
+		}
+	}
 	calColdJunctionOffset = (*(__IO uint32_t*) COLD_JUNCTION_OFFSET_ADDR);
 	calColdJunctionGain = (*(__IO uint32_t*) COLD_JUNCTION_GAIN_ADDR);
 	isCalibrationValid = ((*(__IO uint8_t*) CAL_VALID_ADDR_LO_ADDR) == CAL_VALID_ADDR_LO_ADDR)
@@ -395,36 +393,58 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 #endif
 		return baseGain;
 	}
-	if (temperature < calTempLow || temperature > calTempHigh) {
+	if (temperature < calibrationTemps[0] || temperature > calibrationTemps[maxValidTempIdx]) {
 		/* The temperature is out of range, we will return the closest */
 #ifdef CALIBRATION_TABLE_DEBUG
 		printf(
 				"[Calibration Table] The requested temperature %f was out of range. Minimum is %f and maximum is %f.\n\r",
-				temperature, calTempLow, calTempHigh);
+				temperature, calibrationTemps[0], calibrationTemps[maxValidTempIdx]);
 #endif
 		snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
 				"Error fetching the gain calibration value for temperature: %f Deg C. Temperature out of range. Allowable range is %f to %f Deg C",
-				temperature, calTempLow, calTempHigh);
+				temperature, calibrationTemps[0], calibrationTemps[maxValidTempIdx]);
 		TelnetWriteErrorMessage(TOSTRING_BUFFER);
-		if (temperature < calTempLow) {
-			temperature = calTempLow;
+		if (temperature < calibrationTemps[0]) {
+			temperature = calibrationTemps[0];
 		} else {
-			temperature = calTempHigh;
+			temperature = calibrationTemps[maxValidTempIdx];
 		}
 	}
 
-	uint8_t num_temp_steps = (uint8_t) (temperature / calTempStep);
-	float low_temp = calTempLow * num_temp_steps;
-	float high_temp = calTempLow + calTempStep * num_temp_steps;
-	float factor = (temperature - calTempLow) / calTempStep;
+	float low_temp = 0.0f;
+	float high_temp = 0.0f;
+	bool loop = true;
+	for (uint8_t i = 0; i <= maxValidTempIdx; ++i) {
+		if (temperature <= calibrationTemps[i]) {
+			// We have passed the temp so i-1 is the low, unless i is 0 in which case we use index 0
+			low_temp = (i > 0) ? calibrationTemps[i-1] : calibrationTemps[0];
+			loop = false;
+		}
+		if (i == maxValidTempIdx) {
+			high_temp = calibrationTemps[i];
+			if (low_temp == 0.0f) {
+				low_temp = calibrationTemps[i];
+			}
+			loop = false;
+		}
+		if (loop == false) break;
+	}
+	for (uint8_t i = 0; i <= maxValidTempIdx; ++i) {
+		if (temperature >= calibrationTemps[i]) {
+			// We have pass the temp so i-1 is the high, unless i is max in which case we use max index
+			high_temp = (i < maxValidTempIdx) ? calibrationTemps[i-1] : calibrationTemps[maxValidTempIdx];
+		}
+	}
 
-	uint32_t offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, low_temp); /* Add one for the move to gain */
-	uint32_t Address = CAL_DATA_START_ADDR + 4 * offset; /* Multiply offset by 4 because entries are 4bytes long */
+	float factor = (temperature - low_temp) / (high_temp - low_temp);
+
+	uint32_t offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, low_temp);
+	uint32_t Address = CAL_DATA_START_ADDR + offset;
 
 	uint32_t data_low = (*(__IO uint32_t*) Address);
 
-	offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, high_temp); /* Add one for the move to gain */
-	Address = CAL_DATA_START_ADDR + 4 * offset; /* Multiply offset by 4 because entries are 4bytes long */
+	offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, high_temp);
+	Address = CAL_DATA_START_ADDR + offset;
 
 	uint32_t data_high = (*(__IO uint32_t*) Address);
 	return (baseGain + InterpolateValue(data_low, data_high, factor));
@@ -577,73 +597,27 @@ FLASH_Status Tekdaqc_SetSerialNumber(char* serial) {
 }
 
 /**
- * Writes the low temperature for which calibration data exists. This is the lowest temperature for which
- * we have valid calibration data. This method requires that the board be in calibration mode and will return
- * FLASH_ERROR_WRP if it is not.
+ * Writes the specified temperature for which calibration data exists. This method requires
+ * that the board be in calibration mode and will return FLASH_ERROR_WRP if it is not.
  *
  * @param temp float The temperature value.
+ * @param temp_idx uint8_t The table temperature index.
  * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
  */
-FLASH_Status Tekdaqc_SetCalibrationLowTemperature(float temp) {
+FLASH_Status Tekdaqc_SetCalibrationTemperature(float temp, uint8_t temp_idx) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
+	uint32_t address = CAL_TEMP_LOW_ADDR + 4 * temp_idx;
 #ifdef CALIBRATION_TABLE_DEBUG
 	printf("[Calibration Table] Programming calibration table low temperature: %f at location 0x%08" PRIX32 ".\n\r",
-			temp, CAL_TEMP_LOW_ADDR);
+			temp, address);
 #endif
 	/* Convert the floating point value into a byte equivilant uint32_t */
 	uint32_t* value = (uint32_t*) ((void*) &temp);
-	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_LOW_ADDR, *value);
+	FLASH_Status status = FLASH_ProgramWord(address, *value);
 	if (status == FLASH_COMPLETE)
-		calTempLow = temp;
-	return status;
-}
-
-/**
- * Writes the high temperature for which calibration data exists. This is the highest temperature for which
- * we have valid calibration data. This method requires that the board be in calibration mode and will return
- * FLASH_ERROR_WRP if it is not.
- *
- * @param temp float The temperature value.
- * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
- */
-FLASH_Status Tekdaqc_SetCalibrationHighTemperature(float temp) {
-	if (CalibrationModeEnabled == false) {
-		return FLASH_ERROR_WRP;
-	}
-#ifdef CALIBRATION_TABLE_DEBUG
-	printf("[Calibration Table] Programming calibration table high temperature: %f at location 0x%08" PRIX32 ".\n\r",
-			temp, CAL_TEMP_HIGH_ADDR);
-#endif
-	/* Convert the floating point value into a byte equivilant uint32_t */
-	uint32_t* value = (uint32_t*) ((void*) &temp);
-	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_HIGH_ADDR, *value);
-	if (status == FLASH_COMPLETE)
-		calTempHigh = temp;
-	return status;
-}
-
-/**
- * Writes the temperature step for the calibration data points. This method requires that the board be in
- * calibration mode and will return FLASH_ERROR_WRP if it is not.
- *
- * @param temp float The temperature step value.
- * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
- */
-FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp) {
-	if (CalibrationModeEnabled == false) {
-		return FLASH_ERROR_WRP;
-	}
-#ifdef CALIBRATION_TABLE_DEBUG
-	printf("[Calibration Table] Programming calibration table temperature step: %f at location 0x%08" PRIX32 ".\n\r",
-			temp, CAL_TEMP_STEP_ADDR);
-#endif
-	/* Convert the floating point value into a byte equivilant uint32_t */
-	uint32_t* value = (uint32_t*) ((void*) &temp);
-	FLASH_Status status = FLASH_ProgramWord(CAL_TEMP_STEP_ADDR, *value);
-	if (status == FLASH_COMPLETE)
-		calTempStep = temp;
+		calibrationTemps[temp_idx] = temp;
 	return status;
 }
 

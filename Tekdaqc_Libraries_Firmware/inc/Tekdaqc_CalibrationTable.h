@@ -108,19 +108,9 @@ void Tekdaqc_EndCalibrationMode(void);
 FLASH_Status Tekdaqc_SetSerialNumber(char* serial);
 
 /**
- * @brief Sets the temperature value for the lowest temperature entry of the table.
+ * @brief Sets the temperature value for the specified temperature entry of the table.
  */
-FLASH_Status Tekdaqc_SetCalibrationLowTemperature(float temp);
-
-/**
- * @brief Sets the temperature value for the highest temperature entry of the table.
- */
-FLASH_Status Tekdaqc_SetCalibrationHighTemperature(float temp);
-
-/**
- * @brief Sets the temperature step value for the temperature entries of the table.
- */
-FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp);
+FLASH_Status Tekdaqc_SetCalibrationTemperature(float temp, uint8_t temp_idx);
 
 /**
  * @brief Marks the calibration table to indicate that it is valid.

@@ -135,12 +135,13 @@ int main(void) {
 
 static void program_loop(void) {
 	/* Infinite loop */
+	shouldServiceEthernet = true;
 	while (1) {
 		/* Service the inputs/outputs */
 		ServiceTasks();
 
 		if (shouldServiceEthernet == true) {
-			shouldServiceEthernet = false;
+			//shouldServiceEthernet = false;
 			/* Check if any packet received */
 			if (ETH_CheckFrameReceived()) {
 				/* Process received Ethernet packet */
@@ -157,9 +158,9 @@ static void program_loop(void) {
 					Command_AddChar(character);
 				}
 			}
-		} else {
+		} /*else {
 			shouldServiceEthernet = true;
-		}
+		}*/
 
 		/* Check to see if any faults have occurred */
 		/*Tekdaqc_CheckStatus();*/ //TODO: Re-enable when digital output faults work
