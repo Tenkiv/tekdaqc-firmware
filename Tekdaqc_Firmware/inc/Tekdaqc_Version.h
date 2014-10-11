@@ -35,7 +35,7 @@ extern "C" {
 static const uint8_t MAJOR_VERSION = 1;  // Hardware changes/rearchitecture
 static const uint8_t MINOR_VERSION = 1;  // New features
 static const uint8_t BUILD_NUMBER  = 1;  // Bug fixes
-static const uint8_t SPECIAL_BUILD = 3;  // Special unique release, otherwise 0
+static const uint8_t SPECIAL_BUILD = 8;  // Special unique release, otherwise 0
 
 #ifdef __cplusplus
 }

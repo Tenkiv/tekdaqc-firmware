@@ -26,6 +26,7 @@
 #include "Tekdaqc_Error.h"
 #include "Tekdaqc_Version.h"
 #include <stdio.h>
+#include <inttypes.h>
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -67,22 +68,16 @@ int main(void) {
 	printf("\n\rSerial Port Initialized.\n\r");
 #endif
 
-	/* Enable the PWR APB1 Clock Interface */
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-
-	/* Allow access to BKP Domain */
-	PWR_BackupAccessCmd(ENABLE);
-
 	if ((RTC_ReadBackupRegister(RTC_CONFIGURED_REG) & RTC_CONFIGURED) != RTC_CONFIGURED) {
 #ifdef DEBUG
 		printf("[Main] Configuring the RTC domain.\n\r");
 #endif
 		/* Initialize the RTC and Backup registers */
-		/* RTC_Config(); */
-
-		/* Setup date and time */
-		/* TODO: Set up date and time */
+		RTC_Config(RTC_SYNCH_PRESCALER, RTC_ASYNCH_PRESCALER);
 	} else {
+#ifdef DEBUG
+		printf("[Main] RTC domain configured. Waiting for synchronization.\n\r");
+#endif
 		/* Wait for RTC APB registers synchronization */
 		RTC_WaitForSynchro();
 	}
@@ -136,6 +131,7 @@ int main(void) {
 static void program_loop(void) {
 	/* Infinite loop */
 	shouldServiceEthernet = true;
+
 	while (1) {
 		/* Service the inputs/outputs */
 		ServiceTasks();

@@ -97,7 +97,7 @@ void HardFault_Handler(void) {
 	stacked_pc = ((unsigned long) hardfault_args[6]);
 	stacked_psr = ((unsigned long) hardfault_args[7]);
 
-	printf("[Hard fault handler]\n");
+	printf("[Hard fault handler]\n\r");
 	printf("R0 = %" PRIx32 "\n\r", stacked_r0);
 	printf("R1 = %" PRIx32 "\n\r", stacked_r1);
 	printf("R2 = %" PRIx32 "\n\r", stacked_r2);
