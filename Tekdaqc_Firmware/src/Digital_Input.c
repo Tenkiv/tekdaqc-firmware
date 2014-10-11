@@ -271,10 +271,6 @@ void DigitalInputsInit(void) {
 	GPIO_InitStructure.GPIO_Pin = GPI_PORTB_PINS;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-	/* Configure the Port C Pins */
-	GPIO_InitStructure.GPIO_Pin = GPI_PORTC_PINS;
-	GPIO_Init(GPIOC, &GPIO_InitStructure);
-
 	/* Configure the Port E Pins */
 	GPIO_InitStructure.GPIO_Pin = GPI_PORTE_PINS;
 	GPIO_Init(GPIOE, &GPIO_InitStructure);
