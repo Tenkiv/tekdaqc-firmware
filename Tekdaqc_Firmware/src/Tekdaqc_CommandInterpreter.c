@@ -303,7 +303,7 @@ const char* ENTER_CALIBRATION_MODE_PARAMS[NUM_ENTER_CALIBRATION_MODE_PARAMS] = {
  * List of all parameters for the WRITE_GAIN_CALIBRATION_VALUE command.
  */
 const char* WRITE_GAIN_CALIBRATION_VALUE_PARAMS[NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS] = {PARAMETER_VALUE,
-PARAMETER_GAIN, PARAMETER_RATE, PARAMETER_BUFFER, PARAMETER_SCALE, PARAMETER_TEMPERATURE};
+PARAMETER_GAIN, PARAMETER_RATE, PARAMETER_BUFFER, PARAMETER_SCALE, PARAMETER_INDEX};
 
 /**
  * List of all parameters for the WRITE_CALIBRATION_TEMP command.
@@ -1503,15 +1503,27 @@ static Tekdaqc_Command_Error_t Ex_ReadAnalogInput(char keys[][MAX_COMMANDPART_LE
 		if (retval == ERR_COMMAND_OK) { /* If an error occurred, don't bother continuing */
 			switch (list_type) {
 				case SINGLE_CHANNEL:
+#ifdef COMMAND_DEBUG
+					printf("[Command Interpreter] ADC Sampling Single Channel.\n\r");
+#endif
 					ADC_Machine_Input_Sample(aInputs, numSamples, true);
 					break;
 				case CHANNEL_SET:
+#ifdef COMMAND_DEBUG
+					printf("[Command Interpreter] ADC Sampling Channel Set.\n\r");
+#endif
 					ADC_Machine_Input_Sample(aInputs, numSamples, false);
 					break;
 				case CHANNEL_RANGE:
+#ifdef COMMAND_DEBUG
+					printf("[Command Interpreter] ADC Sampling Channel Range.\n\r");
+#endif
 					ADC_Machine_Input_Sample(aInputs, numSamples, false);
 					break;
 				case ALL_CHANNELS:
+#ifdef COMMAND_DEBUG
+					printf("[Command Interpreter] ADC Sampling All Channels.\n\r");
+#endif
 					ADC_Machine_Input_Sample(aInputs, numSamples, false);
 					break;
 				default:
