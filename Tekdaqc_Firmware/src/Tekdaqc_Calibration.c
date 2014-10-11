@@ -251,7 +251,7 @@ Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMA
 	ADS1256_SPS_t rate;
 	ADS1256_PGA_t gain;
 	ANALOG_INPUT_SCALE_t scale;
-	float temperature;
+	uint8_t temperature;
 	uint_fast8_t i = 0U;
 	for (; i < NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS; ++i) {
 		index = GetIndexOfArgument(keys, WRITE_GAIN_CALIBRATION_VALUE_PARAMS[i], count);
@@ -278,9 +278,9 @@ Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMA
 				case 4U: /* SCALE key */
 					scale = Tekdaqc_StringToAnalogInputScale(param);
 					break;
-				case 5U: /* TEMPERATURE key */
+				case 5U: /* INDEX key */
 					errno = 0; /* Set the global error number to 0 so we get a valid check */
-					temperature = strtof(values[index], NULL);
+					temperature = (uint8_t) strtol(values[index], NULL, 0);
 					if (errno != 0) {
 						retval = ERR_CALIBRATION_PARSE_ERROR;
 						break;

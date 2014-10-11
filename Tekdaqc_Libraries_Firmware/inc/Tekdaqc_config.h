@@ -110,6 +110,16 @@ const char* DigitalLevelToString(DigitalLevel_t level);
  */
 void ClearToStringBuffer(void);
 
+/**
+ * @brief Disables all interrupts used by the board.
+ */
+void DisableBoardInterrupts(void);
+
+/**
+ * @brief Enables all interrupts used by the board.
+ */
+void EnableBoardInterrupts(void);
+
 #ifdef DEBUG
 /**
  * @internal

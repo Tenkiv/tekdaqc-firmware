@@ -741,7 +741,7 @@ FLASH_Status FLASH_ProgramDoubleWord(uint32_t Address, uint64_t Data)
   *
   * @note   This function must be used when the device voltage range is from 2.7V to 3.6V. 
   *
-  * @note   If an erase and a program operations are requested simustaneously,    
+  * @note   If an erase and a program operations are requested simultaneously,
   *         the erase operation is performed before the program one.
   *  
   * @param  Address: specifies the address to be programmed.
@@ -783,7 +783,7 @@ FLASH_Status FLASH_ProgramWord(uint32_t Address, uint32_t Data)
   * @brief  Programs a half word (16-bit) at a specified address. 
   * @note   This function must be used when the device voltage range is from 2.1V to 3.6V. 
   *
-  * @note   If an erase and a program operations are requested simustaneously,    
+  * @note   If an erase and a program operations are requested simultaneously,
   *         the erase operation is performed before the program one.
   * 
   * @param  Address: specifies the address to be programmed.

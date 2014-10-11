@@ -103,6 +103,11 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void);
 void Tekdaqc_EndCalibrationMode(void);
 
 /**
+ * @brief Check if the board is currently in calibration mode.
+ */
+bool Tekdaqc_IsCalibrationModeEnabled(void);
+
+/**
  * @brief Sets the serial number of this Tekdaqc.
  */
 FLASH_Status Tekdaqc_SetSerialNumber(char* serial);
@@ -121,7 +126,7 @@ FLASH_Status Tekdaqc_SetCalibrationValid(void);
  * @brief Sets the gain calibration value for the specified parameters.
  */
 FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
-		ANALOG_INPUT_SCALE_t scale, float temperature);
+		ANALOG_INPUT_SCALE_t scale, uint8_t temp_idx);
 
 /**
  * @brief Sets the offset calibration value to be used for the cold junction sensor.

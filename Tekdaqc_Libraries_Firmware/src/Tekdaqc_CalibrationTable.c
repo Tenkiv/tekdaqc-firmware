@@ -38,6 +38,7 @@
 #include "Tekdaqc_CalibrationTable.h"
 #include "Tekdaqc_BSP.h"
 #include "TelnetServer.h"
+#include "Tekdaqc_Config.h"
 #include <string.h>
 #include <stdio.h>
 #include <inttypes.h>
@@ -102,6 +103,11 @@ static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor);
 static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t* buffer_index, uint8_t* scale_index,
 		ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, ANALOG_INPUT_SCALE_t scale);
 
+/**
+ * @brief Clears all pending FLASH status flags.
+ */
+static void ClearFlags(void);
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -113,7 +119,7 @@ static void ComputeTableIndices(uint8_t* rateIndex, uint8_t* gain_index, uint8_t
  * @param rate ADS1256_SPS_t The sample rate to lookup for.
  * @param gain ADS1256_PGA_t The gain to lookup for.
  * @param bufer ADS1256_BUFFER_t The buffer setting to lookup for.
- * @param temperature float The temperature value to lookup for.
+ * @param temperature uint8_t The temperature value index to lookup for.
  * @retval The computed address offset.
  */
 static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
@@ -126,12 +132,14 @@ static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BU
 
 	ComputeTableIndices(&rateIDX, &gainIDX, &bufferIDX, &scaleIDX, rate, gain, buffer, scale);
 #ifdef CALIBRATION_TABLE_DEBUG
-	printf("[Calibration Table] Computed table indices - Rate: %i, Gain: %i, Buffer: %i, Scale: %i\n\r", rateIDX,
-			gainIDX, bufferIDX, scaleIDX);
+	printf("[Calibration Table] Computed table indices - Rate: %i, Gain: %i, Buffer: %i, Scale: %i, Temperature: %i\n\r", rateIDX,
+			gainIDX, bufferIDX, scaleIDX, temp_idx);
 #endif
-	offset = (temp_idx * CALIBRATION_TEMP_OFFSET)
-			+ rateIDX * NUM_PGA_SETTINGS * (NUM_INPUT_RANGES + NUM_BUFFER_SETTINGS)
-			+ gainIDX * (NUM_INPUT_RANGES + NUM_BUFFER_SETTINGS) + bufferIDX * NUM_BUFFER_SETTINGS + scaleIDX;
+	offset = (temp_idx * CALIBRATION_TEMP_OFFSET) /* Move to correct temperature */
+	+ (scaleIDX * NUM_SAMPLE_RATES * NUM_PGA_SETTINGS * NUM_BUFFER_SETTINGS) /* Move to correct scale */
+	+ (rateIDX * NUM_BUFFER_SETTINGS * NUM_PGA_SETTINGS) /* Move to correct rate */
+	+ (gainIDX * NUM_BUFFER_SETTINGS) /* Move to correct gain */
+	+ bufferIDX; /* Move to correct buffer */
 	offset *= 4; /* Multiply by 4 because these are word values */
 #ifdef CALIBRATION_TABLE_DEBUG
 	printf("[Calibration Table] Computed table offset: %" PRIu32 "\n\r", offset);
@@ -169,7 +177,7 @@ static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor) {
  */
 static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_t* buffer_index, uint8_t* scale_index,
 		ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, ANALOG_INPUT_SCALE_t scale) {
-	*buffer_index = (buffer == ADS1256_BUFFER_ENABLED) ? 0U : 1U;
+	*buffer_index = (buffer == ADS1256_BUFFER_ENABLED) ? 1U : 0U;
 	*scale_index = (scale == ANALOG_SCALE_5V) ? 0U : 1U;
 
 	switch (gain) {
@@ -260,6 +268,17 @@ static void ComputeTableIndices(uint8_t* rate_index, uint8_t* gain_index, uint8_
 	}
 }
 
+/**
+ * @internal
+ * Clears all pending FLASH status flags.
+ */
+static void ClearFlags(void) {
+	/* Clear pending flags (if any) */
+	FLASH_ClearFlag(
+			FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR
+					| FLASH_FLAG_PGSERR);
+}
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PUBLIC METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -281,8 +300,8 @@ bool Tekdaqc_CalibrationInit(void) {
 	}
 	calColdJunctionOffset = (*(__IO uint32_t*) COLD_JUNCTION_OFFSET_ADDR);
 	calColdJunctionGain = (*(__IO uint32_t*) COLD_JUNCTION_GAIN_ADDR);
-	isCalibrationValid = ((*(__IO uint8_t*) CAL_VALID_ADDR_LO_ADDR) == CAL_VALID_ADDR_LO_ADDR)
-			&& ((*(__IO uint8_t*) CAL_VALID_ADDR_HI_ADDR) == CAL_VALID_ADDR_HI_ADDR);
+	isCalibrationValid = ((*(__IO uint8_t*) CAL_VALID_ADDR_LO_ADDR) == CALIBRATION_VALID_LO_BYTE)
+			&& ((*(__IO uint8_t*) CAL_VALID_ADDR_HI_ADDR) == CALIBRATION_VALID_HI_BYTE);
 	return TRUE;
 }
 
@@ -413,11 +432,13 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 
 	float low_temp = 0.0f;
 	float high_temp = 0.0f;
+	uint8_t low_temp_idx = 0U;
+	uint8_t high_temp_idx = 0U;
 	bool loop = true;
 	for (uint8_t i = 0; i <= maxValidTempIdx; ++i) {
 		if (temperature <= calibrationTemps[i]) {
 			// We have passed the temp so i-1 is the low, unless i is 0 in which case we use index 0
-			low_temp = (i > 0) ? calibrationTemps[i-1] : calibrationTemps[0];
+			low_temp = (i > 0) ? calibrationTemps[i - 1] : calibrationTemps[0];
 			loop = false;
 		}
 		if (i == maxValidTempIdx) {
@@ -427,26 +448,38 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 			}
 			loop = false;
 		}
-		if (loop == false) break;
+		if (loop == false) {
+			low_temp_idx = i;
+			break;
+		}
 	}
 	for (uint8_t i = 0; i <= maxValidTempIdx; ++i) {
 		if (temperature >= calibrationTemps[i]) {
 			// We have pass the temp so i-1 is the high, unless i is max in which case we use max index
-			high_temp = (i < maxValidTempIdx) ? calibrationTemps[i-1] : calibrationTemps[maxValidTempIdx];
+			high_temp = (i < maxValidTempIdx) ? calibrationTemps[i - 1] : calibrationTemps[maxValidTempIdx];
+			high_temp_idx = i;
 		}
 	}
 
-	float factor = (temperature - low_temp) / (high_temp - low_temp);
+	float factor = 1.0f;
+	if (low_temp != high_temp) {
+		/* Save extra effort if there is no interpolation */
+		factor = (temperature - low_temp) / (high_temp - low_temp);
+	}
 
-	uint32_t offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, low_temp);
+	uint32_t offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, low_temp_idx);
 	uint32_t Address = CAL_DATA_START_ADDR + offset;
 
 	uint32_t data_low = (*(__IO uint32_t*) Address);
+	uint32_t data_high = data_low;
 
-	offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, high_temp);
-	Address = CAL_DATA_START_ADDR + offset;
+	if (factor != 1.0f) {
+		/* Save extra effort if there is no interpolation */
+		offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, high_temp_idx);
+		Address = CAL_DATA_START_ADDR + offset;
 
-	uint32_t data_high = (*(__IO uint32_t*) Address);
+		data_high = (*(__IO uint32_t*) Address);
+	}
 	return (baseGain + InterpolateValue(data_low, data_high, factor));
 }
 
@@ -476,14 +509,7 @@ uint32_t Tekdaqc_GetOffsetCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, AD
  * @retval The calibration value.
  */
 uint32_t Tekdaqc_GetColdJunctionOffsetCalibration(void) {
-	uint32_t cal;
-	if (calColdJunctionOffset == 0xFFFFFFFFU) {
-		cal = Tekdaqc_GetOffsetCalibration(ADS1256_SPS_3750, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED);
-	} else {
-		cal = calColdJunctionOffset;
-	}
-
-	return cal;
+	return Tekdaqc_GetOffsetCalibration(ADS1256_SPS_3750, ADS1256_PGAx4, ADS1256_BUFFER_ENABLED);
 }
 
 /**
@@ -493,19 +519,13 @@ uint32_t Tekdaqc_GetColdJunctionOffsetCalibration(void) {
  * @retval The calibration value.
  */
 uint32_t Tekdaqc_GetColdJunctionGainCalibration(void) {
-	uint32_t cal;
 	uint8_t gainIDX;
 	uint8_t rateIDX;
 	uint8_t bufferIDX;
 	uint8_t scaleIDX;
-	ComputeTableIndices(&rateIDX, & gainIDX, &bufferIDX, &scaleIDX, ADS1256_SPS_3750, ADS1256_PGAx8, ADS1256_BUFFER_ENABLED, ANALOG_SCALE_5V);
-	if (calColdJunctionGain == 0xFFFFFFFFU) {
-		cal = baseGainCalibrations[rateIDX][gainIDX][bufferIDX];
-	} else {
-		cal = calColdJunctionGain;
-	}
-
-	return cal;
+	ComputeTableIndices(&rateIDX, &gainIDX, &bufferIDX, &scaleIDX, ADS1256_SPS_3750, ADS1256_PGAx4,
+			ADS1256_BUFFER_ENABLED, ANALOG_SCALE_5V);
+	return baseGainCalibrations[rateIDX][gainIDX][bufferIDX];
 }
 
 /**
@@ -519,32 +539,26 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
 	FLASH_Unlock();
 
 	/* Clear pending flags (if any) */
-	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
+	FLASH_ClearFlag(
+	FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
 	FLASH_Status status = FLASH_WaitForLastOperation();
 
-	if (status != FLASH_COMPLETE) return status;
+	if (status != FLASH_COMPLETE)
+		return status;
 
-	/* FLASH_OB_Unlock(); */
+	FLASH_OB_Unlock();
 
 	/* Disable write protection for this sector */
-	/*FLASH_OB_WRPConfig(CALIBRATION_WPSECTOR, DISABLE);
+	FLASH_OB_WRPConfig(CALIBRATION_WPSECTOR, DISABLE);
 
-	 FLASH_OB_Launch(); */
+	FLASH_OB_Launch();
 
 	/* Erase the calibration sector */
 	status = FLASH_EraseSector(CALIBRATION_SECTOR, FLASH_VOLTAGE_RANGE);
 	if (status != FLASH_COMPLETE) {
 		return status;
 	}
-
-	/* Enable write protection for this sector */
-	/*FLASH_OB_WRPConfig(CALIBRATION_WPSECTOR, ENABLE);
-
-	 FLASH_OB_Launch();*/
-
-	/* FLASH_OB_Lock(); */
-	/* Disable the flash control register access */
 
 	CalibrationModeEnabled = true;
 	return status;
@@ -557,11 +571,28 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void) {
  * @retval none
  */
 void Tekdaqc_EndCalibrationMode(void) {
+	/* Enable write protection for this sector */
+	FLASH_OB_WRPConfig(CALIBRATION_WPSECTOR, ENABLE);
+
+	FLASH_OB_Launch();
+
+	FLASH_OB_Lock();
+	/* Disable the flash control register access */
 	/* Lock the Flash to disable the flash control register access (recommended
 	 to protect the FLASH memory against possible unwanted operation) */
 	FLASH_Lock();
 
 	CalibrationModeEnabled = false;
+}
+
+/**
+ * Checks if the board is currently in calibration mode.
+ *
+ * @param none
+ * @retval bool True if the board is in calibration mode.
+ */
+bool Tekdaqc_IsCalibrationModeEnabled(void) {
+	return CalibrationModeEnabled;
 }
 
 /**
@@ -608,7 +639,19 @@ FLASH_Status Tekdaqc_SetCalibrationTemperature(float temp, uint8_t temp_idx) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
+
+	ClearFlags();
+
 	uint32_t address = CAL_TEMP_LOW_ADDR + 4 * temp_idx;
+	__IO uint32_t *ptr = (__IO uint32_t*) address;
+	if (*ptr != 0xFFFFFFFF) {
+#ifdef CALIBRATION_TABLE_DEBUG
+		printf(
+				"[Calibration Table] Trying to write table temperature %d as %f at location 0x%08" PRIX32 " failed due to non-erased word.\n\r",
+				temp_idx, temp, address);
+#endif
+		return FLASH_ERROR_PROGRAM;
+	}
 #ifdef CALIBRATION_TABLE_DEBUG
 	printf("[Calibration Table] Programming calibration table low temperature: %f at location 0x%08" PRIX32 ".\n\r",
 			temp, address);
@@ -618,6 +661,9 @@ FLASH_Status Tekdaqc_SetCalibrationTemperature(float temp, uint8_t temp_idx) {
 	FLASH_Status status = FLASH_ProgramWord(address, *value);
 	if (status == FLASH_COMPLETE)
 		calibrationTemps[temp_idx] = temp;
+#ifdef CALIBRATION_TABLE_DEBUG
+	printf("[Calibration Table] Flash Status: %i\n\r", status);
+#endif
 	return status;
 }
 
@@ -631,6 +677,9 @@ FLASH_Status Tekdaqc_SetCalibrationValid(void) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
+
+	ClearFlags();
+
 #ifdef CALIBRATION_TABLE_DEBUG
 	printf("[Calibration Table] Marking calibration table as valid.\n\r");
 #endif
@@ -654,17 +703,24 @@ FLASH_Status Tekdaqc_SetCalibrationValid(void) {
  * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
  */
 FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
-		ANALOG_INPUT_SCALE_t scale, float temperature) {
+		ANALOG_INPUT_SCALE_t scale, uint8_t temp_idx) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
 	}
+	DisableBoardInterrupts();
 
-	uint32_t addr = CAL_DATA_START_ADDR + ComputeOffset(rate, gain, buffer, scale, temperature);
+	ClearFlags();
+	printf("[Calibration Table] Calibration data start address: 0x%08" PRIX32 "\n\r", CAL_DATA_START_ADDR);
+	uint32_t addr = CAL_DATA_START_ADDR + ComputeOffset(rate, gain, buffer, scale, temp_idx);
 #ifdef CALIBRATION_TABLE_DEBUG
 	printf("[Calibration Table] Programming calibration table value: 0x%08" PRIX32 " at location 0x%08" PRIX32 ".\n\r",
 			cal, addr);
 #endif
 	FLASH_Status status = FLASH_ProgramWord(addr, cal);
+#ifdef CALIBRATION_TABLE_DEBUG
+	printf("[Calibration Table] Flash Status: %i - 0x%08" PRIX32 "\n\r", status, FLASH->SR);
+#endif
+	EnableBoardInterrupts();
 	return status;
 }
 
@@ -680,6 +736,8 @@ FLASH_Status Tekdaqc_SetColdJunctionOffsetCalibration(uint32_t cal) {
 		return FLASH_ERROR_WRP;
 	}
 
+	ClearFlags();
+
 	FLASH_Status status = FLASH_ProgramWord(COLD_JUNCTION_OFFSET_ADDR, cal);
 	return status;
 }
@@ -693,13 +751,15 @@ FLASH_Status Tekdaqc_SetColdJunctionOffsetCalibration(uint32_t cal) {
  * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
  */
 FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal, bool forFLASH) {
-	if (forFLASH == true) {
+	if (forFLASH != true) {
 		calColdJunctionGain = cal;
 		return FLASH_COMPLETE;
 	} else {
 		if (CalibrationModeEnabled == false) {
 			return FLASH_ERROR_WRP;
 		}
+
+		ClearFlags();
 
 		FLASH_Status status = FLASH_ProgramWord(COLD_JUNCTION_GAIN_ADDR, cal);
 		return status;
