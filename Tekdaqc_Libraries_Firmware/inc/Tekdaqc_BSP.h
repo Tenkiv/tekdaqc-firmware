@@ -136,6 +136,12 @@ extern "C" {
 #define RTC_CONFIGURED_REG			(RTC_BKP_DR19)
 #define RTC_CONFIGURED				0x00000002U
 
+#define RTC_ASYNCH_PRESCALER		0x01
+#define RTC_SYNCH_PRESCALER			0x7FFF
+
+#define USE_LSE
+#define RTC_TIME
+
 /**
  * @}
  */
@@ -466,7 +472,7 @@ typedef enum {
 #define GPI3_PIN							(GPIO_Pin_11)
 #define GPI3_GPIO_PORT						(GPIOI)
 /* GPI4 */
-#define GPI4_PIN							(GPIO_Pin_0)
+#define GPI4_PIN							(GPIO_Pin_3)
 #define GPI4_GPIO_PORT						(GPIOH)
 /* GPI5 */
 #define GPI5_PIN							(GPIO_Pin_4)
@@ -499,8 +505,8 @@ typedef enum {
 #define GPI14_PIN							(GPIO_Pin_6)
 #define GPI14_GPIO_PORT						(GPIOE)
 /* GPI15 */
-#define GPI15_PIN							(GPIO_Pin_14)
-#define GPI15_GPIO_PORT						(GPIOC)
+#define GPI15_PIN							(GPIO_Pin_5)
+#define GPI15_GPIO_PORT						(GPIOH)
 /* GPI16 */
 #define GPI16_PIN							(GPIO_Pin_9)
 #define GPI16_GPIO_PORT						(GPIOF)
@@ -527,14 +533,13 @@ typedef enum {
 #define GPI23_GPIO_PORT						(GPIOH)
 
 #define GPI_PORTB_PINS						(GPI18_PIN)
-#define GPI_PORTC_PINS						(GPI15_PIN)
 #define GPI_PORTE_PINS						(GPI0_PIN | GPI1_PIN | GPI8_PIN | GPI9_PIN | GPI12_PIN | GPI13_PIN | GPI14_PIN | GPI21_PIN)
 #define GPI_PORTF_PINS						(GPI6_PIN | GPI7_PIN | GPI16_PIN | GPI19_PIN)
 #define GPI_PORTG_PINS						(GPI20_PIN)
-#define GPI_PORTH_PINS						(GPI4_PIN | GPI5_PIN | GPI10_PIN | GPI11_PIN | GPI17_PIN | GPI22_PIN | GPI23_PIN)
+#define GPI_PORTH_PINS						(GPI4_PIN | GPI5_PIN | GPI10_PIN | GPI11_PIN | GPI15_PIN | GPI17_PIN | GPI22_PIN | GPI23_PIN)
 #define GPI_PORTI_PINS						(GPI2_PIN | GPI3_PIN)
 
-#define GPI_GPIO_CLKS						(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOE \
+#define GPI_GPIO_CLKS						(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOE \
 		| RCC_AHB1Periph_GPIOF | RCC_AHB1Periph_GPIOG | RCC_AHB1Periph_GPIOH \
 		| RCC_AHB1Periph_GPIOI)
 
