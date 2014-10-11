@@ -457,14 +457,14 @@ void DebugComPort_Init(void) {
 	USART_InitTypeDef USART_InitStructure;
 
 	/* USARTx configured as follow:
-	 - BaudRate = 115200 baud
+	 - BaudRate = 921600 baud
 	 - Word Length = 8 Bits
 	 - One Stop Bit
 	 - No parity
 	 - Hardware flow control disabled (RTS and CTS signals)
 	 - Receive and transmit enabled
 	 */
-	USART_InitStructure.USART_BaudRate = 921600; //460800;
+	USART_InitStructure.USART_BaudRate = 921600;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_Parity = USART_Parity_No;
