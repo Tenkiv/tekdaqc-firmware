@@ -165,7 +165,7 @@ void AnalogInputsInit(void) {
 	cold->physicalInput = IN_COLD_JUNCTION;
 	cold->buffer = ADS1256_BUFFER_ENABLED;
 	cold->rate = ADS1256_SPS_3750;
-	cold->gain = ADS1256_PGAx8;
+	cold->gain = ADS1256_PGAx4;
 	strcpy(cold->name, "COLD JUNCTION");
 	cold->bufferReadIdx = 0U;
 	cold->bufferWriteIdx = 0U;

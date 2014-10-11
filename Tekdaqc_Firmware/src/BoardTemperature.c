@@ -30,6 +30,7 @@
 #include "AnalogInput_Multiplexer.h"
 #include "Tekdaqc_BSP.h"
 #include "Tekdaqc_Debug.h"
+#include "Tekdaqc_Config.h"
 #include "eeprom.h"
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -84,13 +85,19 @@ static uint32_t scratch;
  * @retval none
  */
 void updateBoardTemperature(Analog_Input_t* input, int32_t code) {
+	if (isSelfCalibrated == false) {
+#ifdef BOARD_TEMPERATURE_DEBUG
+		//printf("[Board Temperature] Ignoring new board temperature due to incomplete self calibration.\n\r");
+#endif
+		return;
+	}
 	int32_t max = MAX_CODE;
 	if (code < 0)
 		++max; /* Add one for negative range. */
 	temperature = LM35_SLOPE * ((2.0f * V_REFERENCE )/ADS1256_GetGainMultiplier(input->gain))* (((float) code)/max);
 	return;
 #ifdef BOARD_TEMPERATURE_DEBUG
-	printf("[Board Temperature] New board temperature: %f Deg C.\n\r", temperature);
+	//printf("[Board Temperature] New board temperature: %f Deg C.\n\r", temperature);
 #endif
 	if (max_temp == 0.0f) {
 		EE_ReadVariable(ADDR_BOARD_MAX_TEMP_HIGH, &high_max_word);

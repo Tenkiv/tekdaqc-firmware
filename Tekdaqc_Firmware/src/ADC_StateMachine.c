@@ -26,20 +26,26 @@
 /* INCLUDES */
 /*--------------------------------------------------------------------------------------------------------*/
 
-#include "Tekdaqc_Debug.h"
-#include "ADC_StateMachine.h"
-#include "AnalogInput_Multiplexer.h"
-#include "CommandState.h"
-#include "BoardTemperature.h"
-#include "Tekdaqc_Calibration.h"
-#include "Tekdaqc_CalibrationTable.h"
-#include "ADS1256_Driver.h"
-#include "Tekdaqc_Config.h"
-#include "Tekdaqc_Timers.h"
-#include "TelnetServer.h"
-#include "boolean.h"
+#include <ADC_StateMachine.h>
+#include <ADS1256_Driver.h>
+#include <AnalogInput_Multiplexer.h>
+#include <BoardTemperature.h>
+#include <core_cm4.h>
+#include <CommandState.h>
 #include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <stm32f4x7_eth_bsp.h>
+#include <stm32f4xx.h>
+#include <Tekdaqc_BSP.h>
+#include <Tekdaqc_config.h>
+#include <Tekdaqc_Calibration.h>
+#include <Tekdaqc_CalibrationTable.h>
+#include <Tekdaqc_Timers.h>
+#include <TelnetServer.h>
+//#include "boolean.h"
+//#include "Tekdaqc_Config.h"
+//#include "Tekdaqc_Debug.h"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -97,6 +103,8 @@ static uint8_t scratch_bytes[3];
 static CalibrationState_t calibrationState;
 
 static bool isFirstIdle = true;
+
+static Analog_Input_t* calibrationInput = NULL;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
@@ -246,6 +254,7 @@ static void ADC_Machine_Service_Calibrating(void) {
 		/* The calibration is complete */
 		printf("[ADC STATE MACHINE] Calibration Completed.\n\r");
 		TelnetWriteStatusMessage("[ADC STATE MACHINE] Calibration Completed.\n\r");
+		isSelfCalibrated = true;
 		ADC_Machine_Idle();
 	}
 }
@@ -257,7 +266,14 @@ static void ADC_Machine_Service_Calibrating(void) {
  * @retval none
  */
 static void ADC_Machine_Service_GainCalibrating(void) {
+	ADS1256_SetDataRate(calibrationInput->rate);
+	ADS1256_SetPGASetting(calibrationInput->gain);
+	ADS1256_SetInputBufferSetting(calibrationInput->buffer);
 	ADS1256_CalibrateSystem_Gain();
+#ifdef ADC_STATE_MACHINE_DEBUG
+	printf("[ADC STATE MACHINE] ADC Registers after calibration...\n\r");
+	ADS1256_PrintRegs();
+#endif
 	ADC_Machine_Idle();
 }
 
@@ -268,37 +284,40 @@ static void ADC_Machine_Service_GainCalibrating(void) {
  * @retval none
  */
 static void ADC_Machine_Service_Idle(void) {
-	/* If a temperature reading is ready, update the board temperature */
-	if (ADS1256_IsDataReady(false)) {
-		Analog_Input_t* input = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-		ADS1256_Sync(true);
-		waitingOnTemp = false;
-		/* We need to read it */
-		input->values[input->bufferWriteIdx] = ADS1256_GetMeasurement();
-		/* Update temperature */
-		updateBoardTemperature(input, input->values[input->bufferWriteIdx]);
-		++(input->bufferWriteIdx);
-		input->timestamps[input->bufferWriteIdx] = GetLocalTime();
-		ADS1256_Wakeup();
+	/* Only service cold junction sampling if we are not in calibration mode */
+	if (Tekdaqc_IsCalibrationModeEnabled() == false) {
+		/* If a temperature reading is ready, update the board temperature */
+		if (ADS1256_IsDataReady(false)) {
+			Analog_Input_t* input = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+			ADS1256_Sync(true);
+			waitingOnTemp = false;
+			/* We need to read it */
+			input->values[input->bufferWriteIdx] = ADS1256_GetMeasurement();
+			/* Update temperature */
+			updateBoardTemperature(input, input->values[input->bufferWriteIdx]);
+			++(input->bufferWriteIdx);
+			input->timestamps[input->bufferWriteIdx] = GetLocalTime();
+			ADS1256_Wakeup();
 #ifdef BOARD_TEMPERATURE_DEBUG
-		printf("[ADC STATE MACHINE] Cold junction temperature sample is complete.\n\r");
+			//printf("[ADC STATE MACHINE] Cold junction temperature sample is complete.\n\r");
 #endif
-		/* Check the buffer positions for errors/roll over */
-		if (input->bufferWriteIdx == input->bufferReadIdx) {
 			/* Check the buffer positions for errors/roll over */
+			if (input->bufferWriteIdx == input->bufferReadIdx) {
+				/* Check the buffer positions for errors/roll over */
 #ifdef BOARD_TEMPERATURE_DEBUG
-			printf("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
-			TelnetWriteErrorMessage("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
+				printf("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
+				TelnetWriteErrorMessage("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
 #endif
-			/* Buffer is full, overwrite */
-			input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
-		}
-		if (((input->bufferWriteIdx - 1U) == input->bufferReadIdx) && ((input->bufferWriteIdx - 1U) > 0U)) {
-			/* This means we wrote over some data */
-		}
-		if (input->bufferWriteIdx == ANALOG_INPUT_BUFFER_SIZE) {
-			/* We have reached the end of the buffer and need to start writing to the beginning */
-			input->bufferWriteIdx = 0U;
+				/* Buffer is full, overwrite */
+				input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
+			}
+			if (((input->bufferWriteIdx - 1U) == input->bufferReadIdx) && ((input->bufferWriteIdx - 1U) > 0U)) {
+				/* This means we wrote over some data */
+			}
+			if (input->bufferWriteIdx == ANALOG_INPUT_BUFFER_SIZE) {
+				/* We have reached the end of the buffer and need to start writing to the beginning */
+				input->bufferWriteIdx = 0U;
+			}
 		}
 	}
 }
@@ -347,6 +366,9 @@ static void ADC_Machine_Service_Sampling(void) {
 				input = samplingInputs[currentSamplingInput];
 			}
 			if (input != current) { /* Prevent unnecessary external muxings */
+#ifdef ADC_STATE_MACHINE_DEBUG
+				printf("[ADC STATE MACHINE] Selecting next analog channel: %" PRIu8 "\n\r", input->physicalInput);
+#endif
 				SelectAnalogInput(input, true); /* Select the input */
 				/* We are done sampling this input, write out any remaining data */
 				WriteAnalogInput(current);
@@ -583,6 +605,9 @@ void ADC_GainCalibrate(PhysicalAnalogInput_t input) {
 		calibrationState.finished = false;
 		calibrationState.finished_count = 0U;
 
+		/* Save the calibration input */
+		calibrationInput = GetAnalogInputByNumber(input);
+
 		/* Select the calibration input */
 		SelectPhysicalInput(input, true);
 	}
@@ -682,11 +707,14 @@ void ADC_Machine_Idle(void) {
 		printf("[ADC STATE MACHINE] Moving to state ADC_IDLE.\n\r");
 #endif
 		CurrentState = ADC_IDLE;
-		ADS1256_Wakeup();
-		ADS1256_Sync(true);
-		Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-		SelectAnalogInput(cold, false);
-		BeginNextConversion(cold);
+		/* Only start cold junction sampling if we are not in calibration mode */
+		if (Tekdaqc_IsCalibrationModeEnabled() == false) {
+			ADS1256_Wakeup();
+			ADS1256_Sync(true);
+			Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+			SelectAnalogInput(cold, false);
+			BeginNextConversion(cold);
+		}
 	}
 }
 
@@ -744,6 +772,7 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 		uint8_t i = 0U;
 		for (; i < NUM_ANALOG_INPUTS; ++i) {
 			if (inputs[i] != NULL && inputs[i]->added == CHANNEL_ADDED) {
+
 				break;
 			}
 		}
@@ -760,6 +789,15 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 	}
 
 	samplingInputs = inputs;
+
+	printf("\n\rSampling Inputs\n\r");
+	for (int n = 0; n < NUM_ANALOG_INPUTS; ++n) {
+		if (samplingInputs[n] != NULL && samplingInputs[n]->added == CHANNEL_ADDED) {
+			printf("Input: %" PRIu8 "\n\r", samplingInputs[n]->physicalInput);
+		}
+	}
+	printf("\n\r");
+
 	Analog_Input_t* input = samplingInputs[currentSamplingInput];
 	CurrentState = ADC_CHANNEL_SAMPLING;
 	SelectAnalogInput(input, true);

@@ -34,6 +34,8 @@
 #include "TelnetServer.h"
 #include "Tekdaqc_CalibrationTable.h"
 #include "eeprom.h"
+#include "stm32f4x7_eth_bsp.h"
+#include "stm32f4xx.h"
 #include <string.h>
 #include <inttypes.h>
 
@@ -83,8 +85,6 @@ static GPIO_TypeDef* COM_RX_PORT[COMn] = { COM1_RX_GPIO_PORT, COM2_RX_GPIO_PORT 
 /* Timer output compare initialization structure */
 /*static TIM_OCInitTypeDef TIM_OCInitStructure;*/
 
-
-
 /*--------------------------------------------------------------------------------------------------------*/
 /* PUBLIC VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -98,7 +98,8 @@ unsigned char TEKDAQC_BOARD_SERIAL_NUM[BOARD_SERIAL_NUM_LENGTH + 1]; /* 32 chars
 /* Definition of the FLASH disk EEPROM addresses */
 uint16_t EEPROM_ADDRESSES[NUM_EEPROM_ADDRESSES];
 
-
+/* Definition of the self calibrated flag */
+__IO bool isSelfCalibrated = false;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
