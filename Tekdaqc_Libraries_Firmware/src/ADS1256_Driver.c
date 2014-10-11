@@ -572,6 +572,7 @@ void ADS1256_Reset_By_Command(void) {
 	ID = 0xFFU; /* Reset the stored ID so we can properly identify the ADC after reset */
 	ADS1256_CS_LOW(); /* Enable SPI communication */
 	ADS1256_Send_Command(ADS1256_RESET); /* Send the reset command */
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH(); /* Latch the SPI communication */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC reports that data is ready via the DRDY pin. */
 }
@@ -643,13 +644,19 @@ void ADS1256_Reset_SPI(void) {
  */
 void ADS1256_ResetAndReprogram(void) {
 	ADS1256_Full_Reset(); /* Perform the full reset */
-	ADS1256_ReadRegisters(ADS1256_STATUS, ADS1256_NREGS); /* Read out al registers */
+	ADS1256_ReadRegisters(ADS1256_STATUS, ADS1256_NREGS); /* Read out all registers */
 
-	/* Set PGA and data rate first, then calibrate */
+	/* Set PGA and data rate first */
+#ifdef ADS1256_DEBUG
+	printf("\n\rResetting ADC Parameters:\n\r");
+	/*printf("\tRate: %s\n\r", ADS1256_StringFromSPS(SPS));
+	printf("\tGain: %s\n\r", ADS1256_StringFromPGA(PGA));
+	printf("\tBuffer: %s\n\r", ADS1256_StringFromBuffer(BUFFER));
+	printf("\t")*/
+#endif
 	ADS1256_SetInputBufferSetting(BUFFER);
 	ADS1256_SetDataRate(SPS);
 	ADS1256_SetPGASetting(PGA);
-	ADS1256_CalibrateSelf();
 
 	/* Now set other stuff */
 	ADS1256_SetInputChannels(AIN_POS, AIN_NEG);
@@ -665,6 +672,11 @@ void ADS1256_ResetAndReprogram(void) {
 			ADS1256_SetGPIOStatus(i, GPIO_STATUS[i]);
 		}
 	}
+
+#ifdef ADS1256_DEBUG
+	printf("ADC Registers after reset:\n\r");
+	ADS1256_PrintRegs();
+#endif
 }
 
 
@@ -715,6 +727,7 @@ void ADS1256_ReadData(uint8_t* data) {
 	ADS1256_SendByte(ADS1256_RDATA); /* Send RDATA command byte */
 	Delay_us((uint64_t) (50U * ADS1256_CLK_PERIOD_US)); /*  timing characteristic t6 */
 	ADS1256_ReceiveBytes(data, 3U);
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH(); /* Latch SPI communication */
 	Delay_us((uint64_t) (4U * ADS1256_CLK_PERIOD_US)); /*  timing characteristic t11 */
 }
@@ -1717,6 +1730,7 @@ static void ADS1256_Reg_Command(ADS1256_Command_t cmd, ADS1256_Register_t reg, u
 static void ADS1256_Send_Command(ADS1256_Command_t cmd) {
 	ADS1256_CS_LOW();
 	ADS1256_SendByte(cmd);
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH();
 }
 
@@ -1834,9 +1848,14 @@ static void ADS1256_ReadRegister(ADS1256_Register_t reg) {
  */
 static void ADS1256_ReadRegisters(ADS1256_Register_t reg, uint8_t count) {
 	ADS1256_CS_LOW();
+	DisableBoardInterrupts();
 	ADS1256_Reg_Command(ADS1256_RREG, reg, count);
+	EnableBoardInterrupts();
 	Delay_us(50 * ADS1256_CLK_PERIOD_US); /* timing characteristic t6 */
+	DisableBoardInterrupts();
 	ADS1256_ReceiveBytes(ADS1256_Registers + reg, count);
+	EnableBoardInterrupts();
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH();
 	Delay_us(4 * ADS1256_CLK_PERIOD_US); /* timing characteristic t11 */
 	if (reg == ADS1256_STATUS) {
@@ -1881,9 +1900,14 @@ static void ADS1256_WriteRegister(ADS1256_Register_t reg) {
  */
 static void ADS1256_WriteRegisters(ADS1256_Register_t reg, uint8_t count) {
 	ADS1256_CS_LOW();
+	DisableBoardInterrupts();
 	ADS1256_Reg_Command(ADS1256_WREG, reg, count);
+	EnableBoardInterrupts();
 	Delay_us(50 * ADS1256_CLK_PERIOD_US); /* timing characteristic t6 */
+	DisableBoardInterrupts();
 	ADS1256_SendBytes(ADS1256_Registers + reg, count);
+	EnableBoardInterrupts();
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH();
 	Delay_us(4 * ADS1256_CLK_PERIOD_US); /* timing characteristic t11 */
 }

@@ -363,16 +363,21 @@ static void ADC_Machine_Service_Sampling(void) {
 		} else {
 			/* We are single channel sampling */
 #ifdef ADC_STATE_MACHINE_DEBUG
+
+			//TODO
+			printf("SINGLE CHANNEL SAMPLING.\n\r");
+
 			snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER,
 					"[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r", SampleCurrent + 1,
 					SampleTotal);
 			TelnetWriteStatusMessage(TOSTRING_BUFFER);
 #endif
 			++SampleCurrent; /* Increment the sample count */
-			ADS1256_Wakeup(); /* Begin the next sample */
+			BeginNextConversion(samplingInputs[currentSamplingInput]);
+			//ADS1256_Wakeup(); /* Begin the next sample */
 			/* Save the real time clock entry for the sample */
-			samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] =
-					GetLocalTime();
+			//samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] =
+			//		GetLocalTime();
 		}
 		if ((SampleCurrent == SampleTotal) && !((numberSamplingInputs > 1) && SampleCurrent == 0)) {
 			/* The equality check is because we incremented already */
