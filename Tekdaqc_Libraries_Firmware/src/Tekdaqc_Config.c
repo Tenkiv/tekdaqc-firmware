@@ -359,6 +359,41 @@ void COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct) {
 	}
 }
 
+/**
+ * Disables all interrupts used by the board.
+ *
+ * @param none
+ * @retval none
+ */
+void DisableBoardInterrupts(void) {
+#ifdef DEBUG
+	/*printf("Disabling interrupts.\n\r");*/
+#endif
+	Eth_EXTI_Disable();
+	NVIC_DisableIRQ(SysTick_IRQn);
+#ifdef DEBUG
+	/*printf("Interrupts disabled.\n\r");*/
+#endif
+}
+
+/**
+ * Enables all interrupts used by the board.
+ *
+ * @param none
+ * @retval none
+ */
+void EnableBoardInterrupts(void) {
+#ifdef DEBUG
+	/*printf("Re-enabling interrupts.\n\r");*/
+#endif
+	Eth_EXTI_Enable();
+	NVIC_EnableIRQ(SysTick_IRQn);
+#ifdef DEBUG
+	/*printf("Interrupts re-enabled.\n\r");*/
+#endif
+}
+
+
 #ifdef DEBUG
 GPIO_TypeDef* GPIO_PORT[TEST_PINn] = { TEST_PIN1_GPIO_PORT, TEST_PIN2_GPIO_PORT,
 		TEST_PIN3_GPIO_PORT, TEST_PIN4_GPIO_PORT };
