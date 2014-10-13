@@ -68,7 +68,8 @@ extern "C" {
  */
 
 /* #define TEKDAQC_BOARD_TYPE ((char) 'C') */
-#define TEKDAQC_BOARD_TYPE ((char) 'D')
+/* #define TEKDAQC_BOARD_TYPE ((char) 'D') */
+#define TEKDAQC_BOARD_TYPE ((char) 'E')
 
 /** @addtogroup flash_parameters FLASH Parameters
  * @{
