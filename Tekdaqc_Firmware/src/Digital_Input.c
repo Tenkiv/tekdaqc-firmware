@@ -47,7 +47,7 @@
  * @def DIGITAL_INPUT_FORMATTER
  * @brief The message format string for printing a digital input to a human readable string.
  */
-#define DIGITAL_INPUT_FORMATTER "\n\r--------------------\n\rDigital Input\n\r\tName: %s\n\r\tPhysical Channel: %i\n\r\tTimestamp: %" PRIu64 "\n\r\tLevel: %s\n\r--------------------\n\r\x1E"
+#define DIGITAL_INPUT_FORMATTER "\n\r--------------------\n\rDigital Input\n\r\tName: %s\n\r\tPhysical Input: %i\n\r\tTimestamp: %" PRIu64 "\n\r\tLevel: %s\n\r--------------------\n\r\x1E"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
