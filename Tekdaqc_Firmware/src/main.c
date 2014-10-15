@@ -35,7 +35,6 @@
 Tekdaqc_CommandInterpreter_t* interpreter;
 char character;
 TelnetStatus_t status;
-bool shouldServiceEthernet = true;
 
 /* Private functions ---------------------------------------------------------*/
 static void program_loop(void);
@@ -130,39 +129,32 @@ int main(void) {
 
 static void program_loop(void) {
 	/* Infinite loop */
-	shouldServiceEthernet = true;
-
 	while (1) {
 		/* Service the inputs/outputs */
 		ServiceTasks();
 
-		if (shouldServiceEthernet == true) {
-			//shouldServiceEthernet = false;
-			/* Check if any packet received */
-			if (ETH_CheckFrameReceived()) {
-				/* Process received Ethernet packet */
-				LwIP_Pkt_Handle();
+		/* Check if any packet received */
+		if (ETH_CheckFrameReceived()) {
+			/* Process received Ethernet packet */
+			LwIP_Pkt_Handle();
+		}
+
+		/* Handle periodic timers for LwIP */
+		LwIP_Periodic_Handle(GetLocalTime());
+
+		if (TelnetIsConnected() == true) { /* We have an active Telnet connection to service */
+			/* Do server stuff */
+			character = TelnetRead();
+			if (character != '\0') {
+				Command_AddChar(character);
 			}
-
-			/* Handle periodic timers for LwIP */
-			LwIP_Periodic_Handle(GetLocalTime());
-
-			if (TelnetIsConnected() == true) { /* We have an active Telnet connection to service */
-				/* Do server stuff */
-				character = TelnetRead();
-				if (character != '\0') {
-					Command_AddChar(character);
-				}
-			}
-		} /*else {
-			shouldServiceEthernet = true;
-		}*/
-
-		/* Check to see if any faults have occurred */
-		/*Tekdaqc_CheckStatus();*/ //TODO: Re-enable when digital output faults work
-		/* Reload the IWDG Counter to prevent reset */
-		IWDG_ReloadCounter();
+		}
 	}
+
+	/* Check to see if any faults have occurred */
+	/*Tekdaqc_CheckStatus();*/ //TODO: Re-enable when digital output faults work
+	/* Reload the IWDG Counter to prevent reset */
+	IWDG_ReloadCounter();
 }
 
 static void Init_Locator() {
@@ -220,6 +212,9 @@ static void Tekdaqc_Init(void) {
 		Address += sizeof(char);
 	}
 	TEKDAQC_BOARD_SERIAL_NUM[BOARD_SERIAL_NUM_LENGTH] = '\0'; /* Apply the NULL termination character */
+#ifdef DEBUG
+	printf("Initialized board serial number: %s\n\r", TEKDAQC_BOARD_SERIAL_NUM);
+#endif
 
 #ifdef USE_WATCHDOG
 	// Initialize the watchdog timer

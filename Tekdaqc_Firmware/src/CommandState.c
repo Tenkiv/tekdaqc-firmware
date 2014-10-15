@@ -33,13 +33,20 @@
 #include "DI_StateMachine.h"
 #include "DO_StateMachine.h"
 #include "TLE7232_RelayDriver.h"
+#include "Tekdaqc_Timers.h"
 #include "netconf.h"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
 /*--------------------------------------------------------------------------------------------------------*/
 
-#define SKIP_COUNT	4
+/**
+ * @def DIGITAL_INPUT_SAMPLE_RATE
+ * @internal
+ * @brief The digital input sampling rate in Hertz.
+ */
+#define DIGITAL_INPUT_SAMPLE_RATE		1
+#define DIGITAL_INPUT_SAMPLE_PERIOD 	(1e6 / DIGITAL_INPUT_SAMPLE_RATE)
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -59,6 +66,12 @@ static bool DOSampling = FALSE;
 
 /* Counter for number of service loops to make before sampling DI again */
 static bool DISkipCount;
+
+/* Storage for the last time a digital input sample was taken */
+static uint64_t TimeLastDigitalInputSample = 0;
+
+/* Temporary storage for the current board time */
+static uint64_t CurrentTime = 0;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
@@ -111,8 +124,13 @@ void ServiceTasks(void) {
 			break;
 		case STATE_DIGITAL_INPUT_SAMPLE:
 			if (DISampling == TRUE) {
-				/* Service the DI state machine */
-				DI_Machine_Service();
+				CurrentTime = GetLocalTime();
+				if ((CurrentTime - TimeLastDigitalInputSample) >= DIGITAL_INPUT_SAMPLE_PERIOD) {
+					printf("[Command State] Time to sample digital input...\n\r");
+					/* Service the DI state machine */
+					DI_Machine_Service();
+					TimeLastDigitalInputSample = CurrentTime;
+				}
 			} else {
 				CurrentState = STATE_IDLE;
 			}
@@ -129,14 +147,10 @@ void ServiceTasks(void) {
 			if ((ADCSampling == TRUE) || (DISampling == TRUE) || (DOSampling == TRUE)) {
 				/* Service the ADC state machine */
 				ADC_Machine_Service();
-				if (DISkipCount > 0) {
-					/* Handle periodic timers for LwIP */
-					LwIP_Periodic_Handle(GetLocalTime());
-					--DISkipCount;
-				} else {
-					/* Service the DI state machine */
+				CurrentTime = GetLocalTime();
+				if ((CurrentTime - TimeLastDigitalInputSample) >= DIGITAL_INPUT_SAMPLE_PERIOD) {
 					DI_Machine_Service();
-					DISkipCount = SKIP_COUNT;
+					TimeLastDigitalInputSample = CurrentTime;
 				}
 				/* Service the DO state machine */
 				DO_Machine_Service();
@@ -239,7 +253,6 @@ void CommandStateMoveToGeneralSample(void) {
 	ADCSampling = TRUE;
 	DISampling = TRUE;
 	DOSampling = TRUE;
-	DISkipCount = SKIP_COUNT;
 }
 
 /**
