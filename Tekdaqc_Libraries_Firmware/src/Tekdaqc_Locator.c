@@ -29,6 +29,7 @@
 #include "Tekdaqc_Locator.h"
 #include "TelnetServer.h"
 #include "Tekdaqc_BSP.h"
+#include "eeprom.h"
 #include "boolean.h"
 #include "lwip/udp.h"
 
@@ -56,8 +57,6 @@
  * @brief The length of the data packet returned.
  */
 #define LOCATOR_DATA_LENGTH     115U
-
-
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -88,8 +87,6 @@ static unsigned char LocatorMessage[] = "TEKDAQC CONNECT";
 /* The length of the expected UDP packet message */
 static uint8_t LengthLocatorMessage = 14U;
 
-
-
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -98,8 +95,6 @@ static uint8_t LengthLocatorMessage = 14U;
  * @brief Callback function to process received UDP packets on the locator port.
  */
 static void Tekdaqc_LocatorReceive(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_addr *addr, uint16_t port);
-
-
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
@@ -153,7 +148,7 @@ static void Tekdaqc_LocatorReceive(void *arg, struct udp_pcb *pcb, struct pbuf *
 
 	/* Allocate a new pbuf for sending the response. */
 	p = pbuf_alloc(PBUF_TRANSPORT, sizeof(LocatorData), PBUF_RAM);
-	if (p == NULL ) {
+	if (p == NULL) {
 		return;
 	}
 
@@ -174,8 +169,6 @@ static void Tekdaqc_LocatorReceive(void *arg, struct udp_pcb *pcb, struct pbuf *
 	/* Free the pbuf. */
 	pbuf_free(p);
 }
-
-
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PUBLIC FUNCTIONS */
@@ -203,15 +196,52 @@ void Tekdaqc_LocatorInit(void) {
 	LocatorData[2] = CMD_DISCOVER_TARGET;
 
 	/* Fill in the MAC address for the response data. */
-	LocatorData[40] = MAC_ADDR0;
-	LocatorData[41] = MAC_ADDR1;
-	LocatorData[42] = MAC_ADDR2;
-	LocatorData[43] = MAC_ADDR3;
-	LocatorData[44] = MAC_ADDR4;
-	LocatorData[45] = MAC_ADDR5;
+	/* set MAC hardware address */
+	uint8_t M0, M1, M2, M3, M4, M5;
+	uint16_t isUserMacValid = 0;
+	EE_ReadVariable(ADDR_USE_USER_MAC, &isUserMacValid);
+	if (isUserMacValid != 0) {
+		/* We should program the user MAC address */
+		uint16_t low, mid, high;
+		EE_ReadVariable(ADDR_USER_MAC_LOW, &low);
+		EE_ReadVariable(ADDR_USER_MAC_MID, &mid);
+		EE_ReadVariable(ADDR_USER_MAC_HIGH, &high);
+		/* The high bytes are the first bytes in the MAC address from the perspective of the user */
+		M0 = (high >> 8) & 0xFF;
+		M1 = high & 0xFF;
+		M2 = (mid >> 8) & 0xFF;
+		M3 = mid & 0xFF;
+		M4 = (low >> 8) & 0xFF;
+		M5 = low & 0xFF;
+	} else {
+		/* We should try to use the factory programmed MAC Address */
+		M0 = *((uint8_t *) FACTORY_MAC_ADDR0);
+		M1 = *((uint8_t *) FACTORY_MAC_ADDR1);
+		M2 = *((uint8_t *) FACTORY_MAC_ADDR2);
+		M3 = *((uint8_t *) FACTORY_MAC_ADDR3);
+		M4 = *((uint8_t *) FACTORY_MAC_ADDR4);
+		M5 = *((uint8_t *) FACTORY_MAC_ADDR5);
+
+		if (M0 == 0xFF && M1 == 0xFF && M1 == 0xFF && M2 == 0xFF && M3 == 0xFF && M4 == 0xFF && M5 == 0xFF) {
+			/* We should use the default hard coded MAC address */
+			M0 = MAC_ADDR0;
+			M1 = MAC_ADDR1;
+			M2 = MAC_ADDR2;
+			M3 = MAC_ADDR3;
+			M4 = MAC_ADDR4;
+			M5 = MAC_ADDR5;
+		}
+	}
+
+	LocatorData[40] = M0;
+	LocatorData[41] = M1;
+	LocatorData[42] = M2;
+	LocatorData[43] = M3;
+	LocatorData[44] = M4;
+	LocatorData[45] = M5;
 
 	/* Fill in the Board Type */
-	Tekdaqc_LocatorBoardTypeSet(TEKDAQC_BOARD_TYPE );
+	Tekdaqc_LocatorBoardTypeSet(TEKDAQC_BOARD_TYPE);
 
 	/* Create a new UDP port for listening to device locator requests. */
 	pcb = udp_new();

@@ -101,7 +101,7 @@ extern "C" {
 /**
  * The maximum length of a command parameter key/value pair.
  */
-#define MAX_COMMANDPART_LENGTH 36U
+#define MAX_COMMANDPART_LENGTH 50U
 
 /**
  * @}

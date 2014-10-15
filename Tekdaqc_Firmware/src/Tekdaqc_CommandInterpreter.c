@@ -2768,10 +2768,10 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	char * serial;
 	uint8_t char_count = 1;
-	if (InputArgsCheck(keys, values, count, NUM_SET_FACTORY_MAC_ADDR_PARAMS, SET_FACTORY_MAC_ADDR_PARAMS)) {
+	if (InputArgsCheck(keys, values, count, NUM_SET_BOARD_SERIAL_NUM_PARAMS, SET_BOARD_SERIAL_NUM_PARAMS)) {
 		int8_t index = -1;
-		for (int i = 0; i < NUM_SET_FACTORY_MAC_ADDR_PARAMS; ++i) {
-			index = GetIndexOfArgument(keys, SET_FACTORY_MAC_ADDR_PARAMS[i], count);
+		for (int i = 0; i < NUM_SET_BOARD_SERIAL_NUM_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, SET_BOARD_SERIAL_NUM_PARAMS[i], count);
 			if (index >= 0) { /* We found the key in the list */
 				switch (i) { /* Switch on the key not position in arguments list */
 					case 0: /* VALUE key */
@@ -2779,6 +2779,7 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 						printf("Processing VALUE key\n\r");
 #endif
 						serial = values[i];
+						printf("Received serial number: %s.\n\r", serial);
 						while (serial[char_count] != '\0') {
 							++char_count;
 						}
@@ -2817,6 +2818,7 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 				/* Program each byte of the serial number sequentially */
 				while (status == FLASH_COMPLETE && idx < char_count) {
 					status = FLASH_ProgramByte(BOARD_SERIAL_NUM_ADDR + idx, serial[idx]);
+					++idx;
 				}
 				/* Lock the Serial Number Address Block */
 				status = FLASH_ProgramByte(BOARD_SERIAL_LOCK_ADDR, 0x00);
