@@ -608,7 +608,6 @@ void TelnetWrite(const char character) {
  * @retval none
  */
 void TelnetWriteString(char* string) {
-	printf("Writing string: %s\n\r", string);
 	if (TelnetIsConnected() == TRUE) {
 		Eth_EXTI_Disable();
 		while (*string) {
@@ -960,7 +959,6 @@ void TelnetWriteErrorMessage(char* message) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
 	}
-	printf("[Telnet] Sent error message: %s\n\r", message);
 }
 
 /**
@@ -984,7 +982,6 @@ void TelnetWriteStatusMessage(char* message) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
 	}
-	printf("[Telnet] Sent status message: %s\n\r", message);
 }
 
 /**
@@ -1008,7 +1005,6 @@ void TelnetWriteDebugMessage(char* message) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
 	}
-	printf("[Telnet] Sent debug message: %s\n\r", message);
 }
 
 /**
@@ -1032,5 +1028,4 @@ void TelnetWriteCommandDataMessage(char* message) {
 			TelnetWriteString(MESSAGE_BUFFER);
 		}
 	}
-	printf("[Telnet] Sent command data message: %s\n\r", message);
 }
