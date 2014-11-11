@@ -52,6 +52,8 @@
 /* Pointer to the function to use when writing data to the output stream. */
 static WriteFunction writer = NULL;
 
+static uint8_t DigitalOutputMap[] = {6, 1, 2, 4, 15, 8, 10,	12, 7, 0, 3, 5, 14, 9, 11, 13};
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE EXTERNAL VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -135,6 +137,7 @@ static void InitializeOutput(Digital_Output_t* output) {
 	output->timestamp = 0U;
 	strcpy(output->name, "NONE");
 	output->output = NULL_CHANNEL;
+	output->physicalChannel = NULL_CHANNEL;
 	output->fault_status = TLE7232_Normal_Operation;
 	output->fault_timestamp = 0U;
 }
@@ -149,18 +152,19 @@ static void InitializeOutput(Digital_Output_t* output) {
  */
 static void SetDigitalOutputState(Digital_Output_t* output, DigitalLevel_t level) {
 	/* Set the state */
-	uint8_t control = TLE7232_ReadRegister(TLE7232_REG_CTL, output->output % 8U);
-	uint8_t channel = output->output;
-	if (channel >= 8) { /* Convert the channel to a single chip index */
-		channel -= 8;
-	}
+	TLE7232_ReadAllDiagnosis();
+	uint8_t control = TLE7232_ReadRegister(TLE7232_REG_CTL, output->physicalChannel / 8U);
+	uint8_t channel = output->physicalChannel - (8U * (output->physicalChannel / 8U)); /* Convert the channel to a single chip index */
 	uint8_t mask = 0x01 << channel; /* Move the bit flag to the correct position */
 	if (level == OUTPUT_ON) {
+		/* Turn an output on */
 		control |= mask; /* Set the appropriate bit */
 	} else {
-		control ^= mask;	/* Clear the appropriate bit */
+		/* Turn an output off */
+		control &= ~mask;	/* Clear the appropriate bit */
 	}
-	TLE7232_WriteRegister(TLE7232_REG_CTL, control, output->output % 8U); /* Update the register */
+	TLE7232_WriteRegister(TLE7232_REG_CTL, control, output->physicalChannel / 8U); /* Update the register */
+	TLE7232_ReadAllDiagnosis();
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -178,6 +182,11 @@ void DigitalOutputsInit(void) {
 	for (uint_fast8_t i = 0; i < NUM_DIGITAL_OUTPUTS; ++i) {
 		InitializeOutput(&Ext_DOutputs[i]);
 	}
+
+	uint8_t data[NUMBER_TLE7232_CHIPS] = {0x00, 0x00};
+	uint8_t read[NUMBER_TLE7232_CHIPS];
+	TLE7232_ReadRegisterAll(TLE7232_REG_IMCR, read);
+	TLE7232_WriteRegisterAll(TLE7232_REG_IMCR, data);
 
 	/*uint8_t data[NUMBER_TLE7232_CHIPS] = {0xFF, 0xFF};
 	TLE7232_WriteRegisterAll(TLE7232_REG_CTL, data);*/
@@ -292,6 +301,7 @@ Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH]
 			if (dig_output != NULL) {
 				if (dig_output->added != CHANNEL_ADDED) {
 					dig_output->output = output;
+					dig_output->physicalChannel = DigitalOutputMap[output];
 					strcpy(dig_output->name, name);
 					dig_output->level = LOGIC_LOW;
 					dig_output->timestamp = 0U;
@@ -587,6 +597,13 @@ bool CheckDigitalOutputStatus(void) {
 bool SetDigitalOutputFaultStatus(TLE7232_Status_t status, uint8_t chip_id, uint8_t channel) {
 	bool retval = false;
 	uint8_t out = channel * (chip_id + 1);
+	/* Reverse the mapping to an input number */
+	for (uint8_t i = 0; i < NUM_DIGITAL_OUTPUTS; ++i) {
+		if (out == DigitalOutputMap[i]) {
+			out = i;
+			break;
+		}
+	}
 	if (out < NUM_DIGITAL_OUTPUTS) {
 		Ext_DOutputs[out].fault_status = status;
 		Ext_DOutputs[out].fault_timestamp = GetLocalTime();

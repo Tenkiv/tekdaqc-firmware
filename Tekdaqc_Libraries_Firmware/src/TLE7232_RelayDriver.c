@@ -26,12 +26,16 @@
 /* INCLUDES */
 /*--------------------------------------------------------------------------------------------------------*/
 
-#include "Tekdaqc_Debug.h"
-#include "TLE7232_RelayDriver.h"
-#include "Tekdaqc_Config.h"
-#include "Tekdaqc_Timers.h"
-
-
+#include <stdint.h>
+#include <stdio.h>
+#include <stm32f4xx.h>
+#include <stm32f4xx_rcc.h>
+#include <stm32f4xx_spi.h>
+#include <Tekdaqc_BSP.h>
+#include <Tekdaqc_Timers.h>
+#include <TLE7232_RelayDriver.h>
+//#include "Tekdaqc_Config.h"
+//#include "Tekdaqc_Debug.h"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -46,8 +50,6 @@ static SetOutputFaultStatus SetFaultStatus = NULL;
 
 /* Local copy of the diagnosis registers of all TLE7232 chips */
 static uint16_t DiagnosisRegisters[NUMBER_TLE7232_CHIPS];
-
-
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE METHOD PROTOTYPES */
@@ -68,8 +70,6 @@ static void TLE7232_SPI_Init(void);
  */
 static void TLE7232_EvaluateDiagnosis(void);
 
-
-
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ static void TLE7232_LowLevel_Init(void) {
 
 	/* Enable GPIO clocks */
 	RCC_AHB1PeriphClockCmd(TLE7232_SPI_SCK_GPIO_CLK | TLE7232_SPI_MISO_GPIO_CLK |
-			TLE7232_SPI_MOSI_GPIO_CLK | TLE7232_CS_GPIO_CLK, ENABLE);
+	TLE7232_SPI_MOSI_GPIO_CLK | TLE7232_CS_GPIO_CLK, ENABLE);
 
 	/* SPI pins configuration */
 
@@ -100,18 +100,18 @@ static void TLE7232_LowLevel_Init(void) {
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
 
 	/* SPI SCK pin configuration */
 	GPIO_InitStructure.GPIO_Pin = TLE7232_SPI_SCK_PIN;
 	GPIO_Init(TLE7232_SPI_SCK_GPIO_PORT, &GPIO_InitStructure);
 
 	/* SPI MOSI pin configuration */
-	GPIO_InitStructure.GPIO_Pin =  TLE7232_SPI_MOSI_PIN;
+	GPIO_InitStructure.GPIO_Pin = TLE7232_SPI_MOSI_PIN;
 	GPIO_Init(TLE7232_SPI_MOSI_GPIO_PORT, &GPIO_InitStructure);
 
 	/* SPI MISO pin configuration */
-	GPIO_InitStructure.GPIO_Pin =  TLE7232_SPI_MISO_PIN;
+	GPIO_InitStructure.GPIO_Pin = TLE7232_SPI_MISO_PIN;
 	GPIO_Init(TLE7232_SPI_MISO_GPIO_PORT, &GPIO_InitStructure);
 
 	/* Configure TLE7232 CS pin in output pushpull mode */
@@ -133,7 +133,7 @@ static void TLE7232_SPI_Init(void) {
 #ifdef TLE7232_SPI_DEBUG
 	printf("[TLE7232] Initializing SPI peripherals for the TLE7232.\n\r");
 #endif
-	SPI_InitTypeDef  SPI_InitStructure;
+	SPI_InitTypeDef SPI_InitStructure;
 	TLE7232_LowLevel_Init();
 
 	/* Deselect the TLE7232: Chip Select high */
@@ -146,7 +146,7 @@ static void TLE7232_SPI_Init(void) {
 	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
 	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
-	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;
+	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_64;
 	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
 	SPI_InitStructure.SPI_CRCPolynomial = 7;
 
@@ -170,19 +170,17 @@ static void TLE7232_EvaluateDiagnosis(void) {
 			uint16_t mask = 0x0003;
 			uint16_t reg = 0x0000;
 			TLE7232_Status_t status;
-			for (uint16_t shift = 0; shift < 16; shift+=2) { /* The 16bit index is to match the data it operates on */
+			for (uint16_t shift = 0; shift < 16; shift += 2) { /* The 16bit index is to match the data it operates on */
 				reg = DiagnosisRegisters[i] & (mask << shift); /* Isolate the channel's bits */
 				reg >>= shift; /* Move the bits to the least significant bits */
 				status = (TLE7232_Status_t) reg;
 				if (SetFaultStatus != NULL) {
-					SetFaultStatus(status, i, (shift/2)); /* Set the status on the output */
+					SetFaultStatus(status, i, (shift / 2)); /* Set the status on the output */
 				}
 			}
 		}
 	}
 }
-
-
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PUBLIC METHODS */
@@ -249,14 +247,14 @@ uint16_t TLE7232_ReadDiagnosis(uint8_t chip_index) {
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
 		SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
 		DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
 	}
 
-	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
-		/* The SPI transmit buffer has data, so wait patiently */
-	}
 
 	/* De-select the TLE7232: Chip Select High */
 	TLE7232_CS_HIGH();
@@ -275,14 +273,13 @@ void TLE7232_ReadAllDiagnosis(void) {
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
 		SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
 		/* Fetch the specific data */
 		DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
-	}
-
-	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
-		/* The SPI transmit buffer has data, so wait patiently */
 	}
 
 	/* Deselect the TLE7232: Chip Select High */
@@ -326,18 +323,17 @@ void TLE7232_ResetRegisters(uint8_t chip_index) {
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
 		if (i == chip_index) {
 			/* Reset the specific chip */
 			SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_RESET_REGISTERS);
 		} else {
 			SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
 		}
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
 		DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
-	}
-
-	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
-		/* The SPI transmit buffer has data, so wait patiently */
 	}
 
 	/* De-select the TLE7232: Chip Select High */
@@ -355,15 +351,14 @@ void TLE7232_ResetAllRegisters(void) {
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
 		printf("Resetting TLE7232 %i\n", i);
 		SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_RESET_REGISTERS);
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
 		/* Fetch the specific data */
 		DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
-	}
-
-	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
-		/* The SPI transmit buffer has data, so wait patiently */
 	}
 
 	/* De-select the TLE7232: Chip Select High */
@@ -384,19 +379,18 @@ void TLE7232_WriteRegister(TLE7232_Register_t reg, uint8_t data, uint8_t chip_in
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
 		if (i == chip_index) {
 			/* Write the data to the specified chip. */
 			SPI_I2S_SendData(TLE7232_SPI, command);
 		} else {
 			SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
 		}
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
 		/* Fetch the diagnosis data regardless of the command */
 		DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
-	}
-
-	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
-		/* The SPI transmit buffer has data, so wait patiently */
 	}
 
 	/* Deselect the TLE7232: Chip Select High */
@@ -416,17 +410,16 @@ void TLE7232_WriteRegisterAll(TLE7232_Register_t reg, uint8_t data[NUMBER_TLE723
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
 		/* Build the command word. */
 		command = TLE7232_CMD_WRITE_REGISTER | reg | data[i];
 		/* Write the data to the chip. */
 		SPI_I2S_SendData(TLE7232_SPI, command);
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
 		/* Fetch the diagnosis data regardless of the command */
 		DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
-	}
-
-	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
-		/* The SPI transmit buffer has data, so wait patiently */
 	}
 
 	/* De-select the TLE7232: Chip Select High */
@@ -446,7 +439,7 @@ void TLE7232_WriteArbitraryRegisterAll(TLE7232_Register_t reg[NUMBER_TLE7232_CHI
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
 		/* Build the command word. */
 		command = TLE7232_CMD_WRITE_REGISTER | reg[i] | data[i];
 		/* Write the data to the chip. */
@@ -476,23 +469,28 @@ uint8_t TLE7232_ReadRegister(TLE7232_Register_t reg, uint8_t chip_index) {
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
+		uint16_t data = (i == chip_index) ? TLE7232_CMD_READ_REGISTER | reg : TLE7232_CMD_DIAGNOSIS;
+		/* Write the data to the specified chip. */
+		SPI_I2S_SendData(TLE7232_SPI, data);
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
+		/* Fetch the diagnosis data */
+		DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
+	}
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
+		SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
 		if (i == chip_index) {
-			/* Write the data to the specified chip. */
-			SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_READ_REGISTER | reg);
-			/* Fetch the diagnosis data */
-			DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
-			SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
-			retval = SPI_I2S_ReceiveData(TLE7232_SPI);
+			/* Fetch the data */
+			retval = ((uint8_t) (0xFF & SPI_I2S_ReceiveData(TLE7232_SPI)));
 		} else {
-			SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
 			/* Fetch the diagnosis data */
 			DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
 		}
-	}
-
-	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
-		/* The SPI transmit buffer has data, so wait patiently */
 	}
 
 	/* De-select the TLE7232: Chip Select High */
@@ -513,17 +511,21 @@ void TLE7232_ReadRegisterAll(TLE7232_Register_t reg, uint8_t data[NUMBER_TLE7232
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
 		/* Write the data to the specified chip. */
 		SPI_I2S_SendData(TLE7232_SPI, command);
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
 		/* Fetch the diagnosis data */
 		DiagnosisRegisters[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
-		SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
-		data[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
 	}
-
-	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
-		/* The SPI transmit buffer has data, so wait patiently */
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0; --i) {
+		SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_DIAGNOSIS);
+		while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+			/* The SPI transmit buffer has data, so wait patiently */
+		}
+		data[i] = SPI_I2S_ReceiveData(TLE7232_SPI);
 	}
 
 	/* De-select the TLE7232: Chip Select High */
@@ -532,7 +534,7 @@ void TLE7232_ReadRegisterAll(TLE7232_Register_t reg, uint8_t data[NUMBER_TLE7232
 }
 
 /**
- * Reads all TKE7232 drivers, pulling the specified register from the specified TLE7232 drivers in the chain.
+ * Reads all TLE7232 drivers, pulling the specified register from the specified TLE7232 drivers in the chain.
  *
  * @param reg TLE7232_Register_t The register to read data from, indexed by chip index.
  * @param data uint8_t[] Array to store the read-in data, indexed by chip index.
@@ -542,7 +544,7 @@ void TLE7232_ReadArbitraryRegisterAll(TLE7232_Register_t reg[NUMBER_TLE7232_CHIP
 	/* Select the TLE7232: Chip Select Low */
 	TLE7232_CS_LOW();
 
-	for (int i = 0; i < NUMBER_TLE7232_CHIPS; ++i) {
+	for (int i = NUMBER_TLE7232_CHIPS - 1; i >= 0 ; --i) {
 		/* Write the data to the specified chip. */
 		SPI_I2S_SendData(TLE7232_SPI, TLE7232_CMD_READ_REGISTER | reg[i]);
 		/* Fetch the diagnosis data */

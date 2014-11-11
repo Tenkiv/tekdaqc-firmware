@@ -63,13 +63,13 @@ extern "C" {
  * @def OUTPUT_ON
  * @brief Redefinition of the LOGIC_LOW definition. Used as a code readability convenience.
  */
-#define OUTPUT_ON	(LOGIC_LOW)
+#define OUTPUT_ON	(LOGIC_HIGH)
 
 /**
  * @def OUTPUT_OFF
  * @brief Redefinition of the LOGIC_HIGH definition. Used as a code readability convenience.
  */
-#define OUTPUT_OFF	(LOGIC_HIGH)
+#define OUTPUT_OFF	(LOGIC_LOW)
 
 
 
@@ -87,6 +87,7 @@ extern "C" {
 typedef struct {
 	ChannelAdded_t added; /**< Addition status of the input. */
 	GPO_TypeDef output; /**< An integer id for this input. */
+	uint8_t physicalChannel; /**< An integer id for the chip output */
 	char name[MAX_DIGITAL_OUTPUT_NAME_LENGTH]; /**< Pointer to a C string name for this input. */
 	DigitalLevel_t level; /**< The recorded status of this input. */
 	uint64_t timestamp; /**< The timestamp of the measurement in UNIX epoch format. */
