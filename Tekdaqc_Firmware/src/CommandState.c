@@ -64,9 +64,6 @@ static bool DISampling = FALSE;
 /* Is the DO sampling complete */
 static bool DOSampling = FALSE;
 
-/* Counter for number of service loops to make before sampling DI again */
-static bool DISkipCount;
-
 /* Storage for the last time a digital input sample was taken */
 static uint64_t TimeLastDigitalInputSample = 0;
 
