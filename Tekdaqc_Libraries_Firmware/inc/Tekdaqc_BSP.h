@@ -140,8 +140,8 @@ extern "C" {
 #define RTC_ASYNCH_PRESCALER		0x01
 #define RTC_SYNCH_PRESCALER			0x7FFF
 
-//#define USE_LSE
-//#define RTC_TIME
+#define USE_LSE
+#define RTC_TIME
 
 /**
  * @}

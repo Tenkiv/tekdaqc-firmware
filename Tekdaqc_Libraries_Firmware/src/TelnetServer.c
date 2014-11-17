@@ -178,11 +178,12 @@ static err_t TelnetAccept(void *arg, struct tcp_pcb *pcb, err_t err) {
 #ifdef TELNET_DEBUG
 	printf("[Telnet Server] Initializing telnet server.\n\r");
 #endif
+	tcp_nagle_enable(pcb);
 	telnet_server.pcb = pcb;
 	telnet_server.pcb->so_options |= SOF_KEEPALIVE;
-	telnet_server.pcb->keep_idle = 5000;
-	telnet_server.pcb->keep_intvl = 1000;
-	telnet_server.pcb->keep_cnt = 5;
+	telnet_server.pcb->keep_idle = 300000UL; // 5 Minutes
+	telnet_server.pcb->keep_intvl = 1000UL; // 1 Second
+	telnet_server.pcb->keep_cnt = 9; // 9 Consecutive failures terminate
 
 	/* Mark that a client has connected. */
 	IsConnected = true;
