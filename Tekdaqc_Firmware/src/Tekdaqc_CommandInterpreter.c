@@ -912,6 +912,7 @@ static Command_t ParseCommand(const char* command) {
 		printf("[Command Interpreter] Determined command to be: %s\n\r", COMMAND_STRINGS[ret_command]);
 	} else {
 		printf("[Command Interpreter] Unable to determine command.\n\r");
+		ret_command = COMMAND_NONE;
 	}
 #endif
 	return ret_command;

@@ -37,6 +37,8 @@
 #include "Tekdaqc_BSP.h"
 #include "Tekdaqc_CommandInterpreter.h"
 #include <stdlib.h>
+#include <inttypes.h>
+#include <stdio.h>
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -301,6 +303,8 @@ Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMA
 		}
 	}
 	if (retval == ERR_FUNCTION_OK) {
+		printf("Writing gain calibration value 0x%" PRIX32 " for Rate: %s, Gain %s, Buffer: %s\n\r", value, ADS1256_StringFromSPS(rate),
+				ADS1256_StringFromPGA(gain), ADS1256_StringFromBuffer(buffer));
 		if (Tekdaqc_SetGainCalibration(value, rate, gain, buffer, scale, temperature) != FLASH_COMPLETE) {
 			retval = ERR_CALIBRATION_WRITE_FAILED;
 		}
