@@ -75,7 +75,12 @@ uint32_t Tekdaqc_GetBaseGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, 
 /**
  * @brief Retrieves a gain calibration value for the specified parameters.
  */
-uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
+uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer);
+
+/**
+ * @brief Retreives a gain calibration correction factor for the specified parameters.
+ */
+float Tekdaqc_GetGainCorrectionFactor(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
 
 /**
  * @brief Retrieves an offset calibration value for the specified parameters.
@@ -125,7 +130,7 @@ FLASH_Status Tekdaqc_SetCalibrationValid(void);
 /**
  * @brief Sets the gain calibration value for the specified parameters.
  */
-FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
+FLASH_Status Tekdaqc_SetGainCalibration(float cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
 		ANALOG_INPUT_SCALE_t scale, uint8_t temp_idx);
 
 /**

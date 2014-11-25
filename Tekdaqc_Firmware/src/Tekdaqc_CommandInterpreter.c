@@ -1328,6 +1328,8 @@ static void BuildDigitalOutputList(Channel_List_t list_type, char* param) {
 		default:
 #ifdef COMMAND_DEBUG
 			printf("[Command Interpreter] The specified input range is invalid.\n\r");
+#else
+			; /* Add an empty statment for the compiler */
 #endif
 	}
 }
@@ -1652,6 +1654,8 @@ static Tekdaqc_Command_Error_t Ex_SetAnalogInputScale(char keys[][MAX_COMMANDPAR
 					case 0: /* SCALE key */
 #ifdef COMMAND_DEBUG
 						printf("Processing SCALE key\n\r");
+#else
+						; /* Add an empty statement for the compiler */
 #endif
 						ANALOG_INPUT_SCALE_t scale = Tekdaqc_StringToAnalogInputScale(values[index]);
 						Tekdaqc_SetAnalogInputScale(scale);
@@ -2422,10 +2426,14 @@ static Tekdaqc_Command_Error_t Ex_SetUserMac(char keys[][MAX_COMMANDPART_LENGTH]
 					case 0: /* VALUE key */
 #ifdef COMMAND_DEBUG
 						printf("Processing VALUE key\n\r");
+#else
+						; /* Add an empty statement for the compiler */
 #endif
 						uint64_t mac = strtoull(values[i], NULL, 16);
 #ifdef COMMAND_DEBUG
 						printf("Decoded MAC address: 0x%012" PRIX64 "\n\r", mac);
+#else
+						; /* Add an empty statement for the compiler */
 #endif
 						uint16_t low = mac & 0xFFFF;
 						uint16_t mid = (mac >> 16) & 0xFFFF;
@@ -2433,6 +2441,8 @@ static Tekdaqc_Command_Error_t Ex_SetUserMac(char keys[][MAX_COMMANDPART_LENGTH]
 #ifdef COMMAND_DEBUG
 						printf("MAC Address:\n\r\tHIGH: %" PRIX16 "\n\r\tMID: %" PRIX16 "\n\r\tLOW: %" PRIX16 "\n\r",
 								high, mid, low);
+#else
+						; /* Add an empty statement for the compiler */
 #endif
 						EE_WriteVariable(ADDR_USER_MAC_LOW, low);
 						EE_WriteVariable(ADDR_USER_MAC_MID, mid);
@@ -2681,6 +2691,8 @@ static Tekdaqc_Command_Error_t Ex_SetFactoryMACAddr(char keys[][MAX_COMMANDPART_
 					case 0: /* VALUE key */
 #ifdef COMMAND_DEBUG
 						printf("Processing VALUE key\n\r");
+#else
+						; /* Add an empty statement for the compiler */
 #endif
 						uint64_t mac = strtoull(values[i], NULL, 16);
 #ifdef COMMAND_DEBUG
