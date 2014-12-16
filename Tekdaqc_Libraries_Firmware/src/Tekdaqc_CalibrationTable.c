@@ -95,7 +95,7 @@ static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BU
 /**
  * @brief Interpolates two calibration values with the specified interpolation factor.
  */
-static uint32_t InterpolateValue(float low, float high, float factor);
+static float InterpolateValue(float low, float high, float factor);
 
 /**
  * @brief Computes the indecies for the RAM gain and offset lookup tables based on the sampling parameters.
@@ -151,12 +151,12 @@ static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BU
  * @internal
  * Interpolates two calibration values based on the specified factor.
  *
- * @param low uint32_t The lower calibration data point.
- * @param high uint32_t The higher calibration data point.
+ * @param low float The lower calibration data point.
+ * @param high float The higher calibration data point.
  * @param factor float The interpolation factor. A value of 0 corresponds to low, a value of 1 corresponds to high.
- * @retval uint32_t The interpolated value.
+ * @retval float The interpolated value.
  */
-static uint32_t InterpolateValue(float low, float high, float factor) {
+static float InterpolateValue(float low, float high, float factor) {
 	float value = low + (high - low) * factor;
 	return value;
 }
