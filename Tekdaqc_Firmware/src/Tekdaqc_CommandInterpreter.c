@@ -907,6 +907,9 @@ static Command_t ParseCommand(const char* command) {
 			++ret_command;
 		}
 	}
+	if (ret_command > COMMAND_NONE) {
+		ret_command = COMMAND_NONE;
+	}
 #ifdef COMMAND_DEBUG
 	if (ret_command <= COMMAND_NONE) {
 		printf("[Command Interpreter] Determined command to be: %s\n\r", COMMAND_STRINGS[ret_command]);
