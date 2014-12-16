@@ -36,6 +36,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "Tekdaqc_Timers.h"
 #include "Tekdaqc_Config.h"
+#include "netconf.h"
 #include "Tekdaqc_CAN.h"
 #include <stdio.h>
 #include <inttypes.h>
@@ -45,12 +46,17 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint16_t tmpCC4[2] = {0, 0};
+__IO bool isInitialized = false;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
+
+void Tekdaqc_Initialized(bool status) {
+	isInitialized = status;
+}
 
 /**
  * @brief   This function handles NMI exception.
@@ -176,6 +182,10 @@ void SysTick_Handler(void) {
 	//TestPin_On(PIN2);
 	Time_Update();
 	//TestPin_Off(PIN2);
+	/*if (isInitialized == true) {
+		/* Handle periodic timers for LwIP */
+		/*LwIP_Periodic_Handle(GetLocalTime());
+	}*/
 }
 
 /******************************************************************************/
