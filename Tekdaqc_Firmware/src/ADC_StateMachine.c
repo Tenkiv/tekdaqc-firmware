@@ -491,9 +491,6 @@ static void ApplyCalibrationParameters(Analog_Input_t* input) {
 		offset_cal = Tekdaqc_GetOffsetCalibration(input->rate, input->gain, input->buffer);
 		gain_cal = Tekdaqc_GetGainCalibration(input->rate, input->gain, input->buffer);
 	}
-#ifdef ADC_STATE_MACHINE_DEBUG
-	printf("Calibration params: Offset: 0x%" PRIx32 " Gain: 0x%" PRIx32 " Correction: %0.4f\n\r", offset_cal, gain_cal, nextSampleCorrection);
-#endif
 	ConvertCalibrationToBytes(scratch_bytes, offset_cal);
 	ADS1256_SetOffsetCalSetting(scratch_bytes);
 	ConvertCalibrationToBytes(scratch_bytes, gain_cal);

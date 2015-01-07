@@ -146,6 +146,7 @@
 								<option id="com.atollic.truestudio.gcc.warnings.missing_include_dirs.1146352798" name="Warn if a user-supplied include directory does not exist" superClass="com.atollic.truestudio.gcc.warnings.missing_include_dirs" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gcc.warnings.w_switch_default.449827606" name="Warn when switch statement does not have a default case" superClass="com.atollic.truestudio.gcc.warnings.w_switch_default" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gcc.warnings.w_switch_enum.1642245035" name="Warn if switch is used on enum type and switch statement lacks case for some enumerations" superClass="com.atollic.truestudio.gcc.warnings.w_switch_enum" value="true" valueType="boolean"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.271576491" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.gcc.input.749330410" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.lib.release.toolchain.gpp.814517982" name="C++ Compiler" superClass="com.atollic.truestudio.lib.release.toolchain.gpp">
