@@ -95,7 +95,7 @@ static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BU
 /**
  * @brief Interpolates two calibration values with the specified interpolation factor.
  */
-static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor);
+static float InterpolateValue(float low, float high, float factor);
 
 /**
  * @brief Computes the indecies for the RAM gain and offset lookup tables based on the sampling parameters.
@@ -151,13 +151,13 @@ static uint32_t ComputeOffset(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BU
  * @internal
  * Interpolates two calibration values based on the specified factor.
  *
- * @param low uint32_t The lower calibration data point.
- * @param high uint32_t The higher calibration data point.
+ * @param low float The lower calibration data point.
+ * @param high float The higher calibration data point.
  * @param factor float The interpolation factor. A value of 0 corresponds to low, a value of 1 corresponds to high.
- * @retval uint32_t The interpolated value.
+ * @retval float The interpolated value.
  */
-static uint32_t InterpolateValue(uint32_t low, uint32_t high, float factor) {
-	uint32_t value = low + (high - low) * factor;
+static float InterpolateValue(float low, float high, float factor) {
+	float value = low + (high - low) * factor;
 	return value;
 }
 
@@ -395,7 +395,7 @@ uint32_t Tekdaqc_GetBaseGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, 
  * @param temperature float The temperature value to lookup for.
  * @retval The determined calibration value.
  */
-uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature) {
+uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer) {
 	uint8_t rate_index = 0U;
 	uint8_t gain_index = 0U;
 	uint8_t buffer_index = 0U;
@@ -403,14 +403,15 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 	ComputeTableIndices(&rate_index, &gain_index, &buffer_index, &range_index, rate, gain, buffer,
 			CURRENT_ANALOG_SCALE);
 	uint32_t baseGain = baseGainCalibrations[rate_index][gain_index][buffer_index];
+	return baseGain;
+}
 
-	if (isCalibrationValid != TRUE) {
+float Tekdaqc_GetGainCorrectionFactor(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature) {
+	if (isCalibrationValid != TRUE || Tekdaqc_IsCalibrationModeEnabled()) {
 #ifdef CALIBRATION_TABLE_DEBUG
-		printf(
-				"[Calibration Table] The calibration table is not valid, returning ADC calibration only (0x%" PRIX32 ").\n\r",
-				baseGain);
+		printf("[Calibration Table] The calibration table is not valid, returning 1.0f.\n\r");
 #endif
-		return baseGain;
+		return 1.0f;
 	}
 	if (temperature < calibrationTemps[0] || temperature > calibrationTemps[maxValidTempIdx]) {
 		/* The temperature is out of range, we will return the closest */
@@ -470,17 +471,17 @@ uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1
 	uint32_t offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, low_temp_idx);
 	uint32_t Address = CAL_DATA_START_ADDR + offset;
 
-	uint32_t data_low = (*(__IO uint32_t*) Address);
-	uint32_t data_high = data_low;
+	float data_low = (*(__IO float*) Address);
+	float data_high = data_low;
 
 	if (factor != 1.0f) {
 		/* Save extra effort if there is no interpolation */
 		offset = ComputeOffset(rate, gain, buffer, CURRENT_ANALOG_SCALE, high_temp_idx);
 		Address = CAL_DATA_START_ADDR + offset;
 
-		data_high = (*(__IO uint32_t*) Address);
+		data_high = (*(__IO float*) Address);
 	}
-	return (baseGain + InterpolateValue(data_low, data_high, factor));
+	return (InterpolateValue(data_low, data_high, factor));
 }
 
 /**
@@ -694,7 +695,7 @@ FLASH_Status Tekdaqc_SetCalibrationValid(void) {
  * Writes the gain calibration value for the specified parameters. This method requires that the board be in
  * calibration mode and will return FLASH_ERROR_WRP if it is not.
  *
- * @param cal uint32_t The calibration value to write.
+ * @param cal float The calibration value to write.
  * @param rate ADS1256_SPS_t The sample rate to write for.
  * @param gain ADS1256_PGA_t The gain to write for.
  * @param buffer ADS1256_BUFFER_t The buffer setting to write for.
@@ -702,7 +703,7 @@ FLASH_Status Tekdaqc_SetCalibrationValid(void) {
  * @param temperature float The temperature value to write for.
  * @retval FLASH_Status FLASH_COMPLETE on success, or the error status on failure.
  */
-FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
+FLASH_Status Tekdaqc_SetGainCalibration(float cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
 		ANALOG_INPUT_SCALE_t scale, uint8_t temp_idx) {
 	if (CalibrationModeEnabled == false) {
 		return FLASH_ERROR_WRP;
@@ -713,10 +714,10 @@ FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS125
 	printf("[Calibration Table] Calibration data start address: 0x%08" PRIX32 "\n\r", CAL_DATA_START_ADDR);
 	uint32_t addr = CAL_DATA_START_ADDR + ComputeOffset(rate, gain, buffer, scale, temp_idx);
 #ifdef CALIBRATION_TABLE_DEBUG
-	printf("[Calibration Table] Programming calibration table value: 0x%08" PRIX32 " at location 0x%08" PRIX32 ".\n\r",
+	printf("[Calibration Table] Programming calibration table value: %0.8f at location 0x%08" PRIX32 ".\n\r",
 			cal, addr);
 #endif
-	FLASH_Status status = FLASH_ProgramWord(addr, cal);
+	FLASH_Status status = FLASH_ProgramWord(addr, (*(uint32_t*)((void *)(&cal))));
 #ifdef CALIBRATION_TABLE_DEBUG
 	printf("[Calibration Table] Flash Status: %i - 0x%08" PRIX32 "\n\r", status, FLASH->SR);
 #endif

@@ -66,6 +66,13 @@
 
 /**
  * @internal
+ * @def ADS1256_BUFFER_DISABLED_STR
+ * @brief String constant used for comparing to command line inputs for the state of the input buffer.
+ */
+#define ADS1256_BUFFER_DISABLED_STR "DISABLED"
+
+/**
+ * @internal
  * @def ADS1256_REGISTERS_DEBUG_FORMATTER
  * @brief Used as the format string for printing the ADS1256 registers to a string.
  */
@@ -458,7 +465,7 @@ const char* ADS1256_StringFromBuffer(ADS1256_BUFFER_t buffer) {
  * @retval ADS1256_BUFFER_t value correlating to the string.
  */
 ADS1256_BUFFER_t ADS1256_StringToBuffer(char* str) {
-	if (strcmp(str, ADS1256_BUFFER_OFF_STR) == 0) {
+	if (strcmp(str, ADS1256_BUFFER_OFF_STR) == 0 || strcmp(str, ADS1256_BUFFER_DISABLED_STR) == 0) {
 		return ADS1256_BUFFER_DISABLED;
 	} else {
 		return ADS1256_BUFFER_ENABLED;

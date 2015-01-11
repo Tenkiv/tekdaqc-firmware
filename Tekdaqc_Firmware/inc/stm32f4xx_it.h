@@ -43,6 +43,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
+void Tekdaqc_Initialized(bool status);
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);

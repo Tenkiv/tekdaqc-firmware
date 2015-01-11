@@ -15,6 +15,7 @@
 #include "Tekdaqc_Config.h"
 #include "stm32f4x7_eth.h"
 #include "netconf.h"
+#include "stm32f4xx_it.h"
 #include "TelnetServer.h"
 #include "Tekdaqc_Locator.h"
 #include "Tekdaqc_CommandInterpreter.h"
@@ -118,6 +119,7 @@ int main(void) {
 
 	if (InitializeTelnetServer() == TELNET_OK) {
 		CreateCommandInterpreter();
+		Tekdaqc_Initialized(true);
 		program_loop();
 	} else {
 		/* We have a fatal error */

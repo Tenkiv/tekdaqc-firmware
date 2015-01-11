@@ -44,6 +44,7 @@
 #include "ethernetif.h"
 #include "netconf.h"
 #include "Tekdaqc_Locator.h"
+#include <inttypes.h>
 
 #ifdef PRINTF_OUTPUT
 #include <stdio.h>
@@ -165,7 +166,8 @@ void LwIP_Pkt_Handle(void) {
  * @retval None
  */
 void LwIP_Periodic_Handle(__IO uint64_t localtime) {
-	uint32_t time = ((uint32_t) (localtime / 1000U));
+	uint64_t time = (localtime / 1000U);
+	//printf("[NETCONF] Servicing LWIP with time %" PRIu64 " ms.\n\r", time);
 #if LWIP_TCP
 	/* TCP periodic process every 5 ms */
 	if (time - TCPTimer >= TCP_TMR_INTERVAL) {

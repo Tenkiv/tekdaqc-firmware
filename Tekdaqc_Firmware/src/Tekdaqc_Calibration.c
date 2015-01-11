@@ -37,6 +37,8 @@
 #include "Tekdaqc_BSP.h"
 #include "Tekdaqc_CommandInterpreter.h"
 #include <stdlib.h>
+#include <inttypes.h>
+#include <stdio.h>
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -246,7 +248,7 @@ Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMA
 	char* param;
 	int8_t index = -1;
 	/* Set the default parameters */
-	uint32_t value;
+	float value;
 	ADS1256_BUFFER_t buffer;
 	ADS1256_SPS_t rate;
 	ADS1256_PGA_t gain;
@@ -260,7 +262,7 @@ Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMA
 			switch (i) { /* Switch on the key not position in arguments list */
 				case 0U: { /* VALUE key */
 					char* testPtr = NULL;
-					value = (uint32_t) strtol(param, &testPtr, 0);
+					value = strtof(param, &testPtr);
 					if (testPtr == param) {
 						retval = ERR_CALIBRATION_PARSE_ERROR;
 					}
@@ -301,6 +303,8 @@ Tekdaqc_Function_Error_t Tekdaqc_WriteGainCalibrationValue(char keys[][MAX_COMMA
 		}
 	}
 	if (retval == ERR_FUNCTION_OK) {
+		printf("Writing gain calibration value 0x%0.4f for Rate: %s, Gain %s, Buffer: %s\n\r", value, ADS1256_StringFromSPS(rate),
+				ADS1256_StringFromPGA(gain), ADS1256_StringFromBuffer(buffer));
 		if (Tekdaqc_SetGainCalibration(value, rate, gain, buffer, scale, temperature) != FLASH_COMPLETE) {
 			retval = ERR_CALIBRATION_WRITE_FAILED;
 		}
