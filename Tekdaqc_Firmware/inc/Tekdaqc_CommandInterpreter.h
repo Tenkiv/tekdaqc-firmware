@@ -346,7 +346,7 @@ extern const char* LIST_DIGITAL_OUTPUTS_PARAMS[NUM_LIST_DIGITAL_OUTPUTS_PARAMS];
  * @def NUM_SET_DIGITAL_OUTPUT_PARAMS
  * @brief The number of parameters for the SET_DIGITAL_OUTPUT command.
  */
-#define NUM_SET_DIGITAL_OUTPUT_PARAMS 2
+#define NUM_SET_DIGITAL_OUTPUT_PARAMS 1
 /* Prototype the SET_DIGITAL_OUTPUT command params array */
 extern const char* SET_DIGITAL_OUTPUT_PARAMS[NUM_SET_DIGITAL_OUTPUT_PARAMS];
 
@@ -354,7 +354,7 @@ extern const char* SET_DIGITAL_OUTPUT_PARAMS[NUM_SET_DIGITAL_OUTPUT_PARAMS];
  * @def NUM_READ_DIGITAL_OUTPUT_PARAMS
  * @brief The number of parameters for the READ_DIGITAL_OUTPUT command.
  */
-#define NUM_READ_DIGITAL_OUTPUT_PARAMS 2
+#define NUM_READ_DIGITAL_OUTPUT_PARAMS 0
 /* Prototype the READ_DIGITAL_OUTPUT command params array */
 extern const char* READ_DIGITAL_OUTPUT_PARAMS[NUM_READ_DIGITAL_OUTPUT_PARAMS];
 
@@ -362,9 +362,9 @@ extern const char* READ_DIGITAL_OUTPUT_PARAMS[NUM_READ_DIGITAL_OUTPUT_PARAMS];
  * @def NUM_ADD_DIGITAL_OUTPUT_PARAMS
  * @brief The number of parameters for the ADD_DIGITAL_OUTPUT command.
  */
-#define NUM_ADD_DIGITAL_OUTPUT_PARAMS 2
-/* Prototype the ADD_DIGITAL_OUTPUT command params array */
-extern const char* ADD_DIGITAL_OUTPUT_PARAMS[NUM_ADD_DIGITAL_OUTPUT_PARAMS];
+#define NUM_DO_DIAGS_PARAMS 0
+/* Prototype the READ_DO_DIAGS command params array */
+extern const char* DO_DIAGS_PARAMS[NUM_DO_DIAGS_PARAMS];
 
 /**
  * @def NUM_REMOVE_DIGITAL_OUTPUT_PARAMS

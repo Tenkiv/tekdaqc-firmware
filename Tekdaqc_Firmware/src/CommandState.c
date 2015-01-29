@@ -103,13 +103,13 @@ void ServiceTasks(void) {
 		case UNINITIALIZED:
 			ADC_Machine_Service();
 			DI_Machine_Service();
-			DO_Machine_Service();
+			//DO_Machine_Service();
 			CurrentState = STATE_IDLE;
 			break;
 		case STATE_IDLE:
 			ADC_Machine_Service();
 			DI_Machine_Service();
-			DO_Machine_Service();
+			//DO_Machine_Service();
 			break;
 		case STATE_ANALOG_INPUT_SAMPLE:
 			if (ADCSampling == TRUE) {
@@ -135,7 +135,7 @@ void ServiceTasks(void) {
 		case STATE_DIGITAL_OUTPUT_SAMPLE:
 			if (DOSampling == TRUE) {
 				/* Service the DO state machine */
-				DO_Machine_Service();
+				//DO_Machine_Service();
 			} else {
 				CurrentState = STATE_IDLE;
 			}
@@ -150,7 +150,7 @@ void ServiceTasks(void) {
 					TimeLastDigitalInputSample = CurrentTime;
 				}
 				/* Service the DO state machine */
-				DO_Machine_Service();
+				//DO_Machine_Service();
 			} else {
 				CurrentState = STATE_IDLE;
 			}
@@ -189,14 +189,14 @@ void HaltTasks(void) {
 			break;
 		case STATE_DIGITAL_OUTPUT_SAMPLE:
 			printf("[Command State] Halting digital output sampling.\n\r");
-			DO_Machine_Halt();
+			//DO_Machine_Halt();
 			CurrentState = STATE_IDLE;
 			break;
 		case STATE_GENERAL_SAMPLE:
 			printf("[Command State] Halting all sampling.\n\r");
 			ADC_Machine_Halt();
 			DI_Machine_Halt();
-			DO_Machine_Halt();
+			//DO_Machine_Halt();
 			CurrentState = STATE_IDLE;
 			break;
 		default:

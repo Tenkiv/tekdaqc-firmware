@@ -132,9 +132,20 @@ Tekdaqc_Function_Error_t ListDigitalOutputs(void);
 Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], int count);
 
 /**
- * @brief Sets a digital output to the specified state.
+ * @brief Sets a digital output.
  */
 Tekdaqc_Function_Error_t SetDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @brief Reads the digital output.
+ */
+Tekdaqc_Function_Error_t ReadDigitalOutput(void);
+
+
+/**
+ * @brief Reads the digital output.
+ */
+Tekdaqc_Function_Error_t ReadDODiags(void);
 
 /**
  * @brief Sets the pointer to the function to invoke when digital output data needs to be written.

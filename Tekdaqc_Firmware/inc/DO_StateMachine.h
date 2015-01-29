@@ -105,7 +105,7 @@ void DO_Machine_Idle(void);
 /**
  * @brief Output sampling state handler.
  */
-void DO_Machine_Output_Sample(Digital_Output_t** outputs, uint32_t count, bool singleChannel);
+//void DO_Machine_Output_Sample(Digital_Output_t** outputs, uint32_t count, bool singleChannel);
 
 /**
  * @brief Reset state handler.
