@@ -118,6 +118,7 @@ void DO_Machine_Init(void) {
 	printf("[DO STATE MACHINE] Moving to state DO_INITIALIZED.\n\r");
 #endif
 	/* Initialize the digital outputs */
+
 	TLE7232_Init();
 	//SetOutputFaultStatusFunction(&SetDigitalOutputFaultStatus);
 

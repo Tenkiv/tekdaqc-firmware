@@ -30,6 +30,7 @@
 #include "ADS1256_Driver.h"
 #include "Tekdaqc_Config.h"
 #include "Tekdaqc_Timers.h"
+
 #include <string.h>
 #include <stdlib.h>
 
@@ -85,6 +86,7 @@
  */
 #define ADS1256_REGISTERS_TOSTRING_HEADER "[ADS1256] Register Contents:\n\r"
 
+extern void InitAnalogSamplesBuffer(void);
 
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -256,21 +258,105 @@ void ADS1256_Init(void) {
 #endif
 }
 
+
+
+
+void ADS1256_EXTI_Enable(void) {
+	// Clear interrupt pending bit
+	EXTI_ClearITPendingBit(EXTI_Line10);
+	NVIC_EnableIRQ(EXTI15_10_IRQn);
+}
+
+void ADS1256_EXTI_Disable(void) {
+	NVIC_DisableIRQ(EXTI15_10_IRQn);
+}
+
+//lfao- this timer is used for very short delay purposes...this does not trigger an interrupt...
+//lfao- this is currently configured at 1 count=1us...
+//lfao- NOTE: when doing short delays(i.e., reading the counter), user must handle the special
+//lfao- case where the counter is near the reload value of 0xFFFFFFF0...
+void InitializeShortDelayTimer(void)
+{
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+
+    TIM_TimeBaseInitTypeDef ShortDelayTimer;
+    ShortDelayTimer.TIM_Prescaler = 83;
+    ShortDelayTimer.TIM_CounterMode = TIM_CounterMode_Up;
+    ShortDelayTimer.TIM_Period = 0xFFFFFFFF;
+    ShortDelayTimer.TIM_ClockDivision = TIM_CKD_DIV1;
+    ShortDelayTimer.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM2, &ShortDelayTimer);
+    TIM_Cmd(TIM2, ENABLE);
+}
+//lfao-new timer used for the channel switching...
+//currently configured to trigger an interrupt every 3ms...
+void InitializeChannelSwitchTimer(void)
+{
+
+    NVIC_InitTypeDef nVIC_InitStructure;
+    nVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+    nVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    nVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    nVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&nVIC_InitStructure);
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+
+    TIM_TimeBaseInitTypeDef ChnSwitchTimer;
+    ChnSwitchTimer.TIM_Prescaler = 41999;
+    ChnSwitchTimer.TIM_CounterMode = TIM_CounterMode_Up;
+    ChnSwitchTimer.TIM_Period = 5;
+    ChnSwitchTimer.TIM_ClockDivision = TIM_CKD_DIV1;
+    ChnSwitchTimer.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM4, &ChnSwitchTimer);
+
+
+    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+    TIM_Cmd(TIM4, ENABLE);
+}
+volatile int totalDelay = 0;
+void ShortDelayUS(uint32_t Delay)
+{
+	totalDelay = totalDelay+Delay;
+	//lfao- set counter to 0
+	TIM_SetCounter(TIM2,0);
+	while(TIM_GetCounter(TIM2) < Delay)
+	{
+
+	}
+}
 /**
  * Initializes the STM32 pins connected to the ADS1256 state pins such as data ready (DRDY) and reset.
  */
 void ADS1256_StatePins_Init(void) {
 	GPIO_InitTypeDef GPIO_InitStructure; /* Structure used to initialize the GPIO pins */
+	EXTI_InitTypeDef EXTI_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 
 	/* Confgure the DRDY Pin */
 	/* Enable the GPIO Clock */
 	RCC_AHB1PeriphClockCmd(ADS1256_DRDY_GPIO_CLK, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
 	/* Configure the GPIO pin */
 	GPIO_InitStructure.GPIO_Pin = ADS1256_DRDY_PIN;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init(ADS1256_DRDY_GPIO_PORT, &GPIO_InitStructure);
+
+	/* Connect EXTI Line to INT Pin */
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource10);
+	/* Configure EXTI line */
+	EXTI_InitStructure.EXTI_Line = EXTI_Line10;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure);
+	/* Enable and set the EXTI interrupt to priority 1*/
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 
 	/* Confgure the SYNC Pin */
 	/* Enable the GPIO Clock */
@@ -301,7 +387,14 @@ void ADS1256_StatePins_Init(void) {
 
 	/* Bring the RESET pin high */
 	GPIO_SetBits(ADS1256_RESET_GPIO_PORT, ADS1256_RESET_PIN);
+
+	//lfao- during init, disable the interrupt at first...
+	ADS1256_EXTI_Disable();
+
+	//lfao- initialize the buffer for analog samples...
+	InitAnalogSamplesBuffer();
 }
+
 
 
 

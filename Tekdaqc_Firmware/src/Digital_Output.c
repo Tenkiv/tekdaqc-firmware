@@ -43,7 +43,7 @@
  * @def DIGITAL_OUTPUT_FORMATTER
  * @brief The header format string for printing an analog input to a human readable string.
  */
-#define DIGITAL_OUTPUT_FORMATTER "\n\r--------------------\n\rDigital Output\n\r\tValue: %04x\n\r--------------------\n\r"
+#define DIGITAL_OUTPUT_FORMATTER "\n\r--------------------\n\rDigital Output\n\r\tValue: %04x\n\r--------------------\n\r%c\n\r"
 #define DIGITAL_DIAGS_FORMATTER "\n\r--------------------\n\rDiagnostics\n\r\tValue: %08x\n\r--------------------\n\r"
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -54,7 +54,8 @@
 static WriteFunction writer = NULL;
 
 //static uint8_t DigitalOutputMap[] = {6, 1, 2, 4, 15, 8, 10,	12, 7, 0, 3, 5, 14, 9, 11, 13};
-static uint8_t channelMap[16] = {14,9,10,12,7,0,2,4,15,8,11,13,6,1,3,5};
+//static uint8_t channelMap[16] = {14,9,10,12,7,0,2,4,15,8,11,13,6,1,3,5};
+static uint8_t channelMap[16] = {5,3,1,6,13,11,8,15,4,2,0,7,12,10,9,14};
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE EXTERNAL VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -634,7 +635,7 @@ Tekdaqc_Function_Error_t ReadDigitalOutput(void)
 
 
 
-	sprintf(TOSTRING_BUFFER, DIGITAL_OUTPUT_FORMATTER, uiOrigOutput);
+	sprintf(TOSTRING_BUFFER, DIGITAL_OUTPUT_FORMATTER, uiOrigOutput, 0x1e);
 	writer(TOSTRING_BUFFER);
 	return ERR_FUNCTION_OK;
 }

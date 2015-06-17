@@ -38,9 +38,14 @@
 #include "Tekdaqc_Config.h"
 #include "netconf.h"
 #include "Tekdaqc_CAN.h"
+#include "Analog_Input.h"
 #include <stdio.h>
 #include <inttypes.h>
 
+//lfao-these variables are used by the DRDY interrupt handler for it to know which channel is sampling and
+//the number of samples to take...
+extern volatile int viCurrentChannel;
+extern volatile int viSamplesToTake;
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -176,16 +181,18 @@ void DebugMon_Handler(void) {
  * @param  None
  * @retval None
  */
+
 void SysTick_Handler(void) {
+#if 0
 	/* Update the LocalTime by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
 	//printf("SysTick_Handler...\n");
 	//TestPin_On(PIN2);
+#endif
 	Time_Update();
+#if 0
 	//TestPin_Off(PIN2);
-	/*if (isInitialized == true) {
-		/* Handle periodic timers for LwIP */
-		/*LwIP_Periodic_Handle(GetLocalTime());
-	}*/
+
+#endif
 }
 
 /******************************************************************************/
@@ -197,6 +204,7 @@ void SysTick_Handler(void) {
  * @param  None
  * @retval None
  */
+#if 0
 void EXTI15_10_IRQHandler(void) {
 	if (EXTI_GetITStatus(ETH_LINK_EXTI_LINE) != RESET) {
 		Eth_Link_ITHandler(DP83848_PHY_ADDRESS);
@@ -204,6 +212,51 @@ void EXTI15_10_IRQHandler(void) {
 		EXTI_ClearITPendingBit(ETH_LINK_EXTI_LINE);
 	}
 }
+#endif
+
+void EXTI15_10_IRQHandler(void)
+{
+	uint8_t ads1256data[3];
+	Analog_Samples_t newAnalogSample;
+
+	if (EXTI_GetITStatus(EXTI_Line10) != RESET)
+	{
+		//viCurrentChannel
+		//viSamplesToTake
+
+		// Clear interrupt pending bit
+		EXTI_ClearITPendingBit(EXTI_Line10);
+
+		/****Get ADS1256 reading routine******/
+		ADS1256_CS_LOW(); /* Enable SPI communication */
+		ADS1256_SendByte(ADS1256_RDATA); /* Send RDATA command byte */
+		ShortDelayUS(11);
+		//Delay_us((uint64_t) (50U * ADS1256_CLK_PERIOD_US)); /*  timing characteristic t6 */
+		ADS1256_ReceiveBytes(ads1256data, 3U);
+		ShortDelayUS(3);
+		//Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
+		ADS1256_CS_HIGH(); /* Latch SPI communication */
+		ShortDelayUS(2);
+		//Delay_us((uint64_t) (4U * ADS1256_CLK_PERIOD_US)); /*  timing characteristic t11 */
+		newAnalogSample.iChannel = viCurrentChannel;
+		newAnalogSample.iReading = (uint32_t)(ads1256data[0]<<16 | ads1256data[1]<<8 | ads1256data[2]);
+		newAnalogSample.ui64TimeStamp = GetLocalTime();
+		WriteSampleToBuffer(&newAnalogSample);
+		//lfao - infinite sampling, do nothing, just let it run, else disable this interrupt...
+		if(viSamplesToTake!=-1)
+		{
+			viSamplesToTake--;
+			if(viSamplesToTake==0)
+			{
+				ADS1256_EXTI_Disable();
+			}
+		}
+		/*************************************************/
+
+	}
+}
+
+
 
 void TIM5_IRQHandler(void) {
 	if (TIM_GetITStatus(TIM5, TIM_IT_CC4) != RESET) {
@@ -219,7 +272,14 @@ void TIM5_IRQHandler(void) {
 		}
 	}
 }
-
+void TIM4_IRQHandler(void)
+{
+    if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET)
+    {
+        TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
+        AnalogChannelHandler();
+    }
+}
 /**
   * @brief  This function handles CAN1 RX0 request.
   * @param  None

@@ -610,12 +610,16 @@ void TelnetWrite(const char character) {
  */
 void TelnetWriteString(char* string) {
 	if (TelnetIsConnected() == TRUE) {
+#if 0
 		Eth_EXTI_Disable();
+#endif
 		while (*string) {
 			TelnetWrite(*string);
 			++string;
 		}
+#if 0
 		Eth_EXTI_Enable();
+#endif
 	}
 }
 

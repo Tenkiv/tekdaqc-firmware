@@ -547,7 +547,11 @@ void ADS1256_Init(void);
  * @brief Initialize the state pins of the ADC Driver.
  */
 void ADS1256_StatePins_Init(void);
-
+void ADS1256_EXTI_Disable(void);
+void ADS1256_EXTI_Enable(void);
+void InitializeShortDelayTimer(void);
+void InitializeChannelSwitchTimer(void);
+void ShortDelayUS(uint32_t Delay);
 /*--------------------------------------------------------------------------------------------------------*/
 /* STRING METHODS */
 /*--------------------------------------------------------------------------------------------------------*/

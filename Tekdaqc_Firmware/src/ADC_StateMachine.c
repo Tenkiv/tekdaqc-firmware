@@ -44,6 +44,8 @@
 #include <Tekdaqc_Timers.h>
 #include <TelnetServer.h>
 #include <math.h>
+#include "netconf.h"
+#include <stm32f4x7_eth.h>
 //#include "boolean.h"
 //#include "Tekdaqc_Config.h"
 //#include "Tekdaqc_Debug.h"
@@ -56,20 +58,7 @@
 /* PRIVATE TYPE DEFINITIONS */
 /*--------------------------------------------------------------------------------------------------------*/
 
-/**
- * @internal
- * @brief Data structure for keeping track of the current state of the calibration process.
- *
- * The Tekdaqc uses this data structure to keep track of the current state of its calibration process, which
- * includes both offset and gain calibrations.
- */
-typedef struct {
-	uint8_t gain_index; /**< The index of the current gain setting being calibrated. */
-	uint8_t rate_index; /**< The index of the current rate setting being calibrated. */
-	uint8_t buffer_index; /**< The index of the current buffer setting being calibrated. */
-	bool finished; /**< TRUE if the particular calibration set has completed. Note that this is not the entire process. */
-	uint8_t finished_count; /**< The number of calibration sets which have completed. */
-} CalibrationState_t;
+
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -101,7 +90,7 @@ static bool waitingOnTemp = false;
 
 static uint8_t scratch_bytes[3];
 
-static CalibrationState_t calibrationState;
+CalibrationState_t calibrationState;
 
 static bool isFirstIdle = true;
 
@@ -128,7 +117,7 @@ static void BeginNextConversion(Analog_Input_t* input);
  * @brief Performs the necessary calibration steps for the ADC.
  */
 static void ADC_Machine_Service_Calibrating(void);
-
+void ADC_Machine_Service_CalibratingVer2(void);
 /**
  * @internal
  * @brief Performs the necessary system gain calibration steps for the ADC.
@@ -163,7 +152,7 @@ static void ConvertCalibrationToBytes(uint8_t bytes[], uint32_t cal);
  * @internal
  * @brief Applies any calibration parameters to the ADC.
  */
-static void ApplyCalibrationParameters(Analog_Input_t* input);
+void ApplyCalibrationParameters(Analog_Input_t* input);
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
@@ -261,6 +250,81 @@ static void ADC_Machine_Service_Calibrating(void) {
 		ADC_Machine_Idle();
 	}
 }
+
+/**
+ * Performs the necessary functions to calibrate the ADC and populate its calibration tables.
+ *
+ * @param none
+ * @retval none
+ */
+void ADC_Machine_Service_CalibratingVer2(void) {
+	static ADS1256_PGA_t gains[] = {ADS1256_PGAx1, ADS1256_PGAx2, ADS1256_PGAx4, ADS1256_PGAx8, ADS1256_PGAx16,
+			ADS1256_PGAx32, ADS1256_PGAx64};
+	static ADS1256_SPS_t rates[] = {ADS1256_SPS_30000, ADS1256_SPS_15000, ADS1256_SPS_7500, ADS1256_SPS_3750,
+			ADS1256_SPS_2000, ADS1256_SPS_1000, ADS1256_SPS_500, ADS1256_SPS_100, ADS1256_SPS_60, ADS1256_SPS_50,
+			ADS1256_SPS_30, ADS1256_SPS_25, ADS1256_SPS_15, ADS1256_SPS_10, ADS1256_SPS_5, ADS1256_SPS_2_5};
+	static ADS1256_BUFFER_t buffers[] = {ADS1256_BUFFER_ENABLED, ADS1256_BUFFER_DISABLED};
+
+	Analog_Input_t* cold = GetAnalogInputByNumber(COLD_JUNCTION);
+
+	if (calibrationState.finished == false) {
+		if (calibrationState.gain_index < NUM_PGA_SETTINGS) {
+			if (calibrationState.rate_index < NUM_SAMPLE_RATES) {
+				if (calibrationState.buffer_index < NUM_BUFFER_SETTINGS) {
+					ADS1256_SetInputBufferSetting(buffers[calibrationState.buffer_index]);
+					ADS1256_SetDataRate(rates[calibrationState.rate_index]);
+					ADS1256_SetPGASetting(gains[calibrationState.gain_index]);
+					ADS1256_CalibrateSelf();
+					//lfao-service LWIP here because calibrating all combinations will take time...
+					/* Check if any packet received */
+					if (ETH_CheckFrameReceived()) {
+						/* Process received Ethernet packet */
+						LwIP_Pkt_Handle();
+					}
+					LwIP_Periodic_Handle(GetLocalTime());
+					Tekdaqc_SetBaseGainCalibration(ADS1256_GetGainCalSetting(), rates[calibrationState.rate_index],
+							gains[calibrationState.gain_index], buffers[calibrationState.buffer_index]);
+					if (rates[calibrationState.rate_index] == cold->rate
+							&& gains[calibrationState.gain_index] == cold->gain
+							&& buffers[calibrationState.buffer_index] == cold->buffer) {
+						// We want to save this self gain value
+						Tekdaqc_SetColdJunctionGainCalibration(ADS1256_GetGainCalSetting(), false);
+					}
+					ADS1256_CalibrateSystem_Offset();
+					Tekdaqc_SetOffsetCalibration(ADS1256_GetOffsetCalSetting(), rates[calibrationState.rate_index],
+							gains[calibrationState.gain_index], buffers[calibrationState.buffer_index++]);
+					calibrationState.finished_count++;
+				} else {
+					calibrationState.buffer_index = 0;
+					calibrationState.rate_index++;
+				}
+			} else {
+				calibrationState.rate_index = 0;
+				calibrationState.gain_index++;
+			}
+		} else {
+			calibrationState.finished = true;
+		}
+		static uint32_t total = NUM_PGA_SETTINGS * NUM_SAMPLE_RATES * NUM_BUFFER_SETTINGS;
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %3.1f%%.\n\r",
+				((float) calibrationState.finished_count / total) * 100.0f);
+		TelnetWriteStatusMessage(TOSTRING_BUFFER);
+#ifdef ADC_STATE_MACHINE_DEBUG
+		printf("%s", TOSTRING_BUFFER);
+#endif
+	} else {
+		/* The calibration is complete */
+#ifdef ADC_STATE_MACHINE_DEBUG
+		printf("[ADC STATE MACHINE] Calibration Completed.\n\r");
+#endif
+		TelnetWriteStatusMessage("[ADC STATE MACHINE] Calibration Completed.\n\r");
+		isSelfCalibrated = true;
+		//ADC_Machine_Idle();
+	}
+}
+
+
+
 
 /**
  * Performs the necessary functions to system gain calibrate the ADC and populate its calibration tables.
@@ -478,7 +542,7 @@ static void ConvertCalibrationToBytes(uint8_t bytes[], uint32_t cal) {
 	bytes[2] = (cal & 0xFF0000) >> 16;
 }
 
-static void ApplyCalibrationParameters(Analog_Input_t* input) {
+void ApplyCalibrationParameters(Analog_Input_t* input) {
 	uint32_t offset_cal;
 	uint32_t gain_cal;
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -487,6 +551,7 @@ static void ApplyCalibrationParameters(Analog_Input_t* input) {
 	if (input->physicalInput == IN_COLD_JUNCTION) {
 		offset_cal = Tekdaqc_GetColdJunctionOffsetCalibration();
 		gain_cal = Tekdaqc_GetColdJunctionGainCalibration();
+
 	} else {
 		offset_cal = Tekdaqc_GetOffsetCalibration(input->rate, input->gain, input->buffer);
 		gain_cal = Tekdaqc_GetGainCalibration(input->rate, input->gain, input->buffer);

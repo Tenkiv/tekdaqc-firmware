@@ -121,6 +121,7 @@ static void Tekdaqc_LocatorReceive(void *arg, struct udp_pcb *pcb, struct pbuf *
 #ifdef LOCATOR_DEBUG
 		printf("[Locator] Packet received while Telnet connection is active. Ignoring.\n\r");
 #endif
+		pbuf_free(p);
 		return;
 	}
 

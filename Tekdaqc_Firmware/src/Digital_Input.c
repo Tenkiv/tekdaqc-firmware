@@ -30,6 +30,7 @@
 #include "Tekdaqc_CommandInterpreter.h"
 #include "Tekdaqc_Timers.h"
 #include "boolean.h"
+#include "TelnetServer.h"
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
@@ -59,6 +60,12 @@ static WriteFunction writer = NULL;
 /* List of external digital inputs */
 static Digital_Input_t Ext_DInputs[NUM_DIGITAL_INPUTS];
 
+
+//lfao-circular buffer details...
+Digital_Samples_t DigitalSampleBuffer[DIGITAL_SAMPLES_BUFFER_SIZE];
+extern volatile uint64_t numDigitalSamples;
+extern volatile int numOfDigitalInputs;
+volatile uint64_t numSamplesTaken = 0;
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -96,7 +103,119 @@ static void RemoveDigitalInputByID(uint8_t id);
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
 /*--------------------------------------------------------------------------------------------------------*/
+extern Digital_Input_t* dInputs[];
+volatile int iDigiHead;
+volatile int iDigiTail;
 
+//lfao-init buffer and indexes
+void InitDigitalSamplesBuffer(void)
+{
+	iDigiHead=0;
+	iDigiTail=0;
+}
+
+//lfao-writes a new sample and updates the iDigiHead
+int WriteDigiSampleToBuffer(Digital_Samples_t *Data)
+{
+
+	//full or empty
+	if((iDigiHead+2)%DIGITAL_SAMPLES_BUFFER_SIZE ==  iDigiTail%DIGITAL_SAMPLES_BUFFER_SIZE)
+	{
+		return 1;
+	}
+	else
+	{
+		iDigiHead=iDigiHead%DIGITAL_SAMPLES_BUFFER_SIZE;
+		DigitalSampleBuffer[iDigiHead].iChannel = Data->iChannel;
+		DigitalSampleBuffer[iDigiHead].iLevel = Data->iLevel;
+		DigitalSampleBuffer[iDigiHead].ui64TimeStamp= Data->ui64TimeStamp;
+		iDigiHead++;
+	    return 0;
+	}
+}
+//lfao-reads sample from buffer and updates iDigiTail
+int ReadDigitalSampleFromBuffer(Digital_Samples_t *Data)
+{
+
+	//full/empty
+	if(iDigiTail%DIGITAL_SAMPLES_BUFFER_SIZE ==  iDigiHead%DIGITAL_SAMPLES_BUFFER_SIZE)
+	{
+		return 1;
+	}
+	else
+	{
+		iDigiTail=iDigiTail%DIGITAL_SAMPLES_BUFFER_SIZE;
+		Data->iChannel = DigitalSampleBuffer[iDigiTail].iChannel;
+		Data->iLevel = DigitalSampleBuffer[iDigiTail].iLevel;
+		Data->ui64TimeStamp = DigitalSampleBuffer[iDigiTail].ui64TimeStamp;
+		iDigiTail++;
+	    return 0;
+	}
+}
+
+//lfao-converts the gathered data into ASCII and writes it to Telnet...
+void WriteToTelnet_Digital(void)
+{
+	Digital_Samples_t tempData;
+
+	while(1)
+	{
+		if(ReadDigitalSampleFromBuffer(&tempData)==0)
+		{
+			if(tempData.iLevel==LOGIC_HIGH)
+			{
+		       snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?D%i\r\n%" PRIu64 ",L%c\r\n", tempData.iChannel, tempData.ui64TimeStamp, 0x1e);
+			}
+			else
+			{
+			   snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?D%i\r\n%" PRIu64 ",H%c\r\n", tempData.iChannel, tempData.ui64TimeStamp, 0x1e);
+		    }
+		    TelnetWriteString(TOSTRING_BUFFER);
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+
+//lfao - read the ADDED inputs
+void ReadDigitalInputs(void)
+{
+	Digital_Samples_t tempDigitalSample;
+	for (uint_fast8_t i = 0U; i < NUM_DIGITAL_INPUTS; ++i)
+	{
+		if(dInputs[i] != NULL)
+		{
+			if(dInputs[i]->added == CHANNEL_ADDED)
+			{
+				if(numDigitalSamples)
+				{
+					numSamplesTaken++;
+					if(numSamplesTaken > numDigitalSamples*numOfDigitalInputs)
+						break;
+				}
+
+				tempDigitalSample.iChannel = dInputs[i]->input;
+				tempDigitalSample.iLevel = ReadGPI_Pin(dInputs[i]->input);
+				tempDigitalSample.ui64TimeStamp = GetLocalTime();
+				WriteDigiSampleToBuffer(&tempDigitalSample);
+			}
+		}
+	}
+}
+
+void DigitalInputHalt(void)
+{
+	numOfDigitalInputs=0;
+	numDigitalSamples=0;
+	numSamplesTaken = 0;
+	for (uint_fast8_t i = 0U; i < NUM_DIGITAL_INPUTS; ++i)
+	{
+		dInputs[i] = NULL; /* NULL them all*/
+	}
+}
 /**
  * Converts the specified GPI input into a human readable string.
  *

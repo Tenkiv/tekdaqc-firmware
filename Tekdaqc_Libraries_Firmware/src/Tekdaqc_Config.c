@@ -370,7 +370,9 @@ void DisableBoardInterrupts(void) {
 #ifdef DEBUG
 	/*printf("Disabling interrupts.\n\r");*/
 #endif
+#if 0
 	Eth_EXTI_Disable();
+#endif
 	NVIC_DisableIRQ(SysTick_IRQn);
 #ifdef DEBUG
 	/*printf("Interrupts disabled.\n\r");*/
@@ -387,7 +389,9 @@ void EnableBoardInterrupts(void) {
 #ifdef DEBUG
 	/*printf("Re-enabling interrupts.\n\r");*/
 #endif
+#if 0
 	Eth_EXTI_Enable();
+#endif
 	NVIC_EnableIRQ(SysTick_IRQn);
 #ifdef DEBUG
 	/*printf("Interrupts re-enabled.\n\r");*/

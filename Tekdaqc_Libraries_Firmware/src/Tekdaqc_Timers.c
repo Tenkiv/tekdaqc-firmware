@@ -28,6 +28,7 @@
 #include "Tekdaqc_Debug.h"
 #include "Tekdaqc_Timers.h"
 #include "Tekdaqc_BSP.h"
+#include "ADS1256_Driver.h"
 #include <inttypes.h>
 
 #ifdef PRINTF_OUTPUT
@@ -61,7 +62,6 @@
 
 /* Keeps track of a local time reference incremented by the SYSTICK period */
 static volatile uint64_t LocalTime = 0;
-
 /* Used to keep track of the ending time for a delay */
 static volatile uint64_t count = 0;
 
@@ -184,9 +184,15 @@ void Delay_us(uint64_t us) {
 		/* Do nothing */
 	}
 #else
+#if 0
 	count = us + LocalTime;
 	while (LocalTime < count) {
 		/* Do nothing */
 	}
+#endif
+	int delay;
+	delay = us;
+	//lfao, round-up, so add 1...
+	ShortDelayUS(delay+1);
 #endif
 }

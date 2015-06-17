@@ -47,6 +47,7 @@
 #include "boolean.h"
 #include "eeprom.h"
 #include "Tekdaqc_Locator.h"
+#include "Tekdaqc_Timers.h"
 #include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
@@ -56,6 +57,11 @@
 #include <stdio.h>
 #endif
 
+extern volatile int currentAnHandlerState;
+extern volatile int readColdJunction;
+extern CalibrationState_t calibrationState;
+extern void SelectCalibrationInput(void);
+extern void ADC_Machine_Service_CalibratingVer2(void);
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -344,7 +350,10 @@ static Tekdaqc_CommandInterpreter_t interpreter;
  * List of analog inputs referenced for use by a command.
  */
 Analog_Input_t* aInputs[NUM_ANALOG_INPUTS];
-
+volatile uint64_t numAnalogSamples, numDigitalSamples;
+extern volatile uint64_t numSamplesTaken;
+volatile int numOfInputs=0, numOfDigitalInputs=0;
+volatile int infiniteSampling=0;
 /**
  * List of digital inputs referenced for use by a command.
  */
@@ -353,7 +362,7 @@ Digital_Input_t* dInputs[NUM_DIGITAL_INPUTS];
 /**
  * List of digital outputs referenced for use by a command.
  */
-Digital_Output_t* dOutputs[NUM_DIGITAL_OUTPUTS];
+//Digital_Output_t* dOutputs[NUM_DIGITAL_OUTPUTS];
 
 /**
  * The last function error which occurred.
@@ -457,7 +466,7 @@ static void BuildDigitalInputList(Channel_List_t list_type, char* param);
  * @internal
  * @brief Build the list of digital outputs to sample.
  */
-static void BuildDigitalOutputList(Channel_List_t list_type, char* param);
+//static void BuildDigitalOutputList(Channel_List_t list_type, char* param);
 
 /**
  * @internal
@@ -497,6 +506,9 @@ static Tekdaqc_Command_Error_t Ex_ReadADCRegisters(char keys[][MAX_COMMANDPART_L
  * @brief Execute the READ_ANALOG_INPUT command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_ReadAnalogInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+//lfao
+static Tekdaqc_Command_Error_t Ex_ReadAnalogInputVer2(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
 /**
@@ -545,7 +557,7 @@ static Tekdaqc_Command_Error_t Ex_SystemGainCal(char keys[][MAX_COMMANDPART_LENG
  * @internal
  * @brief Execute the SYSTEM_CAL command with the provided parameters.
  */
-static Tekdaqc_Command_Error_t Ex_SystemCal(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+static Tekdaqc_Command_Error_t Ex_SystemCalVer2(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count);
 
 /**
@@ -770,8 +782,8 @@ static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char
  * @brief Function lookup table for command execution.
  */
 static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInputs, Ex_ReadADCRegisters,
-		Ex_ReadAnalogInput, Ex_AddAnalogInput, Ex_RemoveAnalogInput, Ex_CheckAnalogInput, Ex_SetAnalogInputScale,
-		Ex_GetAnalogInputScale, Ex_SystemCal, Ex_SystemGainCal, Ex_ReadSelfGCal, Ex_ReadSystemGCal,
+		Ex_ReadAnalogInputVer2, Ex_AddAnalogInput, Ex_RemoveAnalogInput, Ex_CheckAnalogInput, Ex_SetAnalogInputScale,
+		Ex_GetAnalogInputScale, Ex_SystemCalVer2, Ex_SystemGainCal, Ex_ReadSelfGCal, Ex_ReadSystemGCal,
 		Ex_ListDigitalInputs, Ex_ReadDigitalInput, Ex_AddDigitalInput, Ex_RemoveDigitalInput, Ex_ListDigitalOutputs,
 		Ex_SetDigitalOutput, Ex_ReadDigitalOutput, Ex_ReadDigitalOutputDiags, Ex_RemoveDigitalOutput,
 		Ex_ClearDigitalOutputFault, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt, Ex_SetRTC,
@@ -1100,7 +1112,7 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 			if (channel < 0 || channel > NUM_ANALOG_INPUTS) {
 				/* Input number out of range */
 #ifdef COMMAND_DEBUG
-				printf("[Command Interpreter] The requested input number is out of range.\n\r");
+			printf("[Command Interpreter] The requested input number is out of range.\n\r");
 #endif
 				break;
 			}
@@ -1147,7 +1159,8 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 			}
 			break; /* END INPUT RANGE */
 		case ALL_CHANNELS: /* ALL_CHANNELS */
-			count = NUM_ANALOG_INPUTS;
+			//lfao-not including the cold junction here...
+			count = NUM_ANALOG_INPUTS - 1;
 			for (int i = 0; i < count; ++i) {
 				aInputs[i] = GetAnalogInputByNumber(i); /* Some of these may be NULL, this is OK. */
 			}
@@ -1453,7 +1466,7 @@ static Tekdaqc_Command_Error_t Ex_ReadADCRegisters(char keys[][MAX_COMMANDPART_L
 	}
 	return retval;
 }
-
+#if 0
 /**
  * Execute the READ_ANALOG_INPUT command.
  *
@@ -1549,6 +1562,78 @@ static Tekdaqc_Command_Error_t Ex_ReadAnalogInput(char keys[][MAX_COMMANDPART_LE
 	}
 	return retval;
 }
+#endif
+//lfao
+static Tekdaqc_Command_Error_t Ex_ReadAnalogInputVer2(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	AnalogHalt();
+	if (InputArgsCheck(keys, values, count, NUM_READ_ANALOG_INPUT_PARAMS, READ_ANALOG_INPUT_PARAMS)) {
+		numAnalogSamples = 0;
+		numOfInputs = 0;
+		Channel_List_t list_type = ALL_CHANNELS;
+		int8_t index = -1;
+		for (int i = 0; i < NUM_READ_ANALOG_INPUT_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, READ_ANALOG_INPUT_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (i) { /* Switch on the key not position in arguments list */
+					case 0: /* INPUT key */
+#ifdef COMMAND_DEBUG
+						printf("Processing INPUT key\n\r");
+#endif
+						list_type = GetChannelListType(values[index]);
+						BuildAnalogInputList(list_type, values[index]);
+						//get count of all channels to sample...
+						for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i)
+						{
+							if (aInputs[i] != NULL)
+							{
+								if(aInputs[i]->added == CHANNEL_ADDED)
+								{
+								   numOfInputs++;
+								}
+							}
+						}
+						break;
+					case 1: /* NUMBER key */
+#ifdef COMMAND_DEBUG
+						printf("Processing NUMBER key\n\r");
+#endif
+						numAnalogSamples = (int32_t) strtol(values[index], NULL, 10);
+						break;
+					default:
+						/* Return an error */
+						retval = ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+			if (retval != ERR_COMMAND_OK) {
+				break; /* If an error occurred, don't bother continuing */
+			}
+		}
+		/* If an error occurred, don't bother continuing */
+		if (retval == ERR_COMMAND_OK && list_type != ALL_CHANNELS) {
+			for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i) {
+				if (aInputs[i] != NULL) {
+					if (aInputs[i]->added == CHANNEL_NOTADDED) {
+						retval = ERR_COMMAND_FUNCTION_ERROR;
+						lastFunctionError = ERR_AIN_INPUT_NOT_FOUND;
+						break;
+					}
+				}
+			}
+		}
+
+	} else {
+		/* We can't create a new input */
+#ifdef COMMAND_DEBUG
+		printf("[Command Interpreter] Provided arguments are not valid for read of an analog input.\n\r");
+#endif
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+    currentAnHandlerState=1;
+	return retval;
+}
+
 
 /**
  * Execute the ADD_ANALOG_INPUT command.
@@ -1729,6 +1814,7 @@ static Tekdaqc_Command_Error_t Ex_SystemGainCal(char keys[][MAX_COMMANDPART_LENG
  * @param count uint8_t The number of command parameters.
  * @retval Tekdaqc_Command_Error_t The command error status.
  */
+#if 0
 static Tekdaqc_Command_Error_t Ex_SystemCal(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
@@ -1737,6 +1823,44 @@ static Tekdaqc_Command_Error_t Ex_SystemCal(char keys[][MAX_COMMANDPART_LENGTH],
 		lastFunctionError = status;
 		retval = ERR_COMMAND_FUNCTION_ERROR;
 	}
+	return retval;
+}
+#endif
+
+static Tekdaqc_Command_Error_t Ex_SystemCalVer2(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	AnalogHalt();
+	//Tekdaqc_Function_Error_t status = PerformSystemCalibration();
+	//---ADC_Calibrate();----------//////////////
+	/* Update the finished state */
+	calibrationState.finished = false;
+	calibrationState.finished_count = 0U;
+	calibrationState.buffer_index = 0U;
+	calibrationState.rate_index = 0U;
+	calibrationState.gain_index = 0U;
+
+	/* Select the calibration input */
+	SelectCalibrationInput();
+	Delay_us(EXTERNAL_MUX_DELAY);
+	//---------------------------------//////
+
+	//---ADC_Machine_Service_Calibrating();----------//////////////
+	while(1)
+	{
+		ADC_Machine_Service_CalibratingVer2();
+		if(calibrationState.finished == true)
+		{
+			//lfao - run one more time to display the calibration complete message and set the isSelfCalibrated flag
+			ADC_Machine_Service_CalibratingVer2();
+			break;
+		}
+	}
+	//---------------------------------//////
+	/*if (status != ERR_FUNCTION_OK) {
+		lastFunctionError = status;
+		retval = ERR_COMMAND_FUNCTION_ERROR;
+	}*/
 	return retval;
 }
 
@@ -1832,8 +1956,8 @@ static Tekdaqc_Command_Error_t Ex_ListDigitalInputs(char keys[][MAX_COMMANDPART_
 static Tekdaqc_Command_Error_t Ex_ReadDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	DigitalInputHalt();
 	if (InputArgsCheck(keys, values, count, NUM_READ_DIGITAL_INPUT_PARAMS, READ_DIGITAL_INPUT_PARAMS)) {
-		int32_t numSamples = 0;
 		Channel_List_t list_type = 0;
 		int8_t index = -1;
 		for (int i = 0; i < NUM_READ_DIGITAL_INPUT_PARAMS; ++i) {
@@ -1846,12 +1970,23 @@ static Tekdaqc_Command_Error_t Ex_ReadDigitalInput(char keys[][MAX_COMMANDPART_L
 #endif
 						list_type = GetChannelListType(values[index]);
 						BuildDigitalInputList(list_type, values[index]);
+						//get count of all channels to sample...
+						for (uint_fast8_t i = 0; i < NUM_DIGITAL_INPUTS; ++i)
+						{
+							if (dInputs[i] != NULL)
+							{
+								if(dInputs[i]->added == CHANNEL_ADDED)
+								{
+									numOfDigitalInputs++;
+								}
+							}
+						}
 						break;
 					case 1: /* NUMBER key */
 #ifdef COMMAND_DEBUG
 						printf("Processing NUMBER key\n\r");
 #endif
-						numSamples = strtol(values[index], NULL, 10);
+						numDigitalSamples = strtol(values[index], NULL, 10);
 						break;
 					default:
 						/* Return error */
@@ -1873,26 +2008,6 @@ static Tekdaqc_Command_Error_t Ex_ReadDigitalInput(char keys[][MAX_COMMANDPART_L
 					}
 				}
 			}
-		}
-		if (retval == ERR_COMMAND_OK) {
-			switch (list_type) {
-				case SINGLE_CHANNEL:
-					DI_Machine_Input_Sample(dInputs, numSamples, true);
-					break;
-				case CHANNEL_SET:
-					DI_Machine_Input_Sample(dInputs, numSamples, false);
-					break;
-				case CHANNEL_RANGE:
-					DI_Machine_Input_Sample(dInputs, numSamples, false);
-					break;
-				case ALL_CHANNELS:
-					DI_Machine_Input_Sample(dInputs, numSamples, false);
-					break;
-				default:
-					/* Return an error */
-					retval = ERR_COMMAND_FUNCTION_ERROR;
-			}
-			CommandStateMoveToDigitalInputSample();
 		}
 	}
 	return retval;
@@ -2016,6 +2131,7 @@ static Tekdaqc_Command_Error_t Ex_ListDigitalOutputs(char keys[][MAX_COMMANDPART
 static Tekdaqc_Command_Error_t Ex_SetDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count)
 {
+
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	if (InputArgsCheck(keys, values, count, NUM_SET_DIGITAL_OUTPUT_PARAMS, SET_DIGITAL_OUTPUT_PARAMS))
 	{
@@ -2033,6 +2149,7 @@ static Tekdaqc_Command_Error_t Ex_SetDigitalOutput(char keys[][MAX_COMMANDPART_L
 		retval = ERR_COMMAND_BAD_PARAM;
 	}
 	return retval;
+
 }
 
 /**
@@ -2046,9 +2163,11 @@ static Tekdaqc_Command_Error_t Ex_SetDigitalOutput(char keys[][MAX_COMMANDPART_L
 static Tekdaqc_Command_Error_t Ex_ReadDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count)
 {
+
 	//snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "Digital Output\n\r\tValue: %04x", ReadDigitalOutput());
 	//TelnetWriteStatusMessage(TOSTRING_BUFFER);
 	return ReadDigitalOutput();
+
 }
 
 
@@ -2058,6 +2177,7 @@ static Tekdaqc_Command_Error_t Ex_ReadDigitalOutputDiags(char keys[][MAX_COMMAND
 	//snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "Diagnostics\n\r\tValue: %08x", ReadDODiags());
 	//TelnetWriteStatusMessage(TOSTRING_BUFFER);
 	return ReadDODiags();
+
 }
 
 /**
@@ -2218,7 +2338,8 @@ static Tekdaqc_Command_Error_t Ex_Identify(char keys[][MAX_COMMANDPART_LENGTH], 
 		uint32_t count = 0;
 		count = snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "Board Identity");
 		count += snprintf(TOSTRING_BUFFER + count, 51 * sizeof(char), "\n\r\tSerial Number: %s", serial);
-		count -= 2;
+		//count -= 2;
+		count = strlen(TOSTRING_BUFFER);
 		count += snprintf(TOSTRING_BUFFER + count, sizeof(TOSTRING_BUFFER),
 				"\n\r\tBoard Revision: %c\n\r\tFirmware Version: %lu.%lu.%lu.%lu", (char) type, (version & 0xff),
 				((version >> 8) & 0xff), ((version >> 16) & 0xff), ((version >> 24) & 0xff));
@@ -2246,11 +2367,15 @@ static Tekdaqc_Command_Error_t Ex_Identify(char keys[][MAX_COMMANDPART_LENGTH], 
  * @param count uint8_t The number of command parameters.
  * @retval Tekdaqc_Command_Error_t The command error status.
  */
+//lfao
 static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	//halt analog...
+	AnalogHalt();
+	DigitalInputHalt();
 	if (InputArgsCheck(keys, values, count, NUM_SAMPLE_PARAMS, SAMPLE_PARAMS)) {
-		int32_t numSamples = 0;
+
 		int8_t index = -1;
 		for (int i = 0; i < NUM_SAMPLE_PARAMS; ++i) {
 			index = GetIndexOfArgument(keys, SAMPLE_PARAMS[i], count);
@@ -2260,7 +2385,8 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 #ifdef COMMAND_DEBUG
 						printf("Processing NUMBER key\n\r");
 #endif
-						numSamples = (int32_t) strtol(values[index], NULL, 10);
+						numAnalogSamples = (int32_t) strtol(values[index], NULL, 10);
+						numDigitalSamples= numAnalogSamples;
 						break;
 					default:
 						/* Return an error */
@@ -2273,12 +2399,29 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 		}
 		if (retval == ERR_COMMAND_OK) { /* If an error occurred, don't bother continuing */
 			BuildAnalogInputList(ALL_CHANNELS, NULL);
+			//get count of all channels to sample...
+			for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i)
+			{
+				if (aInputs[i] != NULL)
+				{
+					if(aInputs[i]->added == CHANNEL_ADDED)
+					{
+					   numOfInputs++;
+					}
+				}
+			}
 			BuildDigitalInputList(ALL_CHANNELS, NULL);
-			//BuildDigitalOutputList(ALL_CHANNELS, NULL);
-			ADC_Machine_Input_Sample(aInputs, numSamples, false);
-			DI_Machine_Input_Sample(dInputs, numSamples, false);
-			//DO_Machine_Output_Sample(dOutputs, numSamples, false);
-			CommandStateMoveToGeneralSample();
+			//get count of all channels to sample...
+			for (uint_fast8_t i = 0; i < NUM_DIGITAL_INPUTS; ++i)
+			{
+				if (dInputs[i] != NULL)
+				{
+					if(dInputs[i]->added == CHANNEL_ADDED)
+					{
+						numOfDigitalInputs++;
+					}
+				}
+			}
 		}
 	} else {
 		/* We can't sample */
@@ -2287,6 +2430,8 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 #endif
 		retval = ERR_COMMAND_BAD_PARAM;
 	}
+	//enable analog sampling...
+	currentAnHandlerState = 1;
 	return retval;
 }
 
@@ -2298,12 +2443,15 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
  * @param count uint8_t The number of command parameters.
  * @retval Tekdaqc_Command_Error_t The command error status.
  */
+//lfao
 static Tekdaqc_Command_Error_t Ex_Halt(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	if (InputArgsCheck(keys, values, count, NUM_HALT_PARAMS, HALT_PARAMS)) {
 		/* Instruct the command state machine to halt all tasks */
-		HaltTasks();
+		//disable analog sampling...
+		AnalogHalt();
+		DigitalInputHalt();
 	} else {
 		/* We received some params we weren't expecting */
 #ifdef COMMAND_DEBUG
@@ -2313,6 +2461,7 @@ static Tekdaqc_Command_Error_t Ex_Halt(char keys[][MAX_COMMANDPART_LENGTH], char
 	}
 	return retval;
 }
+
 
 /**
  * Execute the SET_RTC command.
@@ -2789,7 +2938,11 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
  */
 static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count) {
-
+	//ADS1256_SetDataRate(ADS1256_SPS_7500);
+	//ADS1256_SetDataRate(ADS1256_SPS_3750);
+	//lfao-settling time
+	//Delay_us(1000000);
+	//ADS1256_EXTI_Enable();
 	return ERR_COMMAND_OK;
 }
 

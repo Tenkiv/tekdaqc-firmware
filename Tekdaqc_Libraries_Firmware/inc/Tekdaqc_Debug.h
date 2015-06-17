@@ -174,14 +174,14 @@ extern "C" {
  * @def SERIAL_DEBUG
  * @brief Used to enable retarget of printf to serial port for debug purpose
  */
-#define SERIAL_DEBUG
+//#define SERIAL_DEBUG
 
 /**
  * @internal
  * @def SWV_DEBUG
  * @brief Used to enable retarget of `printf` to SWV ITM Port 0.
  */
-/*#define SWV_DEBUG */
+#define SWV_DEBUG
 
 /**
  * @}

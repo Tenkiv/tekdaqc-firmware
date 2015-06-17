@@ -253,6 +253,7 @@ void ADS1256_GPIO_To_CLK(void) {
   * @retval uint8_t The value of the received byte.
   */
 uint8_t ADS1256_SendByte(uint8_t data) {
+
 #ifdef ADS1256_SPI_DEBUG
   printf("[ADS1256] Sending byte: 0x%02X\n\r", data);
 #endif
@@ -267,6 +268,7 @@ uint8_t ADS1256_SendByte(uint8_t data) {
 
   /* Return the byte read from the SPI bus */
   return SPI_I2S_ReceiveData(ADS1256_SPI);
+
 }
 
 /**

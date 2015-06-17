@@ -57,7 +57,7 @@ extern "C" {
  */
 #define MAX_DIGITAL_INPUT_NAME_LENGTH 24
 
-
+#define DIGITAL_SAMPLES_BUFFER_SIZE 100
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* EXPORTED TYPES */
@@ -79,6 +79,11 @@ typedef struct {
 } Digital_Input_t;
 
 
+typedef struct {
+int iChannel;
+DigitalLevel_t iLevel;
+uint64_t ui64TimeStamp;
+} Digital_Samples_t;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PUBLIC METHODS */
@@ -88,6 +93,9 @@ typedef struct {
  * @brief Initializes the boards digital input data structures.
  */
 void DigitalInputsInit(void);
+void WriteToTelnet_Digital(void);
+void ReadDigitalInputs(void);
+void DigitalInputHalt(void);
 
 /**
  * @brief Retrieves the requested digital input.

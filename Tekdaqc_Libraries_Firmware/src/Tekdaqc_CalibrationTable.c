@@ -420,10 +420,13 @@ float Tekdaqc_GetGainCorrectionFactor(ADS1256_SPS_t rate, ADS1256_PGA_t gain, AD
 				"[Calibration Table] The requested temperature %f was out of range. Minimum is %f and maximum is %f.\n\r",
 				temperature, calibrationTemps[0], calibrationTemps[maxValidTempIdx]);
 #endif
-		snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
-				"Error fetching the gain calibration value for temperature: %f Deg C. Temperature out of range. Allowable range is %f to %f Deg C",
+		/*snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
+				//"Error fetching the gain calibration value for temperature: %f Deg C. Temperature out of range. Allowable range is %f to %f Deg C",
+				"TE:%f,%f->%f\r\n",
 				temperature, calibrationTemps[0], calibrationTemps[maxValidTempIdx]);
-		TelnetWriteErrorMessage(TOSTRING_BUFFER);
+		TelnetWriteErrorMessage(TOSTRING_BUFFER);*/
+		//snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER), "TE\r\n");
+		 //TelnetWriteString(TOSTRING_BUFFER);
 		if (temperature < calibrationTemps[0]) {
 			temperature = calibrationTemps[0];
 		} else {

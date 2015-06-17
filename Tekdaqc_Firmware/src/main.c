@@ -26,6 +26,7 @@
 #include "ADS1256_SPI_Controller.h"
 #include "Tekdaqc_Error.h"
 #include "Tekdaqc_Version.h"
+#include "ADS1256_Driver.h"
 #include <stdio.h>
 #include <inttypes.h>
 
@@ -120,6 +121,17 @@ int main(void) {
 	if (InitializeTelnetServer() == TELNET_OK) {
 		CreateCommandInterpreter();
 		Tekdaqc_Initialized(true);
+
+		//lfao: do calibration here since no more state based loop...
+		//ADC_Machine_SetState(ADC_UNINITIALIZED);
+		//ADC_Machine_Init();
+		//ADC_Machine_Idle();
+		//PerformSystemCalibration();
+		//while(isSelfCalibrated==false)
+		//{
+		//  ADC_Machine_Service_Calibrating();
+		//}
+
 		program_loop();
 	} else {
 		/* We have a fatal error */
@@ -131,19 +143,21 @@ int main(void) {
 
 static void program_loop(void) {
 	/* Infinite loop */
-	while (1) {
-		/* Service the inputs/outputs */
-		ServiceTasks();
+	while (1)
+	{
 
+		/* Service the inputs/outputs */
+		if(isSelfCalibrated==false)
+		{
+			ServiceTasks();
+		}
 		/* Check if any packet received */
 		if (ETH_CheckFrameReceived()) {
 			/* Process received Ethernet packet */
 			LwIP_Pkt_Handle();
 		}
-
 		/* Handle periodic timers for LwIP */
 		LwIP_Periodic_Handle(GetLocalTime());
-
 		if (TelnetIsConnected() == true) { /* We have an active Telnet connection to service */
 			/* Do server stuff */
 			character = TelnetRead();
@@ -151,6 +165,12 @@ static void program_loop(void) {
 				Command_AddChar(character);
 			}
 		}
+		//lfao - write to telnet the analog samples data...
+		WriteToTelnet_Analog();
+		//lfao - read digital inputs
+		ReadDigitalInputs();
+		//lfao - write to telnet the digital inputs data...
+		WriteToTelnet_Digital();
 	}
 
 	/* Check to see if any faults have occurred */
@@ -180,6 +200,11 @@ static void Init_Locator() {
  * @retval none
  */
 static void Tekdaqc_Init(void) {
+	//lfao- initialize short delay timer...
+	InitializeShortDelayTimer();
+	//lfao- initialize the timer for channel switching...
+	InitializeChannelSwitchTimer();
+
 	/* Initialize the FLASH disk */
 	FlashDiskInit();
 

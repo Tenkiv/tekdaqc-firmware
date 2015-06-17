@@ -65,6 +65,9 @@ extern "C" {
  */
 #define ANALOG_INPUT_BUFFER_SIZE	50U /* 50 samples. Other code expects it to <= 255. */
 
+
+//lfao-defines the size of the buffer where samples taken from the DRDY interrupt handler are written
+#define ANALOG_SAMPLES_BUFFER_SIZE 100
 /*--------------------------------------------------------------------------------------------------------*/
 /* EXPORTED TYPES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -104,6 +107,13 @@ typedef struct {
 	uint64_t timestamps[ANALOG_INPUT_BUFFER_SIZE]; /**< The timestamps of the measurements in UNIX epoch format. */
 } Analog_Input_t;
 
+
+typedef struct {
+int iChannel;
+uint32_t iReading;
+uint64_t ui64TimeStamp;
+} Analog_Samples_t;
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* EXPORTED VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -116,7 +126,12 @@ typedef struct {
  * @brief Initialize all of the submodules for analog inputs.
  */
 void AnalogInputsInit(void);
-
+void InitAnalogSamplesBuffer(void);
+int WriteSampleToBuffer(Analog_Samples_t *Data);
+int ReadSampleFromBuffer(Analog_Samples_t *Data);
+void WriteToTelnet_Analog(void);
+void AnalogChannelHandler(void);
+void AnalogHalt(void);
 /*--------------------------------------------------------------------------------------------------------*/
 /* INPUT ADD/REMOVE METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
