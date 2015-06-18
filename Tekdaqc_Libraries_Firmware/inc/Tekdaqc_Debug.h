@@ -34,6 +34,8 @@ extern "C" {
 /* INCLUDES */
 /*--------------------------------------------------------------------------------------------------------*/
 
+#include "stm32f4xx.h"
+
 /** @addtogroup tekdaqc_firmware_libraries Tekdaqc Firmware Libraries
  * @{
  */
@@ -59,22 +61,22 @@ extern "C" {
  * @def TLE7232_DEBUG
  * @brief Used to turn on debugging `printf` statements for the TLE7232 driver.
  */
-#define TLE7232_DEBUG
-#define TLE7232_SPI_DEBUG
+//#define TLE7232_DEBUG
+//#define TLE7232_SPI_DEBUG
 
 /**
  * @internal
  * @def ANALOGINPUT_DEBUG
  * @brief Used to turn on debugging `printf` statements for the Tekdaqc_Input data type.
  */
-#define ANALOGINPUT_DEBUG
+//#define ANALOGINPUT_DEBUG
 
 /**
  * @internal
  * @def ADC_STATE_MACHINE_DEBUG
  * @brief Used to turn on debugging `printf` statements for the ADC state machine.
  */
-#define ADC_STATE_MACHINE_DEBUG
+//#define ADC_STATE_MACHINE_DEBUG
 
 /**
  * @internal
@@ -88,49 +90,49 @@ extern "C" {
  * @def DI_STATE_MACHINE_DEBUG
  * @brief Used to turn on debugging `printf` statements for the DI state machine.
  */
-#define DI_STATE_MACHINE_DEBUG
+//#define DI_STATE_MACHINE_DEBUG
 
 /**
  * @internal
  * @def DO_STATE_MACHINE_DEBUG
  * @brief Used to turn on debugging `printf` statements for the DO state machine.
  */
-#define DO_STATE_MACHINE_DEBUG
+//#define DO_STATE_MACHINE_DEBUG
 
 /**
  * @internal
  * @def DIGITALINPUT_DEBUG
  * @brief Used to turn on debugging `printf` statements for the Tekdaqc_Input data type.
  */
-#define DIGITALINPUT_DEBUG
+//#define DIGITALINPUT_DEBUG
 
 /**
  * @internal
  * @def DIGITALOUTPUT_DEBUG
  * @brief Used to turn on debugging `printf` statements for the Tekdaqc_Output data type.
  */
-#define DIGITALOUTPUT_DEBUG
+//#define DIGITALOUTPUT_DEBUG
 
 /**
  * @internal
  * @def COMMAND_DEBUG
  * @brief Used to turn on debugging `printf` statements for the Tekdaqc command parser.
  */
-#define COMMAND_DEBUG
+//#define COMMAND_DEBUG
 
 /**
  * @internal
  * @def TEKDAQC_OUTPUT_DEBUG
  * @brief
  */
-#define TEKDAQC_OUTPUT_DEBUG
+//#define TEKDAQC_OUTPUT_DEBUG
 
 /**
  * @internal
  * @def INPUT_MULTIPLEXER_DEBUG
  * @brief Used to turn on debugging `printf` statements for the Analog Input multiplexer.
  */
-#define INPUT_MULTIPLEXER_DEBUG
+//#define INPUT_MULTIPLEXER_DEBUG
 
 /**
  * @internal
@@ -158,28 +160,28 @@ extern "C" {
  * @def CALIBRATION_TABLE_DEBUG
  * @brief Used to turn on debugging `printf` statements for the flash calibration table.
  */
-#define CALIBRATION_TABLE_DEBUG
+//#define CALIBRATION_TABLE_DEBUG
 
 /**
  * @internal
  * @def LOCATOR_DEBUG
  * @brief Used to turn on debugging `printf` statements for the Tekdaqc locator service.
  */
-#define LOCATOR_DEBUG
+/* #define LOCATOR_DEBUG */
 
 /**
  * @internal
  * @def SERIAL_DEBUG
  * @brief Used to enable retarget of printf to serial port for debug purpose
  */
-#define SERIAL_DEBUG
+//#define SERIAL_DEBUG
 
 /**
  * @internal
  * @def SWV_DEBUG
  * @brief Used to enable retarget of `printf` to SWV ITM Port 0.
  */
-/*#define SWV_DEBUG */
+#define SWV_DEBUG
 
 /**
  * @}
@@ -188,6 +190,8 @@ extern "C" {
 /**
  * @}
  */
+
+void Debug_Hexdump(char* desc, void* addr, uint32_t length);
 
 #ifdef __cplusplus
 }

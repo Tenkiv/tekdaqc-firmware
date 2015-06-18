@@ -52,26 +52,38 @@ void RTC_Config(uint32_t synch_prediv, uint32_t asynch_prediv) {
 	/* Allocate the init structure */
 	RTC_InitTypeDef RTC_InitStructure;
 
-	/* Enable the PWR clock */
+	/* Enable the PWR APB1 Clock Interface */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
 
-	/* Allow access to RTC */
+	/* Allow access to BKP Domain */
 	PWR_BackupAccessCmd(ENABLE);
 
+#ifdef USE_LSE
 	/* Enable the LSE OSC */
-	RCC_LSEConfig(RCC_LSE_ON );
+	RCC_LSEConfig(RCC_LSE_ON);
 
 	/* Wait till LSE is ready */
-	while (RCC_GetFlagStatus(RCC_FLAG_LSERDY ) == RESET) {
+	while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET) {
 		/* Do nothing */
 	}
 
 	/* Select the RTC Clock Source */
-	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE );
+	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
+#else
+	/* Enable the LSI OSC */
+	RCC_LSICmd(ENABLE);
+
+	/* Wait till LSI is ready */
+	while (RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET) {
+	}
+
+	/* Select the RTC Clock Source */
+	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
+#endif
 
 	/* Configure the RTC data register and RTC prescaler */
-	RTC_InitStructure.RTC_AsynchPrediv = synch_prediv;
-	RTC_InitStructure.RTC_SynchPrediv = asynch_prediv;
+	RTC_InitStructure.RTC_AsynchPrediv = asynch_prediv;
+	RTC_InitStructure.RTC_SynchPrediv = synch_prediv;
 	RTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
 
 	/* Check on RTC init */
@@ -84,10 +96,33 @@ void RTC_Config(uint32_t synch_prediv, uint32_t asynch_prediv) {
 	/* Enable the RTC Clock */
 	RCC_RTCCLKCmd(ENABLE);
 
-	/* Wait for RTC APB registers synchronization */
+	/* Wait for RTC APB registers synchronisation */
 	RTC_WaitForSynchro();
 
-	uint32_t reg = RTC_ReadBackupRegister(RTC_CONFIGURED_REG );
+	/* Zero the time value */
+	RTC_ZeroTime();
+
+	uint32_t reg = RTC_ReadBackupRegister(RTC_CONFIGURED_REG);
 	reg |= RTC_CONFIGURED;
 	RTC_WriteBackupRegister(RTC_CONFIGURED_REG, reg);
+}
+
+void RTC_ZeroTime(void) {
+
+	RTC_TimeTypeDef RTC_TimeStructure;
+	RTC_DateTypeDef RTC_DateStructure;
+
+	/* Set Time hh:mm:ss */
+	RTC_TimeStructure.RTC_H12 = RTC_H12_AM;
+	RTC_TimeStructure.RTC_Hours = 0x00;
+	RTC_TimeStructure.RTC_Minutes = 0x00;
+	RTC_TimeStructure.RTC_Seconds = 0x00;
+	RTC_SetTime(RTC_Format_BCD, &RTC_TimeStructure);
+
+	/* Set Date Week/Date/Month/Year */
+	RTC_DateStructure.RTC_WeekDay = RTC_Weekday_Monday;
+	RTC_DateStructure.RTC_Date = 0x01;
+	RTC_DateStructure.RTC_Month = RTC_Month_January;
+	RTC_DateStructure.RTC_Year = 0x00;
+	RTC_SetDate(RTC_Format_BCD, &RTC_DateStructure);
 }

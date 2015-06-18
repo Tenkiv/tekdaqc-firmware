@@ -924,7 +924,7 @@ uint32_t RTC_GetSubSecond(void)
   /* Get sub seconds values from the correspondent registers*/
   tmpreg = (uint32_t)(RTC->SSR);
   
-  /* Read DR register to unfroze calendar registers */
+  /* Read DR register to unfreeze calendar registers */
   (void) (RTC->DR);
   
   return (tmpreg);

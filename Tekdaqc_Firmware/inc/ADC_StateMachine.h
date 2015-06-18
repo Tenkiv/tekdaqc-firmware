@@ -68,6 +68,21 @@ typedef enum {
 	ADC_EXTERNAL_MUXING /**< The external multiplexer is switching inputs. Sample the cold junction temperature. */
 } ADC_State_t;
 
+
+/**
+ * @internal
+ * @brief Data structure for keeping track of the current state of the calibration process.
+ *
+ * The Tekdaqc uses this data structure to keep track of the current state of its calibration process, which
+ * includes both offset and gain calibrations.
+ */
+typedef struct {
+	uint8_t gain_index; /**< The index of the current gain setting being calibrated. */
+	uint8_t rate_index; /**< The index of the current rate setting being calibrated. */
+	uint8_t buffer_index; /**< The index of the current buffer setting being calibrated. */
+	bool finished; /**< TRUE if the particular calibration set has completed. Note that this is not the entire process. */
+	uint8_t finished_count; /**< The number of calibration sets which have completed. */
+} CalibrationState_t;
 /*--------------------------------------------------------------------------------------------------------*/
 /* INITIALIZATION METHODS */
 /*--------------------------------------------------------------------------------------------------------*/

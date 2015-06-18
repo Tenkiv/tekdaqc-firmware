@@ -52,7 +52,7 @@ extern "C" {
  * @def SYSTEMTICK_PERIOD_US
  * @brief Defines the time period in microseconds for SYSTICK interrupts.
  */
-#define SYSTEMTICK_PERIOD_US 			1000
+#define SYSTEMTICK_PERIOD_US 			100
 
 /**
  * @def SYSTEMTICK_DIVIDER_US

@@ -84,8 +84,10 @@ void ETH_BSP_Config(void) {
 	/* Configure the PHY to generate an interrupt on change of link status */
 	Eth_Link_PHYITConfig(DP83848_PHY_ADDRESS);
 
+#if 0
 	/* Configure the EXTI for Ethernet link status. */
 	Eth_Link_EXTIConfig();
+#endif
 }
 
 /**
@@ -257,6 +259,7 @@ uint32_t Eth_Link_PHYITConfig(uint16_t PHYAddress) {
  * @param PHYAddress: external PHY address
  * @retval None
  */
+#if 0
 void Eth_Link_EXTIConfig(void) {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	EXTI_InitTypeDef EXTI_InitStructure;
@@ -312,6 +315,7 @@ void Eth_Link_ITHandler(uint16_t PHYAddress) {
 		}
 	}
 }
+#endif
 
 /**
  * @brief  Link callback function, this function is called on change of link status.

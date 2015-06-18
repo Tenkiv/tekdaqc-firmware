@@ -21,7 +21,7 @@
 					<folderInfo id="com.atollic.truestudio.lib.debug.968482380." name="/" resourcePath="">
 						<toolChain id="com.atollic.truestudio.lib.debug.toolchain.276098248" name="Atollic ARM Tools" superClass="com.atollic.truestudio.lib.debug.toolchain">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.lib.debug.toolchain.platform.303943256" isAbstract="false" name="Debug platform" superClass="com.atollic.truestudio.lib.debug.toolchain.platform"/>
-							<builder buildPath="${workspace_loc:/TekDAQC_Library_Firmware/Debug}" customBuilderProperties="toolChainpathType=1|toolChainpathString=C:/Program Files (x86)/Atollic/TrueSTUDIO for ARM Pro 5.1.0/ARMTools/bin|" id="com.atollic.truestudio.mbs.builder1.690192229" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
+							<builder buildPath="${workspace_loc:/TekDAQC_Library_Firmware/Debug}" customBuilderProperties="toolChainpathType=1|toolChainpathString=C:/Program Files (x86)/Atollic/TrueSTUDIO for ARM Pro 5.2.1/ARMTools/bin|" id="com.atollic.truestudio.mbs.builder1.690192229" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
 							<tool id="com.atollic.truestudio.lib.debug.toolchain.as.131197502" name="Assembler" superClass="com.atollic.truestudio.lib.debug.toolchain.as">
 								<option id="com.atollic.truestudio.common_options.target.fpucore.638537729" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="FPv4-SP-D16" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.mcpu.1844920379" name="Microcontroller" superClass="com.atollic.truestudio.common_options.target.mcpu" value="STM32F407IG" valueType="enumerated"/>
@@ -50,8 +50,6 @@
 								<option id="com.atollic.truestudio.gcc.warnings.w_switch_enum.1775451045" name="Warn if switch is used on enum type and switch statement lacks case for some enumerations" superClass="com.atollic.truestudio.gcc.warnings.w_switch_enum" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gcc.symbols.defined.49703972" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F40_41xxx"/>
-									<listOptionValue builtIn="false" value="PRINTF_OUTPUT"/>
-									<listOptionValue builtIn="false" value="DEBUG"/>
 								</option>
 								<option id="com.atollic.truestudio.gcc.directories.select.2132335253" name="Include path" superClass="com.atollic.truestudio.gcc.directories.select" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
@@ -359,6 +357,8 @@
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/TekDAQC_Library_Firmware"/>
 		</configuration>
+		<configuration configurationName="Optimized"/>
+		<configuration configurationName="Size Optimized"/>
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/TekDAQC_Library_Firmware"/>
 		</configuration>

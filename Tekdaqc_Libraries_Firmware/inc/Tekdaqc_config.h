@@ -59,6 +59,8 @@ extern __IO uint32_t LSICaptureNumber;
 extern char TOSTRING_BUFFER[SIZE_TOSTRING_BUFFER];
 extern unsigned char TEKDAQC_BOARD_SERIAL_NUM[BOARD_SERIAL_NUM_LENGTH + 1]; /* 32 chars plus NULL termination */
 
+extern __IO bool isSelfCalibrated;
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* EXPORTED TYPES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -109,6 +111,16 @@ const char* DigitalLevelToString(DigitalLevel_t level);
  * @brief Clears the global TOSTRING_BUFFER data structure.
  */
 void ClearToStringBuffer(void);
+
+/**
+ * @brief Disables all interrupts used by the board.
+ */
+void DisableBoardInterrupts(void);
+
+/**
+ * @brief Enables all interrupts used by the board.
+ */
+void EnableBoardInterrupts(void);
 
 #ifdef DEBUG
 /**

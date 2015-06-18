@@ -42,15 +42,45 @@ extern "C" {
 /* PUBLIC METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * @brief Initializes the Tekdaqc's calibration table for read access.
  */
 bool Tekdaqc_CalibrationInit(void);
 
 /**
+ * @brief Sets the current operating scale of the analog inputs.
+ */
+void Tekdaqc_SetAnalogInputScale(ANALOG_INPUT_SCALE_t scale);
+
+/**
+ * @brief Retrieves the current operating scale of the analog inputs.
+ */
+ANALOG_INPUT_SCALE_t Tekdaqc_GetAnalogInputScale(void);
+
+/**
+ * @brief Converts a human readable string into its corresponding analog input scale.
+ */
+ANALOG_INPUT_SCALE_t Tekdaqc_StringToAnalogInputScale(char* str);
+
+/**
+ * @brief Retrieves the human readable string for the specified analog input scale.
+ */
+const char* Tekdaqc_AnalogInputScaleToString(ANALOG_INPUT_SCALE_t scale);
+
+/**
+ * @brief Retrieves a self gain calibration value for the specified parameters.
+ */
+uint32_t Tekdaqc_GetBaseGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer);
+
+/**
  * @brief Retrieves a gain calibration value for the specified parameters.
  */
-uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
+uint32_t Tekdaqc_GetGainCalibration(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer);
+
+/**
+ * @brief Retreives a gain calibration correction factor for the specified parameters.
+ */
+float Tekdaqc_GetGainCorrectionFactor(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
 
 /**
  * @brief Retrieves an offset calibration value for the specified parameters.
@@ -78,29 +108,30 @@ FLASH_Status Tekdaqc_SetCalibrationMode(void);
 void Tekdaqc_EndCalibrationMode(void);
 
 /**
+ * @brief Check if the board is currently in calibration mode.
+ */
+bool Tekdaqc_IsCalibrationModeEnabled(void);
+
+/**
  * @brief Sets the serial number of this Tekdaqc.
  */
 FLASH_Status Tekdaqc_SetSerialNumber(char* serial);
 
 /**
- * @brief Sets the temperature value for the lowest temperature entry of the table.
+ * @brief Sets the temperature value for the specified temperature entry of the table.
  */
-FLASH_Status Tekdaqc_SetCalibrationLowTemperature(float temp);
+FLASH_Status Tekdaqc_SetCalibrationTemperature(float temp, uint8_t temp_idx);
 
 /**
- * @brief Sets the temperature value for the highest temperature entry of the table.
+ * @brief Marks the calibration table to indicate that it is valid.
  */
-FLASH_Status Tekdaqc_SetCalibrationHighTemperature(float temp);
-
-/**
- * @brief Sets the temperature step value for the temperature entries of the table.
- */
-FLASH_Status Tekdaqc_SetCalibrationStepTemperature(float temp);
+FLASH_Status Tekdaqc_SetCalibrationValid(void);
 
 /**
  * @brief Sets the gain calibration value for the specified parameters.
  */
-FLASH_Status Tekdaqc_SetGainCalibration(uint32_t cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
+FLASH_Status Tekdaqc_SetGainCalibration(float cal, ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer,
+		ANALOG_INPUT_SCALE_t scale, uint8_t temp_idx);
 
 /**
  * @brief Sets the offset calibration value to be used for the cold junction sensor.
@@ -110,7 +141,7 @@ FLASH_Status Tekdaqc_SetColdJunctionOffsetCalibration(uint32_t cal);
 /**
  * @brief Sets the gain calibration value to be used for the cold junction sensor.
  */
-FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal);
+FLASH_Status Tekdaqc_SetColdJunctionGainCalibration(uint32_t cal, bool forFLASH);
 
 /**
  * @brief Sets the offset calibration value for the specified parameters.

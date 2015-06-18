@@ -43,7 +43,8 @@
  * @def DIGITAL_OUTPUT_FORMATTER
  * @brief The header format string for printing an analog input to a human readable string.
  */
-#define DIGITAL_OUTPUT_FORMATTER "\n\r--------------------\n\rDigital Output\n\r\tName: %s\n\r\tPhysical Channel: %i\n\r\tTimestamp: %" PRIu64 "\n\r\tLevel: %s\n\r--------------------\n\r\x1E"
+#define DIGITAL_OUTPUT_FORMATTER "\n\r--------------------\n\rDigital Output\n\r\tValue: %04x\n\r--------------------\n\r%c\n\r"
+#define DIGITAL_DIAGS_FORMATTER "\n\r--------------------\n\rDiagnostics\n\r\tValue: %08x\n\r--------------------\n\r"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -52,17 +53,20 @@
 /* Pointer to the function to use when writing data to the output stream. */
 static WriteFunction writer = NULL;
 
+//static uint8_t DigitalOutputMap[] = {6, 1, 2, 4, 15, 8, 10,	12, 7, 0, 3, 5, 14, 9, 11, 13};
+//static uint8_t channelMap[16] = {14,9,10,12,7,0,2,4,15,8,11,13,6,1,3,5};
+static uint8_t channelMap[16] = {5,3,1,6,13,11,8,15,4,2,0,7,12,10,9,14};
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE EXTERNAL VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
 
 /* List of external digital outputs */
-static Digital_Output_t Ext_DOutputs[NUM_DIGITAL_OUTPUTS];
+//static Digital_Output_t Ext_DOutputs[NUM_DIGITAL_OUTPUTS];
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
 /*--------------------------------------------------------------------------------------------------------*/
-
+#if 0
 /**
  * @internal
  * @brief Removes a digital output its absolute index.
@@ -135,6 +139,7 @@ static void InitializeOutput(Digital_Output_t* output) {
 	output->timestamp = 0U;
 	strcpy(output->name, "NONE");
 	output->output = NULL_CHANNEL;
+	output->physicalChannel = NULL_CHANNEL;
 	output->fault_status = TLE7232_Normal_Operation;
 	output->fault_timestamp = 0U;
 }
@@ -149,18 +154,19 @@ static void InitializeOutput(Digital_Output_t* output) {
  */
 static void SetDigitalOutputState(Digital_Output_t* output, DigitalLevel_t level) {
 	/* Set the state */
-	uint8_t control = TLE7232_ReadRegister(TLE7232_REG_CTL, output->output % 8U);
-	uint8_t channel = output->output;
-	if (channel >= 8) { /* Convert the channel to a single chip index */
-		channel -= 8;
-	}
+	TLE7232_ReadAllDiagnosis();
+	uint8_t control = TLE7232_ReadRegister(TLE7232_REG_CTL, output->physicalChannel / 8U);
+	uint8_t channel = output->physicalChannel - (8U * (output->physicalChannel / 8U)); /* Convert the channel to a single chip index */
 	uint8_t mask = 0x01 << channel; /* Move the bit flag to the correct position */
 	if (level == OUTPUT_ON) {
+		/* Turn an output on */
 		control |= mask; /* Set the appropriate bit */
 	} else {
-		control ^= mask;	/* Clear the appropriate bit */
+		/* Turn an output off */
+		control &= ~mask;	/* Clear the appropriate bit */
 	}
-	TLE7232_WriteRegister(TLE7232_REG_CTL, control, output->output % 8U); /* Update the register */
+	TLE7232_WriteRegister(TLE7232_REG_CTL, control, output->physicalChannel / 8U); /* Update the register */
+	TLE7232_ReadAllDiagnosis();
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -174,15 +180,21 @@ static void SetDigitalOutputState(Digital_Output_t* output, DigitalLevel_t level
  * @param none
  * @retval none
  */
+#endif
 void DigitalOutputsInit(void) {
-	for (uint_fast8_t i = 0; i < NUM_DIGITAL_OUTPUTS; ++i) {
+	/*for (uint_fast8_t i = 0; i < NUM_DIGITAL_OUTPUTS; ++i) {
 		InitializeOutput(&Ext_DOutputs[i]);
-	}
+	}*/
+
+	uint8_t data[NUMBER_TLE7232_CHIPS] = {0x00, 0x00};
+	uint8_t read[NUMBER_TLE7232_CHIPS];
+	TLE7232_ReadRegisterAll(TLE7232_REG_IMCR, read);
+	TLE7232_WriteRegisterAll(TLE7232_REG_IMCR, data);
 
 	/*uint8_t data[NUMBER_TLE7232_CHIPS] = {0xFF, 0xFF};
 	TLE7232_WriteRegisterAll(TLE7232_REG_CTL, data);*/
 }
-
+#if 0
 /**
  * Prints a human readable representation of all the added digital outputs via the current write function.
  *
@@ -292,6 +304,7 @@ Tekdaqc_Function_Error_t CreateDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH]
 			if (dig_output != NULL) {
 				if (dig_output->added != CHANNEL_ADDED) {
 					dig_output->output = output;
+					dig_output->physicalChannel = DigitalOutputMap[output];
 					strcpy(dig_output->name, name);
 					dig_output->level = LOGIC_LOW;
 					dig_output->timestamp = 0U;
@@ -402,9 +415,82 @@ Digital_Output_t* GetDigitalOutputByNumber(uint8_t number) {
 		return NULL;
 	}
 }
-
-Tekdaqc_Function_Error_t SetDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+#endif
+/* Set the 16-bit digital output */
+Tekdaqc_Function_Error_t SetDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count)
+{
 	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
+	char* param;
+	int8_t index = -1, i;
+	uint16_t uiOrigOutput, uiRemappedOutput=0;
+	uint8_t uiHighByte;
+
+
+
+	index = GetIndexOfArgument(keys, SET_DIGITAL_OUTPUT_PARAMS[0], count);
+	param = values[index];
+
+	//placed some error checking here...
+	if (strlen(param) != 4)
+	{
+		return ERR_COMMAND_BAD_PARAM;
+	}
+	for (i = 0; i< strlen(param); i++)
+	{
+		if (param[i]<0x30 || param[i]>0x66)
+		{
+			return ERR_COMMAND_BAD_PARAM;
+		}
+		if (param[i]>0x39 && param[i]<0x41)
+		{
+			return ERR_COMMAND_BAD_PARAM;
+		}
+		if (param[i]>0x46 && param[i]<0x61)
+		{
+			return ERR_COMMAND_BAD_PARAM;
+		}
+	}
+
+	sscanf(param, "%x", &uiOrigOutput);
+    //remap channel labels data to actual output pins...
+	for (i = 0; i < 16; i++)
+	{
+		if ((uiOrigOutput >> i) & 0x0001)
+		{
+			uiRemappedOutput = uiRemappedOutput | ((unsigned short int)(0x0001) << channelMap[i]);
+		}
+	}
+
+
+	uiHighByte = (uint8_t)((uiRemappedOutput>>8) & 0xFF);
+
+	//write to SPIDER
+	//TLE7232_WriteRegister
+	TLE7232_CS_LOW();
+	//put delay here...refer to datasheet
+	Delay_us(2);
+	uiRemappedOutput = uiRemappedOutput & 0xFF;
+	uint16_t command = TLE7232_CMD_WRITE_REGISTER | TLE7232_REG_CTL;
+	command = command | uiRemappedOutput;
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	command = TLE7232_CMD_WRITE_REGISTER | TLE7232_REG_CTL;
+	command = command | uiHighByte;
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	//put delay here...refer to datasheet
+	Delay_us(2);
+	TLE7232_CS_HIGH();
+	Delay_us(2);
+	//put delay here???
+
+#if 0
+
+
 	char* param;
 	int8_t index = -1;
 	uint8_t output = NULL_CHANNEL; /* The physical input */
@@ -475,9 +561,152 @@ Tekdaqc_Function_Error_t SetDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], c
 			retval = ERR_DOUT_OUTPUT_UNSPECIFIED;
 		}
 	}
+#endif
 	return retval;
 }
 
+/* Reads the digital outputs current output data */
+Tekdaqc_Function_Error_t ReadDigitalOutput(void)
+{
+	uint16_t uOutputDataRead = 0;
+	uint16_t uiOrigOutput = 0, i, j;
+
+	//write to SPIDER
+	//TLE7232_WriteRegister
+	TLE7232_CS_LOW();
+	//put delay here...refer to datasheet
+	Delay_us(2);
+	uint16_t command = TLE7232_CMD_READ_REGISTER | TLE7232_REG_CTL;
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	//put delay here...refer to datasheet
+	Delay_us(2);
+	TLE7232_CS_HIGH();
+	//put delay here???
+	Delay_us(10);
+	//clear whatever is in the received data before?
+	uOutputDataRead =  SPI_I2S_ReceiveData(TLE7232_SPI);
+	TLE7232_CS_LOW();
+	//put delay here...refer to datasheet
+	Delay_us(2);
+	//send command to shift out data that needs to be read...
+
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	Delay_us(2);
+	uOutputDataRead =  SPI_I2S_ReceiveData(TLE7232_SPI);
+	uOutputDataRead = uOutputDataRead & 0xFF;
+	Delay_us(2);
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	Delay_us(2);
+	uOutputDataRead =  ((SPI_I2S_ReceiveData(TLE7232_SPI))<<8) | uOutputDataRead;
+	TLE7232_CS_HIGH();
+	Delay_us(2);
+
+
+    //remap read data to actual channel labels...
+	for (i = 0; i < 16; i++)
+	{
+		if((uOutputDataRead >> i) & 0x0001)
+		{
+			for(j=0; j<16; j++)
+			{
+				if(channelMap[j]==i)
+				{
+					uiOrigOutput = uiOrigOutput | ((uint16_t)(0x0001) << j);
+					break;
+				}
+
+			}
+
+		}
+	}
+
+
+
+	sprintf(TOSTRING_BUFFER, DIGITAL_OUTPUT_FORMATTER, uiOrigOutput, 0x1e);
+	writer(TOSTRING_BUFFER);
+	return ERR_FUNCTION_OK;
+}
+
+/* Reads the digital output's diagnostic data*/
+Tekdaqc_Function_Error_t ReadDODiags(void)
+{
+	uint uDiagDataRead = 0, uiOrigOutput = 0, i, j;
+	//write to SPIDER
+	//TLE7232_WriteRegister
+	TLE7232_CS_LOW();
+	//put delay here...refer to datasheet
+	Delay_us(2);
+	uint16_t command = TLE7232_CMD_DIAGNOSIS;
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	//put delay here...refer to datasheet
+	Delay_us(2);
+	TLE7232_CS_HIGH();
+	//put delay here???
+	Delay_us(10);
+	//clear whatever is in the received data before?
+	uDiagDataRead =  SPI_I2S_ReceiveData(TLE7232_SPI);
+	TLE7232_CS_LOW();
+	//put delay here...refer to datasheet
+	Delay_us(2);
+	//send command to shift out data that needs to be read...
+
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	Delay_us(2);
+	uDiagDataRead =  SPI_I2S_ReceiveData(TLE7232_SPI);
+	Delay_us(2);
+	SPI_I2S_SendData(TLE7232_SPI, command);
+	while (SPI_I2S_GetFlagStatus(TLE7232_SPI, SPI_I2S_FLAG_BSY) == SET) {
+		/* The SPI transmit buffer has data, so wait patiently */
+	}
+	Delay_us(2);
+	uDiagDataRead =  (uint)(SPI_I2S_ReceiveData(TLE7232_SPI)<<16) | uDiagDataRead;
+	TLE7232_CS_HIGH();
+	Delay_us(2);
+
+
+    //remap read data to actual channel labels...
+	for (i = 0; i < 16; i++)
+	{
+		for(j=0; j<16; j++)
+		{
+			if(channelMap[j]==i)
+			{
+
+				uiOrigOutput = uiOrigOutput | ((uint)((uDiagDataRead >> i*2) & 0x00000003) << j*2);
+
+				break;
+			}
+
+		}
+	}
+
+	sprintf(TOSTRING_BUFFER, DIGITAL_DIAGS_FORMATTER, uiOrigOutput);
+	writer(TOSTRING_BUFFER);
+	return ERR_FUNCTION_OK;
+}
 /**
  * Set the function pointer to use when writing data from a digital output to the data connection.
  *
@@ -488,6 +717,7 @@ void SetDigitalOutputWriteFunction(WriteFunction writeFunction) {
 	writer = writeFunction;
 }
 
+#if 0
 /**
  * Samples the specified digital output's level and writes out the result.
  *
@@ -587,6 +817,13 @@ bool CheckDigitalOutputStatus(void) {
 bool SetDigitalOutputFaultStatus(TLE7232_Status_t status, uint8_t chip_id, uint8_t channel) {
 	bool retval = false;
 	uint8_t out = channel * (chip_id + 1);
+	/* Reverse the mapping to an input number */
+	for (uint8_t i = 0; i < NUM_DIGITAL_OUTPUTS; ++i) {
+		if (out == DigitalOutputMap[i]) {
+			out = i;
+			break;
+		}
+	}
 	if (out < NUM_DIGITAL_OUTPUTS) {
 		Ext_DOutputs[out].fault_status = status;
 		Ext_DOutputs[out].fault_timestamp = GetLocalTime();
@@ -599,3 +836,5 @@ bool SetDigitalOutputFaultStatus(TLE7232_Status_t status, uint8_t chip_id, uint8
 	}
 	return retval;
 }
+
+#endif

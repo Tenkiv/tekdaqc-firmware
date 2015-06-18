@@ -33,10 +33,14 @@
 #include "Tekdaqc_Debug.h"
 #include "TelnetServer.h"
 #include "Tekdaqc_Config.h"
+#include "Tekdaqc_Timers.h"
 #include "stm32f4xx.h"
 #include "lwip/debug.h"
 #include "lwip/stats.h"
 #include "lwip/tcp.h"
+#include "netconf.h"
+#include <stdio.h>
+#include <inttypes.h>
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -174,11 +178,12 @@ static err_t TelnetAccept(void *arg, struct tcp_pcb *pcb, err_t err) {
 #ifdef TELNET_DEBUG
 	printf("[Telnet Server] Initializing telnet server.\n\r");
 #endif
+	tcp_nagle_enable(pcb);
 	telnet_server.pcb = pcb;
 	telnet_server.pcb->so_options |= SOF_KEEPALIVE;
-	telnet_server.pcb->keep_idle = 5000;
-	telnet_server.pcb->keep_intvl = 1000;
-	telnet_server.pcb->keep_cnt = 5;
+	telnet_server.pcb->keep_idle = 300000UL; // 5 Minutes
+	telnet_server.pcb->keep_intvl = 1000UL; // 1 Second
+	telnet_server.pcb->keep_cnt = 9; // 9 Consecutive failures terminate
 
 	/* Mark that a client has connected. */
 	IsConnected = true;
@@ -587,6 +592,8 @@ void TelnetWrite(const char character) {
 #ifdef TELNET_DEBUG
 		printf("[Telnet Server] Telnet buffer is full!\n\r");
 #endif
+		/* Handle periodic timers for LwIP */
+		LwIP_Periodic_Handle(GetLocalTime());
 	}
 
 	/* Write this character into the output buffer. */
@@ -603,12 +610,16 @@ void TelnetWrite(const char character) {
  */
 void TelnetWriteString(char* string) {
 	if (TelnetIsConnected() == TRUE) {
+#if 0
 		Eth_EXTI_Disable();
+#endif
 		while (*string) {
 			TelnetWrite(*string);
 			++string;
 		}
+#if 0
 		Eth_EXTI_Enable();
+#endif
 	}
 }
 

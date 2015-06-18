@@ -113,10 +113,28 @@ extern "C" {
 #define PARAMETER_VALUE			"VALUE"
 
 /**
+ * @def PARAMETER_SCALE
+ * @brief String constant definition for the SCALE parameter.
+ */
+#define PARAMETER_SCALE			"SCALE"
+
+/**
+ * @def PARAMETER_TEMPERATURE
+ * @brief String constant definition for the TEMPERATURE parameter.
+ */
+#define PARAMETER_TEMPERATURE	"TEMPERATURE"
+
+/**
+ * @def PARAMETER_INDEX
+ * @brief String constant definition for the INDEX parameter.
+ */
+#define PARAMETER_INDEX			"INDEX"
+
+/**
  * @def NUM_COMMANDS
  * @brief The total number of commands known by this board.
  */
-#define NUM_COMMANDS 28
+#define NUM_COMMANDS 41
 
 /**
  * @def TELNET_EOF
@@ -139,28 +157,41 @@ typedef enum {
 	COMMAND_ADD_ANALOG_INPUT = 3,
 	COMMAND_REMOVE_ANALOG_INPUT = 4,
 	COMMAND_CHECK_ANALOG_INPUT = 5,
-	COMMAND_SYSTEM_GCAL = 6,
-	COMMAND_SYSTEM_CAL = 7,
-	COMMAND_LIST_DIGITAL_INPUTS = 8,
-	COMMAND_READ_DIGITAL_INPUT = 9,
-	COMMAND_ADD_DIGITAL_INPUT = 10,
-	COMMAND_REMOVE_DIGITAL_INPUT = 11,
-	COMMAND_LIST_DIGITAL_OUTPUTS = 12,
-	COMMAND_SET_DIGITAL_OUTPUT = 13,
-	COMMAND_READ_DIGITAL_OUTPUT = 14,
-	COMMAND_ADD_DIGITAL_OUTPUT = 15,
-	COMMAND_REMOVE_DIGITAL_OUTPUT = 16,
-	COMMAND_CLEAR_DIG_OUTPUT_FAULT = 17,
-	COMMAND_DISCONNECT = 18,
-	COMMAND_UPGRADE = 19,
-	COMMAND_IDENTIFY = 20,
-	COMMAND_SAMPLE = 21,
-	COMMAND_HALT = 22,
-	COMMAND_SET_RTC = 23,
-	COMMAND_SET_USER_MAC = 24,
-	COMMAND_SET_STATIC_IP = 25,
-	COMMAND_GET_CALIBRATION_STATUS = 26,
-	COMMAND_NONE = 27
+	COMMAND_SET_ANALOG_INPUT_SCALE = 6,
+	COMMAND_GET_ANALOG_INPUT_SCALE = 7,
+	COMMAND_SYSTEM_CAL = 8,
+	COMMAND_SYSTEM_GCAL = 9,
+	COMMAND_READ_SELF_GCAL = 10,
+	COMMAND_READ_SYSTEM_GCAL = 11,
+	COMMAND_LIST_DIGITAL_INPUTS = 12,
+	COMMAND_READ_DIGITAL_INPUT = 13,
+	COMMAND_ADD_DIGITAL_INPUT = 14,
+	COMMAND_REMOVE_DIGITAL_INPUT = 15,
+	COMMAND_LIST_DIGITAL_OUTPUTS = 16,
+	COMMAND_SET_DIGITAL_OUTPUT = 17,
+	COMMAND_READ_DIGITAL_OUTPUT = 18,
+	COMMAND_ADD_DIGITAL_OUTPUT = 19,
+	COMMAND_REMOVE_DIGITAL_OUTPUT = 20,
+	COMMAND_CLEAR_DIG_OUTPUT_FAULT = 21,
+	COMMAND_DISCONNECT = 22,
+	COMMAND_REBOOT = 23,
+	COMMAND_UPGRADE = 24,
+	COMMAND_IDENTIFY = 25,
+	COMMAND_SAMPLE = 26,
+	COMMAND_HALT = 27,
+	COMMAND_SET_RTC = 28,
+	COMMAND_SET_USER_MAC = 29,
+	COMMAND_CLEAR_USER_MAC = 30,
+	COMMAND_SET_STATIC_IP = 31,
+	COMMAND_GET_CALIBRATION_STATUS = 32,
+	COMMAND_ENTER_CALIBRATION_MODE = 33,
+	COMMAND_WRITE_GAIN_CAL_VALUE = 34,
+	COMMAND_WRITE_CAL_TEMP = 35,
+	COMMAND_WRITE_CAL_VALID = 36,
+	COMMAND_EXIT_CALIBRATION_MODE = 37,
+	COMMAND_SET_FACTORY_MAC_ADDR = 38,
+	COMMAND_SET_BOARD_SERIAL_NUM = 39,
+	COMMAND_NONE = 40
 } Command_t;
 
 /**
@@ -224,12 +255,20 @@ extern const char* REMOVE_ANALOG_INPUT_PARAMS[NUM_REMOVE_ANALOG_INPUT_PARAMS];
 extern const char* CHECK_ANALOG_INPUT_PARAMS[NUM_CHECK_ANALOG_INPUT_PARAMS];
 
 /**
- * @def NUM_SYSTEM_GCAL_PARAMS
- * @brief The number of parameters for the SYSTEM_GCAL command.
+ * @def NUM_SET_ANALOG_INPUT_SCALE_PARAMS
+ * @brief The number of parameters for the SET_ANALOG_INPUT_SCALE command.
  */
-#define NUM_SYSTEM_GCAL_PARAMS 4
-/* Prototype the SYSTEM_GCAL command params array */
-extern const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS];
+#define NUM_SET_ANALOG_INPUT_SCALE_PARAMS 1
+/* Prototype the CHECK_ANALOG_INPUT command params array */
+extern const char* SET_ANALOG_INPUT_SCALE_PARAMS[NUM_SET_ANALOG_INPUT_SCALE_PARAMS];
+
+/**
+ * @def NUM_GET_ANALOG_INPUT_SCALE_PARAMS
+ * @brief The number of parameters for the GET_ANALOG_INPUT_SCALE command.
+ */
+#define NUM_GET_ANALOG_INPUT_SCALE_PARAMS 1
+/* Prototype the CHECK_ANALOG_INPUT command params array */
+extern const char* GET_ANALOG_INPUT_SCALE_PARAMS[NUM_GET_ANALOG_INPUT_SCALE_PARAMS];
 
 /**
  * @def NUM_SYSTEM_CAL_PARAMS
@@ -238,6 +277,30 @@ extern const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS];
 #define NUM_SYSTEM_CAL_PARAMS 0
 /* Prototype the SYSTEM_CAL command params array */
 extern const char* SYSTEM_CAL_PARAMS[NUM_SYSTEM_CAL_PARAMS];
+
+/**
+ * @def NUM_SYSTEM_GCAL_PARAMS
+ * @brief The number of parameters for the SYSTEM_GCAL command.
+ */
+#define NUM_SYSTEM_GCAL_PARAMS 1
+/* Prototype the SYSTEM_GCAL command params array */
+extern const char* SYSTEM_GCAL_PARAMS[NUM_SYSTEM_GCAL_PARAMS];
+
+/**
+ * @def NUM_READ_SELF_GCAL_PARAMS
+ * @brief The number of parameters for the READ_SYSTEM_GCAL command.
+ */
+#define NUM_READ_SELF_GCAL_PARAMS 3
+/* Prototype the READ_SELF_GCAL command params array */
+extern const char* READ_SELF_GCAL_PARAMS[NUM_READ_SELF_GCAL_PARAMS];
+
+/**
+ * @def NUM_READ_SYSTEM_GCAL_PARAMS
+ * @brief The number of parameters for the READ_SYSTEM_GCAL command.
+ */
+#define NUM_READ_SYSTEM_GCAL_PARAMS 0
+/* Prototype the READ_SYSTEM_GCAL command params array */
+extern const char* READ_SYSTEM_GCAL_PARAMS[NUM_READ_SYSTEM_GCAL_PARAMS];
 
 /**
  * @def NUM_LIST_DIGITAL_INPUTS_PARAMS
@@ -283,7 +346,7 @@ extern const char* LIST_DIGITAL_OUTPUTS_PARAMS[NUM_LIST_DIGITAL_OUTPUTS_PARAMS];
  * @def NUM_SET_DIGITAL_OUTPUT_PARAMS
  * @brief The number of parameters for the SET_DIGITAL_OUTPUT command.
  */
-#define NUM_SET_DIGITAL_OUTPUT_PARAMS 2
+#define NUM_SET_DIGITAL_OUTPUT_PARAMS 1
 /* Prototype the SET_DIGITAL_OUTPUT command params array */
 extern const char* SET_DIGITAL_OUTPUT_PARAMS[NUM_SET_DIGITAL_OUTPUT_PARAMS];
 
@@ -291,7 +354,7 @@ extern const char* SET_DIGITAL_OUTPUT_PARAMS[NUM_SET_DIGITAL_OUTPUT_PARAMS];
  * @def NUM_READ_DIGITAL_OUTPUT_PARAMS
  * @brief The number of parameters for the READ_DIGITAL_OUTPUT command.
  */
-#define NUM_READ_DIGITAL_OUTPUT_PARAMS 2
+#define NUM_READ_DIGITAL_OUTPUT_PARAMS 0
 /* Prototype the READ_DIGITAL_OUTPUT command params array */
 extern const char* READ_DIGITAL_OUTPUT_PARAMS[NUM_READ_DIGITAL_OUTPUT_PARAMS];
 
@@ -299,9 +362,9 @@ extern const char* READ_DIGITAL_OUTPUT_PARAMS[NUM_READ_DIGITAL_OUTPUT_PARAMS];
  * @def NUM_ADD_DIGITAL_OUTPUT_PARAMS
  * @brief The number of parameters for the ADD_DIGITAL_OUTPUT command.
  */
-#define NUM_ADD_DIGITAL_OUTPUT_PARAMS 2
-/* Prototype the ADD_DIGITAL_OUTPUT command params array */
-extern const char* ADD_DIGITAL_OUTPUT_PARAMS[NUM_ADD_DIGITAL_OUTPUT_PARAMS];
+#define NUM_DO_DIAGS_PARAMS 0
+/* Prototype the READ_DO_DIAGS command params array */
+extern const char* DO_DIAGS_PARAMS[NUM_DO_DIAGS_PARAMS];
 
 /**
  * @def NUM_REMOVE_DIGITAL_OUTPUT_PARAMS
@@ -326,6 +389,14 @@ extern const char* CLEAR_DIG_OUTPUT_FAULT_PARAMS[NUM_CLEAR_DIG_OUTPUT_FAULT_PARA
 #define NUM_DISCONNECT_PARAMS 0
 /* Prototype the DISCONNECT command params array */
 extern const char* DISCONNECT_PARAMS[NUM_DISCONNECT_PARAMS];
+
+/**
+ * @def NUM_REBOOT_PARAMS
+ * @brief The number of parameters for the REBOOT command.
+ */
+#define NUM_REBOOT_PARAMS 0
+/* Prototype the REBOOT command params array */
+extern const char* REBOOT_PARAMS[NUM_REBOOT_PARAMS];
 
 /**
  * @def NUM_UPGRADE_PARAMS
@@ -376,6 +447,14 @@ extern const char* SET_RTC_PARAMS[NUM_SET_RTC_PARAMS];
 extern const char* SET_USER_MAC_PARAMS[NUM_SET_USER_MAC_PARAMS];
 
 /**
+ * @def NUM_CLEAR_USER_MAC_PARAMS
+ * @brief The number of parameters for the CLEAR_USER_MAC command.
+ */
+#define NUM_CLEAR_USER_MAC_PARAMS 1
+/* Prototype the CLEAR_USER_MAC command params array */
+extern const char* CLEAR_USER_MAC_PARAMS[NUM_CLEAR_USER_MAC_PARAMS];
+
+/**
  * @def NUM_SET_STATIC_IP_PARAMS
  * @brief The number of parameters for the SET_STATIC_IP command.
  */
@@ -390,6 +469,62 @@ extern const char* SET_STATIC_IP_PARAMS[NUM_SET_STATIC_IP_PARAMS];
 #define NUM_GET_CALIBRATION_STATUS_PARAMS 0
 /* Prototype the GET_CALIBRATION_STATUS command params array */
 extern const char* GET_CALIBRATION_STATUS_PARAMS[NUM_GET_CALIBRATION_STATUS_PARAMS];
+
+/**
+ * @def NUM_ENTER_CALIBRATION_MODE_PARAMS
+ * @brief The number of parameters for the ENTER_CALIBRATION_MODE command.
+ */
+#define NUM_ENTER_CALIBRATION_MODE_PARAMS 0
+/* Prototype the ENTER_CALIBRATION_MODE command params array */
+extern const char* ENTER_CALIBRATION_MODE_PARAMS[NUM_ENTER_CALIBRATION_MODE_PARAMS];
+
+/**
+ * @def NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS
+ * @brief The number of parameters for the WRITE_GAIN_CALIBRATION_VALUE command.
+ */
+#define NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS 6
+/* Prototype the WRITE_GAIN_CALIBRATION_VALUE command params array */
+extern const char* WRITE_GAIN_CALIBRATION_VALUE_PARAMS[NUM_WRITE_GAIN_CALIBRATION_VALUE_PARAMS];
+
+/**
+ * @def NUM_WRITE_CALIBRATION_TEMP_PARAMS
+ * @brief The number of parameters for the WRITE_CALIBRATION_TEMP command.
+ */
+#define NUM_WRITE_CALIBRATION_TEMP_PARAMS 2
+/* Prototype the WRITE_CALIBRATION_TEMP command params array */
+extern const char* WRITE_CALIBRATION_TEMP_PARAMS[NUM_WRITE_CALIBRATION_TEMP_PARAMS];
+
+/**
+ * @def NUM_WRITE_CAL_VALID_PARAMS
+ * @brief The number of parameters for the WRITE_CAL_VALID command.
+ */
+#define NUM_WRITE_CAL_VALID_PARAMS 0
+/* Prototype the WRITE_CAL_VALID command params array */
+extern const char* WRITE_CAL_VALID_PARAMS[NUM_WRITE_CAL_VALID_PARAMS];
+
+/**
+ * @def NUM_EXIT_CALIBRATION_MODE_PARAMS
+ * @brief The number of parameters for the EXIT_CALIBRATION_MODE command.
+ */
+#define NUM_EXIT_CALIBRATION_MODE_PARAMS 0
+/* Prototype the EXIT_CALIBRATION_MODE command params array */
+extern const char* EXIT_CALIBRATION_MODE_PARAMS[NUM_EXIT_CALIBRATION_MODE_PARAMS];
+
+/**
+ * @def NUM_SET_FACTORY_MAC_ADDR_PARAMS
+ * @brief The number of parameters for the SET_FACTORY_MAC_ADDR command.
+ */
+#define NUM_SET_FACTORY_MAC_ADDR_PARAMS 1
+/* Prototype the SET_FACTORY_MAC_ADDR command params array */
+extern const char* SET_FACTORY_MAC_ADDR_PARAMS[NUM_SET_FACTORY_MAC_ADDR_PARAMS];
+
+/**
+ * @def NUM_SET_BOARD_SERIAL_NUM_PARAMS
+ * @brief The number of parameters for the SET_FACTORY_MAC_ADDR command.
+ */
+#define NUM_SET_BOARD_SERIAL_NUM_PARAMS 1
+/* Prototype the SET_BOARD_SERIAL_NUM command params array */
+extern const char* SET_BOARD_SERIAL_NUM_PARAMS[NUM_SET_BOARD_SERIAL_NUM_PARAMS];
 
 /**
  * @def NUM_NONE_PARAMS

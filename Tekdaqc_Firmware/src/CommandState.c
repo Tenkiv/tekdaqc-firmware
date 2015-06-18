@@ -33,10 +33,20 @@
 #include "DI_StateMachine.h"
 #include "DO_StateMachine.h"
 #include "TLE7232_RelayDriver.h"
+#include "Tekdaqc_Timers.h"
+#include "netconf.h"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
 /*--------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @def DIGITAL_INPUT_SAMPLE_RATE
+ * @internal
+ * @brief The digital input sampling rate in Hertz.
+ */
+#define DIGITAL_INPUT_SAMPLE_RATE		1
+#define DIGITAL_INPUT_SAMPLE_PERIOD 	(1e6 / DIGITAL_INPUT_SAMPLE_RATE)
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -53,6 +63,12 @@ static bool DISampling = FALSE;
 
 /* Is the DO sampling complete */
 static bool DOSampling = FALSE;
+
+/* Storage for the last time a digital input sample was taken */
+static uint64_t TimeLastDigitalInputSample = 0;
+
+/* Temporary storage for the current board time */
+static uint64_t CurrentTime = 0;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
@@ -84,56 +100,64 @@ void InitCommandStateHandler(void) {
  */
 void ServiceTasks(void) {
 	switch (CurrentState) {
-	case UNINITIALIZED:
-		ADC_Machine_Service();
-		DI_Machine_Service();
-		DO_Machine_Service();
-		CurrentState = STATE_IDLE;
-		break;
-	case STATE_IDLE:
-		ADC_Machine_Service();
-		DI_Machine_Service();
-		DO_Machine_Service();
-		break;
-	case STATE_ANALOG_INPUT_SAMPLE:
-		if (ADCSampling == TRUE) {
-			/* Service the ADC state machine */
+		case UNINITIALIZED:
 			ADC_Machine_Service();
-		} else {
-			CurrentState = STATE_IDLE;
-		}
-		break;
-	case STATE_DIGITAL_INPUT_SAMPLE:
-		if (DISampling == TRUE) {
-			/* Service the DI state machine */
 			DI_Machine_Service();
-		} else {
+			//DO_Machine_Service();
 			CurrentState = STATE_IDLE;
-		}
-		break;
-	case STATE_DIGITAL_OUTPUT_SAMPLE:
-		if (DOSampling == TRUE) {
-			/* Service the DO state machine */
-			DO_Machine_Service();
-		} else {
-			CurrentState = STATE_IDLE;
-		}
-		break;
-	case STATE_GENERAL_SAMPLE:
-		if ((ADCSampling == TRUE) || (DISampling == TRUE) || (DOSampling == TRUE)) {
-			/* Service the ADC state machine */
+			break;
+		case STATE_IDLE:
 			ADC_Machine_Service();
-			/* Service the DI state machine */
 			DI_Machine_Service();
-			/* Service the DO state machine */
-			DO_Machine_Service();
-		} else {
-			CurrentState = STATE_IDLE;
-		}
-		break;
-	default:
-		/* TODO: Throw error. */
-		break;
+			//DO_Machine_Service();
+			break;
+		case STATE_ANALOG_INPUT_SAMPLE:
+			if (ADCSampling == TRUE) {
+				/* Service the ADC state machine */
+				ADC_Machine_Service();
+			} else {
+				CurrentState = STATE_IDLE;
+			}
+			break;
+		case STATE_DIGITAL_INPUT_SAMPLE:
+			if (DISampling == TRUE) {
+				CurrentTime = GetLocalTime();
+				if ((CurrentTime - TimeLastDigitalInputSample) >= DIGITAL_INPUT_SAMPLE_PERIOD) {
+					printf("[Command State] Time to sample digital input...\n\r");
+					/* Service the DI state machine */
+					DI_Machine_Service();
+					TimeLastDigitalInputSample = CurrentTime;
+				}
+			} else {
+				CurrentState = STATE_IDLE;
+			}
+			break;
+		case STATE_DIGITAL_OUTPUT_SAMPLE:
+			if (DOSampling == TRUE) {
+				/* Service the DO state machine */
+				//DO_Machine_Service();
+			} else {
+				CurrentState = STATE_IDLE;
+			}
+			break;
+		case STATE_GENERAL_SAMPLE:
+			if ((ADCSampling == TRUE) || (DISampling == TRUE) || (DOSampling == TRUE)) {
+				/* Service the ADC state machine */
+				ADC_Machine_Service();
+				CurrentTime = GetLocalTime();
+				if ((CurrentTime - TimeLastDigitalInputSample) >= DIGITAL_INPUT_SAMPLE_PERIOD) {
+					DI_Machine_Service();
+					TimeLastDigitalInputSample = CurrentTime;
+				}
+				/* Service the DO state machine */
+				//DO_Machine_Service();
+			} else {
+				CurrentState = STATE_IDLE;
+			}
+			break;
+		default:
+			/* TODO: Throw error. */
+			break;
 	}
 }
 
@@ -147,38 +171,38 @@ void ServiceTasks(void) {
 void HaltTasks(void) {
 	printf("[Command State] Halting all tasks.\n\r");
 	switch (CurrentState) {
-	case UNINITIALIZED:
-		/* There is nothing to halt */
-		break;
-	case STATE_IDLE:
-		/* There is nothing to halt */
-		break;
-	case STATE_ANALOG_INPUT_SAMPLE:
-		printf("[Command State] Halting analog input sampling.\n\r");
-		ADC_Machine_Halt();
-		CurrentState = STATE_IDLE;
-		break;
-	case STATE_DIGITAL_INPUT_SAMPLE:
-		printf("[Command State] Halting digital input sampling.\n\r");
-		DI_Machine_Halt();
-		CurrentState = STATE_IDLE;
-		break;
-	case STATE_DIGITAL_OUTPUT_SAMPLE:
-		printf("[Command State] Halting digital output sampling.\n\r");
-		DO_Machine_Halt();
-		CurrentState = STATE_IDLE;
-		break;
-	case STATE_GENERAL_SAMPLE:
-		printf("[Command State] Halting all sampling.\n\r");
-		ADC_Machine_Halt();
-		DI_Machine_Halt();
-		DO_Machine_Halt();
-		CurrentState = STATE_IDLE;
-		break;
-	default:
-		printf("[Command State] Halt tasks called while in an unknown command state.");
-		/* TODO: Throw error */
-		break;
+		case UNINITIALIZED:
+			/* There is nothing to halt */
+			break;
+		case STATE_IDLE:
+			/* There is nothing to halt */
+			break;
+		case STATE_ANALOG_INPUT_SAMPLE:
+			printf("[Command State] Halting analog input sampling.\n\r");
+			ADC_Machine_Halt();
+			CurrentState = STATE_IDLE;
+			break;
+		case STATE_DIGITAL_INPUT_SAMPLE:
+			printf("[Command State] Halting digital input sampling.\n\r");
+			DI_Machine_Halt();
+			CurrentState = STATE_IDLE;
+			break;
+		case STATE_DIGITAL_OUTPUT_SAMPLE:
+			printf("[Command State] Halting digital output sampling.\n\r");
+			//DO_Machine_Halt();
+			CurrentState = STATE_IDLE;
+			break;
+		case STATE_GENERAL_SAMPLE:
+			printf("[Command State] Halting all sampling.\n\r");
+			ADC_Machine_Halt();
+			DI_Machine_Halt();
+			//DO_Machine_Halt();
+			CurrentState = STATE_IDLE;
+			break;
+		default:
+			printf("[Command State] Halt tasks called while in an unknown command state.");
+			/* TODO: Throw error */
+			break;
 	}
 }
 

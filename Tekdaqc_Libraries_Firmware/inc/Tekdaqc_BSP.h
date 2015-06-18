@@ -68,32 +68,48 @@ extern "C" {
  */
 
 /* #define TEKDAQC_BOARD_TYPE ((char) 'C') */
-#define TEKDAQC_BOARD_TYPE ((char) 'D')
+/* #define TEKDAQC_BOARD_TYPE ((char) 'D') */
+#define TEKDAQC_BOARD_TYPE ((char) 'E')
+
+/** @addtogroup flash_parameters FLASH Parameters
+ * @{
+ */
+
+#define FLASH_VOLTAGE_RANGE			(VoltageRange_3)
+#define FLASH_LATENCY				(FLASH_Latency_5)
+#define OTP_BLOCK_SIZE				0x20 /* 32 Bytes */
+#define OTP_BLOCK_COUNT				0x10 /* 16 Blocks */
+#define OTP_BASE_ADDRESS			0x1FFF7800
+#define OTP_LOCK_BASE_ADDRESS		0x1FFF7A00
+
+/**
+ * @}
+ */
 
 /** @addtogroup command_parser Command Parser
-  * @{
-  */
+ * @{
+ */
 
-#define SIZE_TOSTRING_BUFFER 500U
+#define SIZE_TOSTRING_BUFFER 512U
 
 /**
  * The maximum length of a command line
  */
 #define MAX_COMMANDLINE_LENGTH 512U
-#define MAX_NUM_ARGUMENTS		5U
+#define MAX_NUM_ARGUMENTS		6U
 
 /**
  * The maximum length of a command parameter key/value pair.
  */
-#define MAX_COMMANDPART_LENGTH 36U
+#define MAX_COMMANDPART_LENGTH 50U
 
 /**
  * @}
  */
 
 /** @addtogroup tekdaqc_communication Tekdaqc Communication
-  * @{
-  */
+ * @{
+ */
 
 /**
  * @def LOCATOR_PORT
@@ -112,8 +128,8 @@ extern "C" {
  */
 
 /** @addtogroup update_rtc_driver Update/RTC Driver
-  * @{
-  */
+ * @{
+ */
 
 #define UPDATE_FLAG_REGISTER		(RTC_BKP_DR19)
 #define UPDATE_FLAG_ENABLED			0x00000001U
@@ -121,15 +137,21 @@ extern "C" {
 #define RTC_CONFIGURED_REG			(RTC_BKP_DR19)
 #define RTC_CONFIGURED				0x00000002U
 
+#define RTC_ASYNCH_PRESCALER		0x01
+#define RTC_SYNCH_PRESCALER			0x7FFF
+
+//#define USE_LSE
+//#define RTC_TIME
+
 /**
  * @}
  */
 
 /** @addtogroup analog_input_constants Analog Input Constants
-  * @{
-  */
+ * @{
+ */
 
-#define EXTERNAL_MUX_DELAY ((float) 1.0f)
+#define EXTERNAL_MUX_DELAY 1000
 
 #define V_REFERENCE	((float) 2.5f)
 #define MAX_CODE 8388607U
@@ -142,9 +164,17 @@ extern "C" {
 #define NUM_SAMPLE_RATES			16U
 #define NUM_PGA_SETTINGS			7U
 #define NUM_BUFFER_SETTINGS			2U
+#define NUM_INPUT_RANGES			2U
 
 #define CALIBRATION_VALID_MAX_TEMP	(50.0f)
 #define CALIBRATION_VALID_MIN_TEMP  (0.0f)
+
+#define ANALOG_SCALE_5V_STRING		"ANALOG_SCALE_5V"
+#define ANALOG_SCALE_400V_STRING	"ANAlOG_SCALE_400V"
+
+typedef enum {
+	ANALOG_SCALE_5V, ANALOG_SCALE_400V, INVALID_SCALE
+} ANALOG_INPUT_SCALE_t;
 
 /**
  * @def NULL_CHANNEL
@@ -159,8 +189,8 @@ extern "C" {
  */
 
 /** @addtogroup analog_input_multiplexer Analog Input Multiplexer
-  * @{
-  */
+ * @{
+ */
 
 /* The external input settings for the internal MUX */
 #define EXTERNAL_ANALOG_IN_AINP (ADS1256_AIN0)
@@ -264,8 +294,8 @@ typedef enum {
  */
 
 /** @addtogroup board_channel_constants General Board IO Channel Constants
-  * @{
-  */
+ * @{
+ */
 
 /**
  * @brief Tekdaqc logic level enumeration.
@@ -290,8 +320,8 @@ typedef enum {
  */
 
 /** @addtogroup ads1256_driver ADS1256 Driver
-  * @{
-  */
+ * @{
+ */
 
 /**
  * @def ADS1256_CLK_FREQ
@@ -355,8 +385,8 @@ typedef enum {
  */
 
 /** @addtogroup tle7232_driver TLE7232 Driver
-  * @{
-  */
+ * @{
+ */
 
 /* SPIDER TLE7232 SPI Interface pins  */
 #define NUMBER_TLE7232_CHIPS				2
@@ -426,8 +456,8 @@ typedef enum {
  */
 
 /** @addtogroup digital_input_driver Digital Input Driver
-  * @{
-  */
+ * @{
+ */
 
 /* Digital Input Interface pins  */
 /* GPI0 */
@@ -443,7 +473,7 @@ typedef enum {
 #define GPI3_PIN							(GPIO_Pin_11)
 #define GPI3_GPIO_PORT						(GPIOI)
 /* GPI4 */
-#define GPI4_PIN							(GPIO_Pin_0)
+#define GPI4_PIN							(GPIO_Pin_3)
 #define GPI4_GPIO_PORT						(GPIOH)
 /* GPI5 */
 #define GPI5_PIN							(GPIO_Pin_4)
@@ -476,8 +506,8 @@ typedef enum {
 #define GPI14_PIN							(GPIO_Pin_6)
 #define GPI14_GPIO_PORT						(GPIOE)
 /* GPI15 */
-#define GPI15_PIN							(GPIO_Pin_14)
-#define GPI15_GPIO_PORT						(GPIOC)
+#define GPI15_PIN							(GPIO_Pin_5)
+#define GPI15_GPIO_PORT						(GPIOH)
 /* GPI16 */
 #define GPI16_PIN							(GPIO_Pin_9)
 #define GPI16_GPIO_PORT						(GPIOF)
@@ -504,14 +534,13 @@ typedef enum {
 #define GPI23_GPIO_PORT						(GPIOH)
 
 #define GPI_PORTB_PINS						(GPI18_PIN)
-#define GPI_PORTC_PINS						(GPI15_PIN)
 #define GPI_PORTE_PINS						(GPI0_PIN | GPI1_PIN | GPI8_PIN | GPI9_PIN | GPI12_PIN | GPI13_PIN | GPI14_PIN | GPI21_PIN)
 #define GPI_PORTF_PINS						(GPI6_PIN | GPI7_PIN | GPI16_PIN | GPI19_PIN)
 #define GPI_PORTG_PINS						(GPI20_PIN)
-#define GPI_PORTH_PINS						(GPI4_PIN | GPI5_PIN | GPI10_PIN | GPI11_PIN | GPI17_PIN | GPI22_PIN | GPI23_PIN)
+#define GPI_PORTH_PINS						(GPI4_PIN | GPI5_PIN | GPI10_PIN | GPI11_PIN | GPI15_PIN | GPI17_PIN | GPI22_PIN | GPI23_PIN)
 #define GPI_PORTI_PINS						(GPI2_PIN | GPI3_PIN)
 
-#define GPI_GPIO_CLKS						(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOE \
+#define GPI_GPIO_CLKS						(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOE \
 		| RCC_AHB1Periph_GPIOF | RCC_AHB1Periph_GPIOG | RCC_AHB1Periph_GPIOH \
 		| RCC_AHB1Periph_GPIOI)
 
@@ -549,8 +578,8 @@ typedef enum {
  */
 
 /** @addtogroup ethernet_driver Ethernet Driver
-  * @{
-  */
+ * @{
+ */
 
 /* Ethernet defines */
 #define USE_DHCP       					/* enable DHCP, if disabled static address is used */
@@ -609,9 +638,22 @@ typedef enum {
 #define MAC_ADDR0   0U
 #define MAC_ADDR1   25U
 #define MAC_ADDR2   13U
-#define MAC_ADDR3   0U
+#define MAC_ADDR3   16U
 #define MAC_ADDR4   0U
 #define MAC_ADDR5   0U
+
+#define FACTORY_MAC_BLOCK				0x00 /* Block */
+#define FACTORY_MAC_LOCK_ADDR			(OTP_LOCK_BASE_ADDRESS + FACTORY_MAC_BLOCK)
+
+#define FACTORY_MAC_ADDR0				(OTP_BASE_ADDRESS + FACTORY_MAC_BLOCK * OTP_BLOCK_SIZE)
+#define FACTORY_MAC_ADDR1				(FACTORY_MAC_ADDR0 + 1)
+#define FACTORY_MAC_ADDR2				(FACTORY_MAC_ADDR1 + 1)
+#define FACTORY_MAC_ADDR3				(FACTORY_MAC_ADDR2 + 1)
+#define FACTORY_MAC_ADDR4				(FACTORY_MAC_ADDR3 + 1)
+#define FACTORY_MAC_ADDR5				(FACTORY_MAC_ADDR4 + 1)
+
+#define USE_DEFAULT_MAC 				0x0000
+#define USE_USER_MAC					0x0001
 
 /* Static IP ADDRESS: IP_ADDR0.IP_ADDR1.IP_ADDR2.IP_ADDR3 */
 #define IP_ADDR0   192U
@@ -646,8 +688,8 @@ typedef enum {
 #define CAN_TX_SOURCE              (GPIO_PinSource1)
 
 /** @addtogroup com_port_driver COM Port Driver
-  * @{
-  */
+ * @{
+ */
 
 typedef enum {
 	COM1 = 0, COM2 = 1
@@ -704,42 +746,42 @@ typedef enum {
  */
 
 /** @addtogroup calibration_table Calibration Table
-  * @{
-  */
+ * @{
+ */
 
-#define CALIBRATION_LATENCY			(FLASH_Latency_5)
-#define FLASH_VOLTAGE_RANGE			(VoltageRange_3)
+#define CALIBRATION_LATENCY			(FLASH_LATENCY)
 
 #define CALIBRATION_SECTOR			(FLASH_Sector_11) /* 128KB */
 #define CALIBRATION_WPSECTOR		(OB_WRP_Sector_11)
 #define ADDR_CALIBRATION_BASE	    ((uint32_t)0x080E0000) /* Base @ of Sector 11, 128 Kbytes */
 #define ADDR_CALIBRATION_END		((uint32_t)0x080FFFFF)
-#define CALIBRATION_ERASE_DATA		((uint32_t)0x12345678)
 
-#define CALIBRATION_RATE_OFFSET		2
-#define CALIBRATION_GAIN_OFFSET		(CALIBRATION_RATE_OFFSET*NUM_SAMPLE_RATES)
-#define CALIBRATION_BUFFER_OFFSET	(CALIBRATION_GAIN_OFFSET*NUM_PGA_SETTINGS)
-#define CALIBRATION_TEMP_OFFSET		(CALIBRATION_BUFFER_OFFSET*NUM_BUFFER_SETTINGS)
+#define CALIBRATION_TEMP_OFFSET		(NUM_INPUT_RANGES * NUM_BUFFER_SETTINGS * NUM_PGA_SETTINGS * NUM_SAMPLE_RATES)
 
-#define BOARD_SERIAL_NUM_ADDR		(ADDR_CALIBRATION_BASE)
+#define BOARD_SERIAL_OTP_BLOCK		0x01 /* Block */
+#define BOARD_SERIAL_NUM_ADDR		(OTP_BASE_ADDRESS + BOARD_SERIAL_OTP_BLOCK * OTP_BLOCK_SIZE)
+#define BOARD_SERIAL_LOCK_ADDR		(OTP_LOCK_BASE_ADDRESS + BOARD_SERIAL_OTP_BLOCK)
 #define BOARD_SERIAL_NUM_LENGTH		32 /* Serial number is 32 bytes long (32 chars) */
 
-#define CAL_TEMP_LOW_ADDR			(BOARD_SERIAL_NUM_ADDR + BOARD_SERIAL_NUM_LENGTH)
-#define CAL_TEMP_HIGH_ADDR			(CAL_TEMP_LOW_ADDR + 4)
-#define CAL_TEMP_STEP_ADDR			(CAL_TEMP_HIGH_ADDR + 4)
-#define CAL_TEMP_CNT_ADDR			(CAL_TEMP_STEP_ADDR + 4)
-#define CAL_VALID_ADDR				(CAL_TEMP_CNT_ADDR + 4)
-#define COLD_JUNCTION_OFFSET_ADDR	(CAL_VALID_ADDR + 1)
-#define COLD_JUNCTION_GAIN_ADDR		(COLD_JUNCTION_OFFSET_ADDR + 1)
-#define CAL_DATA_START_ADDR			(COLD_JUNCTION_GAIN_ADDR + 1)
+#define CALIBRATION_VALID_LO_BYTE	('O')
+#define CALIBRATION_VALID_HI_BYTE	('K')
+
+#define CAL_INVALID_TEMP			0xFFFFFFFF
+#define CAL_NUM_TEMPS				10
+#define CAL_TEMP_LOW_ADDR			(ADDR_CALIBRATION_BASE)
+#define CAL_VALID_ADDR_LO_ADDR		(CAL_TEMP_LOW_ADDR + 4 * CAL_NUM_TEMPS) /* Aligned 0 */
+#define CAL_VALID_ADDR_HI_ADDR		(CAL_VALID_ADDR_LO_ADDR + 1) /* Aligned 1 */
+#define COLD_JUNCTION_OFFSET_ADDR	(CAL_VALID_ADDR_HI_ADDR + 1) /* Aligned 2 */
+#define COLD_JUNCTION_GAIN_ADDR		(COLD_JUNCTION_OFFSET_ADDR + 1) /* Aligned 3 */
+#define CAL_DATA_START_ADDR			(COLD_JUNCTION_GAIN_ADDR + 1) /* This needs to be word aligned */
 
 /**
  * @}
  */
 
 /** @addtogroup flash_disk_driver FLASH Disk Driver
-  * @{
-  */
+ * @{
+ */
 
 /* EEPROM start address in Flash */
 #define EEPROM_START_ADDRESS  ((uint32_t)0x080A0000) /* EEPROM emulation start address:
@@ -758,12 +800,19 @@ typedef enum {
 #define PAGE1_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (2 * PAGE_SIZE - 1)))
 #define PAGE1_ID              (FLASH_Sector_10)
 
-#define NUM_EEPROM_ADDRESSES			4
+#define NUM_EEPROM_ADDRESSES			10
 
 #define ADDR_BOARD_MAX_TEMP_HIGH		0x0000
 #define ADDR_BOARD_MAX_TEMP_LOW			0x0001
 #define ADDR_BOARD_MIN_TEMP_HIGH		0x0002
 #define ADDR_BOARD_MIN_TEMP_LOW			0x0003
+#define ADDR_USER_MAC_LOW				0x0004
+#define ADDR_USER_MAC_MID				0x0005
+#define ADDR_USER_MAC_HIGH				0x0006
+#define ADDR_USE_USER_MAC				0x0007
+#define ADDR_SHOULD_UPGRADE				0x0008
+#define ADDR_STATIC_IP_LOW				0x0009
+#define ADDR_STATIC_IP_HIGH				0x000A
 
 /* Virtual address defined by the user: 0xFFFF value is prohibited */
 extern uint16_t EEPROM_ADDRESSES[NUM_EEPROM_ADDRESSES];
@@ -773,8 +822,8 @@ extern uint16_t EEPROM_ADDRESSES[NUM_EEPROM_ADDRESSES];
  */
 
 /** @addtogroup debug_constants Debug Constants
-  * @{
-  */
+ * @{
+ */
 
 #ifdef DEBUG
 typedef enum {

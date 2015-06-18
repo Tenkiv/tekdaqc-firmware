@@ -34,6 +34,7 @@
 #include "ADS1256_Driver.h"
 #include "Tekdaqc_Timers.h"
 #include "TelnetServer.h"
+#include <inttypes.h>
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -89,7 +90,10 @@ static void SelectExternalInput(ExternalMuxedInput_t input, bool doMuxDelay) {
 	/* Make the switch */
 	SelectInternalInput(EXTERNAL_ANALOG_IN);
 	GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, EXT_ANALOG_SELECT);
-	GPIO_Write(EXT_ANALOG_IN_MUX_PORT, (input | (GPIO_ReadOutputData(EXT_ANALOG_IN_MUX_PORT ) & EXT_ANALOG_IN_BITMASK )));
+
+	printf("[Analog Input Multiplexer] Writing %" PRIX16 " to the external multiplexer.\n\r", input);
+
+	GPIO_Write(EXT_ANALOG_IN_MUX_PORT, (input | (GPIO_ReadOutputData(EXT_ANALOG_IN_MUX_PORT) & EXT_ANALOG_IN_BITMASK)));
 
 	if (doMuxDelay == true) {
 		/* Wait for the external multiplexing relays to conduct */
@@ -244,10 +248,10 @@ void SelectAnalogInput(Analog_Input_t* input, bool doMuxDelay) {
 		} else {
 			/* ERROR */
 			snprintf(TOSTRING_BUFFER, sizeof(TOSTRING_BUFFER),
-					"[Analog Input Multiplexer] Attempted to select an input which does not exist.");
+					"[Analog Input Multiplexer] Attempted to select an input which does not exist: %" PRIu8 ".", input->physicalInput);
 			TelnetWriteErrorMessage(TOSTRING_BUFFER);
 #ifdef INPUT_MULTIPLEXER_DEBUG
-			printf("[Analog Input Multiplexer] Attempted to select an input which does not exist.\n\r");
+			printf("[Analog Input Multiplexer] Attempted to select an input which does not exist: %" PRIu8 ".\n\r", input->physicalInput);
 #endif
 		}
 	} else {

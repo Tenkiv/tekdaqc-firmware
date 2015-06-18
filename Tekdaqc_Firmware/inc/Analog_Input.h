@@ -63,8 +63,11 @@ extern "C" {
  * @def ANALOG_INPUT_BUFFER_SIZE
  * @brief The number or readings to store in the circular buffer for the input.
  */
-#define ANALOG_INPUT_BUFFER_SIZE	100U /* 100 samples. Other code expects it to <= 255. */
+#define ANALOG_INPUT_BUFFER_SIZE	50U /* 50 samples. Other code expects it to <= 255. */
 
+
+//lfao-defines the size of the buffer where samples taken from the DRDY interrupt handler are written
+#define ANALOG_SAMPLES_BUFFER_SIZE 100
 /*--------------------------------------------------------------------------------------------------------*/
 /* EXPORTED TYPES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -92,17 +95,24 @@ typedef struct {
 	ExternalMuxedInput_t externalInput; /**< If an external input, which channel. */
 	InternalAnalogInput_t internalInput; /**< If an internal input, which channel. */
 	char name[MAX_ANALOG_INPUT_NAME_LENGTH]; /**< Pointer to a C string name for this input. */
-	int32_t min; /**< The low value of the allowable range of this input. */
-	int32_t max; /**< The high value of the allowable range of this input. */
-	int32_t values[ANALOG_INPUT_BUFFER_SIZE]; /**< The recorded values of this input (ADC Counts). */
-	uint64_t timestamps[ANALOG_INPUT_BUFFER_SIZE]; /**< The timestamps of the measurements in UNIX epoch format. */
 	uint8_t bufferReadIdx; /**< The index of the buffer to read data from. */
 	uint8_t bufferWriteIdx; /**< The index of the buffer to write data to. */
 	AnalogInputStatus_t status; /**< The current status of this input. */
 	ADS1256_BUFFER_t buffer; /**< Analog buffer state to use. */
 	ADS1256_PGA_t gain; /**< Gain setting to use for analog measurements. */
 	ADS1256_SPS_t rate; /**< Sample rate to use for measurements. */
+	int32_t min; /**< The low value of the allowable range of this input. */
+	int32_t max; /**< The high value of the allowable range of this input. */
+	int32_t values[ANALOG_INPUT_BUFFER_SIZE]; /**< The recorded values of this input (ADC Counts). */
+	uint64_t timestamps[ANALOG_INPUT_BUFFER_SIZE]; /**< The timestamps of the measurements in UNIX epoch format. */
 } Analog_Input_t;
+
+
+typedef struct {
+int iChannel;
+uint32_t iReading;
+uint64_t ui64TimeStamp;
+} Analog_Samples_t;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* EXPORTED VARIABLES */
@@ -116,7 +126,12 @@ typedef struct {
  * @brief Initialize all of the submodules for analog inputs.
  */
 void AnalogInputsInit(void);
-
+void InitAnalogSamplesBuffer(void);
+int WriteSampleToBuffer(Analog_Samples_t *Data);
+int ReadSampleFromBuffer(Analog_Samples_t *Data);
+void WriteToTelnet_Analog(void);
+void AnalogChannelHandler(void);
+void AnalogHalt(void);
 /*--------------------------------------------------------------------------------------------------------*/
 /* INPUT ADD/REMOVE METHODS */
 /*--------------------------------------------------------------------------------------------------------*/

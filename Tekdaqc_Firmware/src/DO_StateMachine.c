@@ -118,8 +118,9 @@ void DO_Machine_Init(void) {
 	printf("[DO STATE MACHINE] Moving to state DO_INITIALIZED.\n\r");
 #endif
 	/* Initialize the digital outputs */
+
 	TLE7232_Init();
-	SetOutputFaultStatusFunction(&SetDigitalOutputFaultStatus);
+	//SetOutputFaultStatusFunction(&SetDigitalOutputFaultStatus);
 
 	/* Initialize the count variables */
 	SampleTotal = 0U;
@@ -134,7 +135,7 @@ void DO_Machine_Init(void) {
 /*--------------------------------------------------------------------------------------------------------*/
 /* SERVICE METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
-
+#if 0
 /**
  * Perform a periodic service of the state machine. This will subsequently call the relevant state handler.
  *
@@ -204,7 +205,7 @@ void DO_Machine_Halt(void) {
 	DO_Machine_Idle();
 	CompletedDOSampling();
 }
-
+#endif
 /*--------------------------------------------------------------------------------------------------------*/
 /* STATE METHODS */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -230,6 +231,7 @@ void DO_Machine_Idle(void) {
 	state = DO_IDLE;
 }
 
+#if 0
 /**
  * Enter the output sampling state. In this state the DO will be made to sample a set of outputs each the specified number of times.
  *
@@ -301,7 +303,7 @@ void DO_Machine_Output_Sample(Digital_Output_t** outputs, uint32_t count, bool s
 	SampleTotal = count;
 	state = DO_CHANNEL_SAMPLING;
 }
-
+#endif
 /**
  * Enter the reset state. In this state the DO will be reset and returned to the idle state.
  *

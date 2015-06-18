@@ -30,6 +30,7 @@
 #include "ADS1256_Driver.h"
 #include "Tekdaqc_Config.h"
 #include "Tekdaqc_Timers.h"
+
 #include <string.h>
 #include <stdlib.h>
 
@@ -66,6 +67,13 @@
 
 /**
  * @internal
+ * @def ADS1256_BUFFER_DISABLED_STR
+ * @brief String constant used for comparing to command line inputs for the state of the input buffer.
+ */
+#define ADS1256_BUFFER_DISABLED_STR "DISABLED"
+
+/**
+ * @internal
  * @def ADS1256_REGISTERS_DEBUG_FORMATTER
  * @brief Used as the format string for printing the ADS1256 registers to a string.
  */
@@ -78,6 +86,7 @@
  */
 #define ADS1256_REGISTERS_TOSTRING_HEADER "[ADS1256] Register Contents:\n\r"
 
+extern void InitAnalogSamplesBuffer(void);
 
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -249,21 +258,105 @@ void ADS1256_Init(void) {
 #endif
 }
 
+
+
+
+void ADS1256_EXTI_Enable(void) {
+	// Clear interrupt pending bit
+	EXTI_ClearITPendingBit(EXTI_Line10);
+	NVIC_EnableIRQ(EXTI15_10_IRQn);
+}
+
+void ADS1256_EXTI_Disable(void) {
+	NVIC_DisableIRQ(EXTI15_10_IRQn);
+}
+
+//lfao- this timer is used for very short delay purposes...this does not trigger an interrupt...
+//lfao- this is currently configured at 1 count=1us...
+//lfao- NOTE: when doing short delays(i.e., reading the counter), user must handle the special
+//lfao- case where the counter is near the reload value of 0xFFFFFFF0...
+void InitializeShortDelayTimer(void)
+{
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+
+    TIM_TimeBaseInitTypeDef ShortDelayTimer;
+    ShortDelayTimer.TIM_Prescaler = 83;
+    ShortDelayTimer.TIM_CounterMode = TIM_CounterMode_Up;
+    ShortDelayTimer.TIM_Period = 0xFFFFFFFF;
+    ShortDelayTimer.TIM_ClockDivision = TIM_CKD_DIV1;
+    ShortDelayTimer.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM2, &ShortDelayTimer);
+    TIM_Cmd(TIM2, ENABLE);
+}
+//lfao-new timer used for the channel switching...
+//currently configured to trigger an interrupt every 3ms...
+void InitializeChannelSwitchTimer(void)
+{
+
+    NVIC_InitTypeDef nVIC_InitStructure;
+    nVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+    nVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    nVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    nVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&nVIC_InitStructure);
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+
+    TIM_TimeBaseInitTypeDef ChnSwitchTimer;
+    ChnSwitchTimer.TIM_Prescaler = 41999;
+    ChnSwitchTimer.TIM_CounterMode = TIM_CounterMode_Up;
+    ChnSwitchTimer.TIM_Period = 5;
+    ChnSwitchTimer.TIM_ClockDivision = TIM_CKD_DIV1;
+    ChnSwitchTimer.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM4, &ChnSwitchTimer);
+
+
+    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+    TIM_Cmd(TIM4, ENABLE);
+}
+volatile int totalDelay = 0;
+void ShortDelayUS(uint32_t Delay)
+{
+	totalDelay = totalDelay+Delay;
+	//lfao- set counter to 0
+	TIM_SetCounter(TIM2,0);
+	while(TIM_GetCounter(TIM2) < Delay)
+	{
+
+	}
+}
 /**
  * Initializes the STM32 pins connected to the ADS1256 state pins such as data ready (DRDY) and reset.
  */
 void ADS1256_StatePins_Init(void) {
 	GPIO_InitTypeDef GPIO_InitStructure; /* Structure used to initialize the GPIO pins */
+	EXTI_InitTypeDef EXTI_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 
 	/* Confgure the DRDY Pin */
 	/* Enable the GPIO Clock */
 	RCC_AHB1PeriphClockCmd(ADS1256_DRDY_GPIO_CLK, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
 	/* Configure the GPIO pin */
 	GPIO_InitStructure.GPIO_Pin = ADS1256_DRDY_PIN;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init(ADS1256_DRDY_GPIO_PORT, &GPIO_InitStructure);
+
+	/* Connect EXTI Line to INT Pin */
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource10);
+	/* Configure EXTI line */
+	EXTI_InitStructure.EXTI_Line = EXTI_Line10;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure);
+	/* Enable and set the EXTI interrupt to priority 1*/
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 
 	/* Confgure the SYNC Pin */
 	/* Enable the GPIO Clock */
@@ -294,7 +387,14 @@ void ADS1256_StatePins_Init(void) {
 
 	/* Bring the RESET pin high */
 	GPIO_SetBits(ADS1256_RESET_GPIO_PORT, ADS1256_RESET_PIN);
+
+	//lfao- during init, disable the interrupt at first...
+	ADS1256_EXTI_Disable();
+
+	//lfao- initialize the buffer for analog samples...
+	InitAnalogSamplesBuffer();
 }
+
 
 
 
@@ -458,7 +558,7 @@ const char* ADS1256_StringFromBuffer(ADS1256_BUFFER_t buffer) {
  * @retval ADS1256_BUFFER_t value correlating to the string.
  */
 ADS1256_BUFFER_t ADS1256_StringToBuffer(char* str) {
-	if (strcmp(str, ADS1256_BUFFER_OFF_STR) == 0) {
+	if (strcmp(str, ADS1256_BUFFER_OFF_STR) == 0 || strcmp(str, ADS1256_BUFFER_DISABLED_STR) == 0) {
 		return ADS1256_BUFFER_DISABLED;
 	} else {
 		return ADS1256_BUFFER_ENABLED;
@@ -572,6 +672,7 @@ void ADS1256_Reset_By_Command(void) {
 	ID = 0xFFU; /* Reset the stored ID so we can properly identify the ADC after reset */
 	ADS1256_CS_LOW(); /* Enable SPI communication */
 	ADS1256_Send_Command(ADS1256_RESET); /* Send the reset command */
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH(); /* Latch the SPI communication */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC reports that data is ready via the DRDY pin. */
 }
@@ -643,13 +744,19 @@ void ADS1256_Reset_SPI(void) {
  */
 void ADS1256_ResetAndReprogram(void) {
 	ADS1256_Full_Reset(); /* Perform the full reset */
-	ADS1256_ReadRegisters(ADS1256_STATUS, ADS1256_NREGS); /* Read out al registers */
+	ADS1256_ReadRegisters(ADS1256_STATUS, ADS1256_NREGS); /* Read out all registers */
 
-	/* Set PGA and data rate first, then calibrate */
+	/* Set PGA and data rate first */
+#ifdef ADS1256_DEBUG
+	printf("\n\rResetting ADC Parameters:\n\r");
+	/*printf("\tRate: %s\n\r", ADS1256_StringFromSPS(SPS));
+	printf("\tGain: %s\n\r", ADS1256_StringFromPGA(PGA));
+	printf("\tBuffer: %s\n\r", ADS1256_StringFromBuffer(BUFFER));
+	printf("\t")*/
+#endif
 	ADS1256_SetInputBufferSetting(BUFFER);
 	ADS1256_SetDataRate(SPS);
 	ADS1256_SetPGASetting(PGA);
-	ADS1256_CalibrateSelf();
 
 	/* Now set other stuff */
 	ADS1256_SetInputChannels(AIN_POS, AIN_NEG);
@@ -665,6 +772,11 @@ void ADS1256_ResetAndReprogram(void) {
 			ADS1256_SetGPIOStatus(i, GPIO_STATUS[i]);
 		}
 	}
+
+#ifdef ADS1256_DEBUG
+	printf("ADC Registers after reset:\n\r");
+	ADS1256_PrintRegs();
+#endif
 }
 
 
@@ -715,6 +827,7 @@ void ADS1256_ReadData(uint8_t* data) {
 	ADS1256_SendByte(ADS1256_RDATA); /* Send RDATA command byte */
 	Delay_us((uint64_t) (50U * ADS1256_CLK_PERIOD_US)); /*  timing characteristic t6 */
 	ADS1256_ReceiveBytes(data, 3U);
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH(); /* Latch SPI communication */
 	Delay_us((uint64_t) (4U * ADS1256_CLK_PERIOD_US)); /*  timing characteristic t11 */
 }
@@ -726,9 +839,8 @@ void ADS1256_ReadData(uint8_t* data) {
  * @retval none
  */
 void ADS1256_WaitUntilDataReady(bool useCommand) {
-	uint8_t i = 0U;
 	while (!ADS1256_IsDataReady(useCommand)) { /* Wait in a loop */
-		++i; /* Do a meaningful calculation so the compiler does not remove loop. */
+		// Do nothing
 	}
 }
 
@@ -821,6 +933,7 @@ void ADS1256_CalibrateSelf(void) {
 	ADS1256_Send_Command(ADS1256_SELFCAL); /* Send the self cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 /**
@@ -834,6 +947,7 @@ void ADS1256_CalibrateSelf_Gain(void) {
 	ADS1256_Send_Command(ADS1256_SELFGCAL); /* Send the self gain cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 /**
@@ -847,6 +961,7 @@ void ADS1256_CalibrateSelf_Offset(void) {
 	ADS1256_Send_Command(ADS1256_SELFOCAL); /* Send the self offset cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 /**
@@ -861,6 +976,7 @@ void ADS1256_CalibrateSystem_Gain(void) {
 	ADS1256_Send_Command(ADS1256_SYSGCAL); /* Send the system gain cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 /**
@@ -874,6 +990,7 @@ void ADS1256_CalibrateSystem_Offset(void) {
 	ADS1256_Send_Command(ADS1256_SYSOCAL); /* Send the system offset cal command */
 	ADS1256_WaitUntilDataReady(false); /* Wait until the ADC signals it is finished */
 	ADS1256_Sync(true); /* Enter the SYNC state */
+	ADS1256_Wakeup(); /* Wakeup the ADC */
 }
 
 
@@ -1712,6 +1829,7 @@ static void ADS1256_Reg_Command(ADS1256_Command_t cmd, ADS1256_Register_t reg, u
 static void ADS1256_Send_Command(ADS1256_Command_t cmd) {
 	ADS1256_CS_LOW();
 	ADS1256_SendByte(cmd);
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH();
 }
 
@@ -1829,9 +1947,14 @@ static void ADS1256_ReadRegister(ADS1256_Register_t reg) {
  */
 static void ADS1256_ReadRegisters(ADS1256_Register_t reg, uint8_t count) {
 	ADS1256_CS_LOW();
+	DisableBoardInterrupts();
 	ADS1256_Reg_Command(ADS1256_RREG, reg, count);
+	EnableBoardInterrupts();
 	Delay_us(50 * ADS1256_CLK_PERIOD_US); /* timing characteristic t6 */
+	DisableBoardInterrupts();
 	ADS1256_ReceiveBytes(ADS1256_Registers + reg, count);
+	EnableBoardInterrupts();
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH();
 	Delay_us(4 * ADS1256_CLK_PERIOD_US); /* timing characteristic t11 */
 	if (reg == ADS1256_STATUS) {
@@ -1876,9 +1999,14 @@ static void ADS1256_WriteRegister(ADS1256_Register_t reg) {
  */
 static void ADS1256_WriteRegisters(ADS1256_Register_t reg, uint8_t count) {
 	ADS1256_CS_LOW();
+	DisableBoardInterrupts();
 	ADS1256_Reg_Command(ADS1256_WREG, reg, count);
+	EnableBoardInterrupts();
 	Delay_us(50 * ADS1256_CLK_PERIOD_US); /* timing characteristic t6 */
+	DisableBoardInterrupts();
 	ADS1256_SendBytes(ADS1256_Registers + reg, count);
+	EnableBoardInterrupts();
+	Delay_us(8 * ADS1256_CLK_PERIOD_US); /* timing characteristic t10 */
 	ADS1256_CS_HIGH();
 	Delay_us(4 * ADS1256_CLK_PERIOD_US); /* timing characteristic t11 */
 }

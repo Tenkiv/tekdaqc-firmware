@@ -11,11 +11,11 @@
  * specific language governing permissions and limitations under the License.
  */
 
-
 /* Includes ------------------------------------------------------------------*/
 #include "Tekdaqc_Config.h"
 #include "stm32f4x7_eth.h"
 #include "netconf.h"
+#include "stm32f4xx_it.h"
 #include "TelnetServer.h"
 #include "Tekdaqc_Locator.h"
 #include "Tekdaqc_CommandInterpreter.h"
@@ -26,7 +26,9 @@
 #include "ADS1256_SPI_Controller.h"
 #include "Tekdaqc_Error.h"
 #include "Tekdaqc_Version.h"
+#include "ADS1256_Driver.h"
 #include <stdio.h>
+#include <inttypes.h>
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -67,23 +69,16 @@ int main(void) {
 	printf("\n\rSerial Port Initialized.\n\r");
 #endif
 
-	/* Enable the PWR APB1 Clock Interface */
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-
-	/* Allow access to BKP Domain */
-	PWR_BackupAccessCmd(ENABLE);
-
-	if ((RTC_ReadBackupRegister(RTC_CONFIGURED_REG ) & RTC_CONFIGURED)
-			!= RTC_CONFIGURED) {
+	if ((RTC_ReadBackupRegister(RTC_CONFIGURED_REG) & RTC_CONFIGURED) != RTC_CONFIGURED) {
 #ifdef DEBUG
 		printf("[Main] Configuring the RTC domain.\n\r");
 #endif
 		/* Initialize the RTC and Backup registers */
-		/* RTC_Config(); */
-
-		/* Setup date and time */
-		/* TODO: Set up date and time */
+		RTC_Config(RTC_SYNCH_PRESCALER, RTC_ASYNCH_PRESCALER);
 	} else {
+#ifdef DEBUG
+		printf("[Main] RTC domain configured. Waiting for synchronization.\n\r");
+#endif
 		/* Wait for RTC APB registers synchronization */
 		RTC_WaitForSynchro();
 	}
@@ -93,7 +88,7 @@ int main(void) {
 	/**
 	 * Check if the system has resumed from a WWDG reset
 	 */
-	if (RCC_GetFlagStatus(RCC_FLAG_IWDGRST ) != RESET) {
+	if (RCC_GetFlagStatus(RCC_FLAG_IWDGRST) != RESET) {
 		/* This is a watchdog reset */
 
 		/* Clear the reset flags */
@@ -104,11 +99,11 @@ int main(void) {
 	} else {
 		/* This is not a watchdog reset */
 		/* Do any normal reset stuff here */
-		if (RCC_GetFlagStatus(RCC_FLAG_SFTRST )) {
+		if (RCC_GetFlagStatus(RCC_FLAG_SFTRST)) {
 			/* Software reset */
-		} else if (RCC_GetFlagStatus(RCC_FLAG_PORRST )) {
+		} else if (RCC_GetFlagStatus(RCC_FLAG_PORRST)) {
 			/* Power on Reset/Power down reset */
-		} else if (RCC_GetFlagStatus(RCC_FLAG_PINRST )) {
+		} else if (RCC_GetFlagStatus(RCC_FLAG_PINRST)) {
 			/* Reset pin reset */
 		} else {
 			/* Some other reset */
@@ -125,6 +120,18 @@ int main(void) {
 
 	if (InitializeTelnetServer() == TELNET_OK) {
 		CreateCommandInterpreter();
+		Tekdaqc_Initialized(true);
+
+		//lfao: do calibration here since no more state based loop...
+		//ADC_Machine_SetState(ADC_UNINITIALIZED);
+		//ADC_Machine_Init();
+		//ADC_Machine_Idle();
+		//PerformSystemCalibration();
+		//while(isSelfCalibrated==false)
+		//{
+		//  ADC_Machine_Service_Calibrating();
+		//}
+
 		program_loop();
 	} else {
 		/* We have a fatal error */
@@ -136,19 +143,21 @@ int main(void) {
 
 static void program_loop(void) {
 	/* Infinite loop */
-	while (1) {
-		/* Service the inputs/outputs */
-		ServiceTasks();
+	while (1)
+	{
 
+		/* Service the inputs/outputs */
+		if(isSelfCalibrated==false)
+		{
+			ServiceTasks();
+		}
 		/* Check if any packet received */
 		if (ETH_CheckFrameReceived()) {
-			/* Process received ethernet packet */
+			/* Process received Ethernet packet */
 			LwIP_Pkt_Handle();
 		}
-
 		/* Handle periodic timers for LwIP */
 		LwIP_Periodic_Handle(GetLocalTime());
-
 		if (TelnetIsConnected() == true) { /* We have an active Telnet connection to service */
 			/* Do server stuff */
 			character = TelnetRead();
@@ -156,13 +165,18 @@ static void program_loop(void) {
 				Command_AddChar(character);
 			}
 		}
-
-		/* Check to see if any faults have occurred */
-		Tekdaqc_CheckStatus();
-
-		/* Reload the IWDG Counter to prevent reset */
-		IWDG_ReloadCounter();
+		//lfao - write to telnet the analog samples data...
+		WriteToTelnet_Analog();
+		//lfao - read digital inputs
+		ReadDigitalInputs();
+		//lfao - write to telnet the digital inputs data...
+		WriteToTelnet_Digital();
 	}
+
+	/* Check to see if any faults have occurred */
+	/*Tekdaqc_CheckStatus();*/ //TODO: Re-enable when digital output faults work
+	/* Reload the IWDG Counter to prevent reset */
+	IWDG_ReloadCounter();
 }
 
 static void Init_Locator() {
@@ -176,7 +190,6 @@ static void Init_Locator() {
 	version |= (BUILD_NUMBER << 8);
 	version |= SPECIAL_BUILD;
 	Tekdaqc_LocatorVersionSet(version);
-
 	Tekdaqc_LocatorBoardIDSet(TEKDAQC_BOARD_SERIAL_NUM);
 }
 
@@ -187,6 +200,14 @@ static void Init_Locator() {
  * @retval none
  */
 static void Tekdaqc_Init(void) {
+	//lfao- initialize short delay timer...
+	InitializeShortDelayTimer();
+	//lfao- initialize the timer for channel switching...
+	InitializeChannelSwitchTimer();
+
+	/* Initialize the FLASH disk */
+	FlashDiskInit();
+
 	/* Initialize the Tekdaqc's communication methods */
 	Communication_Init();
 
@@ -208,26 +229,19 @@ static void Tekdaqc_Init(void) {
 	SetDigitalInputWriteFunction(&TelnetWriteString);
 	SetDigitalOutputWriteFunction(&TelnetWriteString);
 
-	/* Initialize the FLASH disk */
-	FlashDiskInit();
-
 	/* Initialize the calibration table and fetch the board serial number */
 	Tekdaqc_CalibrationInit();
 	char data = '\0';
 	uint32_t Address = BOARD_SERIAL_NUM_ADDR;
 	for (int i = 0; i < BOARD_SERIAL_NUM_LENGTH; ++i) {
-		if (Address >= CAL_TEMP_LOW_ADDR) {
-			/* We have overflowed and there is a problem in the software */
-#ifdef DEBUG
-			printf("[Config] Reading board serial number overflowed.\n\r");
-#endif
-			break; /* Break out to prevent an invalid access */
-		}
-		data = *((__IO char*)Address);
+		data = *((__IO char*) Address);
 		TEKDAQC_BOARD_SERIAL_NUM[i] = data;
 		Address += sizeof(char);
 	}
 	TEKDAQC_BOARD_SERIAL_NUM[BOARD_SERIAL_NUM_LENGTH] = '\0'; /* Apply the NULL termination character */
+#ifdef DEBUG
+	printf("Initialized board serial number: %s\n\r", TEKDAQC_BOARD_SERIAL_NUM);
+#endif
 
 #ifdef USE_WATCHDOG
 	// Initialize the watchdog timer
@@ -246,7 +260,7 @@ static void Tekdaqc_Init(void) {
  */
 void assert_failed(uint8_t* file, uint32_t line) {
 	/* User can add his own implementation to report the file name and line number,
- ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+	 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
 	printf("Wrong parameters value: file %s on line %d\r\n", file, line);
 	/* Infinite loop */

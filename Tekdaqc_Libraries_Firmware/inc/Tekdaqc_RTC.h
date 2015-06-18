@@ -54,6 +54,10 @@ extern "C" {
 void RTC_Config(uint32_t synch_prediv, uint32_t asynch_prediv);
 
 /**
+ * @brief Initialize the RTC time to 0.
+ */
+void RTC_ZeroTime(void);
+/**
  * @}
  */
 

@@ -34,6 +34,8 @@
 #include "TelnetServer.h"
 #include "Tekdaqc_CalibrationTable.h"
 #include "eeprom.h"
+#include "stm32f4x7_eth_bsp.h"
+#include "stm32f4xx.h"
 #include <string.h>
 #include <inttypes.h>
 
@@ -83,8 +85,6 @@ static GPIO_TypeDef* COM_RX_PORT[COMn] = { COM1_RX_GPIO_PORT, COM2_RX_GPIO_PORT 
 /* Timer output compare initialization structure */
 /*static TIM_OCInitTypeDef TIM_OCInitStructure;*/
 
-
-
 /*--------------------------------------------------------------------------------------------------------*/
 /* PUBLIC VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -98,7 +98,8 @@ unsigned char TEKDAQC_BOARD_SERIAL_NUM[BOARD_SERIAL_NUM_LENGTH + 1]; /* 32 chars
 /* Definition of the FLASH disk EEPROM addresses */
 uint16_t EEPROM_ADDRESSES[NUM_EEPROM_ADDRESSES];
 
-
+/* Definition of the self calibrated flag */
+__IO bool isSelfCalibrated = false;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
@@ -359,6 +360,45 @@ void COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct) {
 	}
 }
 
+/**
+ * Disables all interrupts used by the board.
+ *
+ * @param none
+ * @retval none
+ */
+void DisableBoardInterrupts(void) {
+#ifdef DEBUG
+	/*printf("Disabling interrupts.\n\r");*/
+#endif
+#if 0
+	Eth_EXTI_Disable();
+#endif
+	NVIC_DisableIRQ(SysTick_IRQn);
+#ifdef DEBUG
+	/*printf("Interrupts disabled.\n\r");*/
+#endif
+}
+
+/**
+ * Enables all interrupts used by the board.
+ *
+ * @param none
+ * @retval none
+ */
+void EnableBoardInterrupts(void) {
+#ifdef DEBUG
+	/*printf("Re-enabling interrupts.\n\r");*/
+#endif
+#if 0
+	Eth_EXTI_Enable();
+#endif
+	NVIC_EnableIRQ(SysTick_IRQn);
+#ifdef DEBUG
+	/*printf("Interrupts re-enabled.\n\r");*/
+#endif
+}
+
+
 #ifdef DEBUG
 GPIO_TypeDef* GPIO_PORT[TEST_PINn] = { TEST_PIN1_GPIO_PORT, TEST_PIN2_GPIO_PORT,
 		TEST_PIN3_GPIO_PORT, TEST_PIN4_GPIO_PORT };
@@ -422,14 +462,14 @@ void DebugComPort_Init(void) {
 	USART_InitTypeDef USART_InitStructure;
 
 	/* USARTx configured as follow:
-	 - BaudRate = 115200 baud
+	 - BaudRate = 921600 baud
 	 - Word Length = 8 Bits
 	 - One Stop Bit
 	 - No parity
 	 - Hardware flow control disabled (RTS and CTS signals)
 	 - Receive and transmit enabled
 	 */
-	USART_InitStructure.USART_BaudRate = 115200;
+	USART_InitStructure.USART_BaudRate = 921600;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_Parity = USART_Parity_No;

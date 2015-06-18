@@ -26,20 +26,29 @@
 /* INCLUDES */
 /*--------------------------------------------------------------------------------------------------------*/
 
-#include "Tekdaqc_Debug.h"
-#include "ADC_StateMachine.h"
-#include "AnalogInput_Multiplexer.h"
-#include "CommandState.h"
-#include "BoardTemperature.h"
-#include "Tekdaqc_Calibration.h"
-#include "Tekdaqc_CalibrationTable.h"
-#include "ADS1256_Driver.h"
-#include "Tekdaqc_Config.h"
-#include "Tekdaqc_Timers.h"
-#include "TelnetServer.h"
-#include "boolean.h"
+#include <ADC_StateMachine.h>
+#include <ADS1256_Driver.h>
+#include <AnalogInput_Multiplexer.h>
+#include <BoardTemperature.h>
+#include <core_cm4.h>
+#include <CommandState.h>
 #include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <stm32f4x7_eth_bsp.h>
+#include <stm32f4xx.h>
+#include <Tekdaqc_BSP.h>
+#include <Tekdaqc_config.h>
+#include <Tekdaqc_Calibration.h>
+#include <Tekdaqc_CalibrationTable.h>
+#include <Tekdaqc_Timers.h>
+#include <TelnetServer.h>
+#include <math.h>
+#include "netconf.h"
+#include <stm32f4x7_eth.h>
+//#include "boolean.h"
+//#include "Tekdaqc_Config.h"
+//#include "Tekdaqc_Debug.h"
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE DEFINES */
@@ -49,20 +58,7 @@
 /* PRIVATE TYPE DEFINITIONS */
 /*--------------------------------------------------------------------------------------------------------*/
 
-/**
- * @internal
- * @brief Data structure for keeping track of the current state of the calibration process.
- *
- * The Tekdaqc uses this data structure to keep track of the current state of its calibration process, which
- * includes both offset and gain calibrations.
- */
-typedef struct {
-	uint8_t gain_index; /**< The index of the current gain setting being calibrated. */
-	uint8_t rate_index; /**< The index of the current rate setting being calibrated. */
-	uint8_t buffer_index; /**< The index of the current buffer setting being calibrated. */
-	bool finished; /**< TRUE if the particular calibration set has completed. Note that this is not the entire process. */
-	uint8_t finished_count; /**< The number of calibration sets which have completed. */
-} CalibrationState_t;
+
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE VARIABLES */
@@ -94,9 +90,11 @@ static bool waitingOnTemp = false;
 
 static uint8_t scratch_bytes[3];
 
-static CalibrationState_t calibrationState;
+CalibrationState_t calibrationState;
 
 static bool isFirstIdle = true;
+
+static Analog_Input_t* calibrationInput = NULL;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
@@ -119,7 +117,7 @@ static void BeginNextConversion(Analog_Input_t* input);
  * @brief Performs the necessary calibration steps for the ADC.
  */
 static void ADC_Machine_Service_Calibrating(void);
-
+void ADC_Machine_Service_CalibratingVer2(void);
 /**
  * @internal
  * @brief Performs the necessary system gain calibration steps for the ADC.
@@ -154,7 +152,7 @@ static void ConvertCalibrationToBytes(uint8_t bytes[], uint32_t cal);
  * @internal
  * @brief Applies any calibration parameters to the ADC.
  */
-static void ApplyCalibrationParameters(Analog_Input_t* input);
+void ApplyCalibrationParameters(Analog_Input_t* input);
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
@@ -167,8 +165,8 @@ static void ApplyCalibrationParameters(Analog_Input_t* input);
  * @retval const char* The human readable string representation.
  */
 static inline const char* ADCMachine_StringFromState(ADC_State_t machine_state) {
-	static const char* strings[] = { "ADC_UNINITIALIZED", "ADC_INITIALIZED", "ADC_CALIBRATING", "ADC_GAIN_CALIBRATING", "ADC_IDLE",
-			"ADC_CHANNEL_SAMPLING", "ADC_RESET", "ADC_EXTERNAL_MUXING" };
+	static const char* strings[] = {"ADC_UNINITIALIZED", "ADC_INITIALIZED", "ADC_CALIBRATING", "ADC_GAIN_CALIBRATING",
+			"ADC_IDLE", "ADC_CHANNEL_SAMPLING", "ADC_RESET", "ADC_EXTERNAL_MUXING"};
 	return strings[machine_state];
 }
 
@@ -183,6 +181,7 @@ static void BeginNextConversion(Analog_Input_t* input) {
 	ADS1256_SetPGASetting(input->gain);
 	ADS1256_SetInputBufferSetting(input->buffer);
 	ApplyCalibrationParameters(input);
+	ADS1256_Sync(true);
 	ADS1256_Wakeup();
 	input->timestamps[input->bufferWriteIdx] = GetLocalTime();
 }
@@ -194,12 +193,14 @@ static void BeginNextConversion(Analog_Input_t* input) {
  * @retval none
  */
 static void ADC_Machine_Service_Calibrating(void) {
-	static ADS1256_PGA_t gains[] = { ADS1256_PGAx1, ADS1256_PGAx2, ADS1256_PGAx4, ADS1256_PGAx8, ADS1256_PGAx16, ADS1256_PGAx32,
-			ADS1256_PGAx64 };
-	static ADS1256_SPS_t rates[] = { ADS1256_SPS_30000, ADS1256_SPS_15000, ADS1256_SPS_7500, ADS1256_SPS_3750, ADS1256_SPS_2000,
-			ADS1256_SPS_1000, ADS1256_SPS_500, ADS1256_SPS_100, ADS1256_SPS_60, ADS1256_SPS_50, ADS1256_SPS_30, ADS1256_SPS_25,
-			ADS1256_SPS_15, ADS1256_SPS_10, ADS1256_SPS_5, ADS1256_SPS_2_5 };
-	static ADS1256_BUFFER_t buffers[] = { ADS1256_BUFFER_ENABLED, ADS1256_BUFFER_DISABLED };
+	static ADS1256_PGA_t gains[] = {ADS1256_PGAx1, ADS1256_PGAx2, ADS1256_PGAx4, ADS1256_PGAx8, ADS1256_PGAx16,
+			ADS1256_PGAx32, ADS1256_PGAx64};
+	static ADS1256_SPS_t rates[] = {ADS1256_SPS_30000, ADS1256_SPS_15000, ADS1256_SPS_7500, ADS1256_SPS_3750,
+			ADS1256_SPS_2000, ADS1256_SPS_1000, ADS1256_SPS_500, ADS1256_SPS_100, ADS1256_SPS_60, ADS1256_SPS_50,
+			ADS1256_SPS_30, ADS1256_SPS_25, ADS1256_SPS_15, ADS1256_SPS_10, ADS1256_SPS_5, ADS1256_SPS_2_5};
+	static ADS1256_BUFFER_t buffers[] = {ADS1256_BUFFER_ENABLED, ADS1256_BUFFER_DISABLED};
+
+	Analog_Input_t* cold = GetAnalogInputByNumber(COLD_JUNCTION);
 
 	if (calibrationState.finished == false) {
 		if (calibrationState.gain_index < NUM_PGA_SETTINGS) {
@@ -211,6 +212,12 @@ static void ADC_Machine_Service_Calibrating(void) {
 					ADS1256_CalibrateSelf();
 					Tekdaqc_SetBaseGainCalibration(ADS1256_GetGainCalSetting(), rates[calibrationState.rate_index],
 							gains[calibrationState.gain_index], buffers[calibrationState.buffer_index]);
+					if (rates[calibrationState.rate_index] == cold->rate
+							&& gains[calibrationState.gain_index] == cold->gain
+							&& buffers[calibrationState.buffer_index] == cold->buffer) {
+						// We want to save this self gain value
+						Tekdaqc_SetColdJunctionGainCalibration(ADS1256_GetGainCalSetting(), false);
+					}
 					ADS1256_CalibrateSystem_Offset();
 					Tekdaqc_SetOffsetCalibration(ADS1256_GetOffsetCalSetting(), rates[calibrationState.rate_index],
 							gains[calibrationState.gain_index], buffers[calibrationState.buffer_index++]);
@@ -226,20 +233,98 @@ static void ADC_Machine_Service_Calibrating(void) {
 		} else {
 			calibrationState.finished = true;
 		}
-#ifdef ADC_STATE_MACHINE_DEBUG
 		static uint32_t total = NUM_PGA_SETTINGS * NUM_SAMPLE_RATES * NUM_BUFFER_SETTINGS;
-		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %f\%.\n\r",
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %3.1f%%.\n\r",
 				((float) calibrationState.finished_count / total) * 100.0f);
-		printf("%s", TOSTRING_BUFFER);
 		TelnetWriteStatusMessage(TOSTRING_BUFFER);
+#ifdef ADC_STATE_MACHINE_DEBUG
+		printf("%s", TOSTRING_BUFFER);
 #endif
 	} else {
 		/* The calibration is complete */
+#ifdef ADC_STATE_MACHINE_DEBUG
 		printf("[ADC STATE MACHINE] Calibration Completed.\n\r");
+#endif
 		TelnetWriteStatusMessage("[ADC STATE MACHINE] Calibration Completed.\n\r");
+		isSelfCalibrated = true;
 		ADC_Machine_Idle();
 	}
 }
+
+/**
+ * Performs the necessary functions to calibrate the ADC and populate its calibration tables.
+ *
+ * @param none
+ * @retval none
+ */
+void ADC_Machine_Service_CalibratingVer2(void) {
+	static ADS1256_PGA_t gains[] = {ADS1256_PGAx1, ADS1256_PGAx2, ADS1256_PGAx4, ADS1256_PGAx8, ADS1256_PGAx16,
+			ADS1256_PGAx32, ADS1256_PGAx64};
+	static ADS1256_SPS_t rates[] = {ADS1256_SPS_30000, ADS1256_SPS_15000, ADS1256_SPS_7500, ADS1256_SPS_3750,
+			ADS1256_SPS_2000, ADS1256_SPS_1000, ADS1256_SPS_500, ADS1256_SPS_100, ADS1256_SPS_60, ADS1256_SPS_50,
+			ADS1256_SPS_30, ADS1256_SPS_25, ADS1256_SPS_15, ADS1256_SPS_10, ADS1256_SPS_5, ADS1256_SPS_2_5};
+	static ADS1256_BUFFER_t buffers[] = {ADS1256_BUFFER_ENABLED, ADS1256_BUFFER_DISABLED};
+
+	Analog_Input_t* cold = GetAnalogInputByNumber(COLD_JUNCTION);
+
+	if (calibrationState.finished == false) {
+		if (calibrationState.gain_index < NUM_PGA_SETTINGS) {
+			if (calibrationState.rate_index < NUM_SAMPLE_RATES) {
+				if (calibrationState.buffer_index < NUM_BUFFER_SETTINGS) {
+					ADS1256_SetInputBufferSetting(buffers[calibrationState.buffer_index]);
+					ADS1256_SetDataRate(rates[calibrationState.rate_index]);
+					ADS1256_SetPGASetting(gains[calibrationState.gain_index]);
+					ADS1256_CalibrateSelf();
+					//lfao-service LWIP here because calibrating all combinations will take time...
+					/* Check if any packet received */
+					if (ETH_CheckFrameReceived()) {
+						/* Process received Ethernet packet */
+						LwIP_Pkt_Handle();
+					}
+					LwIP_Periodic_Handle(GetLocalTime());
+					Tekdaqc_SetBaseGainCalibration(ADS1256_GetGainCalSetting(), rates[calibrationState.rate_index],
+							gains[calibrationState.gain_index], buffers[calibrationState.buffer_index]);
+					if (rates[calibrationState.rate_index] == cold->rate
+							&& gains[calibrationState.gain_index] == cold->gain
+							&& buffers[calibrationState.buffer_index] == cold->buffer) {
+						// We want to save this self gain value
+						Tekdaqc_SetColdJunctionGainCalibration(ADS1256_GetGainCalSetting(), false);
+					}
+					ADS1256_CalibrateSystem_Offset();
+					Tekdaqc_SetOffsetCalibration(ADS1256_GetOffsetCalSetting(), rates[calibrationState.rate_index],
+							gains[calibrationState.gain_index], buffers[calibrationState.buffer_index++]);
+					calibrationState.finished_count++;
+				} else {
+					calibrationState.buffer_index = 0;
+					calibrationState.rate_index++;
+				}
+			} else {
+				calibrationState.rate_index = 0;
+				calibrationState.gain_index++;
+			}
+		} else {
+			calibrationState.finished = true;
+		}
+		static uint32_t total = NUM_PGA_SETTINGS * NUM_SAMPLE_RATES * NUM_BUFFER_SETTINGS;
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Calibration progress: %3.1f%%.\n\r",
+				((float) calibrationState.finished_count / total) * 100.0f);
+		TelnetWriteStatusMessage(TOSTRING_BUFFER);
+#ifdef ADC_STATE_MACHINE_DEBUG
+		printf("%s", TOSTRING_BUFFER);
+#endif
+	} else {
+		/* The calibration is complete */
+#ifdef ADC_STATE_MACHINE_DEBUG
+		printf("[ADC STATE MACHINE] Calibration Completed.\n\r");
+#endif
+		TelnetWriteStatusMessage("[ADC STATE MACHINE] Calibration Completed.\n\r");
+		isSelfCalibrated = true;
+		//ADC_Machine_Idle();
+	}
+}
+
+
+
 
 /**
  * Performs the necessary functions to system gain calibrate the ADC and populate its calibration tables.
@@ -248,11 +333,15 @@ static void ADC_Machine_Service_Calibrating(void) {
  * @retval none
  */
 static void ADC_Machine_Service_GainCalibrating(void) {
-	uint32_t calibration = ADS1256_GetGainCalSetting();
-	ADS1256_SPS_t rate = ADS1256_GetDataRate();
-	ADS1256_PGA_t gain = ADS1256_GetPGASetting();
-	ADS1256_BUFFER_t buffer = ADS1256_GetInputBufferSetting();
-	Tekdaqc_SetBaseGainCalibration(calibration, rate, gain, buffer);
+	ADS1256_SetDataRate(calibrationInput->rate);
+	ADS1256_SetPGASetting(calibrationInput->gain);
+	ADS1256_SetInputBufferSetting(calibrationInput->buffer);
+	ADS1256_CalibrateSystem_Gain();
+#ifdef ADC_STATE_MACHINE_DEBUG
+	printf("[ADC STATE MACHINE] ADC Registers after calibration...\n\r");
+	ADS1256_PrintRegs();
+#endif
+	ADC_Machine_Idle();
 }
 
 /**
@@ -262,37 +351,40 @@ static void ADC_Machine_Service_GainCalibrating(void) {
  * @retval none
  */
 static void ADC_Machine_Service_Idle(void) {
-	/* If a temperature reading is ready, update the board temperature */
-	if (ADS1256_IsDataReady(false)) {
-		Analog_Input_t* input = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-		ADS1256_Sync(true);
-		waitingOnTemp = false;
-		/* We need to read it */
-		input->values[input->bufferWriteIdx] = ADS1256_GetMeasurement();
-		/* Update temperature */
-		updateBoardTemperature(input, input->values[input->bufferWriteIdx]);
-		++(input->bufferWriteIdx);
-		input->timestamps[input->bufferWriteIdx] = GetLocalTime();
-		ADS1256_Wakeup();
+	/* Only service cold junction sampling if we are not in calibration mode */
+	if (Tekdaqc_IsCalibrationModeEnabled() == false) {
+		/* If a temperature reading is ready, update the board temperature */
+		if (ADS1256_IsDataReady(false)) {
+			Analog_Input_t* input = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+			ADS1256_Sync(true);
+			waitingOnTemp = false;
+			/* We need to read it */
+			input->values[input->bufferWriteIdx] = ADS1256_GetMeasurement();
+			/* Update temperature */
+			updateBoardTemperature(input, input->values[input->bufferWriteIdx]);
+			++(input->bufferWriteIdx);
+			input->timestamps[input->bufferWriteIdx] = GetLocalTime();
+			ADS1256_Wakeup();
 #ifdef BOARD_TEMPERATURE_DEBUG
-		printf("[ADC STATE MACHINE] Cold junction temperature sample is complete.\n\r");
+			//printf("[ADC STATE MACHINE] Cold junction temperature sample is complete.\n\r");
 #endif
-		/* Check the buffer positions for errors/roll over */
-		if (input->bufferWriteIdx == input->bufferReadIdx) {
 			/* Check the buffer positions for errors/roll over */
+			if (input->bufferWriteIdx == input->bufferReadIdx) {
+				/* Check the buffer positions for errors/roll over */
 #ifdef BOARD_TEMPERATURE_DEBUG
-			printf("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
-			TelnetWriteErrorMessage("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
+				printf("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
 #endif
-			/* Buffer is full, overwrite */
-			input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
-		}
-		if (((input->bufferWriteIdx - 1U) == input->bufferReadIdx) && ((input->bufferWriteIdx - 1U) > 0U)) {
-			/* This means we wrote over some data */
-		}
-		if (input->bufferWriteIdx == ANALOG_INPUT_BUFFER_SIZE) {
-			/* We have reached the end of the buffer and need to start writing to the beginning */
-			input->bufferWriteIdx = 0U;
+				//TelnetWriteErrorMessage("[ADC STATE MACHINE] Cold junction sampling overwrote data before it could be read.\n\r");
+				/* Buffer is full, overwrite */
+				input->bufferReadIdx = (input->bufferReadIdx + 1) % ANALOG_INPUT_BUFFER_SIZE;
+			}
+			if (((input->bufferWriteIdx - 1U) == input->bufferReadIdx) && ((input->bufferWriteIdx - 1U) > 0U)) {
+				/* This means we wrote over some data */
+			}
+			if (input->bufferWriteIdx == ANALOG_INPUT_BUFFER_SIZE) {
+				/* We have reached the end of the buffer and need to start writing to the beginning */
+				input->bufferWriteIdx = 0U;
+			}
 		}
 	}
 }
@@ -307,23 +399,26 @@ static void ADC_Machine_Service_Sampling(void) {
 	/* Check if data is ready */
 	if (ADS1256_IsDataReady(false)) {
 		/* We need to read it */
-		printf("Reading ADC Sample.\n\r");
-		ADS1256_PrintRegs();
 		uint8_t writeIndex = samplingInputs[currentSamplingInput]->bufferWriteIdx;
-		samplingInputs[currentSamplingInput]->values[writeIndex] = ADS1256_GetMeasurement();
+		int32_t reading = ADS1256_GetMeasurement();
+		Analog_Input_t* input = samplingInputs[currentSamplingInput];
+		float factor = (input->physicalInput == IN_COLD_JUNCTION) ? 1.0f :
+				Tekdaqc_GetGainCorrectionFactor(input->rate, input->gain, input->buffer, getBoardTemperature());
+		int32_t corrected = (int32_t) roundf(factor * reading);
+		samplingInputs[currentSamplingInput]->values[writeIndex] = corrected;
 		samplingInputs[currentSamplingInput]->bufferWriteIdx = (writeIndex + 1) % ANALOG_INPUT_BUFFER_SIZE;
-		if (samplingInputs[currentSamplingInput]->bufferWriteIdx == samplingInputs[currentSamplingInput]->bufferReadIdx) {
+		if (samplingInputs[currentSamplingInput]->bufferWriteIdx
+				== samplingInputs[currentSamplingInput]->bufferReadIdx) {
 			/* Check the buffer positions for errors/roll over */
 #ifdef ADC_STATE_MACHINE_DEBUG
 			printf("[ADC STATE MACHINE] Analog sampling overwrote data before it could be read.\n\r");
 #endif
 			TelnetWriteErrorMessage("Analog sampling overwrote data before it could be read.");
 			/* Buffer is full, overwrite */
-			samplingInputs[currentSamplingInput]->bufferReadIdx = (samplingInputs[currentSamplingInput]->bufferReadIdx + 1)
-					% ANALOG_INPUT_BUFFER_SIZE;
+			samplingInputs[currentSamplingInput]->bufferReadIdx = (samplingInputs[currentSamplingInput]->bufferReadIdx
+					+ 1) % ANALOG_INPUT_BUFFER_SIZE;
 		}
 
-		ADS1256_Sync(true); /*Halt conversion */
 		/* Select the next input */
 
 		if (numberSamplingInputs > 1) {
@@ -335,13 +430,17 @@ static void ADC_Machine_Service_Sampling(void) {
 					/* We have reached the end of a set */
 					currentSamplingInput = 0U; /* Reset to the start */
 #ifdef ADC_STATE_MACHINE_DEBUG
-					printf("[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r", SampleCurrent + 1, SampleTotal);
+					printf("[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r", SampleCurrent + 1,
+							SampleTotal);
 #endif
 					++SampleCurrent; /* Increment the sample counter */
 				}
 				input = samplingInputs[currentSamplingInput];
 			}
 			if (input != current) { /* Prevent unnecessary external muxings */
+#ifdef ADC_STATE_MACHINE_DEBUG
+				printf("[ADC STATE MACHINE] Selecting next analog channel: %" PRIu8 "\n\r", input->physicalInput);
+#endif
 				SelectAnalogInput(input, true); /* Select the input */
 				/* We are done sampling this input, write out any remaining data */
 				WriteAnalogInput(current);
@@ -351,19 +450,21 @@ static void ADC_Machine_Service_Sampling(void) {
 #endif
 				ADS1256_Wakeup(); /* Begin the next sample */
 				/* Save the real time clock entry for the sample */
-				samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] = GetLocalTime();
+				samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] =
+						GetLocalTime();
 			}
 		} else {
 			/* We are single channel sampling */
-#ifdef ADC_STATE_MACHINE_DEBUG
-			snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r",
-					SampleCurrent + 1, SampleTotal);
+			snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER,
+					"[ADC STATE MACHINE] Sample %" PRIi32 " of %" PRIi32 " is complete.\n\r", SampleCurrent + 1,
+					SampleTotal);
 			TelnetWriteStatusMessage(TOSTRING_BUFFER);
-#endif
 			++SampleCurrent; /* Increment the sample count */
-			ADS1256_Wakeup(); /* Begin the next sample */
+			BeginNextConversion(samplingInputs[currentSamplingInput]);
+			//ADS1256_Wakeup(); /* Begin the next sample */
 			/* Save the real time clock entry for the sample */
-			samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] = GetLocalTime();
+			//samplingInputs[currentSamplingInput]->timestamps[samplingInputs[currentSamplingInput]->bufferWriteIdx] =
+			//		GetLocalTime();
 		}
 		if ((SampleCurrent == SampleTotal) && !((numberSamplingInputs > 1) && SampleCurrent == 0)) {
 			/* The equality check is because we incremented already */
@@ -394,14 +495,7 @@ static void ADC_Machine_Service_Sampling(void) {
  */
 static void ADC_Machine_Service_Muxing(void) {
 	Analog_Input_t* input = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-	if (waitingOnTemp == false) {
-		/* We need to begin a temperature sample */
-		ADS1256_Sync(true);
-		SelectColdJunctionInput();
-		Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-		BeginNextConversion(cold);
-		waitingOnTemp = true;
-	} else {
+	if (waitingOnTemp == true) {
 		/* We are waiting for a temperature sample to complete */
 		if (ADS1256_IsDataReady(false)) {
 			/* We need to read it */
@@ -423,18 +517,21 @@ static void ADC_Machine_Service_Muxing(void) {
 #ifdef BOARD_TEMPERATURE_DEBUG
 			printf("[ADC STATE MACHINE] Cold junction temperature sample is complete.\n\r");
 #endif
-			ADS1256_Sync(false); /*Halt conversion */
 		}
 		if ((PreviousState == ADC_CHANNEL_SAMPLING) && (isExternalMuxingComplete() == true)) {
 			/* We need to select external inputs on the internal multiplexer */
 			ResetSelectedInput();
 			/* We need to begin the next conversion */
-			BeginNextConversion(samplingInputs[currentSamplingInput]);
 			CurrentState = PreviousState; /* Return the state to its previous value */
-		} else if (((PreviousState == ADC_IDLE) || (PreviousState == ADC_CALIBRATING) || (PreviousState == ADC_GAIN_CALIBRATING))
-				&& (isExternalMuxingComplete() == true)) {
-			ResetSelectedInput();
+			BeginNextConversion(samplingInputs[currentSamplingInput]);
+		} else if (((PreviousState == ADC_IDLE) || (PreviousState == ADC_CALIBRATING)
+				|| (PreviousState == ADC_GAIN_CALIBRATING)) && (isExternalMuxingComplete() == true)) {
 			CurrentState = PreviousState;
+			ResetSelectedInput();
+		} else {
+#ifdef ADC_STATE_MACHINE_DEBUG
+			printf("Waiting for muxing to complete.\n\r");
+#endif
 		}
 	}
 }
@@ -445,18 +542,23 @@ static void ConvertCalibrationToBytes(uint8_t bytes[], uint32_t cal) {
 	bytes[2] = (cal & 0xFF0000) >> 16;
 }
 
-static void ApplyCalibrationParameters(Analog_Input_t* input) {
+void ApplyCalibrationParameters(Analog_Input_t* input) {
 	uint32_t offset_cal;
 	uint32_t gain_cal;
+#ifdef ADC_STATE_MACHINE_DEBUG
 	printf("Applying calibration parameters for input: %s\n\r", input->name);
+#endif
 	if (input->physicalInput == IN_COLD_JUNCTION) {
 		offset_cal = Tekdaqc_GetColdJunctionOffsetCalibration();
 		gain_cal = Tekdaqc_GetColdJunctionGainCalibration();
+
 	} else {
 		offset_cal = Tekdaqc_GetOffsetCalibration(input->rate, input->gain, input->buffer);
-		gain_cal = Tekdaqc_GetGainCalibration(input->rate, input->gain, input->buffer, getBoardTemperature());
+		gain_cal = Tekdaqc_GetGainCalibration(input->rate, input->gain, input->buffer);
 	}
-	printf("Calibration params: Offset: 0x%" PRIx32 " Gain: 0x%" PRIx32 "\n\r", offset_cal, gain_cal);
+#ifdef ADC_STATE_MACHINE_DEBUG
+	printf("Calibration params: Offset: 0x%" PRIx32 " Gain: 0x%" PRIx32 " Correction: %0.4f\n\r", offset_cal, gain_cal, nextSampleCorrection);
+#endif
 	ConvertCalibrationToBytes(scratch_bytes, offset_cal);
 	ADS1256_SetOffsetCalSetting(scratch_bytes);
 	ConvertCalibrationToBytes(scratch_bytes, gain_cal);
@@ -490,7 +592,8 @@ void ADC_Machine_Init(void) {
 	/* TODO: Can this be merged into ADC_Machine_Create()? */
 	if ((CurrentState != ADC_UNINITIALIZED)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_INITIALIZED state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_INITIALIZED state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -526,7 +629,8 @@ void ADC_Machine_Init(void) {
 void ADC_Calibrate(void) {
 	if ((CurrentState != ADC_IDLE)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_CALIBRATING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_CALIBRATING state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -544,7 +648,7 @@ void ADC_Calibrate(void) {
 
 		/* Select the calibration input */
 		SelectCalibrationInput();
-		Delay_ms(EXTERNAL_MUX_DELAY);
+		Delay_us(EXTERNAL_MUX_DELAY);
 	}
 }
 
@@ -559,7 +663,8 @@ void ADC_Calibrate(void) {
 void ADC_GainCalibrate(PhysicalAnalogInput_t input) {
 	if ((CurrentState != ADC_IDLE)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_CALIBRATING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_CALIBRATING state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -571,6 +676,9 @@ void ADC_GainCalibrate(PhysicalAnalogInput_t input) {
 		/* Update the finished state */
 		calibrationState.finished = false;
 		calibrationState.finished_count = 0U;
+
+		/* Save the calibration input */
+		calibrationInput = GetAnalogInputByNumber(input);
 
 		/* Select the calibration input */
 		SelectPhysicalInput(input, true);
@@ -590,44 +698,44 @@ void ADC_GainCalibrate(PhysicalAnalogInput_t input) {
 void ADC_Machine_Service(void) {
 	/* Determine the state */
 	switch (CurrentState) {
-	case ADC_UNINITIALIZED:
-		ADC_Machine_Init();
-		break;
-	case ADC_INITIALIZED:
-		ADC_Machine_Idle();
-		break;
-	case ADC_CALIBRATING:
-		ADC_Machine_Service_Calibrating();
-		break;
-	case ADC_GAIN_CALIBRATING:
-		ADC_Machine_Service_GainCalibrating();
-		break;
-	case ADC_IDLE:
-		if (isFirstIdle == true) {
-			isFirstIdle = false;
-			PerformSystemCalibration(); /* Load the offset calibration table */
-		} else {
-			ADC_Machine_Service_Idle();
-		}
-		break;
-	case ADC_CHANNEL_SAMPLING:
-		ADC_Machine_Service_Sampling();
-		break;
-	case ADC_RESET:
-		ADS1256_Full_Reset();
-		SampleCurrent = 0U;
-		SampleTotal = 0U;
-		samplingInputs = NULL;
-		numberSamplingInputs = 0U;
-		currentSamplingInput = NULL_CHANNEL;
-		ADC_Machine_Idle();
-		break;
-	case ADC_EXTERNAL_MUXING:
-		ADC_Machine_Service_Muxing();
-		break;
-	default:
-		/* TODO: Throw an error */
-		break;
+		case ADC_UNINITIALIZED:
+			ADC_Machine_Init();
+			break;
+		case ADC_INITIALIZED:
+			ADC_Machine_Idle();
+			break;
+		case ADC_CALIBRATING:
+			ADC_Machine_Service_Calibrating();
+			break;
+		case ADC_GAIN_CALIBRATING:
+			ADC_Machine_Service_GainCalibrating();
+			break;
+		case ADC_IDLE:
+			if (isFirstIdle == true) {
+				isFirstIdle = false;
+				PerformSystemCalibration(); /* Load the offset calibration table */
+			} else {
+				ADC_Machine_Service_Idle();
+			}
+			break;
+		case ADC_CHANNEL_SAMPLING:
+			ADC_Machine_Service_Sampling();
+			break;
+		case ADC_RESET:
+			ADS1256_Full_Reset();
+			SampleCurrent = 0U;
+			SampleTotal = 0U;
+			samplingInputs = NULL;
+			numberSamplingInputs = 0U;
+			currentSamplingInput = NULL_CHANNEL;
+			ADC_Machine_Idle();
+			break;
+		case ADC_EXTERNAL_MUXING:
+			ADC_Machine_Service_Muxing();
+			break;
+		default:
+			/* TODO: Throw an error */
+			break;
 	}
 }
 
@@ -658,21 +766,27 @@ void ADC_Machine_Halt(void) {
  */
 void ADC_Machine_Idle(void) {
 	/* We use explicit checking here in case other state are added later */
-	if ((CurrentState != ADC_INITIALIZED) && (CurrentState != ADC_CHANNEL_SAMPLING) && (CurrentState != ADC_EXTERNAL_MUXING)
-			&& (CurrentState != ADC_CALIBRATING) && (CurrentState != ADC_GAIN_CALIBRATING)) {
+	if ((CurrentState != ADC_INITIALIZED) && (CurrentState != ADC_CHANNEL_SAMPLING)
+			&& (CurrentState != ADC_EXTERNAL_MUXING) && (CurrentState != ADC_CALIBRATING)
+			&& (CurrentState != ADC_GAIN_CALIBRATING)) {
 		/* We can only enter this state from these states */
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_IDLE state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_IDLE state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
 		printf("[ADC STATE MACHINE] Moving to state ADC_IDLE.\n\r");
 #endif
 		CurrentState = ADC_IDLE;
-		ADS1256_Sync(true);
-		Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-		SelectAnalogInput(cold, false);
-		BeginNextConversion(cold);
+		/* Only start cold junction sampling if we are not in calibration mode */
+		if (Tekdaqc_IsCalibrationModeEnabled() == false) {
+			ADS1256_Wakeup();
+			ADS1256_Sync(true);
+			Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+			SelectAnalogInput(cold, false);
+			BeginNextConversion(cold);
+		}
 	}
 }
 
@@ -688,7 +802,8 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 	/* We use explicit checking here in case other state are added later */
 	if ((CurrentState != ADC_IDLE)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_CHANNEL_SAMPLING state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 		return;
 	}
@@ -726,6 +841,7 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 		uint8_t i = 0U;
 		for (; i < NUM_ANALOG_INPUTS; ++i) {
 			if (inputs[i] != NULL && inputs[i]->added == CHANNEL_ADDED) {
+
 				break;
 			}
 		}
@@ -741,6 +857,7 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 	}
 
 	samplingInputs = inputs;
+
 	Analog_Input_t* input = samplingInputs[currentSamplingInput];
 	CurrentState = ADC_CHANNEL_SAMPLING;
 	SelectAnalogInput(input, true);
@@ -756,9 +873,6 @@ void ADC_Machine_Input_Sample(Analog_Input_t** inputs, uint32_t count, bool sing
 		ADS1256_Wakeup(); /* Start Sampling */
 		/* Save the real time clock entry for the sample */
 		input->timestamps[input->bufferWriteIdx] = GetLocalTime();
-	} else {
-		/* We entered the ADC_MUXING state */
-		ADS1256_Sync(false); /* TODO: Is this necessary? It may cause temperature fluctuations */
 	}
 }
 
@@ -773,7 +887,8 @@ void ADC_Machine_Reset(void) {
 	if ((CurrentState != ADC_IDLE) && (CurrentState != ADC_INITIALIZED) && (CurrentState != ADC_CHANNEL_SAMPLING)
 			&& (CurrentState != ADC_RESET)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_RESET state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_RESET state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 		CurrentState = ADC_RESET;
@@ -791,7 +906,8 @@ void ADC_External_Muxing(void) {
 	if ((CurrentState != ADC_RESET) && (CurrentState != ADC_IDLE) && (CurrentState != ADC_CHANNEL_SAMPLING)
 			&& (CurrentState != ADC_CALIBRATING) && (CurrentState != ADC_GAIN_CALIBRATING)) {
 #ifdef ADC_STATE_MACHINE_DEBUG
-		printf("[ADC STATE MACHINE] Attempted to enter ADC_EXTERNAL_MUXING state from %s\n\r", ADCMachine_StringFromState(CurrentState));
+		printf("[ADC STATE MACHINE] Attempted to enter ADC_EXTERNAL_MUXING state from %s\n\r",
+				ADCMachine_StringFromState(CurrentState));
 #endif
 	} else {
 #ifdef ADC_STATE_MACHINE_DEBUG
@@ -799,6 +915,10 @@ void ADC_External_Muxing(void) {
 #endif
 		PreviousState = CurrentState;
 		CurrentState = ADC_EXTERNAL_MUXING;
-		waitingOnTemp = false;
+		/* We need to begin a temperature sample */
+		SelectColdJunctionInput();
+		Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+		BeginNextConversion(cold);
+		waitingOnTemp = true;
 	}
 }
