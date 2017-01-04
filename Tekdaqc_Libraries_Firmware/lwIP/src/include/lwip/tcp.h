@@ -357,6 +357,9 @@ err_t            tcp_shutdown(struct tcp_pcb *pcb, int shut_rx, int shut_tx);
 
 err_t            tcp_write   (struct tcp_pcb *pcb, const void *dataptr, u16_t len,
                               u8_t apiflags);
+  
+#define SLOW_DIGI_SAMPLE 1000000  	//1 second - digital sampling rate
+#define FAST_NET 5000000 		  	//5 seconds - slow network timeout
 
 void             tcp_setprio (struct tcp_pcb *pcb, u8_t prio);
 
