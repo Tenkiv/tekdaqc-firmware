@@ -33,6 +33,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "Tekdaqc_Debug.h"
 #include "Tekdaqc_BSP.h"
+#include "stm32f4x7_eth.h"
 #include "stm32f4x7_eth_bsp.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
@@ -65,6 +66,8 @@ uint64_t IPaddress = 0U;
 uint32_t DHCPfineTimer = 0U;
 uint32_t DHCPcoarseTimer = 0U;
 __IO uint8_t DHCP_state;
+uint64_t statusLinkOff = 0;
+uint64_t timeLinkOff = 0;
 #endif
 extern __IO uint32_t EthStatus;
 
@@ -187,6 +190,20 @@ void LwIP_Periodic_Handle(__IO uint64_t localtime) {
 	if (time - DHCPfineTimer >= DHCP_FINE_TIMER_MSECS) {
 		DHCPfineTimer = time;
 		dhcp_fine_tmr();
+		if (!statusLinkOff && ((ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1) == 0)) { //detect status link off
+			timeLinkOff = time; //time status link was detected off
+			statusLinkOff = 1; //status link went off
+		}
+		else if (statusLinkOff && (ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1)) { //detect status link on after it was off first
+			if (time - timeLinkOff > 500) { //link off for more than 0.5 sec = 500ms
+				//=> reassign tekdaqc a new ip because connection changed, else keep ip
+				DHCP_state = DHCP_START; //reset state to detect router or direct device connection
+				gnetif.ip_addr.addr = 0U; //reset tekdaqc ip_address
+				//^will allow switching connections while still keeping past commands on the tekdaqc
+			}
+
+			statusLinkOff = 0; //status link went on
+		}		
 		if ((DHCP_state != DHCP_ADDRESS_ASSIGNED) && (DHCP_state != DHCP_TIMEOUT) && (DHCP_state != DHCP_LINK_DOWN)) {
 			/* process DHCP state machine */
 			LwIP_DHCP_Process_Handle();
