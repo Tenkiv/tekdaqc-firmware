@@ -12,21 +12,25 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "Tekdaqc_Config.h"
 #include "stm32f4x7_eth.h"
 #include "netconf.h"
 #include "stm32f4xx_it.h"
 #include "TelnetServer.h"
-#include "Tekdaqc_Locator.h"
-#include "Tekdaqc_CommandInterpreter.h"
 #include "Tekdaqc_CalibrationTable.h"
 #include "Tekdaqc_Calibration.h"
+#include "Tekdaqc_CommandInterpreter.h"
+#include "Tekdaqc_Config.h"
+#include "Tekdaqc_Error.h"
+#include "Tekdaqc_Locator.h"
 #include "Tekdaqc_RTC.h"
+#include "Tekdaqc_Timers.h"
+#include "Tekdaqc_Version.h"
 #include "CommandState.h"
 #include "ADS1256_SPI_Controller.h"
-#include "Tekdaqc_Error.h"
-#include "Tekdaqc_Version.h"
 #include "ADS1256_Driver.h"
+#include "lwip/tcp.h"
+#include "Digital_Input.h"
+#include "Digital_Output.h"
 #include <stdio.h>
 #include <inttypes.h>
 
@@ -121,6 +125,8 @@ int main(void) {
 	if (InitializeTelnetServer() == TELNET_OK) {
 		CreateCommandInterpreter();
 		Tekdaqc_Initialized(true);
+		initializeSlowNet();
+		InitializePwmTimer();
 
 		//lfao: do calibration here since no more state based loop...
 		//ADC_Machine_SetState(ADC_UNINITIALIZED);
@@ -141,11 +147,13 @@ int main(void) {
 	return 0;
 }
 
+extern slowNet_t slowNetwork;
+uint64_t slowNetTime = 0;
+extern uint16_t pwmOutput;
 static void program_loop(void) {
 	/* Infinite loop */
 	while (1)
 	{
-
 		/* Service the inputs/outputs */
 		if(isSelfCalibrated==false)
 		{
@@ -168,9 +176,19 @@ static void program_loop(void) {
 		//lfao - write to telnet the analog samples data...
 		WriteToTelnet_Analog();
 		//lfao - read digital inputs
-		ReadDigitalInputs();
+		if (slowNetwork.digiRate && slowNetwork.digiSamp) {
+			if ((GetLocalTime() - slowNetTime) >= slowNetwork.digiSamp) {
+				slowNetTime = GetLocalTime();
+				ReadDigitalInputs();
+				calcDigiRate(slowNetwork.digiRate);
+			}
+		}
+		else {
+			ReadDigitalInputs();
+		}
 		//lfao - write to telnet the digital inputs data...
 		WriteToTelnet_Digital();
+		SetPwm(pwmOutput);
 	}
 
 	/* Check to see if any faults have occurred */
