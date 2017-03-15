@@ -128,7 +128,7 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"GET_ANALOG_INPUT_SCALE", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SELF_GCAL", "READ_SYSTEM_GCAL",
 		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
 		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "READ_DO_DIAGS",
-		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "DISCONNECT", "REBOOT", "UPGRADE", "IDENTIFY", "SAMPLE",
+		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "SET_PWM_OUTPUT", "DISCONNECT", "REBOOT", "UPGRADE", "IDENTIFY", "SAMPLE",
 		"HALT", "SET_RTC", "SET_USER_MAC", "CLEAR_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
 		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_TEMP", "WRITE_CALIBRATION_VALID",
 		"EXIT_CALIBRATION_MODE", "SET_FACTORY_MAC_ADDR", "SET_BOARD_SERIAL_NUM", "NONE"};
@@ -244,6 +244,8 @@ const char* REMOVE_DIGITAL_OUTPUT_PARAMS[NUM_REMOVE_DIGITAL_OUTPUT_PARAMS] = {PA
  * List of all parameters for the CLEAR_DIGITAL_OUTPUT command.
  */
 const char* CLEAR_DIG_OUTPUT_FAULT_PARAMS[NUM_CLEAR_DIG_OUTPUT_FAULT_PARAMS] = {PARAMETER_OUTPUT};
+
+const char* SET_PWM_PARAMS[NUM_SET_PWM_PARAMS] = {PARAMETER_OUTPUT, PARAMETER_DUTYCYCLE};
 
 /**
  * List of all parameters for the DISCONNECT command.
@@ -367,7 +369,7 @@ Digital_Input_t* dInputs[NUM_DIGITAL_INPUTS];
 /**
  * The last function error which occurred.
  */
-static Tekdaqc_Function_Error_t lastFunctionError = ERR_FUNCTION_OK;
+Tekdaqc_Function_Error_t lastFunctionError = ERR_FUNCTION_OK;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE TYPES */
@@ -644,6 +646,9 @@ static Tekdaqc_Command_Error_t Ex_RemoveDigitalOutput(char keys[][MAX_COMMANDPAR
 static Tekdaqc_Command_Error_t Ex_ClearDigitalOutputFault(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
 
+static Tekdaqc_Command_Error_t Ex_SetPwmOutput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
 /**
  * @internal
  * @brief Execute the DISCONNECT command with the provided parameters.
@@ -786,7 +791,7 @@ static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInpu
 		Ex_GetAnalogInputScale, Ex_SystemCalVer2, Ex_SystemGainCal, Ex_ReadSelfGCal, Ex_ReadSystemGCal,
 		Ex_ListDigitalInputs, Ex_ReadDigitalInput, Ex_AddDigitalInput, Ex_RemoveDigitalInput, Ex_ListDigitalOutputs,
 		Ex_SetDigitalOutput, Ex_ReadDigitalOutput, Ex_ReadDigitalOutputDiags, Ex_RemoveDigitalOutput,
-		Ex_ClearDigitalOutputFault, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt, Ex_SetRTC,
+		Ex_ClearDigitalOutputFault, Ex_SetPwmOutput, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt, Ex_SetRTC,
 		Ex_SetUserMac, Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus, Ex_EnterCalibrationMode,
 		Ex_WriteGainCalibrationValue, Ex_WriteCalibrationTemp, Ex_WriteCalibrationValid, Ex_ExitCalibrationMode,
 		Ex_SetFactoryMACAddr, Ex_SetBoardSerialNum, Ex_None};
@@ -2237,6 +2242,20 @@ static Tekdaqc_Command_Error_t Ex_ClearDigitalOutputFault(char keys[][MAX_COMMAN
 	return retval;
 }
 
+static Tekdaqc_Command_Error_t Ex_SetPwmOutput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+
+	//check for valid keys
+	if (InputArgsCheck(keys, values, count, NUM_SET_PWM_PARAMS, SET_PWM_PARAMS)) {
+		retval = SetPwmOutput(keys, values, count);
+	}
+	else {
+		retval = ERR_COMMAND_PARSE_ERROR;
+	}
+	return retval;
+}
+
 /**
  * Execute the DISCONNECT command.
  *
@@ -2943,7 +2962,7 @@ static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char
 	//lfao-settling time
 	//Delay_us(1000000);
 	//ADS1256_EXTI_Enable();
-	return ERR_COMMAND_OK;
+	return ERR_COMMAND_BAD_COMMAND;
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
