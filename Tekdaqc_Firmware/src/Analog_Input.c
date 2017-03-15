@@ -58,7 +58,7 @@
 //lfao-these variables are used by the DRDY interrupt handler for it to know which channel is sampling and
 //the number of samples to take...
 volatile int viCurrentChannel;
-volatile uint64_t viSamplesToTake;
+volatile uint64_t viSamplesToTake; //=0?
 //lfao-circular buffer details...
 Analog_Samples_t AnalogSampleBuffer[ANALOG_SAMPLES_BUFFER_SIZE];
 volatile int iHead;
@@ -161,6 +161,7 @@ int ReadSampleFromBuffer(Analog_Samples_t *Data)
 }
 
 //lfao-converts the gathered data into ASCII and writes it to Telnet...
+slowNet_t slowNetwork;
 void WriteToTelnet_Analog(void)
 {
 	Analog_Samples_t tempData;
@@ -190,6 +191,15 @@ void WriteToTelnet_Analog(void)
 
 		    snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?A%i\r\n%" PRIu64 ",%" PRIi32 "%c\r\n", tempData.iChannel, tempData.ui64TimeStamp, corrected, 0x1e);
 		    TelnetWriteString(TOSTRING_BUFFER);
+
+		    /*
+		     * decrement iTail to prevent the loss of the sample that could not be moved to
+		     * the telnet buffer to be printed via telnet
+		     */
+		    if (!slowNetwork.bufferFree) {
+		    	iTail--;
+		    	break;
+		    }
 		}
 		else
 		{
@@ -203,7 +213,6 @@ volatile int currentAnalogChannel=0;
 volatile int currentAnHandlerState=0;
 volatile int multipleChannelSamples=0;
 volatile int readColdJunction=0;
-
 //lfao-processes the switching of channels and enabling of the DRDY interrupt...
 void AnalogChannelHandler(void)
 {
@@ -354,6 +363,9 @@ void AnalogChannelHandler(void)
 	}
 	else if(currentAnHandlerState==3)
 	{
+		if (!slowNetwork.slowAnalog) {
+			slowNetwork.slowAnalog = TRUE;
+		}
 		if(viSamplesToTake==0)
 		{
 			currentAnHandlerState=1;
@@ -366,6 +378,7 @@ void AnalogChannelHandler(void)
 				//end of sampling for a single channel...
 				if(numOfInputs==1)
 				{
+					AnalogHalt(); //reset analog sample values
 					aInputs[currentAnalogChannel]=NULL;
 					currentAnHandlerState = 0;
 				}
@@ -379,6 +392,7 @@ void AnalogChannelHandler(void)
 						multipleChannelSamples++;
 						if(numOfInputs*numAnalogSamples==multipleChannelSamples)
 						{
+							AnalogHalt(); //reset analog sample values
 							//empty the aInputs array...
 							for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i)
 							{
@@ -401,6 +415,7 @@ void AnalogHalt(void)
 {
 	ADS1256_EXTI_Disable();
 	currentAnHandlerState=0;
+	viSamplesToTake = 0;
 	multipleChannelSamples=0;
 	numAnalogSamples = 0;
 	numOfInputs = 0;
