@@ -80,10 +80,23 @@ typedef struct {
 
 
 typedef struct {
-int iChannel;
-DigitalLevel_t iLevel;
-uint64_t ui64TimeStamp;
+	int iChannel;
+	DigitalLevel_t iLevel;
+	uint64_t ui64TimeStamp;
 } Digital_Samples_t;
+
+typedef struct {
+	uint32_t digiRate;		//digital sampling rate
+	uint8_t digiInput;		//total number of digital inputs
+	uint16_t digiSamp;		//number of 100us to wait
+	uint32_t track;			//hold sampling rate value under 100us
+	uint16_t serverFull;	//consecutive failure to send - adjust sampling rate accordingly
+	uint16_t serverTrack;	//hold highest serverFull value
+	uint8_t bufScale;		//estimate value to calc digiRate
+	bool bufferFree;		//flag server buffer is full
+	bool sentMessage;		//flag to send slow network message
+	bool slowAnalog;		//flag to send analog network message
+} slowNet_t;
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PUBLIC METHODS */
@@ -147,6 +160,9 @@ void WriteDigitalInput(Digital_Input_t* input);
  */
 void WriteAllDigitalInputs(void);
 
+void initializeSlowNet (void);
+void calcDigiRate (uint32_t rate);
+void rstMessRate (void);
 /**
  * @}
  */
