@@ -93,7 +93,7 @@ void HardFault_Handler(void) {
 	volatile unsigned long _MMAR;*/
 	uint32_t* hardfault_args = (uint32_t*) 0x20000400;
 
-	asm("TST LR, #4 \n"
+	__asm("TST LR, #4 \n"
 			"ITE EQ \n"
 			"MRSEQ R0, MSP \n"
 			"MRSNE R0, PSP \n");
@@ -280,6 +280,20 @@ void TIM4_IRQHandler(void)
         AnalogChannelHandler();
     }
 }
+
+uint8_t pwmCounter = 0;
+void TIM3_IRQHandler(void) {
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) {
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+		pwmCounter++;
+		pwmCounter%=100; //update counter, each increment = 1%
+
+		if (pwmCounter == 0) {
+			TIM_SetCounter(TIM3, 0);
+		}
+	}
+}
+
 /**
   * @brief  This function handles CAN1 RX0 request.
   * @param  None
