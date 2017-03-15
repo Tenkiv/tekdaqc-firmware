@@ -39,6 +39,7 @@
 #include "lwip/stats.h"
 #include "lwip/tcp.h"
 #include "netconf.h"
+#include "Digital_Input.h"
 #include <stdio.h>
 #include <inttypes.h>
 
@@ -181,7 +182,7 @@ static err_t TelnetAccept(void *arg, struct tcp_pcb *pcb, err_t err) {
 	tcp_nagle_enable(pcb);
 	telnet_server.pcb = pcb;
 	telnet_server.pcb->so_options |= SOF_KEEPALIVE;
-	telnet_server.pcb->keep_idle = 300000UL; // 5 Minutes
+	telnet_server.pcb->keep_idle = 60000UL; // 2 seconds
 	telnet_server.pcb->keep_intvl = 1000UL; // 1 Second
 	telnet_server.pcb->keep_cnt = 9; // 9 Consecutive failures terminate
 
@@ -471,25 +472,62 @@ bool TelnetIsConnected(void) {
  * @param tpcb tcp_pcb* To the tcp_pcb struct for the current tcp connection.
  * @retval err_t The error/status code.
  */
+extern slowNet_t slowNetwork;
+extern Digital_Input_t* dInputs[NUM_DIGITAL_INPUTS];
+extern volatile int numOfInputs;
 err_t TelnetPoll(void *arg, struct tcp_pcb *tpcb) {
 	err_t ret_err;
 	TelnetServer_t* server;
 	server = (TelnetServer_t*) arg;
+	err_t err = ERR_OK;
 
 	if (server != NULL) {
 		unsigned long length = server->length;
-		if ((server->pcb != NULL) && (length != 0)) {
-			/* Write the data from the transmit buffer. */
-			tcp_write(server->pcb, server->buffer, length, 1);
+		if (server->pcb != NULL) {
+			if (length != 0) {
+				/* Write the data from the transmit buffer. */
+				err = tcp_write(server->pcb, server->buffer, length, 1);
+				if (err != ERR_MEM) {
+					/* Increment the count of outstanding bytes. */
+					server->outstanding += length;
 
-			/* Increment the count of outstanding bytes. */
-			server->outstanding += length;
+					/* Output the telnet data. */
+					tcp_output(server->pcb);
 
-			/* Output the telnet data. */
-			tcp_output(server->pcb);
-
-			/* Reset the size of the data in the transmit buffer. */
-			server->length = 0;
+					/* Reset the size of the data in the transmit buffer. */
+					server->length = 0;
+					//slow network status message
+					if (slowNetwork.serverTrack && !slowNetwork.sentMessage) {
+						snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[NETWORK] Slow Network detected.\n\r");
+						TelnetWriteErrorMessage(TOSTRING_BUFFER);
+						if (slowNetwork.digiInput) { //send status message only if there are active digital sampling
+							if (slowNetwork.digiRate < 1000000) {
+								snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\t[NETWORK] Digital sampling rate is reduced to %lu sample(s) per sec.\n\r", 1000000/slowNetwork.digiRate);
+							}
+							else {
+								snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\t[NETWORK] Digital sampling rate is reduced to %lu sample(s) per min.\n\r", 60000000/slowNetwork.digiRate);
+							}
+							TelnetWriteString(TOSTRING_BUFFER);
+						}
+						if (slowNetwork.slowAnalog) { //send status message only if there are active analog sampling
+							snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\t[NETWORK] Reduce analog sampling rate to prevent loss of samples.\n\r");
+							TelnetWriteString(TOSTRING_BUFFER);
+						}
+						slowNetwork.sentMessage = TRUE;
+					}
+				}
+				else {
+					tcp_output(server->pcb);
+				}
+			}
+			/*Sampling ended in slow network. Reset slow network values to enter fast network mode*/
+			//halt indicate end of sample
+			else if (slowNetwork.sentMessage && (dInputs[0] == NULL) && !numOfInputs) {
+				rstMessRate();
+				snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[NETWORK] All digital inputs are set to the original sampling rate.\n\r"
+						"\t[NETWORK] All analog inputs can be set to the original sampling rate.\n\r");
+				TelnetWriteErrorMessage(TOSTRING_BUFFER);
+			}
 		}
 		/* See if the telnet connection should be closed; this will only occur once
 		 all transmitted data has been ACKed by the client (so that some or all
@@ -585,17 +623,6 @@ char TelnetRead(void) {
  * @retval none
  */
 void TelnetWrite(const char character) {
-	/* Delay until there is some space in the output buffer.  The buffer is not
-	 completly filled here to leave some room for the processing of received
-	 telnet commands. */
-	while (telnet_server.length > (sizeof(telnet_server.buffer) - 32)) {
-#ifdef TELNET_DEBUG
-		printf("[Telnet Server] Telnet buffer is full!\n\r");
-#endif
-		/* Handle periodic timers for LwIP */
-		LwIP_Periodic_Handle(GetLocalTime());
-	}
-
 	/* Write this character into the output buffer. */
 	telnet_server.buffer[telnet_server.length++] = character;
 }
@@ -610,12 +637,46 @@ void TelnetWrite(const char character) {
  */
 void TelnetWriteString(char* string) {
 	if (TelnetIsConnected() == TRUE) {
+		/**
+		 * prevent incomplete write to the telnet buffer by comparing
+		 * length of string to available space in the telnet buffer
+		 */
+		if (strlen(string) < ((sizeof(telnet_server.buffer) - 32) - telnet_server.length)) {
 #if 0
 		Eth_EXTI_Disable();
 #endif
-		while (*string) {
-			TelnetWrite(*string);
-			++string;
+			while (*string) {
+				TelnetWrite(*string);
+				++string;
+			}
+		}
+		else {
+		/**
+		 * no space available in telnet buffer
+		 * flag analog/digital buffer to keep string <- bufferFree
+		 * space is available in telnet buffer when telnet buffer is segmented in tcp_write
+		 */
+			slowNetwork.bufferFree = FALSE;
+
+			for (int i = 0; i < 4; i++) { //guarantee error, status, debug, command messages to pass through
+				if (string[i] == '-') {	//detect if string is error, status, debug, command message
+					while (strlen(string) > ((sizeof(telnet_server.buffer) - 32) - telnet_server.length)) {
+						if (TelnetIsConnected()) {
+							LwIP_Periodic_Handle(GetLocalTime());  //poll until there is space to send message
+						}
+						else {
+							break;
+						}
+					}
+					if (slowNetwork.bufferFree) {
+						while (*string) {
+							TelnetWrite(*string);
+							++string;
+						}
+					}
+					break;
+				}
+			}
 		}
 #if 0
 		Eth_EXTI_Enable();
