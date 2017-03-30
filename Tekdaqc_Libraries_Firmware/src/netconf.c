@@ -67,7 +67,7 @@ uint64_t IPaddress = 0U;
 uint32_t DHCPfineTimer = 0U;
 uint32_t DHCPcoarseTimer = 0U;
 __IO uint8_t DHCP_state;
-uint8_t statusLinkOff = 0;
+volatile uint8_t statusLinkOff = 0;
 #endif
 extern __IO uint32_t EthStatus;
 
