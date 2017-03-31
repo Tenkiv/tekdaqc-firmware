@@ -1,4 +1,4 @@
-/*
+/**
  ******************************************************************************
  * @file    netconf.c
  * @author  MCD Application Team
@@ -67,7 +67,7 @@ uint64_t IPaddress = 0U;
 uint32_t DHCPfineTimer = 0U;
 uint32_t DHCPcoarseTimer = 0U;
 __IO uint8_t DHCP_state;
-volatile uint8_t statusLinkOff = 0;
+volatile uint8_t statusLinkOff = 0;		//flag ethernet connection on/off
 #endif
 extern __IO uint32_t EthStatus;
 
@@ -191,19 +191,20 @@ void LwIP_Periodic_Handle(__IO uint64_t localtime) {
 		DHCPfineTimer = time;
 		dhcp_fine_tmr();
 
+		//check ethernet cable connection only if tekdaqc is not connected via telnet
 		if (!TelnetIsConnected()) {
 			if ((ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1) == 0) { //detect status link off
 				statusLinkOff++; //status link went off
 			}
-			else if ((statusLinkOff>=11) && (ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1)) { //detect status link on after it was off first
-				//off for 5 seconds
-				//=> reassign tekdaqc a new ip because connection changed, else keep ip
+			//detect status link on after it was off first
+			else if ((statusLinkOff>=11) && (ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1)) {
+				//off for 5 seconds => reassign tekdaqc a new ip because connection changed, else keep ip
 				DHCP_state = DHCP_START; //reset state to detect router or direct device connection
-				gnetif.ip_addr.addr = 0U; //reset tekdaqc ip_address
+				gnetif.ip_addr.addr = 0U; //reset only tekdaqc ip_address
 				//^will allow switching connections while still keeping past commands on the tekdaqc
 				statusLinkOff = 0; //status link went on
 			}
-			else {
+			else { //status link went back on
 				statusLinkOff = 0;
 			}
 		}
@@ -287,6 +288,7 @@ void LwIP_DHCP_Process_Handle() {
 				IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
 				netif_set_addr(&gnetif, &ipaddr, &netmask, &gw);
 
+				//save tekdaqc ip address
 				IPaddress = gnetif.ip_addr.addr;
 				Tekdaqc_LocatorClientIPSet((uint32_t) IPaddress);
 
