@@ -27,6 +27,8 @@
 #include "Tekdaqc_Error.h"
 #include "Tekdaqc_Version.h"
 #include "ADS1256_Driver.h"
+#include "Digital_Input.h"
+#include "Digital_Output.h"
 #include <stdio.h>
 #include <inttypes.h>
 
@@ -121,6 +123,8 @@ int main(void) {
 	if (InitializeTelnetServer() == TELNET_OK) {
 		CreateCommandInterpreter();
 		Tekdaqc_Initialized(true);
+		initializeSlowNet(); 		//initialize parameters for a slow network
+		InitializePwmInterrupt();	//initialize timer for pwm output
 
 		//lfao: do calibration here since no more state based loop...
 		//ADC_Machine_SetState(ADC_UNINITIALIZED);
@@ -141,6 +145,9 @@ int main(void) {
 	return 0;
 }
 
+extern volatile slowNet_t slowNetwork;
+volatile uint64_t slowNetTime = 0;	//previous time digital input was sampled
+extern volatile uint16_t pwmOutput;
 static void program_loop(void) {
 	/* Infinite loop */
 	while (1)
@@ -167,10 +174,21 @@ static void program_loop(void) {
 		}
 		//lfao - write to telnet the analog samples data...
 		WriteToTelnet_Analog();
+
 		//lfao - read digital inputs
-		ReadDigitalInputs();
+		if (slowNetwork.digiRate) { 	//digital input sampling rate throttled
+			if ((GetLocalTime() - slowNetTime) >= slowNetwork.digiRate) {
+				slowNetTime = GetLocalTime();
+				ReadDigitalInputs();
+			}
+		}
+		else {
+			ReadDigitalInputs();
+		}
+
 		//lfao - write to telnet the digital inputs data...
 		WriteToTelnet_Digital();
+		SetPwm(pwmOutput); 	//update digital output
 	}
 
 	/* Check to see if any faults have occurred */
