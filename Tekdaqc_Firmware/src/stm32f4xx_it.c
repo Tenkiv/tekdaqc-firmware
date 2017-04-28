@@ -39,6 +39,7 @@
 #include "netconf.h"
 #include "Tekdaqc_CAN.h"
 #include "Analog_Input.h"
+#include "Digital_Input.h"
 #include <stdio.h>
 #include <inttypes.h>
 
@@ -182,13 +183,23 @@ void DebugMon_Handler(void) {
  * @retval None
  */
 
+volatile uint8_t timerCounter = 0; 	//flag 100us
+volatile uint64_t pwmTimer = 0; 	//50us increment for pwm input
+extern volatile pwmInput_t* pInputs[NUM_DIGITAL_INPUTS];
+
 void SysTick_Handler(void) {
 #if 0
 	/* Update the LocalTime by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
 	//printf("SysTick_Handler...\n");
 	//TestPin_On(PIN2);
 #endif
-	Time_Update();
+	if (timerCounter == 2) { //100us
+		Time_Update();
+		timerCounter = 0;
+	}
+	pwmTimer += 50; //50us
+
+	timerCounter++;
 #if 0
 	//TestPin_Off(PIN2);
 
@@ -280,6 +291,16 @@ void TIM4_IRQHandler(void)
         AnalogChannelHandler();
     }
 }
+
+volatile uint8_t pwmCounter = 0;  //duty cycle for pwm output
+void TIM3_IRQHandler(void) {  //pwm output timer - interrupt every 1ms
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) {
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+		pwmCounter++;
+		pwmCounter%=100; //update counter, each increment = 1%
+	}
+}
+
 /**
   * @brief  This function handles CAN1 RX0 request.
   * @param  None
