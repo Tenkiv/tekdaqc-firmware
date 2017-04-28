@@ -100,6 +100,27 @@ typedef struct {
 	bool slowAnalog;		//flag to send analog network message
 	bool slowDigi;			//flag to send digital network message
 } slowNet_t;
+
+//pwm input params
+typedef struct {
+	uint64_t average;					//average sampling time
+	uint64_t stopTime;				//time to send average results
+	uint64_t prevTime;				//time of last transition
+	uint64_t totalTimeOn;			//total time sample was a '1'
+	uint64_t totalTimeOff;			//total time sample was a '0'
+	int32_t totalTransitions;		//total transition within average time
+	DigitalLevel_t startLevel;		//starting reading - '0' / '1'
+	DigitalLevel_t level;			//last reading - '0' / '1'
+	int64_t samples;				//number of samples to take
+	char name[MAX_DIGITAL_INPUT_NAME_LENGTH];	//name of pwm input
+} pwmInput_t;
+
+typedef struct {
+	uint8_t channel;
+	float dutycycle;
+	uint16_t totalTransitions;
+	uint64_t timeStamp;
+} pwmInputBuffer_t;
 	
 /*--------------------------------------------------------------------------------------------------------*/
 /* PUBLIC METHODS */
@@ -139,6 +160,16 @@ Tekdaqc_Function_Error_t ListDigitalInputs(void);
 Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], int count);
 
 /**
+ * @brief Configures a pwm input with the specified parameters.
+ */
+Tekdaqc_Function_Error_t CreatePwmInput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @brief Removes a pwm input, marking it for exclusion from the state machine.
+ */
+Tekdaqc_Function_Error_t removePwmInput(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
  * @brief Sets the pointer to the function to invoke when digital input data needs to be written.
  */
 void SetDigitalInputWriteFunction(WriteFunction writeFunction);
@@ -172,6 +203,47 @@ void initializeSlowNet (void);
  * @brief Reset digital sampling rate parametes
  */
 void rstMessRate (void);
+	
+/**
+ * @brief Initialize pwm input params
+ */
+void initializePwmInput (void);
+
+/**
+ * @brief Get pwm input
+ */
+pwmInput_t* GetPwmInputByNumber(uint8_t number);
+
+/**
+ * @brief Halt pwm input
+ */
+void PwmInputHalt(void);
+
+/**
+ * @brief Sample pwm input
+ */
+void readPwmInput(void);
+
+/**
+ * @brief Set up Pwm input for sampling
+ */
+void startPwmInput(uint64_t samples);
+
+/**
+ * @brief List all Pwm inputs
+ */
+Tekdaqc_Function_Error_t ListPwmInputs(void);
+
+/**
+ * @brief Write pwm input sample data to telnet
+ */
+void WriteToTelnet_PwmInput (void);
+
+/**
+ * @brief Read digital pin value
+ */
+DigitalLevel_t ReadGPI_Pin(GPI_TypeDef gpi);
+	
 /**
  * @}
  */
