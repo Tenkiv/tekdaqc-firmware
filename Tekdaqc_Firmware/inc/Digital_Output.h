@@ -183,6 +183,32 @@ bool CheckDigitalOutputStatus(void);
 bool SetDigitalOutputFaultStatus(TLE7232_Status_t status, uint8_t chip_id, uint8_t channel);
 
 /**
+ * @brief Initialize interrupt for pwm output
+ */
+void InitializePwmInterrupt (void);
+
+/**
+ * @brief Initialize timer for pwm output
+ */
+void InitializePwmTimer(uint32_t pwmTimerInt);
+
+/**
+ * @brief Update digital output based on pwm output
+ */
+Tekdaqc_Function_Error_t SetPwm(uint16_t uiPwmOutput);
+
+/**
+ * @brief Set digital output as pwm output
+ */
+Tekdaqc_Function_Error_t SetPwmOutput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @brief Set interrupt timer for pwm outputs
+ */
+Tekdaqc_Function_Error_t SetPwmOutputInterrupt(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+/**
  * @}
  */
 
