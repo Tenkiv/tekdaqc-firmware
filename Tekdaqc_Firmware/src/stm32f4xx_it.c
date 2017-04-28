@@ -280,6 +280,16 @@ void TIM4_IRQHandler(void)
         AnalogChannelHandler();
     }
 }
+
+uint8_t volatile pwmCounter = 0;  //duty cycle for pwm output
+void TIM3_IRQHandler(void) {	  //pwm output timer - interrupt every 1ms
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) {
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+		pwmCounter++;
+		pwmCounter%=100; //update counter, each increment = 1%
+	}
+}
+
 /**
   * @brief  This function handles CAN1 RX0 request.
   * @param  None
