@@ -56,6 +56,12 @@ static WriteFunction writer = NULL;
 //static uint8_t DigitalOutputMap[] = {6, 1, 2, 4, 15, 8, 10,	12, 7, 0, 3, 5, 14, 9, 11, 13};
 //static uint8_t channelMap[16] = {14,9,10,12,7,0,2,4,15,8,11,13,6,1,3,5};
 static uint8_t channelMap[16] = {5,3,1,6,13,11,8,15,4,2,0,7,12,10,9,14};
+extern volatile uint8_t pwmCounter;
+volatile uint16_t digiOutput = 0;  	//current active digital output
+volatile uint16_t pwmOutput = 0;		//current output on
+volatile uint16_t currentPwm = 0;	//current active pwm output
+volatile uint8_t pwmDutyCycle[16] = {0};	//saved dutycycle
+volatile bool isPwm = FALSE;			//flag to indicate output is pwm
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE EXTERNAL VARIABLES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -452,6 +458,19 @@ Tekdaqc_Function_Error_t SetDigitalOutput(char keys[][MAX_COMMANDPART_LENGTH], c
 	}
 
 	sscanf(param, "%x", &uiOrigOutput);
+	
+	if (!isPwm) { //command from digital output
+		if (uiOrigOutput & currentPwm) { //err - setting pwm as output
+			return ERR_DOUT_OUTPUT_EXISTS;
+		}
+		digiOutput = uiOrigOutput; //valid output command, save
+		uiOrigOutput |= pwmOutput; //keep pwm on, on
+	}
+	else { //command from pwm output
+		isPwm = FALSE;
+		uiOrigOutput |= digiOutput; //keep digital on, on
+	}
+	
     //remap channel labels data to actual output pins...
 	for (i = 0; i < 16; i++)
 	{
@@ -717,6 +736,221 @@ void SetDigitalOutputWriteFunction(WriteFunction writeFunction) {
 	writer = writeFunction;
 }
 
+//initialize pwm output interrupt
+void InitializePwmInterrupt (void) {
+	NVIC_InitTypeDef nVIC_InitStructure;
+	nVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
+	nVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	nVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	nVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&nVIC_InitStructure);
+
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+
+	InitializePwmTimer(1000);
+}
+
+//timer for pwm output
+void InitializePwmTimer(uint32_t pwmTimerInt) { //interrupt every 1ms
+	//84MHz / (84*1000) = 1kHz -> 1ms
+    TIM_TimeBaseInitTypeDef PwmTimer;
+    PwmTimer.TIM_Prescaler = 83;
+    PwmTimer.TIM_CounterMode = TIM_CounterMode_Up;
+    PwmTimer.TIM_Period = pwmTimerInt;
+    PwmTimer.TIM_ClockDivision = TIM_CKD_DIV1;
+    PwmTimer.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM3, &PwmTimer);
+
+    TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+    TIM_Cmd(TIM3, ENABLE);
+}
+
+//update pwm
+Tekdaqc_Function_Error_t SetPwm(uint16_t uiPwmOutput) {
+	uint8_t i;
+	uint8_t counter = pwmCounter;
+	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
+	char values[MAX_NUM_ARGUMENTS][MAX_COMMANDPART_LENGTH];
+	char keys[MAX_NUM_ARGUMENTS][MAX_COMMANDPART_LENGTH];
+	uint8_t count = 1;
+	uint16_t dummy = pwmOutput;
+	pwmOutput |= uiPwmOutput;
+
+	//turn all inactive pwm off
+	if (uiPwmOutput == 0) {
+		pwmOutput &= currentPwm;
+	}
+
+	//turn all pwm on at '0' counter
+	if (counter == 0) {
+		for (i = 0; i < 16; i++) {
+			if (pwmDutyCycle[i] > 0) {
+				pwmOutput |= (0x0001 << i);
+			}
+		}
+	}
+	//turn pwm off
+	else {
+		for (i = 0; i < 16; i++) {
+			if (pwmDutyCycle[i] && (counter >= pwmDutyCycle[i])) {
+				pwmOutput &= ~(0x0001 << i);
+			}
+		}
+	}
+	if (pwmOutput == dummy) { //no change in output
+		return retval;
+	}
+	strcpy(keys[0], PARAMETER_OUTPUT);
+	char temp[5] = {'0'};
+	for (int i = 0; i < 4; i++) {
+		uint16_t dummy = (pwmOutput >> (i<<2)) & 0x000f;
+		if (dummy < 10) {
+			temp[3-i] = (int) dummy+ 48;
+		}
+		else {
+			temp[3-i] = (int) dummy+ 87;
+		}
+	}
+	strcpy(values[0], temp);
+	isPwm = TRUE;
+	retval = SetDigitalOutput(keys, values, count); //update digital outputs
+	return retval;
+}
+
+Tekdaqc_Function_Error_t SetPwmOutput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+
+	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
+	char *param;
+	int8_t index = -1, i, j;
+	uint16_t uiPwmOutput = 0;
+	uint32_t uiDutyCycle = 0;
+
+	//check for valid output value(s)
+	for (i = 0; i < NUM_SET_PWM_PARAMS; i++) {
+		index = GetIndexOfArgument(keys, SET_PWM_PARAMS[i], count);
+
+		if (index >= 0) {
+			param = values[i];
+			uint8_t len = strlen(param);
+			if (len == 0) {
+				return ERR_DOUT_OUTPUT_UNSPECIFIED;
+			}
+
+			switch(index) {
+				case 0U: {
+					if (len != 4) {
+						return ERR_DOUT_PARSE_ERROR;
+					}
+					for (j = 0; j< len; j++)
+					{
+						if (param[j]<0x30 || param[j]>0x66) //<'0' / >'f'
+						{
+							return ERR_DOUT_PARSE_ERROR;
+						}
+						if (param[j]>0x39 && param[j]<0x41) //>'9' / <'A'
+						{
+							return ERR_DOUT_PARSE_ERROR;
+						}
+						if (param[j]>0x46 && param[j]<0x61) //>'F' / <'a'
+						{
+							return ERR_DOUT_PARSE_ERROR;
+						}
+					}
+					sscanf(param, "%x", &uiPwmOutput); //obtain output input(s) in int
+					//output already exists
+					if (uiPwmOutput & digiOutput) {
+						return ERR_DOUT_OUTPUT_EXISTS;
+					}
+					break;
+				}
+				case 1U: {
+					//valid dutycyle value
+					for (j = 0; j<len; j++) {
+						if (param[j] < 48 || param[j] > 57) { //<'0', >'9'
+							return ERR_DOUT_PARSE_ERROR;
+						}
+					}
+					sscanf(param, "%lu", &uiDutyCycle); //obtain duty cycle in int
+					break;
+				}
+				default:
+					return ERR_DOUT_PARSE_ERROR;
+			}
+		}
+		else {
+			return ERR_DOUT_PARSE_MISSING_KEY;
+		}
+	}
+	//update Duty Cycle values with user input values
+	for (int j = 0; j < 16; j++) {
+		if ((uiPwmOutput >> j) & 0x0001) {
+			pwmDutyCycle[j] = uiDutyCycle;
+		}
+	}
+	//track pwm output
+	if (uiDutyCycle) {
+		currentPwm |= uiPwmOutput;
+	}
+	else {
+		//uiPwmOutput = !uiPwmOutput;
+		currentPwm &= !uiPwmOutput;
+		uiPwmOutput = 0;
+	}
+	//valid command, keys, values -> ok to save values
+	retval = SetPwm(uiPwmOutput); //update digital outputs with new param
+	return retval;
+}
+
+Tekdaqc_Function_Error_t SetPwmOutputInterrupt(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
+	char *param;
+	int8_t index = -1, i, j;
+	uint32_t timerInterrupt = 0;
+
+	//check for valid output value(s)
+	for (i = 0; i < NUM_SET_PWM_OUT_TIMER_PARAMS; i++) {
+		index = GetIndexOfArgument(keys, SET_PWM_OUT_TIMER_PARAMS[i], count);
+
+		if (index == 0) {
+			param = values[i];
+			uint8_t len = strlen(param);
+			if (len == 0) {
+				return ERR_DOUT_PARSE_ERROR;
+			}
+
+			switch(index) {
+				case 0U:  { //pwm timer interrupt in microseconds
+					// 84_000_000 / 84 = 1_000_000
+					// 1_000_000
+					for (j = 0; j < len; j++) {
+						if (param[j] < 48 || param[j] > 57) { //<'0', >'9'
+							return ERR_DOUT_PARSE_ERROR;
+						}
+					}
+					sscanf(param, "%d", &timerInterrupt); //cvt to int
+					if (timerInterrupt < 1000) { // >= 1000
+						return ERR_DOUT_PARSE_ERROR;
+					} else {
+						if ((timerInterrupt % 1000) != 0) { //multiples of 1000
+							return ERR_DOUT_PARSE_ERROR;
+						}
+					}
+					break;
+				}
+				default:
+					return ERR_DOUT_PARSE_ERROR;
+			}
+		} else {
+			return ERR_DOUT_PARSE_ERROR;
+		}
+	}
+
+	TIM_Cmd(TIM3, DISABLE);
+	InitializePwmTimer(timerInterrupt);
+	return retval;
+}
 #if 0
 /**
  * Samples the specified digital output's level and writes out the result.
