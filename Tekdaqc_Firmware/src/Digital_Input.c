@@ -114,6 +114,31 @@ void InitDigitalSamplesBuffer(void)
 	iDigiTail=0;
 }
 
+volatile slowNet_t slowNetwork;
+extern uint64_t TCPTimer; //time to next telnetpoll (+5ms / +10ms)
+
+//initialize slow network parameters
+void initializeSlowNet (void) {
+	slowNetwork.digiRate = 0;
+	slowNetwork.digiInput = 0;
+	slowNetwork.serverFull = 0;
+	slowNetwork.serverTrack = 0;
+	slowNetwork.bufferFree = TRUE;
+	slowNetwork.bufScale = 150;
+	slowNetwork.sentMessage = FALSE;
+	slowNetwork.slowAnalog = FALSE;
+	slowNetwork.slowDigi = FALSE;
+}
+
+//reset digital sampling rate
+void rstMessRate (void) {
+	slowNetwork.slowAnalog = FALSE;
+	slowNetwork.slowDigi = FALSE;
+	slowNetwork.sentMessage = FALSE;
+	slowNetwork.serverFull = 0;
+	slowNetwork.digiRate = 0;
+	slowNetwork.serverTrack = 0;
+}
 //lfao-writes a new sample and updates the iDigiHead
 int WriteDigiSampleToBuffer(Digital_Samples_t *Data)
 {
@@ -121,6 +146,21 @@ int WriteDigiSampleToBuffer(Digital_Samples_t *Data)
 	//full or empty
 	if((iDigiHead+2)%DIGITAL_SAMPLES_BUFFER_SIZE ==  iDigiTail%DIGITAL_SAMPLES_BUFFER_SIZE)
 	{
+		if (slowNetwork.sentMessage) {
+			u8_t error = 3;
+			if (numSamplesTaken) { //sample could not be saved => no sample was taken
+				numSamplesTaken--;
+			}
+			//telnet sends data every 10ms
+			//approx. time of data overflow before 10ms
+			int64_t overFlowTime = ((TCPTimer + 5)*1000) - GetLocalTime();
+			if (overFlowTime < 0) {
+				overFlowTime += 5000;
+			}
+			//scale and add overflow time to digital sampling rate
+			overFlowTime = overFlowTime/slowNetwork.bufScale*slowNetwork.serverTrack*slowNetwork.digiInput;
+			slowNetwork.digiRate += overFlowTime*error;
+		}
 		return 1;
 	}
 	else
@@ -171,6 +211,13 @@ void WriteToTelnet_Digital(void)
 			   snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?D%i\r\n%" PRIu64 ",H%c\r\n", tempData.iChannel, tempData.ui64TimeStamp, 0x1e);
 		    }
 		    TelnetWriteString(TOSTRING_BUFFER);
+			
+		    //decrement iDigiTail to prevent the loss of the sample that could not be moved to
+		    //the telnet buffer to be printed via telnet
+		    if (!slowNetwork.bufferFree) {
+		    	iDigiTail--;
+		    	break;
+		    }
 		}
 		else
 		{
@@ -488,6 +535,7 @@ Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 					if (in >= 0U && in <= NUM_DIGITAL_INPUTS) {
 						/* A valid input number */
 						input = in;
+						slowNetwork.digiInput++; //new input added
 					} else {
 						/* Input number out of range */
 #ifdef DIGITALINPUT_DEBUG
@@ -592,6 +640,9 @@ Tekdaqc_Function_Error_t RemoveDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 					retval = ERR_DIN_PARSE_ERROR;
 				} else {
 					if (isExternalInput(in)) {
+						if (slowNetwork.digiInput) {
+							slowNetwork.digiInput--; //digital input removed
+						}
 						/* A valid input number */
 						RemoveDigitalInputByID(in);
 					} else {
