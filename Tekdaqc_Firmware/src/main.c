@@ -125,6 +125,7 @@ int main(void) {
 		Tekdaqc_Initialized(true);
 		initializeSlowNet(); 		//initialize parameters for a slow network
 		InitializePwmInterrupt();	//initialize timer for pwm output
+		initializePwmInput();	//initialize pwm input params
 
 		//lfao: do calibration here since no more state based loop...
 		//ADC_Machine_SetState(ADC_UNINITIALIZED);
@@ -175,6 +176,9 @@ static void program_loop(void) {
 		//lfao - write to telnet the analog samples data...
 		WriteToTelnet_Analog();
 
+		readPwmInput(); 		//sample pwm input
+		WriteToTelnet_PwmInput();	//write pwm input data to telnet
+		
 		//lfao - read digital inputs
 		if (slowNetwork.digiRate) { 	//digital input sampling rate throttled
 			if ((GetLocalTime() - slowNetTime) >= slowNetwork.digiRate) {
