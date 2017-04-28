@@ -66,6 +66,10 @@ Digital_Samples_t DigitalSampleBuffer[DIGITAL_SAMPLES_BUFFER_SIZE];
 extern volatile uint64_t numDigitalSamples;
 extern volatile int numOfDigitalInputs;
 volatile uint64_t numSamplesTaken = 0;
+
+static pwmInput_t Ext_PInputs[NUM_DIGITAL_INPUTS];	//pwm inputs
+extern pwmInput_t* pInputs[NUM_DIGITAL_INPUTS];		//pointer to pwm inputs
+
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTION PROTOTYPES */
 /*--------------------------------------------------------------------------------------------------------*/
@@ -281,7 +285,7 @@ static inline const char* GPIToString(GPI_TypeDef gpi) {
  * @param gpi GPI_TypeDef The GPI input to read.
  * @retval DigitalLevel_t The digital logic level of the input pin.
  */
-static DigitalLevel_t ReadGPI_Pin(GPI_TypeDef gpi) {
+DigitalLevel_t ReadGPI_Pin(GPI_TypeDef gpi) {
 	uint8_t state = 0;
 	switch (gpi) {
 	case GPI0:
@@ -533,9 +537,14 @@ Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 					retval = ERR_DIN_PARSE_ERROR;
 				} else {
 					if (in >= 0U && in <= NUM_DIGITAL_INPUTS) {
-						/* A valid input number */
-						input = in;
-						slowNetwork.digiInput++; //new input added
+						//prevent adding a pwm input
+						if (!Ext_PInputs[in].average) {
+							input = in;
+							slowNetwork.digiInput++; //new input added
+						}
+						else {
+							return ERR_DIN_INPUT_EXISTS;
+						}
 					} else {
 						/* Input number out of range */
 #ifdef DIGITALINPUT_DEBUG
@@ -576,6 +585,8 @@ Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 					dig_input->level = LOGIC_LOW;
 					dig_input->timestamp = 0U;
 					retval = AddDigitalInput(dig_input);
+				} else if (strcmp(dig_input->name, name) != 0) {
+					strcpy(dig_input->name, name);
 				} else {
 					retval = ERR_DIN_INPUT_EXISTS;
 				}
@@ -762,6 +773,338 @@ void WriteAllDigitalInputs(void) {
 			if (input.added == CHANNEL_ADDED) {
 				WriteDigitalInput(&input);
 			}
+		}
+	}
+}
+
+//initialize official pwm input
+void initializePwmInput (void) {
+	for (int i = 0; i < 24; i++) {
+		Ext_PInputs[i].average = 0;
+		Ext_PInputs[i].stopTime = 0;
+		Ext_PInputs[i].prevTime = 0;
+		Ext_PInputs[i].totalTimeOn = 0;
+		Ext_PInputs[i].totalTimeOff = 0;
+		Ext_PInputs[i].totalTransitions = 0;
+		Ext_PInputs[i].startLevel = LOGIC_LOW;
+		Ext_PInputs[i].level = LOGIC_LOW;
+		Ext_PInputs[i].samples = 0;
+		strcpy(Ext_PInputs[i].name, "NONE");
+		PwmInputHalt();
+	}
+}
+
+//reset pwm input parameters
+static void resetPwmInput(int8_t number) {
+	pInputs[number]->totalTimeOn = 0;
+	pInputs[number]->totalTimeOff = 0;
+	pInputs[number]->totalTransitions = 0;
+}
+
+void PwmInputHalt(void) {
+	for (uint_fast8_t i = 0U; i < NUM_DIGITAL_INPUTS; ++i) {
+		pInputs[i]->samples = 0;
+		resetPwmInput(i);
+		pInputs[i] = NULL; /* NULL them all*/
+	}
+}
+
+pwmInput_t* GetPwmInputByNumber(uint8_t number) {
+	if (isExternalInput(number)) {
+		return &Ext_PInputs[number];
+	} else {
+		/* This is out of range */
+		return NULL ;
+	}
+}
+
+Tekdaqc_Function_Error_t CreatePwmInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Function_Error_t retval = ERR_COMMAND_OK;
+	char *param;			//store value
+	int8_t indx = -1;		//store key index
+	u8_t indexPwm = 0;		//store user input pwm input
+	uint64_t averagePwm = 0; 	//store user input average
+	char* testPtr = NULL;	//for a to i conversion
+	char name[MAX_DIGITAL_INPUT_NAME_LENGTH]; /* The name */
+
+	for (int i = 0; i < NUM_ADD_PWM_INPUT_PARAMS; i++) {
+		indx = GetIndexOfArgument(keys, ADD_PWM_INPUT_PARAMS[i], count);
+
+		if (indx >= 0) { //valid key
+			param = values[indx];
+			switch (i) {
+				case 0U: //input
+					indexPwm = (uint8_t) strtol(param, &testPtr, 10); //cvt char to int
+					if (testPtr == param) { //confirm valid int number
+						return ERR_DIN_PARSE_ERROR;
+					}
+					if ((indexPwm < 0) && (indexPwm >= NUM_DIGITAL_INPUTS)) { //confirm input is b/w 0->23
+						return ERR_DIN_INPUT_OUTOFRANGE;
+					}
+
+					//confirm input does not already exist as a digital input
+					Digital_Input_t* dig_input = GetDigitalInputByNumber(indexPwm);
+					if (dig_input->added == CHANNEL_ADDED) {
+						return ERR_DIN_INPUT_EXISTS;
+					}
+					break;
+				case 1U:  //average in us
+					averagePwm = (uint64_t) strtol(param, &testPtr, 10); //cvt char to int
+					//valid if is int, > 1ms, and increment of 50 us
+					if ((testPtr == param) | (averagePwm < 1000) | ((averagePwm%50) != 0)) {
+							return ERR_DIN_PARSE_ERROR;
+					}
+					break;
+				case 2U:
+					strcpy(name, param);
+					break;
+				default:
+					retval = ERR_DIN_PARSE_MISSING_KEY;
+			}
+		}
+		else {
+			if (i == 1) {
+				averagePwm = 1000;
+			}
+			else if (i == 2) {
+				strcpy(name, "NONE");
+			}
+			else {
+				return ERR_DIN_PARSE_MISSING_KEY;
+			}
+		}
+
+	}
+	Ext_PInputs[indexPwm].average = averagePwm;
+	strcpy(Ext_PInputs[indexPwm].name, name);
+	return retval;
+}
+
+Tekdaqc_Function_Error_t removePwmInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Function_Error_t retval = ERR_COMMAND_OK;
+	char *param;			//store value
+	int8_t indx = -1;		//store key index
+	u8_t indexPwm = 0;		//store user input pwm input
+	char* testPtr = NULL;	//for a to i conversion
+
+	for (int i = 0; i < NUM_REMOVE_PWM_INPUT_PARAMS; i++) {
+		indx = GetIndexOfArgument(keys, ADD_PWM_INPUT_PARAMS[i], count);
+
+		if (indx >= 0) {
+			param = values[indx];
+			switch (i) {
+				case 0U:
+					indexPwm = (uint8_t) strtol(param, &testPtr, 10); //cvt char to int
+					if (testPtr == param) { //confirm valid int number
+						return ERR_DIN_PARSE_ERROR;
+					}
+					if ((indexPwm < 0) && (indexPwm >= NUM_DIGITAL_INPUTS)) { //confirm input is b/w 0->23
+						return ERR_DIN_INPUT_OUTOFRANGE;
+					}
+
+					//confirm input does not already exist as a digital input
+					Digital_Input_t* dig_input = GetDigitalInputByNumber(indexPwm);
+					if (dig_input->added == CHANNEL_ADDED) {
+						return ERR_DIN_INPUT_NOT_FOUND;
+					}
+					break;
+				default:
+					return ERR_DIN_PARSE_MISSING_KEY;
+			}
+		}
+		else {
+			return ERR_DIN_PARSE_MISSING_KEY;
+		}
+		Ext_PInputs[indexPwm].average = 0;
+	}
+	return retval;
+}
+
+/**
+ * Prints a human readable representation of all the added digital inputs via the current write function.
+ *
+ * @param none
+ * @return Tekdaqc_Function_Error_t The error status of this function.
+ */
+Tekdaqc_Function_Error_t ListPwmInputs(void) {
+	Tekdaqc_Function_Error_t retval = ERR_FUNCTION_OK;
+	uint8_t n = snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\n\r----------\n\rAdded Pwm Inputs\n\r----------\n\r");
+	if (n <= 0) {
+#ifdef DIGITALINPUT_DEBUG
+		printf("Failed to write header of digital input list.\n\r");
+#endif
+		retval = ERR_DIN_FAILED_WRITE;
+	} else {
+		if (writer != 0) {
+			writer(TOSTRING_BUFFER);
+		}
+		pwmInput_t input;
+		for (uint_fast8_t i = 0U; i < NUM_DIGITAL_INPUTS; ++i) {
+			input = Ext_PInputs[i];
+			if (input.average) {
+				/* This input has been added */
+				n = snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\tPhysical Input %" PRIi8 ":\n\r\t\tName: %s\n\r\t\tAverage: %llu\n\r", i,
+						input.name, input.average);
+				if (n <= 0) {
+#ifdef DIGITALINPUT_DEBUG
+					printf("Failed to write an digital input to the list.\n\r");
+#endif
+					retval = ERR_DIN_FAILED_WRITE;
+					break;
+				} else {
+					if (writer != 0) {
+						writer(TOSTRING_BUFFER);
+					}
+				}
+			}
+		}
+	}
+	return retval;
+}
+
+void startPwmInput(uint64_t samples) {
+	for (int i = 0; i < NUM_DIGITAL_INPUTS; i++) {
+		if (pInputs[i] != NULL) {
+			if (pInputs[i]->average) {
+				pInputs[i]->samples = samples;
+				pInputs[i]->startLevel = ReadGPI_Pin(i);
+				pInputs[i]->level = pInputs[i]->startLevel;
+				uint64_t currentTime = GetLocalTime();
+				pInputs[i]->stopTime = currentTime + pInputs[i]->average;
+				pInputs[i]->prevTime = currentTime;
+			}
+		}
+	}
+}
+
+//sample pwm input
+void readPwmInput(void) {
+	GPI_TypeDef pinPwm;
+	uint64_t currentTime = 0;
+
+	for (int i = 0; i < NUM_DIGITAL_INPUTS; i++) {
+		if ((pInputs[i] != NULL) && pInputs[i]->average) { //input exist as pwm
+			pinPwm = i;
+			if (ReadGPI_Pin(pinPwm) != pInputs[i]->level) { //detect transition
+				currentTime = GetLocalTime(); //record time of transition
+
+				if (pInputs[i]->totalTransitions) {
+					//detect if prev time to current time is '1' or '0'
+					if (pInputs[i]->level == LOGIC_HIGH) {
+						pInputs[i]->totalTimeOn += (currentTime - pInputs[i]->prevTime);
+					}
+					else {
+						pInputs[i]->totalTimeOff += (currentTime - pInputs[i]->prevTime);
+					}
+				}
+
+				pInputs[i]->prevTime = currentTime; //update prev time to current time
+				pInputs[i]->level = !pInputs[i]->level; //update LOGIC_HIGH/LOGIC_LOW
+
+				//number of transition = number of period
+				if (pInputs[i]->level != pInputs[i]->startLevel) {
+					pInputs[i]->totalTransitions++;
+				}
+			}
+		}
+	}
+}
+
+//track data in buffer
+uint8_t iPwmHead = 0;
+uint8_t iPwmTail = 0;
+pwmInputBuffer_t pwmInputBuffer[DIGITAL_SAMPLES_BUFFER_SIZE]; //hold pwm input sample data
+
+extern volatile uint64_t pwmTimer;
+
+void WriteToTelnet_PwmInput (void) {
+	//flag pwm input to write data to telnet
+	for (int i = 0; i < NUM_DIGITAL_INPUTS; i++) {
+		if ((pInputs[i] != NULL) && (pInputs[i]->average)) {
+			if (pwmTimer >= pInputs[i]->stopTime) { //input exists and needs to write to telnet
+				float dutycycle = 0;
+
+				//obtain average dutycycle
+				if (pInputs[i]->totalTransitions > 1) {
+					float on = pInputs[i]->totalTimeOn;
+					float off = pInputs[i]->totalTimeOff;
+
+					if (pInputs[i]->level == pInputs[i]->startLevel) {
+						int32_t transitions = pInputs[i]->totalTransitions;
+						if (pInputs[i]->level == LOGIC_HIGH) {
+							on /= (transitions - 1);
+							off /= transitions;
+						}
+						else {
+							on /= transitions;
+							off /= (transitions - 1);
+						}
+					}
+
+					float period = on + off; //average period
+					dutycycle = (on / period) * 100; //dutycycle
+				}
+				else {
+					if (pInputs[i]->level == LOGIC_HIGH) {
+						dutycycle = 100;
+					}
+					else {
+						dutycycle = 0;
+					}
+				}
+
+				//store data
+				if((iPwmHead+2)%DIGITAL_SAMPLES_BUFFER_SIZE !=  iPwmTail%DIGITAL_SAMPLES_BUFFER_SIZE) {
+					pwmInputBuffer[iPwmHead].channel = i;
+					pwmInputBuffer[iPwmHead].dutycycle = dutycycle;
+					pwmInputBuffer[iPwmHead].totalTransitions = pInputs[i]->totalTransitions;
+					pwmInputBuffer[iPwmHead].timeStamp = pInputs[i]->stopTime;
+					iPwmHead++;
+					iPwmHead %= DIGITAL_SAMPLES_BUFFER_SIZE;
+				}
+
+				//reset values
+				pInputs[i]->startLevel = pInputs[i]->level;
+				pInputs[i]->prevTime = pInputs[i]->stopTime;
+				pInputs[i]->stopTime += pInputs[i]->average;
+				resetPwmInput(i);
+				//number of samples, -1 => infinte sampling
+				pInputs[i]->samples--;
+				if (pInputs[i]->samples == 0) {
+					pInputs[i] = NULL;
+				}
+				else if (pInputs[i]->samples < 0){
+					pInputs[i]->samples = 0;
+				}
+			}
+		}
+	}
+
+	//write data to telnet
+	while (1) {
+		if (TelnetIsConnected()) {
+			if ((iPwmTail%DIGITAL_SAMPLES_BUFFER_SIZE) != (iPwmHead%DIGITAL_SAMPLES_BUFFER_SIZE)) {
+				pwmInputBuffer_t temp = pwmInputBuffer[iPwmTail];
+				snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?P%i\r\n%i, %0.2f\r\n%" PRIu64 "%c\r\n",
+						temp.channel, temp.totalTransitions, temp.dutycycle, temp.timeStamp, 0x1e);
+				TelnetWriteString(TOSTRING_BUFFER);
+
+
+				if (!slowNetwork.bufferFree) {
+					break;
+				}
+
+				iPwmTail++;
+				iPwmTail %= DIGITAL_SAMPLES_BUFFER_SIZE;
+			}
+			else {
+				break;
+			}
+		}
+		else {
+			break;
 		}
 	}
 }
