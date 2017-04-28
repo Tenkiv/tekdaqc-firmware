@@ -33,7 +33,7 @@ extern "C" {
 /*--------------------------------------------------------------------------------------------------------*/
 
 static const uint8_t MAJOR_VERSION = 1;  // Hardware changes/rearchitecture
-static const uint8_t MINOR_VERSION = 3;  // New features
+static const uint8_t MINOR_VERSION = 4;  // New features
 static const uint8_t BUILD_NUMBER  = 0;  // Bug fixes
 static const uint8_t SPECIAL_BUILD = 0;  // Special unique release, otherwise 0
 
