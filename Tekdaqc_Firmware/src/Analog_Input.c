@@ -161,6 +161,8 @@ int ReadSampleFromBuffer(Analog_Samples_t *Data)
 }
 
 //lfao-converts the gathered data into ASCII and writes it to Telnet...
+volatile slowNet_t slowNetwork;
+
 void WriteToTelnet_Analog(void)
 {
 	Analog_Samples_t tempData;
@@ -190,6 +192,13 @@ void WriteToTelnet_Analog(void)
 
 		    snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?A%i\r\n%" PRIu64 ",%" PRIi32 "%c\r\n", tempData.iChannel, tempData.ui64TimeStamp, corrected, 0x1e);
 		    TelnetWriteString(TOSTRING_BUFFER);
+			
+		    //decrement iTail to prevent the loss of the sample that could not be moved to
+		    //the telnet buffer to be printed via telnet
+		    if (!slowNetwork.bufferFree) {
+		    	iTail--;
+		    	break;
+		    }
 		}
 		else
 		{
@@ -354,6 +363,11 @@ void AnalogChannelHandler(void)
 	}
 	else if(currentAnHandlerState==3)
 	{
+		//flag slow network for analog to print slow analog message
+		if (!slowNetwork.slowAnalog) {
+			slowNetwork.slowAnalog = TRUE;
+		}
+		
 		if(viSamplesToTake==0)
 		{
 			currentAnHandlerState=1;
