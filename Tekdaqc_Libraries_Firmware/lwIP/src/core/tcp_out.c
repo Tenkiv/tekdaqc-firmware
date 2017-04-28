@@ -51,6 +51,9 @@
 #include "lwip/inet_chksum.h"
 #include "lwip/stats.h"
 #include "lwip/snmp.h"
+#include "Tekdaqc_Timers.h"
+#include "TelnetServer.h"
+#include "Digital_Input.h"
 #if LWIP_TCP_TIMESTAMPS
 #include "lwip/sys.h"
 #endif
@@ -350,6 +353,7 @@ tcp_write_checks(struct tcp_pcb *pcb, u16_t len)
  * - TCP_WRITE_FLAG_MORE (0x02) for TCP connection, PSH flag will be set on last segment sent,
  * @return ERR_OK if enqueued, another err_t on error
  */
+extern volatile slowNet_t slowNetwork;
 err_t
 tcp_write(struct tcp_pcb *pcb, const void *arg, u16_t len, u8_t apiflags)
 {
@@ -384,8 +388,26 @@ tcp_write(struct tcp_pcb *pcb, const void *arg, u16_t len, u8_t apiflags)
 
   err = tcp_write_checks(pcb, len);
   if (err != ERR_OK) {
+	if (slowNetwork.digiInput) {
+		slowNetwork.serverFull++; //tekdaqc failed to send data over telnet
+
+		//recalculate digital sampling rate
+		if (slowNetwork.serverFull > slowNetwork.serverTrack) {
+			slowNetwork.serverTrack = slowNetwork.serverFull;
+			//10000 / bufScale => 200 samples can be sent every 10ms
+			uint32_t temp = 10000/slowNetwork.bufScale*slowNetwork.serverTrack*slowNetwork.digiInput;
+			if (temp > slowNetwork.digiRate) {
+				slowNetwork.digiRate = temp;
+				slowNetwork.sentMessage = FALSE;
+			}
+		}
+	}
     return err;
   }
+
+  /*space is available for analog/digital buffer to write to telnet buffer*/
+  slowNetwork.bufferFree = TRUE;
+  slowNetwork.serverFull = 0;
   queuelen = pcb->snd_queuelen;
 
 #if LWIP_TCP_TIMESTAMPS
