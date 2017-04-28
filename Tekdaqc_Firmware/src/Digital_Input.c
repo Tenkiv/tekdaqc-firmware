@@ -232,6 +232,8 @@ void WriteToTelnet_Digital(void)
 
 
 //lfao - read the ADDED inputs
+extern uint64_t currentDTime;
+
 void ReadDigitalInputs(void)
 {
 	Digital_Samples_t tempDigitalSample;
@@ -250,7 +252,7 @@ void ReadDigitalInputs(void)
 
 				tempDigitalSample.iChannel = dInputs[i]->input;
 				tempDigitalSample.iLevel = ReadGPI_Pin(dInputs[i]->input);
-				tempDigitalSample.ui64TimeStamp = GetLocalTime();
+				tempDigitalSample.ui64TimeStamp = currentDTime;
 				WriteDigiSampleToBuffer(&tempDigitalSample);
 			}
 		}
@@ -705,7 +707,7 @@ Digital_Input_t* GetDigitalInputByNumber(uint8_t number) {
  * @retval none
  */
 void SampleDigitalInput(Digital_Input_t* input) {
-	input->timestamp = GetLocalTime();
+	input->timestamp = currentDTime;
 	input->level = ReadGPI_Pin(input->input);
 }
 
