@@ -33,6 +33,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "Tekdaqc_Debug.h"
 #include "Tekdaqc_BSP.h"
+#include "TelnetServer.h"
+#include "stm32f4x7_eth.h"
 #include "stm32f4x7_eth_bsp.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
@@ -65,6 +67,7 @@ uint64_t IPaddress = 0U;
 uint32_t DHCPfineTimer = 0U;
 uint32_t DHCPcoarseTimer = 0U;
 __IO uint8_t DHCP_state;
+volatile uint8_t statusLinkOff = 0;		//flag ethernet connection on/off
 #endif
 extern __IO uint32_t EthStatus;
 
@@ -187,6 +190,23 @@ void LwIP_Periodic_Handle(__IO uint64_t localtime) {
 	if (time - DHCPfineTimer >= DHCP_FINE_TIMER_MSECS) {
 		DHCPfineTimer = time;
 		dhcp_fine_tmr();
+		//check ethernet cable connection only if tekdaqc is not connected via telnet
+		if (!TelnetIsConnected()) {
+			if ((ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1) == 0) { //detect status link off
+				statusLinkOff++; //status link went off
+			}
+			//detect status link on after it was off first
+			else if ((statusLinkOff>=11) && (ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1)) {
+				//off for 5 seconds => reassign tekdaqc a new ip because connection changed, else keep ip
+				DHCP_state = DHCP_START; //reset state to detect router or direct device connection
+				gnetif.ip_addr.addr = 0U; //reset only tekdaqc ip_address
+				//^will allow switching connections while still keeping past commands on the tekdaqc
+				statusLinkOff = 0; //status link went on
+			}
+			else { //status link went back on
+				statusLinkOff = 0;
+			}
+		}
 		if ((DHCP_state != DHCP_ADDRESS_ASSIGNED) && (DHCP_state != DHCP_TIMEOUT) && (DHCP_state != DHCP_LINK_DOWN)) {
 			/* process DHCP state machine */
 			LwIP_DHCP_Process_Handle();
@@ -265,6 +285,9 @@ void LwIP_DHCP_Process_Handle() {
 				IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1, NETMASK_ADDR2, NETMASK_ADDR3);
 				IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
 				netif_set_addr(&gnetif, &ipaddr, &netmask, &gw);
+				//save tekdaqc ip address
+				IPaddress = gnetif.ip_addr.addr;
+				Tekdaqc_LocatorClientIPSet((uint32_t) IPaddress);
 
 #ifdef DEBUG
 				printf("DHCP Timeout\n\r");
