@@ -126,10 +126,10 @@ static const char COMMAND_DELIMETER[] = {0x20, 0x00};
 static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_ADC_REGISTERS", "READ_ANALOG_INPUT",
 		"ADD_ANALOG_INPUT", "REMOVE_ANALOG_INPUT", "CHECK_ANALOG_INPUT", "SET_ANALOG_INPUT_SCALE",
 		"GET_ANALOG_INPUT_SCALE", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SELF_GCAL", "READ_SYSTEM_GCAL",
-		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
-		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "READ_DO_DIAGS", "REMOVE_DIGITAL_OUTPUT",
-		"CLEAR_DIG_OUTPUT_FAULT", "SET_PWM_OUTPUT", "SET_PWM_OUTPUT_TIMER", "DISCONNECT", "REBOOT", "UPGRADE",
-		"IDENTIFY", "SAMPLE", "HALT", "SET_RTC", "SET_USER_MAC", "CLEAR_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
+		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT", "ADD_PWM_INPUT", "REMOVE_PWM_INPUT",
+		"READ_PWM_INPUT", "LIST_PWM_INPUTS", "LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "READ_DO_DIAGS",
+		"REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "SET_PWM_OUTPUT", "SET_PWM_OUTPUT_TIMER", "DISCONNECT", "REBOOT", "UPGRADE", "IDENTIFY", "SAMPLE",
+		"HALT", "SET_DEFAULT_TIME", "CHECK_DEFAULT_TIME", "SET_USER_MAC", "CLEAR_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
 		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_TEMP", "WRITE_CALIBRATION_VALID",
 		"EXIT_CALIBRATION_MODE", "SET_FACTORY_MAC_ADDR", "SET_BOARD_SERIAL_NUM", "NONE"};
 
@@ -214,6 +214,22 @@ const char* ADD_DIGITAL_INPUT_PARAMS[NUM_ADD_DIGITAL_INPUT_PARAMS] = {PARAMETER_
  * List of all parameters for the REMOVE_DIGITAL_INPUT command.
  */
 const char* REMOVE_DIGITAL_INPUT_PARAMS[NUM_REMOVE_DIGITAL_INPUT_PARAMS] = {PARAMETER_INPUT};
+
+/* List of all parameters for the ADD_PWM_INPUT_PARAMS command.
+*/
+const char* ADD_PWM_INPUT_PARAMS[NUM_ADD_PWM_INPUT_PARAMS] = {PARAMETER_INPUT, PARAMETER_AVERAGE, PARAMETER_NAME};
+/**
+ *  List of all parameters for the REMOVE_PWM_INPUT_PARAMS command.
+*/
+const char* REMOVE_PWM_INPUT_PARAMS[NUM_REMOVE_PWM_INPUT_PARAMS] = {PARAMETER_INPUT};
+/**
+ *  List of all parameters for the READ_PWM_INPUT_PARAMS command.
+*/
+const char* READ_PWM_INPUT_PARAMS[NUM_READ_PWM_INPUT_PARAMS] = {PARAMETER_INPUT, PARAMETER_NUMBER};
+/**
+ *  List of all parameters for the LIST_PWM_INPUTS_PARAMS command.
+*/
+const char* LIST_PWM_INPUTS_PARAMS[NUM_LIST_PWM_INPUTS_PARAMS];
 
 /**
  * List of all parameters for the LIST_DIGITAL_OUTPUTS command.
@@ -368,6 +384,11 @@ volatile int infiniteSampling=0;
  * List of digital inputs referenced for use by a command.
  */
 Digital_Input_t* dInputs[NUM_DIGITAL_INPUTS];
+
+/**
+ * List of pwm inputs referenced for use by a command.
+ */
+pwmInput_t* pInputs[NUM_DIGITAL_INPUTS];
 
 /**
  * List of digital outputs referenced for use by a command.
@@ -614,6 +635,33 @@ static Tekdaqc_Command_Error_t Ex_RemoveDigitalInput(char keys[][MAX_COMMANDPART
 
 /**
  * @internal
+ * @brief Execute the ADD_PWM_INPUT command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_AddPwmInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+/**
+ * @internal
+ * @brief Execute the REMOVE_PWM_INPUT command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_RemovePwmInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the READ_PWM_INPUT command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_ReadPwmInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the LIST_PWM_INPUT command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_ListPwmInputs(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
  * @brief Execute the LIST_DIGITAL_OUTPUTS command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_ListDigitalOutputs(char keys[][MAX_COMMANDPART_LENGTH],
@@ -808,12 +856,12 @@ static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char
 static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInputs, Ex_ReadADCRegisters,
 		Ex_ReadAnalogInputVer2, Ex_AddAnalogInput, Ex_RemoveAnalogInput, Ex_CheckAnalogInput, Ex_SetAnalogInputScale,
 		Ex_GetAnalogInputScale, Ex_SystemCalVer2, Ex_SystemGainCal, Ex_ReadSelfGCal, Ex_ReadSystemGCal,
-		Ex_ListDigitalInputs, Ex_ReadDigitalInput, Ex_AddDigitalInput, Ex_RemoveDigitalInput, Ex_ListDigitalOutputs,
-		Ex_SetDigitalOutput, Ex_ReadDigitalOutput, Ex_ReadDigitalOutputDiags, Ex_RemoveDigitalOutput,
-		Ex_ClearDigitalOutputFault, Ex_SetPwmOutput, Ex_SetPwmOutputTimer, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt, Ex_SetRTC,
-		Ex_SetUserMac, Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus, Ex_EnterCalibrationMode,
-		Ex_WriteGainCalibrationValue, Ex_WriteCalibrationTemp, Ex_WriteCalibrationValid, Ex_ExitCalibrationMode,
-		Ex_SetFactoryMACAddr, Ex_SetBoardSerialNum, Ex_None};
+		Ex_ListDigitalInputs, Ex_ReadDigitalInput, Ex_AddDigitalInput, Ex_RemoveDigitalInput, Ex_AddPwmInput, Ex_RemovePwmInput,
+		Ex_ReadPwmInput, Ex_ListPwmInputs, Ex_ListDigitalOutputs, Ex_SetDigitalOutput, Ex_ReadDigitalOutput, Ex_ReadDigitalOutputDiags,
+		Ex_RemoveDigitalOutput, Ex_ClearDigitalOutputFault, Ex_SetPwmOutput, Ex_SetPwmOutputTimer, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify,
+		Ex_Sample, Ex_Halt, Ex_SetUserMac, Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus,
+		Ex_EnterCalibrationMode, Ex_WriteGainCalibrationValue, Ex_WriteCalibrationTemp, Ex_WriteCalibrationValid,
+		Ex_ExitCalibrationMode, Ex_SetFactoryMACAddr, Ex_SetBoardSerialNum, Ex_None};
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
@@ -1282,6 +1330,101 @@ static void BuildDigitalInputList(Channel_List_t list_type, char* param) {
 			printf("[Command Interpreter] The specified input range is invalid.\n\r");
 #endif
 			break;
+	}
+}
+
+/**
+ * Build the list of pwm inputs which are to be sampled.
+ *
+ * @param list_type Channel_List_t The type of list provided in the parameter.
+ * @param param char* C-String containing the inputs to use.
+ * @retval none
+ */
+static void BuildPwmInputList(Channel_List_t list_type, char* param) {
+	uint8_t count = 0U;
+	char* ptr = NULL;
+	int8_t channel = -1;
+	long int value = 0L;
+	char* str = NULL;
+	uint8_t start = 0U;
+	uint8_t end = 0U;
+	uint8_t value1 = 0U;
+	uint8_t value2 = 0U;
+
+	for (uint_fast8_t i = 0U; i < NUM_DIGITAL_INPUTS; ++i) {
+		pInputs[i] = NULL; /* NULL them all initially */
+	}
+
+	switch (list_type) {
+		case SINGLE_CHANNEL: /* SINGLE_CHANNEL */
+			channel = (int8_t) strtol(param, NULL, 10);
+			if (channel < 0 || channel > NUM_DIGITAL_INPUTS) {
+				/* Input number out of range */
+#ifdef COMMAND_DEBUG
+				printf("[Command Interpreter] The requested input number is out of range.\n\r");
+#endif
+				break;
+			}
+			pInputs[channel] = GetPwmInputByNumber(channel);
+			break; /* END SINGLE_INPUT */
+		case CHANNEL_SET: /* CHANNEL_SET */
+			if (param != NULL) {
+				str = param;
+				while (TRUE) {
+					if (*ptr == SET_DELIMETER) {
+						str = ptr + 1;
+					}
+					value = strtol(str, &ptr, 10);
+					if (value < NUM_DIGITAL_INPUTS && value >= 0L) {
+						pInputs[value] = GetPwmInputByNumber(value);
+						++count;
+					}
+					if (ptr == NULL) {
+						break;
+					}
+				}
+			}
+			break; /* END INPUT SET */
+		case CHANNEL_RANGE: /* INPUT_RANGE */
+			start = 0U;
+			end = 0U;
+			value1 = (uint8_t) strtol(param, &ptr, 10); /* We know these can potentially loose data...it would be invalid anyway */
+			value2 = (uint8_t) strtol((ptr + 1), NULL, 10);
+
+			if (value1 != 0L) {
+				start = value1;
+			} else {
+				start = 0U;
+			}
+			if (value2 != 0L) {
+				end = value2;
+			} else {
+				end = NUM_DIGITAL_INPUTS;
+			}
+
+			count = end - start + 1;
+			for (int i = 0; i < count; ++i) {
+				pInputs[i] = GetPwmInputByNumber(start + i); /* Some of these may be NULL, this is OK. */
+			}
+			break;
+		case ALL_CHANNELS: /* ALL_CHANNELS */
+			count = NUM_DIGITAL_INPUTS;
+			for (int i = 0; i < count; ++i) {
+				pInputs[i] = GetPwmInputByNumber(i); /* Some of these may be NULL, this is OK. */
+			}
+			break; /* END ALL_CHANNELS */
+		default:
+#ifdef COMMAND_DEBUG
+			printf("[Command Interpreter] The specified input range is invalid.\n\r");
+#endif
+			break;
+	}
+	for (int i = 0; i < NUM_DIGITAL_INPUTS; ++i) {
+		if (pInputs[i] != NULL) {
+			if (!pInputs[i]->average) {
+				pInputs[i] = NULL;
+			}
+		}
 	}
 }
 
@@ -2111,6 +2254,124 @@ static Tekdaqc_Command_Error_t Ex_RemoveDigitalInput(char keys[][MAX_COMMANDPART
 }
 
 /**
+ * Execute the ADD_PWM_INPUT command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_AddPwmInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+
+	//keys are valid
+	if (InputArgsCheck(keys, values, count, NUM_ADD_PWM_INPUT_PARAMS, ADD_PWM_INPUT_PARAMS)) {
+		//check for valid values - input, average
+		Tekdaqc_Function_Error_t status = CreatePwmInput(keys, values, count);
+		if (status != ERR_FUNCTION_OK) {
+			lastFunctionError = status;
+			retval = ERR_COMMAND_FUNCTION_ERROR;
+		}
+	}
+	else {
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
+ * Execute the REMOVE_PWM_INPUT command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_RemovePwmInput(char keys[][MAX_COMMANDPART_LENGTH], //add to command
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+
+	if (InputArgsCheck(keys, values, count, NUM_REMOVE_PWM_INPUT_PARAMS, REMOVE_PWM_INPUT_PARAMS)) { //create variable
+		Tekdaqc_Function_Error_t status = removePwmInput(keys, values, count);
+		if (status != ERR_FUNCTION_OK) {
+			lastFunctionError = status;
+			retval = ERR_COMMAND_FUNCTION_ERROR;
+		}
+	}
+	else {
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
+ * Execute the READ_PWM_INPUT command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_ReadPwmInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	uint64_t numPwmSamples = 0;
+
+	PwmInputHalt();
+	if (InputArgsCheck(keys, values, count, NUM_READ_PWM_INPUT_PARAMS, READ_PWM_INPUT_PARAMS)) {
+		Channel_List_t list_type = 0;
+		int8_t index = -1;
+		for (int i = 0; i < NUM_READ_PWM_INPUT_PARAMS; ++i) {
+			index = GetIndexOfArgument(keys, READ_PWM_INPUT_PARAMS[i], count);
+			if (index >= 0) { /* We found the key in the list */
+				switch (index) {
+					case 0:	//input
+						list_type = GetChannelListType(values[index]);
+						BuildPwmInputList(list_type, values[index]);
+						break;
+					case 1: //number
+						numPwmSamples = strtol(values[index], NULL, 10);
+						break;
+					default:
+						/* Return error */
+						return ERR_COMMAND_PARSE_ERROR;
+				}
+			}
+		}
+		startPwmInput(numPwmSamples);
+	}
+	else {
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
+ * Execute the LIST_DIGITAL_OUTPUTS command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+static Tekdaqc_Command_Error_t Ex_ListPwmInputs(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	if (InputArgsCheck(keys, values, count, NUM_LIST_PWM_INPUTS_PARAMS, LIST_PWM_INPUTS_PARAMS)) {
+		Tekdaqc_Function_Error_t status = ListPwmInputs();
+		if (status != ERR_FUNCTION_OK) {
+			lastFunctionError = status;
+			retval = ERR_COMMAND_FUNCTION_ERROR;
+		}
+	} else {
+		/* We can't create a new input */
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+	return retval;
+}
+
+/**
  * Execute the LIST_DIGITAL_OUTPUTS command.
  *
  * @param keys char[][] C-String of the command parameter keys.
@@ -2447,9 +2708,11 @@ static Tekdaqc_Command_Error_t Ex_Identify(char keys[][MAX_COMMANDPART_LENGTH], 
 static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	uint64_t numPwmSamples = 0;
 	//halt analog...
 	AnalogHalt();
 	DigitalInputHalt();
+	PwmInputHalt();
 	if (InputArgsCheck(keys, values, count, NUM_SAMPLE_PARAMS, SAMPLE_PARAMS)) {
 
 		int8_t index = -1;
@@ -2463,6 +2726,7 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 #endif
 						numAnalogSamples = (int32_t) strtol(values[index], NULL, 10);
 						numDigitalSamples= numAnalogSamples;
+						numPwmSamples = numAnalogSamples;
 						break;
 					default:
 						/* Return an error */
@@ -2499,6 +2763,8 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 				}
 			}
 		}
+		BuildPwmInputList(ALL_CHANNELS, NULL);
+		startPwmInput(numPwmSamples);
 	} else {
 		/* We can't sample */
 #ifdef COMMAND_DEBUG
