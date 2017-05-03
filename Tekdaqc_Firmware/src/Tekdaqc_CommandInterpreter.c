@@ -2840,8 +2840,6 @@ static Tekdaqc_Command_Error_t Ex_Halt(char keys[][MAX_COMMANDPART_LENGTH], char
  */
 //--date 0000/00/00
 //--time 00:00:00
-char defaultDate[MAX_TIME_CHARS] = DATE_DEFAULT; 	// 00/00/0000 -> month/day/year
-char defaultTime[MAX_TIME_CHARS] = TIME_DEFAULT;	// 00:00:00 -> hour:minute:second
 uint64_t currentDTime = 0;	//current tekdaqc default timestamp
 uint8_t update_DTime = 1;	//flag to update default timestamp
 
@@ -2850,11 +2848,9 @@ static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LEN
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	char* testPtr = NULL;	//pointer to user input
 	char *param;			//temporarily hold user input value
-	char tempDate[10];		//hold user input date
 	char tempTime[10];		//hold user input time
 	uint64_t numTime = 0;	//hold total seconds of time input
-	uint8_t updateDate = 1;	//flag to change default date
-	uint8_t updateTime = 1;	//flag to change default time
+	uint64_t epochTime = 0;	//hold total seconds of date input
 
 	if (InputArgsCheck(keys, values, count, NUM_SET_DEFAULT_TIME_PARAMS, SET_DEFAULT_TIME_PARAMS)) {
 		int8_t indx = -1;
@@ -2865,24 +2861,62 @@ static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LEN
 
 				switch (i) {
 					case 0U: //default date
-						strcpy(tempDate, param);
-
 						for (int j = 0; j < 3; j++) {
-							uint8_t num = (uint8_t) strtol(param, &testPtr, 10); //cvt char to int
+							uint32_t num = (uint32_t) strtol(param, &testPtr, 10); //cvt char to int
 							if (testPtr == param) { //confirm valid int number
 								retval = ERR_COMMAND_PARSE_ERROR;
-							}
-							else if ((testPtr[0] != '/') & (testPtr[0] != '\0')) {
+							} else if ((testPtr[0] != '/') & (testPtr[0] != '\0')) {
+								retval = ERR_COMMAND_PARSE_ERROR;
+							} else if (num < 0) {
 								retval = ERR_COMMAND_PARSE_ERROR;
 							}
-							else if (num < 0) {
-								retval = ERR_COMMAND_PARSE_ERROR;
-							}
-							else if ((j == 1) && (num > 12)) {
-								retval = ERR_COMMAND_PARSE_ERROR;
-							}
-							else if ((j == 2) && (num > 31)) {
-								retval = ERR_COMMAND_PARSE_ERROR;
+							else if (j == 0){ //month
+								if (num > 12) {
+									retval = ERR_COMMAND_PARSE_ERROR;
+								} else {
+									num--;
+									if (num < 8) {
+										int dummy = num;
+										if (!(dummy % 2)) {
+											dummy /= 2;
+											epochTime += ((31*dummy + 28 + 30*(dummy-1))*SECONDS_D);
+										} else {
+											dummy /= 2;
+											epochTime += ((31*(dummy+1) + 28 + 30*(dummy-1))*SECONDS_D);
+										}
+									} else {
+										int dummy = num - 8;
+										if (!(dummy%2)) {
+											dummy /= 2;
+											epochTime += ((31*(dummy+1) + 30*(dummy))*SECONDS_D);
+										} else {
+											dummy /= 2;
+											dummy++;
+											epochTime += ((31*(dummy) + 30*(dummy))*SECONDS_D);
+										}
+									}
+								}
+							} else if (j == 1) { //day
+								if (num > 31) {
+									retval = ERR_COMMAND_PARSE_ERROR;
+								} else {
+									epochTime += (num * SECONDS_D);
+								}
+							} else if (j == 2) { //year
+								if (num < 1970) {
+									retval = ERR_COMMAND_PARSE_ERROR;
+								} else {
+									num -= 1970;
+									epochTime += (num * SECONDS_Y);
+									uint32_t temp = num/4;
+									uint32_t dummy = 0;
+									dummy += temp;
+									temp = num/100;
+									dummy -= temp;
+									temp = num/400;
+									dummy += temp;
+									epochTime += (dummy*SECONDS_D);
+								}
 							}
 							testPtr++;
 							strcpy(param, testPtr);
@@ -2900,22 +2934,18 @@ static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LEN
 								}
 							}
 
-							if (testPtr[0] != ':') {
-								if (strlen(tempTime) < 8) {
-									strcat(tempTime, ":00");
-								}
+							if ((j != 2) && (testPtr[0] != ':')) {
+								return ERR_COMMAND_PARSE_ERROR;
 							}
 
 							if (num) { //cvt input to seconds
 								if (j == 0) { //hour
 									if ((num > 0) && (num < 24)) {
 										numTime += (num*3600);
-									}
-									else {
+									} else {
 										retval = ERR_COMMAND_PARSE_ERROR;
 									}
-								}
-								else {
+								} else {
 									if ((num > 0) && (num < 60)) {
 										if (j == 1) { //minute
 											numTime += (num*60);
@@ -2923,12 +2953,12 @@ static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LEN
 										else if (j == 2) { //second
 											numTime += num;
 										}
-									}
-									else {
+									} else {
 										retval = ERR_COMMAND_PARSE_ERROR;
 									}
 								}
 							}
+
 							testPtr++;
 							strcpy(param, testPtr);
 						}
@@ -2937,45 +2967,20 @@ static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LEN
 						retval = ERR_COMMAND_BAD_PARAM;
 						break;
 				}
-			}
-			else {
-				if (i == 0) { //date
-					updateDate = 0;
-				}
-				else if (i == 1) { //time
-					updateTime = 0;
-				}
-				else {
-					retval = ERR_COMMAND_BAD_PARAM;
-				}
+			} else {
+				retval = ERR_COMMAND_BAD_PARAM;
 			}
 		}
-	}
-	else {
+	} else {
 		retval = ERR_COMMAND_BAD_PARAM;
 	}
 
 	if (retval == ERR_COMMAND_OK) {
-		if (!updateDate && !updateTime){
-			return ERR_COMMAND_BAD_PARAM;
-		}
-
-		if (updateDate) {	//update date
-			strcpy(defaultDate, tempDate);
-		}
-
-		if (updateTime) {	//update time
-			update_DTime = 0;
-			if (numTime > 0) {
-				strcpy(defaultTime, tempTime);
-				currentDTime = numTime*1000*1000;
-			}
-			else {
-				strcpy(defaultTime, TIME_DEFAULT);
-				currentDTime = 0;
-			}
-			update_DTime = 1;
-		}
+		update_DTime = 0; //disable interrupt update
+		currentDTime = 0;
+		currentDTime += (epochTime*1000*1000);
+		currentDTime += (numTime*1000*1000);
+		update_DTime = 1; //enable interrupt update
 	}
 	return retval;
 }
@@ -2997,7 +3002,57 @@ static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_L
 	if (InputArgsCheck(keys, values, count, NUM_CHECK_DEFAULT_TIME_PARAMS, CHECK_DEFAULT_TIME_PARAMS)) {
 		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\n\r----------\n\rTekdaqc Default Time\n\r----------\n\r");
 		TelnetWriteString(TOSTRING_BUFFER);
-		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\tDate: %s\n\r\tTime: %s\n\r", defaultDate, defaultTime);
+		uint64_t seconds = currentDTime/1000000;
+		//year
+		uint64_t year = seconds / SECONDS_Y;
+		uint64_t leap = (year/4) - (year/100) + (year/400);
+		seconds -= (year*SECONDS_Y + leap*SECONDS_D);
+		year += DEFAULT_YEAR;
+		int64_t day = seconds / SECONDS_D;
+		//time
+		seconds -= (day*SECONDS_D);
+		uint64_t hours = seconds/SECONDS_H;
+		seconds -= (hours*SECONDS_H);
+		uint64_t minutes = seconds/SECONDS_M;
+		seconds -= (minutes*SECONDS_M);
+		//month/day
+		uint64_t month = 1;
+		if (day > 31) {
+			day -= 31;
+			month++;
+			if (day > 28) {
+				if (((year%400) == 0) || (((year%4) == 0) & ((year%100) != 0))) { //leap year
+					day -= 29;
+				} else {
+					day -= 28;
+				}
+				month++;
+
+				while (month < 13) {
+					day -= 31;
+					if (day < 0) {
+						day = day+31;
+						break;
+					}
+					month++;
+
+					if (month == 8) {
+						continue;
+					}
+
+					day -= 30;
+					if (day < 0) {
+						day = day+30;
+						break;
+					}
+					month++;
+				}
+			} else {
+				day -= 31;
+			}
+		}
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\tDate: %llu\\%llu\\%llu\n\r\tTime: %02llu:%02llu:%02llu\n\r",
+				month, day, year, hours, minutes, seconds);
 		TelnetWriteString(TOSTRING_BUFFER);
 	}
 	else {
