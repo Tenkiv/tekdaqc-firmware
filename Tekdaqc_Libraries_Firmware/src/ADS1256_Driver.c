@@ -574,10 +574,13 @@ ADS1256_BUFFER_t ADS1256_StringToBuffer(char* str) {
 ADS1256_SPS_t ADS1256_StringToDataRate(char* str) {
 	int_least16_t i = (int_least16_t) strtol(str, NULL, 10);
 	switch (i) {
+#if 0
+	//?to be added back when 30000 sps is fix
 	case 30000:
 		return ADS1256_SPS_30000;
 	case 15000:
 		return ADS1256_SPS_15000;
+#endif
 	case 7500:
 		return ADS1256_SPS_7500;
 	case 3750:
@@ -608,7 +611,8 @@ ADS1256_SPS_t ADS1256_StringToDataRate(char* str) {
 		return ADS1256_SPS_2_5;
 	default:
 		printf("[ERROR] ADS1256_StringToDataRate(char* str): Invalid parameter (%s), providing 30000 SPS.\n\r", str);
-		return ADS1256_SPS_30000;
+		//?return ADS1256_SPS_30000;
+		return ADS1256_SPS_10;
 	}
 }
 
