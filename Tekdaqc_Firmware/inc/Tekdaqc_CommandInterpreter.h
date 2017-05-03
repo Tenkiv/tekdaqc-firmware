@@ -154,6 +154,12 @@ extern "C" {
  */
 #define PARAMETER_TIME "TIME"
 
+#define SECONDS_D 86400  			//1 day in seconds
+#define SECONDS_Y (365*SECONDS_D) 	//1 year in seconds
+#define DEFAULT_YEAR 1970			//begin data is 1/1/1970
+#define SECONDS_H 3600				//1 hour in seconds
+#define SECONDS_M 60				//1 hour in seconds
+
 /**
  * @def NUM_COMMANDS
  * @brief The total number of commands known by this board.
@@ -509,7 +515,7 @@ extern const char* HALT_PARAMS[NUM_HALT_PARAMS];
 /* Prototype the SET_DEFAULT_TIME command params array */
 extern const char* SET_DEFAULT_TIME_PARAMS[NUM_SET_DEFAULT_TIME_PARAMS];
 
-#define DATE_DEFAULT "0000/00/00"
+#define DATE_DEFAULT "1/1/1970"
 #define TIME_DEFAULT "00:00:00"
 #define MAX_TIME_CHARS 10
 
