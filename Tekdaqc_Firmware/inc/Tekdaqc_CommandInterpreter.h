@@ -146,7 +146,7 @@ extern "C" {
  * @def NUM_COMMANDS
  * @brief The total number of commands known by this board.
  */
-#define NUM_COMMANDS 43
+#define NUM_COMMANDS 44
 
 /**
  * @def TELNET_EOF
@@ -205,7 +205,8 @@ typedef enum {
 	COMMAND_EXIT_CALIBRATION_MODE = 39,
 	COMMAND_SET_FACTORY_MAC_ADDR = 40,
 	COMMAND_SET_BOARD_SERIAL_NUM = 41,
-	COMMAND_NONE = 42
+	COMMAND_NONE = 42,
+	COMMAND_ERROR = 43
 } Command_t;
 
 /**
