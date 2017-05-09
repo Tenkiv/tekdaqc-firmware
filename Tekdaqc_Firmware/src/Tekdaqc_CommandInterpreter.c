@@ -836,11 +836,15 @@ static void ProcessCommand(char* command, char raw_args[][MAX_COMMANDPART_LENGTH
 	char keys[MAX_NUM_ARGUMENTS][MAX_COMMANDPART_LENGTH];
 	char values[MAX_NUM_ARGUMENTS][MAX_COMMANDPART_LENGTH];
 	Tekdaqc_Command_Error_t error = ERR_COMMAND_OK;
-	bool success = ParseKeyValuePairs(raw_args, keys, values, arg_count); /* Parse the argument key/value pairs. */
-	if (success == TRUE) {
-		error = ExecuteCommand(command_type, keys, values, arg_count); /* Execute the command */
+	if (command_type == COMMAND_ERROR) {
+		error = ERR_COMMAND_BAD_COMMAND;
 	} else {
-		error = ERR_COMMAND_PARSE_ERROR;
+		bool success = ParseKeyValuePairs(raw_args, keys, values, arg_count); /* Parse the argument key/value pairs. */
+		if (success == TRUE) {
+			error = ExecuteCommand(command_type, keys, values, arg_count); /* Execute the command */
+		} else {
+			error = ERR_COMMAND_PARSE_ERROR;
+		}
 	}
 #ifdef COMMAND_DEBUG
 	printf("[Command Interpreter] Processing command error.\n\r");
@@ -942,9 +946,6 @@ static Command_t ParseCommand(const char* command) {
 		} else {
 			++ret_command;
 		}
-	}
-	if (ret_command > COMMAND_NONE) {
-		ret_command = COMMAND_NONE;
 	}
 #ifdef COMMAND_DEBUG
 	if (ret_command <= COMMAND_NONE) {
@@ -3019,7 +3020,7 @@ static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char
 	//lfao-settling time
 	//Delay_us(1000000);
 	//ADS1256_EXTI_Enable();
-	return ERR_COMMAND_BAD_COMMAND;
+	return ERR_COMMAND_OK;
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
