@@ -820,68 +820,7 @@ pwmInput_t* GetPwmInputByNumber(uint8_t number) {
 	}
 }
 
-Tekdaqc_Function_Error_t CreatePwmInput(char keys[][MAX_COMMANDPART_LENGTH],
-		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
-	Tekdaqc_Function_Error_t retval = ERR_COMMAND_OK;
-	char *param;			//store value
-	int8_t indx = -1;		//store key index
-	u8_t indexPwm = 0;		//store user input pwm input
-	uint64_t averagePwm = 0; 	//store user input average
-	char* testPtr = NULL;	//for a to i conversion
-	char name[MAX_DIGITAL_INPUT_NAME_LENGTH]; /* The name */
-
-	for (int i = 0; i < NUM_ADD_PWM_INPUT_PARAMS; i++) {
-		indx = GetIndexOfArgument(keys, ADD_PWM_INPUT_PARAMS[i], count);
-
-		if (indx >= 0) { //valid key
-			param = values[indx];
-			switch (i) {
-				case 0U: //input
-					indexPwm = (uint8_t) strtol(param, &testPtr, 10); //cvt char to int
-					if (testPtr == param) { //confirm valid int number
-						return ERR_DIN_PARSE_ERROR;
-					}
-					if ((indexPwm < 0) && (indexPwm >= NUM_DIGITAL_INPUTS)) { //confirm input is b/w 0->23
-						return ERR_DIN_INPUT_OUTOFRANGE;
-					}
-
-					//confirm input does not already exist as a digital input
-					Digital_Input_t* dig_input = GetDigitalInputByNumber(indexPwm);
-					if (dig_input->added == CHANNEL_ADDED) {
-						return ERR_DIN_INPUT_EXISTS;
-					}
-					break;
-				case 1U:  //average in us
-					averagePwm = (uint64_t) strtol(param, &testPtr, 10); //cvt char to int
-					//valid if is int, > 1ms, and increment of 50 us
-					if ((testPtr == param) | (averagePwm < 1000) | ((averagePwm%50) != 0)) {
-							return ERR_DIN_PARSE_ERROR;
-					}
-					break;
-				case 2U:
-					strcpy(name, param);
-					break;
-				default:
-					retval = ERR_DIN_PARSE_MISSING_KEY;
-			}
-		}
-		else {
-			if (i == 1) {
-				averagePwm = 1000;
-			}
-			else if (i == 2) {
-				strcpy(name, "NONE");
-			}
-			else {
-				return ERR_DIN_PARSE_MISSING_KEY;
-			}
-		}
-
-	}
-	Ext_PInputs[indexPwm].average = averagePwm;
-	strcpy(Ext_PInputs[indexPwm].name, name);
-	return retval;
-}
+stm32f0-Discovery_Tools
 
 Tekdaqc_Function_Error_t removePwmInput(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
