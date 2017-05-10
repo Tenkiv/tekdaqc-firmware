@@ -933,7 +933,7 @@ void readPwmInput(void) {
 
 				if (pInputs[i]->totalTransitions) {
 					//detect if prev time to current time is '1' or '0'
-					if (pInputs[i]->level == LOGIC_HIGH) {
+					if (pInputs[i]->level == LOGIC_LOW) {
 						pInputs[i]->totalTimeOn += (currentTime - pInputs[i]->prevTime);
 					}
 					else {
@@ -974,7 +974,7 @@ void WriteToTelnet_PwmInput (void) {
 
 					if (pInputs[i]->level == pInputs[i]->startLevel) {
 						int32_t transitions = pInputs[i]->totalTransitions;
-						if (pInputs[i]->level == LOGIC_HIGH) {
+						if (pInputs[i]->level == LOGIC_LOW) {
 							on /= (transitions - 1);
 							off /= transitions;
 						}
@@ -988,7 +988,7 @@ void WriteToTelnet_PwmInput (void) {
 					dutycycle = (on / period) * 100; //dutycycle
 				}
 				else {
-					if (pInputs[i]->level == LOGIC_HIGH) {
+					if (pInputs[i]->level == LOGIC_LOW) {
 						dutycycle = 100;
 					}
 					else {
