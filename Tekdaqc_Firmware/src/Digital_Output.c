@@ -656,6 +656,38 @@ Tekdaqc_Function_Error_t ReadDigitalOutput(void)
 
 	sprintf(TOSTRING_BUFFER, DIGITAL_OUTPUT_FORMATTER, uiOrigOutput, 0x1e);
 	writer(TOSTRING_BUFFER);
+	//print all active digital output
+	sprintf(TOSTRING_BUFFER, "Digital Output: %04x\n\r"
+			"%c\n\r", digiOutput, 0x1e);
+	writer(TOSTRING_BUFFER);
+
+	//print all active pwm output
+	uint8_t index[16] = {0};
+	if (currentPwm) {
+		for (uint8_t i = 0; i < 16; i++) {
+			if (!index[i]) {
+				if (pwmDutyCycle[i]) {
+					uint8_t tempDutyCycle = pwmDutyCycle[i];
+					uint16_t tempPwm = (0x0001 << i);
+					for (uint8_t j = (i+1); j < 16; j++) {
+						if (tempDutyCycle == pwmDutyCycle[j]) {
+							index[j] = 1;
+							tempPwm |= (0x0001 << j);
+						}
+					}
+
+					sprintf(TOSTRING_BUFFER, "\n\rPwm Output: %04x\n\r\tDutyCycle: %" PRIu8
+							"%c\n\r", tempPwm, pwmDutyCycle[i], 0x1e);
+					writer(TOSTRING_BUFFER);
+				}
+			}
+		}
+	}
+	else {
+		sprintf(TOSTRING_BUFFER, "\n\rPwm Output: 0000\n\r\tDutyCycle: 0"
+				"%c\n\r", 0x1e);
+		writer(TOSTRING_BUFFER);
+	}
 	return ERR_FUNCTION_OK;
 }
 
