@@ -181,6 +181,8 @@ void DebugMon_Handler(void) {
  * @param  None
  * @retval None
  */
+extern volatile uint64_t currentDTime;
+extern volatile uint8_t update_DTime;
 
 void SysTick_Handler(void) {
 #if 0
@@ -189,6 +191,9 @@ void SysTick_Handler(void) {
 	//TestPin_On(PIN2);
 #endif
 	Time_Update();
+	if (update_DTime) {
+		currentDTime += SYSTEMTICK_PERIOD;
+	}
 #if 0
 	//TestPin_Off(PIN2);
 
@@ -240,7 +245,7 @@ void EXTI15_10_IRQHandler(void)
 		//Delay_us((uint64_t) (4U * ADS1256_CLK_PERIOD_US)); /*  timing characteristic t11 */
 		newAnalogSample.iChannel = viCurrentChannel;
 		newAnalogSample.iReading = (uint32_t)(ads1256data[0]<<16 | ads1256data[1]<<8 | ads1256data[2]);
-		newAnalogSample.ui64TimeStamp = GetLocalTime();
+		newAnalogSample.ui64TimeStamp = currentDTime;
 		WriteSampleToBuffer(&newAnalogSample);
 		//lfao - infinite sampling, do nothing, just let it run, else disable this interrupt...
 		if(viSamplesToTake!=-1)
