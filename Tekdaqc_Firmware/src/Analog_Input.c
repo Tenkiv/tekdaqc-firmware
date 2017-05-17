@@ -652,7 +652,22 @@ Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 				default:
 					retval = ERR_AIN_PARSE_ERROR;
 			}
-		} else if (i == 1U || i == 2U || i == 3U || i == 4U || i == 5U) {
+		} else if (i != 0U) {
+			Analog_Input_t* an_input = GetAnalogInputByNumber(input);
+			if (an_input->added == CHANNEL_ADDED) {
+				if (i == 1U) { //buffer
+					buffer = an_input->buffer;
+				}
+				else if (i == 2U) { //rate
+					rate = an_input->rate;
+				}
+				else if (i == 3U) { //gain
+					gain = an_input->gain;
+				}
+				else if (i == 4U) { //name
+					strcpy(name, an_input->name);
+				}
+			}
 			/* The BUFFER, RATE, GAIN and NAME keys are not strictly required, leave the defaults */
 			continue;
 		} else {
@@ -670,20 +685,16 @@ Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 		if (input != NULL_CHANNEL) {
 			Analog_Input_t* an_input = GetAnalogInputByNumber(input);
 			if (an_input != NULL) {
-				if (an_input->added == CHANNEL_NOTADDED) {
-					an_input->physicalInput = input;
-					an_input->buffer = buffer;
-					an_input->rate = rate;
-					an_input->gain = gain;
-					strcpy(an_input->name, name);
-					an_input->bufferReadIdx = 0U;
-					an_input->bufferWriteIdx = 0U;
-					an_input->min = 0;
-					an_input->max = 0;
-					retval = AddAnalogInput(an_input);
-				} else {
-					retval = ERR_AIN_INPUT_EXISTS;
-				}
+				an_input->physicalInput = input;
+				an_input->buffer = buffer;
+				an_input->rate = rate;
+				an_input->gain = gain;
+				strcpy(an_input->name, name);
+				an_input->bufferReadIdx = 0U;
+				an_input->bufferWriteIdx = 0U;
+				an_input->min = 0;
+				an_input->max = 0;
+				retval = AddAnalogInput(an_input);
 			} else {
 				/* The input could not be found */
 				retval = ERR_AIN_INPUT_NOT_FOUND;
