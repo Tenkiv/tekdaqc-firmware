@@ -127,9 +127,10 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"ADD_ANALOG_INPUT", "REMOVE_ANALOG_INPUT", "CHECK_ANALOG_INPUT", "SET_ANALOG_INPUT_SCALE",
 		"GET_ANALOG_INPUT_SCALE", "SYSTEM_CAL", "SYSTEM_GCAL", "READ_SELF_GCAL", "READ_SYSTEM_GCAL",
 		"LIST_DIGITAL_INPUTS", "READ_DIGITAL_INPUT", "ADD_DIGITAL_INPUT", "REMOVE_DIGITAL_INPUT",
-		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT", "READ_DIGITAL_OUTPUT", "READ_DO_DIAGS", "REMOVE_DIGITAL_OUTPUT",
-		"CLEAR_DIG_OUTPUT_FAULT", "SET_PWM_OUTPUT", "SET_PWM_OUTPUT_TIMER", "DISCONNECT", "REBOOT", "UPGRADE",
-		"IDENTIFY", "SAMPLE", "HALT", "SET_RTC", "SET_USER_MAC", "CLEAR_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
+		"LIST_DIGITAL_OUTPUTS", "SET_DIGITAL_OUTPUT",
+		"READ_DIGITAL_OUTPUT", "READ_DO_DIAGS", "REMOVE_DIGITAL_OUTPUT", "CLEAR_DIG_OUTPUT_FAULT", "SET_PWM_OUTPUT",
+		"SET_PWM_OUTPUT_TIMER", "DISCONNECT", "REBOOT", "UPGRADE", "IDENTIFY", "SAMPLE", "HALT", "SET_DEFAULT_TIME",
+		"CHECK_DEFAULT_TIME", "SET_USER_MAC", "CLEAR_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
 		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_TEMP", "WRITE_CALIBRATION_VALID",
 		"EXIT_CALIBRATION_MODE", "SET_FACTORY_MAC_ADDR", "SET_BOARD_SERIAL_NUM", "NONE"};
 
@@ -286,9 +287,14 @@ const char* SAMPLE_PARAMS[NUM_SAMPLE_PARAMS] = {PARAMETER_NUMBER};
 const char* HALT_PARAMS[NUM_HALT_PARAMS] = {};
 
 /**
- * List of all parameters for the SET_RTC command.
+ * List of all parameters for the SET_DEFAULT_TIME command.
  */
-const char* SET_RTC_PARAMS[NUM_SET_RTC_PARAMS] = {PARAMETER_VALUE};
+const char* SET_DEFAULT_TIME_PARAMS[NUM_SET_DEFAULT_TIME_PARAMS] = {PARAMETER_DATE, PARAMETER_TIME};
+
+/**
+ * List of all parameters for the CHECK_DEFAULT_TIME command.
+ */
+const char* CHECK_DEFAULT_TIME_PARAMS[NUM_CHECK_DEFAULT_TIME_PARAMS] = {};
 
 /**
  * List of all parameters for the SET_USER_MAC command.
@@ -712,9 +718,16 @@ static Tekdaqc_Command_Error_t Ex_Halt(char keys[][MAX_COMMANDPART_LENGTH], char
 
 /**
  * @internal
- * @brief Execute the SET_RTC command with the provided parameters.
+ * @brief Execute the SET_DEFAULT_TIME command with the provided parameters.
  */
-static Tekdaqc_Command_Error_t Ex_SetRTC(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count);
+
+/**
+ * @internal
+ * @brief Execute the CHECK_DEFAULT_TIME command with the provided parameters.
+ */
+static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count);
 
 /**
@@ -808,12 +821,13 @@ static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char
 static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInputs, Ex_ReadADCRegisters,
 		Ex_ReadAnalogInputVer2, Ex_AddAnalogInput, Ex_RemoveAnalogInput, Ex_CheckAnalogInput, Ex_SetAnalogInputScale,
 		Ex_GetAnalogInputScale, Ex_SystemCalVer2, Ex_SystemGainCal, Ex_ReadSelfGCal, Ex_ReadSystemGCal,
-		Ex_ListDigitalInputs, Ex_ReadDigitalInput, Ex_AddDigitalInput, Ex_RemoveDigitalInput, Ex_ListDigitalOutputs,
-		Ex_SetDigitalOutput, Ex_ReadDigitalOutput, Ex_ReadDigitalOutputDiags, Ex_RemoveDigitalOutput,
-		Ex_ClearDigitalOutputFault, Ex_SetPwmOutput, Ex_SetPwmOutputTimer, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt, Ex_SetRTC,
-		Ex_SetUserMac, Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus, Ex_EnterCalibrationMode,
-		Ex_WriteGainCalibrationValue, Ex_WriteCalibrationTemp, Ex_WriteCalibrationValid, Ex_ExitCalibrationMode,
-		Ex_SetFactoryMACAddr, Ex_SetBoardSerialNum, Ex_None};
+		Ex_ListDigitalInputs, Ex_ReadDigitalInput, Ex_AddDigitalInput, Ex_RemoveDigitalInput,
+		Ex_ListDigitalOutputs, Ex_SetDigitalOutput,
+		Ex_ReadDigitalOutput, Ex_ReadDigitalOutputDiags, Ex_RemoveDigitalOutput, Ex_ClearDigitalOutputFault,
+		Ex_SetPwmOutput, Ex_SetPwmOutputTimer, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt,
+		Ex_SetDefaultTime, Ex_CheckDefaultTime, Ex_SetUserMac, Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus,
+		Ex_EnterCalibrationMode, Ex_WriteGainCalibrationValue, Ex_WriteCalibrationTemp, Ex_WriteCalibrationValid,
+		Ex_ExitCalibrationMode, Ex_SetFactoryMACAddr, Ex_SetBoardSerialNum, Ex_None};
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
@@ -2539,21 +2553,234 @@ static Tekdaqc_Command_Error_t Ex_Halt(char keys[][MAX_COMMANDPART_LENGTH], char
 	return retval;
 }
 
-
 /**
- * Execute the SET_RTC command.
+ * Execute the SET__DEFAULT_TIME command.
  *
  * @param keys char[][] C-String of the command parameter keys.
  * @param values char[][] C-String of the command parameter values.
  * @param count uint8_t The number of command parameters.
  * @retval Tekdaqc_Command_Error_t The command error status.
  */
-static Tekdaqc_Command_Error_t Ex_SetRTC(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+//--date 0000/00/00
+//--time 00:00:00
+uint64_t currentDTime = 0;	//current tekdaqc default timestamp
+uint8_t update_DTime = 1;	//flag to update default timestamp
+
+static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
+	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
+	char* testPtr = NULL;	//pointer to user input
+	char *param;			//temporarily hold user input value
+	char tempTime[10];		//hold user input time
+	uint64_t numTime = 0;	//hold total seconds of time input
+	uint64_t epochTime = 0;	//hold total seconds of date input
+
+	if (InputArgsCheck(keys, values, count, NUM_SET_DEFAULT_TIME_PARAMS, SET_DEFAULT_TIME_PARAMS)) {
+		int8_t indx = -1;
+		for (int i = 0; i < NUM_SET_DEFAULT_TIME_PARAMS; i++) {
+			indx = GetIndexOfArgument(keys, SET_DEFAULT_TIME_PARAMS[i], count);
+			if (indx >= 0) {
+				param = values[indx];
+
+				switch (i) {
+					case 0U: //default date
+						for (int j = 0; j < 3; j++) {
+							uint32_t num = (uint32_t) strtol(param, &testPtr, 10); //cvt char to int
+							if (testPtr == param) { //confirm valid int number
+								retval = ERR_COMMAND_PARSE_ERROR;
+							} else if ((testPtr[0] != '/') & (testPtr[0] != '\0')) {
+								retval = ERR_COMMAND_PARSE_ERROR;
+							} else if (num < 0) {
+								retval = ERR_COMMAND_PARSE_ERROR;
+							}
+							else if (j == 0){ //month
+								if (num > 12) {
+									retval = ERR_COMMAND_PARSE_ERROR;
+								} else {
+									num--;
+									if (num < 8) {
+										int dummy = num;
+										if (!(dummy % 2)) {
+											dummy /= 2;
+											epochTime += ((31*dummy + 28 + 30*(dummy-1))*SECONDS_D);
+										} else {
+											dummy /= 2;
+											epochTime += ((31*(dummy+1) + 28 + 30*(dummy-1))*SECONDS_D);
+										}
+									} else {
+										int dummy = num - 8;
+										if (!(dummy%2)) {
+											dummy /= 2;
+											epochTime += ((31*(dummy+1) + 30*(dummy))*SECONDS_D);
+										} else {
+											dummy /= 2;
+											dummy++;
+											epochTime += ((31*(dummy) + 30*(dummy))*SECONDS_D);
+										}
+									}
+								}
+							} else if (j == 1) { //day
+								if (num > 31) {
+									retval = ERR_COMMAND_PARSE_ERROR;
+								} else {
+									epochTime += (num * SECONDS_D);
+								}
+							} else if (j == 2) { //year
+								if (num < 1970) {
+									retval = ERR_COMMAND_PARSE_ERROR;
+								} else {
+									num -= 1970;
+									epochTime += (num * SECONDS_Y);
+									uint32_t temp = num/4;
+									uint32_t dummy = 0;
+									dummy += temp;
+									temp = num/100;
+									dummy -= temp;
+									temp = num/400;
+									dummy += temp;
+									epochTime += (dummy*SECONDS_D);
+								}
+							}
+							testPtr++;
+							strcpy(param, testPtr);
+						}
+						break;
+					case 1U: //default time
+						strcpy(tempTime, param);
+
+						for (int j = 0; j < 3; j++) {
+							uint8_t num = (uint8_t) strtol(param, &testPtr, 10); //cvt char to int
+
+							if (testPtr == param) { //confirm valid int number
+								if (j == 0) {
+									return ERR_COMMAND_PARSE_ERROR;
+								}
+							}
+
+							if ((j != 2) && (testPtr[0] != ':')) {
+								return ERR_COMMAND_PARSE_ERROR;
+							}
+
+							if (num) { //cvt input to seconds
+								if (j == 0) { //hour
+									if ((num > 0) && (num < 24)) {
+										numTime += (num*3600);
+									} else {
+										retval = ERR_COMMAND_PARSE_ERROR;
+									}
+								} else {
+									if ((num > 0) && (num < 60)) {
+										if (j == 1) { //minute
+											numTime += (num*60);
+										}
+										else if (j == 2) { //second
+											numTime += num;
+										}
+									} else {
+										retval = ERR_COMMAND_PARSE_ERROR;
+									}
+								}
+							}
+
+							testPtr++;
+							strcpy(param, testPtr);
+						}
+						break;
+					default:
+						retval = ERR_COMMAND_BAD_PARAM;
+						break;
+				}
+			} else {
+				retval = ERR_COMMAND_BAD_PARAM;
+			}
+		}
+	} else {
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
+
+	if (retval == ERR_COMMAND_OK) {
+		update_DTime = 0; //disable interrupt update
+		currentDTime = 0;
+		currentDTime += (epochTime*1000*1000);
+		currentDTime += (numTime*1000*1000);
+		update_DTime = 1; //enable interrupt update
+	}
+	return retval;
+}
+
+/**
+ * Execute the CHECK_DEFAULT_TIME command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+
+//check the default timestamp
+static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
 		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 
-	/* TODO: Set RTC */
+	if (InputArgsCheck(keys, values, count, NUM_CHECK_DEFAULT_TIME_PARAMS, CHECK_DEFAULT_TIME_PARAMS)) {
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\n\r----------\n\rTekdaqc Default Time\n\r----------\n\r");
+		TelnetWriteString(TOSTRING_BUFFER);
+		uint64_t seconds = currentDTime/1000000;
+		//year
+		uint64_t year = seconds / SECONDS_Y;
+		uint64_t leap = (year/4) - (year/100) + (year/400);
+		seconds -= (year*SECONDS_Y + leap*SECONDS_D);
+		year += DEFAULT_YEAR;
+		int64_t day = seconds / SECONDS_D;
+		//time
+		seconds -= (day*SECONDS_D);
+		uint64_t hours = seconds/SECONDS_H;
+		seconds -= (hours*SECONDS_H);
+		uint64_t minutes = seconds/SECONDS_M;
+		seconds -= (minutes*SECONDS_M);
+		//month/day
+		uint64_t month = 1;
+		if (day > 31) {
+			day -= 31;
+			month++;
+			if (day > 28) {
+				if (((year%400) == 0) || (((year%4) == 0) & ((year%100) != 0))) { //leap year
+					day -= 29;
+				} else {
+					day -= 28;
+				}
+				month++;
 
+				while (month < 13) {
+					day -= 31;
+					if (day < 0) {
+						day = day+31;
+						break;
+					}
+					month++;
+
+					if (month == 8) {
+						continue;
+					}
+
+					day -= 30;
+					if (day < 0) {
+						day = day+30;
+						break;
+					}
+					month++;
+				}
+			} else {
+				day -= 31;
+			}
+		}
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\tDate: %llu\\%llu\\%llu\n\r\tTime: %02llu:%02llu:%02llu\n\r",
+				month, day, year, hours, minutes, seconds);
+		TelnetWriteString(TOSTRING_BUFFER);
+	}
+	else {
+		retval = ERR_COMMAND_BAD_PARAM;
+	}
 	return retval;
 }
 
