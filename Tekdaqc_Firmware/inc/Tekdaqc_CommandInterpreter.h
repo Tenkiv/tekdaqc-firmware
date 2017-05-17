@@ -135,6 +135,12 @@ extern "C" {
  * @brief String constant definition for the DUTYCYCLE parameter.
  */
 #define PARAMETER_DUTYCYCLE "DUTYCYCLE"
+	
+/**
+ * @def PARAMETER_DATE
+ * @brief String constant definition for the DATE parameter.
+ */
+#define PARAMETER_DATE "DATE"
 
 /**
  * @def PARAMETER_TIME
@@ -142,11 +148,17 @@ extern "C" {
  */
 #define PARAMETER_TIME "TIME"
 
+#define SECONDS_D 86400  			//1 day in seconds
+#define SECONDS_Y (365*SECONDS_D) 	//1 year in seconds
+#define DEFAULT_YEAR 1970			//begin data is 1/1/1970
+#define SECONDS_H 3600				//1 hour in seconds
+#define SECONDS_M 60				//1 hour in seconds
+
 /**
  * @def NUM_COMMANDS
  * @brief The total number of commands known by this board.
  */
-#define NUM_COMMANDS 44
+#define NUM_COMMANDS 45
 
 /**
  * @def TELNET_EOF
@@ -193,20 +205,21 @@ typedef enum {
 	COMMAND_IDENTIFY = 27,
 	COMMAND_SAMPLE = 28,
 	COMMAND_HALT = 29,
-	COMMAND_SET_RTC = 30,
-	COMMAND_SET_USER_MAC = 31,
-	COMMAND_CLEAR_USER_MAC = 32,
-	COMMAND_SET_STATIC_IP = 33,
-	COMMAND_GET_CALIBRATION_STATUS = 34,
-	COMMAND_ENTER_CALIBRATION_MODE = 35,
-	COMMAND_WRITE_GAIN_CAL_VALUE = 36,
-	COMMAND_WRITE_CAL_TEMP = 37,
-	COMMAND_WRITE_CAL_VALID = 38,
-	COMMAND_EXIT_CALIBRATION_MODE = 39,
-	COMMAND_SET_FACTORY_MAC_ADDR = 40,
-	COMMAND_SET_BOARD_SERIAL_NUM = 41,
-	COMMAND_NONE = 42,
-	COMMAND_ERROR = 43
+	COMMAND_SET_DEFAULT_TIME = 30,
+	COMMAND_CHECK_DEFAULT_TIME = 31,
+	COMMAND_SET_USER_MAC = 32,
+	COMMAND_CLEAR_USER_MAC = 33,
+	COMMAND_SET_STATIC_IP = 34,
+	COMMAND_GET_CALIBRATION_STATUS = 35,
+	COMMAND_ENTER_CALIBRATION_MODE = 36,
+	COMMAND_WRITE_GAIN_CAL_VALUE = 37,
+	COMMAND_WRITE_CAL_TEMP = 38,
+	COMMAND_WRITE_CAL_VALID = 39,
+	COMMAND_EXIT_CALIBRATION_MODE = 40,
+	COMMAND_SET_FACTORY_MAC_ADDR = 41,
+	COMMAND_SET_BOARD_SERIAL_NUM = 42,
+	COMMAND_NONE = 43,
+	COMMAND_ERROR = 44
 } Command_t;
 
 /**
@@ -461,12 +474,24 @@ extern const char* SAMPLE_PARAMS[NUM_SAMPLE_PARAMS];
 extern const char* HALT_PARAMS[NUM_HALT_PARAMS];
 
 /**
- * @def NUM_SET_RTC_PARAMS
- * @brief The number of parameters for the SET_RTC command.
+ * @def NUM_SET_DEFAULT_TIME_PARAMS
+ * @brief The number of parameters for the SET_TIME command.
  */
-#define NUM_SET_RTC_PARAMS 1
-/* Prototype the SET_RTC command params array */
-extern const char* SET_RTC_PARAMS[NUM_SET_RTC_PARAMS];
+#define NUM_SET_DEFAULT_TIME_PARAMS 2
+/* Prototype the SET_DEFAULT_TIME command params array */
+extern const char* SET_DEFAULT_TIME_PARAMS[NUM_SET_DEFAULT_TIME_PARAMS];
+
+#define DATE_DEFAULT "1/1/1970"
+#define TIME_DEFAULT "00:00:00"
+#define MAX_TIME_CHARS 10
+
+/**
+ * @def NUM_CHECK_DEFAULT_TIME_PARAMS
+ * @brief The number of parameters for the SET_TIME command.
+ */
+#define NUM_CHECK_DEFAULT_TIME_PARAMS 0
+/* Prototype the SET_DEFAULT_TIME command params array */
+extern const char* CHECK_DEFAULT_TIME_PARAMS[NUM_CHECK_DEFAULT_TIME_PARAMS];
 
 /**
  * @def NUM_SET_USER_MAC_PARAMS
