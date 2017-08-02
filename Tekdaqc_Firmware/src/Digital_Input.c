@@ -18,6 +18,9 @@
  * Contains methods for manipulating and interfacing to the Digital_Input)t data structure.
  *
  * @author Jared Woolston (jwoolston@tenkiv.com)
+ *
+ * @modified by Pachia Cha (pcha@tenkiv.com)
+ * @since v1.2.0.0
  */
 
 /*--------------------------------------------------------------------------------------------------------*/
