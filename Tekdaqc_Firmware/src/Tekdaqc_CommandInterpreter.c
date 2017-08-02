@@ -1258,8 +1258,8 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 			}
 			break; /* END INPUT RANGE */
 		case ALL_CHANNELS: /* ALL_CHANNELS */
-			//lfao-not including the cold junction here...
-			count = NUM_ANALOG_INPUTS - 1;
+			//include the cold junction here...
+			count = NUM_ANALOG_INPUTS;
 			for (int i = 0; i < count; ++i) {
 				aInputs[i] = GetAnalogInputByNumber(i); /* Some of these may be NULL, this is OK. */
 			}
