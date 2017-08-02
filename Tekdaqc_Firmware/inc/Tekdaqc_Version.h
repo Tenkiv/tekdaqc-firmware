@@ -17,6 +17,9 @@
  *
  * @author Jared Woolston (jwoolston@tenkiv.com)
  * @since v1.0.0.0
+ *
+ * @modified by Pachia Cha (pcha@tenkiv.com)
+ * @since v1.2.0.0
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
