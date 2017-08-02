@@ -36,6 +36,9 @@
  *
  * Author: Adam Dunkels <adam@sics.se>
  *
+ *
+ * @modified by Pachia Cha (pcha@tenkiv.com)
+ * @since v1.2.0.0
  */
 
 #include "lwip/opt.h"
