@@ -402,13 +402,11 @@ void AnalogChannelHandler(void)
 							currentAnHandlerState = 0;
 						}
 					}
-					currentAnalogChannel++;
 				}
 			}
+			currentAnalogChannel++;
 		}
 	}
-
-
 }
 
 void AnalogHalt(void)
@@ -495,7 +493,7 @@ void AnalogInputsInit(void) {
 	Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
 	cold->physicalInput = IN_COLD_JUNCTION;
 	cold->buffer = ADS1256_BUFFER_ENABLED;
-	cold->rate = ADS1256_SPS_3750;
+	cold->rate = ADS1256_SPS_2_5;
 	cold->gain = ADS1256_PGAx4;
 	strcpy(cold->name, "COLD JUNCTION");
 	cold->bufferReadIdx = 0U;
