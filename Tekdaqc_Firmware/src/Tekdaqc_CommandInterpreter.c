@@ -499,7 +499,8 @@ static Channel_List_t GetChannelListType(char* arg);
  * @internal
  * @brief Build the list of analog inputs to sample.
  */
-static void BuildAnalogInputList(Channel_List_t list_type, char* param);
+static void 
+logInputList(Channel_List_t list_type, char* param);
 
 /**
  * @internal
@@ -1262,7 +1263,7 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 			break; /* END INPUT RANGE */
 		case ALL_CHANNELS: /* ALL_CHANNELS */
 			//include the cold junction here...
-			count = NUM_ANALOG_INPUTS;
+			count = NUM_ANALOG_INPUTS - 1;
 			for (int i = 0; i < count; ++i) {
 				aInputs[i] = GetAnalogInputByNumber(i); /* Some of these may be NULL, this is OK. */
 			}
