@@ -93,7 +93,7 @@ void Timer_Config(void) {
 
 	/* SystTick configuration: an interrupt every 1ms */
 	RCC_GetClocksFreq(&RCC_Clocks);
-	SysTick_Config(RCC_Clocks.HCLK_Frequency / (1000000/50)); //50us
+	SysTick_Config(RCC_Clocks.HCLK_Frequency / SYSTEMTICK_DIVIDER); //100us
 
 	/* Set Systick interrupt priority to 0*/
 	NVIC_SetPriority(SysTick_IRQn, 0U);
