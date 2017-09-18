@@ -183,11 +183,11 @@ void DebugMon_Handler(void) {
  * @retval None
  */
 
-volatile uint8_t timerCounter = 0; 	//flag 100us
 volatile uint64_t pwmTimer = 0; 	//50us increment for pwm input
 extern volatile pwmInput_t* pInputs[NUM_DIGITAL_INPUTS];
-extern volatile uint64_t currentDTime;
-extern volatile uint8_t update_DTime;
+
+extern uint64_t currentDTime;
+extern uint8_t update_DTime;
 
 void SysTick_Handler(void) {
 #if 0
@@ -195,16 +195,13 @@ void SysTick_Handler(void) {
 	//printf("SysTick_Handler...\n");
 	//TestPin_On(PIN2);
 #endif
-	if (timerCounter == 2) { //100us
-		Time_Update();
-		if (update_DTime) {
-			currentDTime += SYSTEMTICK_PERIOD;
-		}
-		timerCounter = 0;
-	}
-	pwmTimer += 50; //50us
+	Time_Update();
+	pwmTimer += 100;
 
-	timerCounter++;
+	if (update_DTime) {
+		currentDTime += SYSTEMTICK_PERIOD;
+	}
+
 #if 0
 	//TestPin_Off(PIN2);
 
