@@ -2858,6 +2858,9 @@ static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LEN
 
 	if (InputArgsCheck(keys, values, count, NUM_SET_DEFAULT_TIME_PARAMS, SET_DEFAULT_TIME_PARAMS)) {
 		int8_t indx = -1;
+		uint32_t month = 0;
+		uint32_t day = 0;
+		uint32_t year = 0;
 		for (int i = 0; i < NUM_SET_DEFAULT_TIME_PARAMS; i++) {
 			indx = GetIndexOfArgument(keys, SET_DEFAULT_TIME_PARAMS[i], count);
 			if (indx >= 0) {
@@ -2874,65 +2877,78 @@ static Tekdaqc_Command_Error_t Ex_SetDefaultTime(char keys[][MAX_COMMANDPART_LEN
 								retval = ERR_COMMAND_PARSE_ERROR;
 							} else if (num < 0) {
 								retval = ERR_COMMAND_PARSE_ERROR;
-							}
-							else if (j == 0){ //month
-								if (num > 12) {
+							} else if (j == 0){ //month
+								month = num;
+								if ((num<1) || (num > 12)) {
 									retval = ERR_COMMAND_PARSE_ERROR;
 								} else if (num == 2) {
-									epochTime += 31*SECONDS_D;
+									epochTime = 31*SECONDS_D;
 								} else if (num > 2) {
-									num--;
 									int dummy = num;
 									if (num > 7) {
 										dummy = 7;
 									}
 									if (!(dummy % 2)) {
 										dummy /= 2;
-										epochTime += ((31*(dummy) + 28 + 30*(dummy-1))*SECONDS_D);
+										if (dummy > 1) {
+											epochTime += ((31*(dummy) + 28 + 30*(dummy-2))*SECONDS_D);
+										} else {
+											epochTime += ((31*(dummy) + 28)*SECONDS_D);
+										}
 									} else {
 										dummy /= 2;
-										epochTime += ((31*(dummy+1) + 28 + 30*(dummy-1))*SECONDS_D);
+										epochTime += ((31*(dummy) + 28 + 30*(dummy-1))*SECONDS_D);
 									}
 									if (num > 7) {
 										dummy = num - 7;
 										if (!(dummy%2)) {
 											dummy /= 2;
-											epochTime += ((31*(dummy) + 30*(dummy))*SECONDS_D);
+											epochTime += ((31*(dummy+1) + 30*(dummy-1))*SECONDS_D);
 										} else {
 											dummy /= 2;
-											dummy++;
 											epochTime += ((31*(dummy+1) + 30*(dummy))*SECONDS_D);
 										}
 									}
 								}
 							} else if (j == 1) { //day
-								if (num > 31) {
+								day = num;
+								if ((num > 31) || (num < 0)) {
 									retval = ERR_COMMAND_PARSE_ERROR;
 								} else {
+									if ((month == 1) || (month == 2))
+										num--;
 									epochTime += (num * SECONDS_D);
 								}
 							} else if (j == 2) { //year
+								year = num;
 								if (num < 1970) {
 									retval = ERR_COMMAND_PARSE_ERROR;
 								} else {
 									num -= 1970;
 									epochTime += (num * SECONDS_Y);
-									uint32_t temp = num/4; //add leap year days
 									uint32_t dummy = 0;
-									dummy += temp;
-									temp = num/400;
-									dummy += temp;
-									temp = num/100;
-									dummy -= temp;
+									dummy = ((float)num)/4 - ((float)num)/100 + ((float)num)/400; //add leap year days
 									epochTime += (dummy*SECONDS_D);
 								}
+								if (month == 2) {
+									if (((year%400) == 0) || (((year%4) == 0) & ((year%100) != 0))) {
+										if (day > 29)
+											epochTime -= (day - 29)*SECONDS_D;
+									} else if (day > 28)
+										epochTime -= (day - 28)*SECONDS_D;
+								} else if (month < 8) {
+									if (!(month%2))
+										if  (day > 30)
+											epochTime -= SECONDS_D;
+								} else if (month%2)
+									if (day > 30)
+										epochTime -= SECONDS_D;
 							}
 							testPtr++;
 							strcpy(param, testPtr);
 						}
 						break;
 					case 1U: //default time
-
 						for (int j = 0; j < 3; j++) {
 							uint8_t num = (uint8_t) strtol(param, &testPtr, 10); //cvt char to int
 
@@ -3016,34 +3032,49 @@ static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_L
 		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\n\r----------\n\rTekdaqc Default Time\n\r----------\n\r");
 		TelnetWriteString(TOSTRING_BUFFER);
 		uint64_t seconds = currentDTime/1000000;
+		uint64_t d_seconds = seconds; //?
 		//year
-		uint64_t year = seconds / SECONDS_Y;
-		uint64_t leap = (year/4) - (year/100) + (year/400);
-		seconds -= (year*SECONDS_Y + leap*SECONDS_D);
+		uint32_t year = seconds / SECONDS_Y;
+		uint32_t leap = ((float)year)/4 - ((float)year)/100 + ((float)year)/400;
+		uint64_t temp_sec = (year*SECONDS_Y + leap*SECONDS_D);
+		uint32_t temp_year = year + DEFAULT_YEAR;
+		if (temp_sec > seconds) { //recalculate year / leap year
+			if (!(((temp_year%400) == 0) || (((temp_year%4) == 0) & ((temp_year%100) != 0)))) {
+				leap+=1; //?
+			}
+
+			leap -= 1;
+			year -= 1;
+			temp_sec = (year*SECONDS_Y + leap*SECONDS_D);
+		}
+		seconds -= temp_sec;
 		year += DEFAULT_YEAR;
-		int64_t day = seconds / SECONDS_D;
+		int32_t day = (seconds / SECONDS_D);
 		//time
 		seconds -= (day*SECONDS_D);
-		uint64_t hours = seconds/SECONDS_H;
+		uint32_t hours = seconds/SECONDS_H;
 		seconds -= (hours*SECONDS_H);
-		uint64_t minutes = seconds/SECONDS_M;
+		uint32_t minutes = seconds/SECONDS_M;
 		seconds -= (minutes*SECONDS_M);
 		//month/day
-		uint64_t month = 1;
+		uint32_t month = 1;
+		day += 1;
 		if (day > 31) {
 			day -= 31;
 			month++;
+
 			if (day > 28) {
-				if (((year%400) == 0) || (((year%4) == 0) & ((year%100) != 0))) { //leap year
-					day -= 29;
-				} else {
-					day -= 28;
+				if ((day == 29) && (((temp_year%400) == 0) || (((temp_year%4) == 0) & ((temp_year%100) != 0)))) {
+					day += 29;
+					month--;
 				}
+
+				day -= 29;
 				month++;
 
 				while (month < 13) {
 					day -= 31;
-					if (day < 0) {
+					if (day <= 0) {
 						day = day+31;
 						break;
 					}
@@ -3054,7 +3085,7 @@ static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_L
 					}
 
 					day -= 30;
-					if (day < 0) {
+					if (day <= 0) {
 						day = day+30;
 						break;
 					}
@@ -3062,8 +3093,10 @@ static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_L
 				}
 			}
 		}
-		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\tDate: %llu\\%llu\\%llu\n\r\tTime: %02llu:%02llu:%02llu\n\r",
-				month, day, year, hours, minutes, seconds);
+
+		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\tDate: %" PRIu32 "/%" PRIi32 "/%" PRIu32
+				"\n\r\tTime: %02" PRIu32 ":%02" PRIu32 ":%02" PRIu64 "\n\r\tSeconds: %02" PRIu64 "\n\r",
+				month, day, year, hours, minutes, seconds, d_seconds); //?
 		TelnetWriteString(TOSTRING_BUFFER);
 	}
 	else {
