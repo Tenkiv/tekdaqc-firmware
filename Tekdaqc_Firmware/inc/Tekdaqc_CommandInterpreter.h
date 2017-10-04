@@ -158,7 +158,7 @@ extern "C" {
 #define PARAMETER_TIME "TIME"
 
 #define SECONDS_D 86400  			//1 day in seconds
-#define SECONDS_Y (365*SECONDS_D) 	//1 year in seconds
+#define SECONDS_Y (366*SECONDS_D) 	//1 year in seconds
 #define DEFAULT_YEAR 1970			//begin data is 1/1/1970
 #define SECONDS_H 3600				//1 hour in seconds
 #define SECONDS_M 60				//1 hour in seconds
