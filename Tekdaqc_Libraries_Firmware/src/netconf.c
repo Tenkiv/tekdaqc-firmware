@@ -1,4 +1,4 @@
-/**
+/*
  ******************************************************************************
  * @file    netconf.c
  * @author  MCD Application Team
@@ -70,7 +70,7 @@ uint64_t IPaddress = 0U;
 uint32_t DHCPfineTimer = 0U;
 uint32_t DHCPcoarseTimer = 0U;
 __IO uint8_t DHCP_state;
-volatile uint8_t statusLinkOff = 0;		//flag ethernet connection on/off
+uint8_t statusLinkOff = 0;
 #endif
 extern __IO uint32_t EthStatus;
 
@@ -123,34 +123,24 @@ void LwIP_Init(void) {
 	/*  Registers the default network interface.*/
 	netif_set_default(&gnetif);
 
-	if (EthStatus == (ETH_INIT_FLAG | ETH_LINK_FLAG)) {
-		/* Set Ethernet link flag */
-		gnetif.flags |= NETIF_FLAG_LINK_UP;
+	/* Set Ethernet link flag */
+	gnetif.flags |= NETIF_FLAG_LINK_UP;
 
-		/* When the netif is fully configured this function must be called.*/
-		netif_set_up(&gnetif);
+	/* When the netif is fully configured this function must be called.*/
+	netif_set_up(&gnetif);
 #ifdef USE_DHCP
-		DHCP_state = DHCP_START;
+	DHCP_state = DHCP_START;
 #else
 #ifdef DEBUG
-		iptab[0] = IP_ADDR3;
-		iptab[1] = IP_ADDR2;
-		iptab[2] = IP_ADDR1;
-		iptab[3] = IP_ADDR0;
+	iptab[0] = IP_ADDR3;
+	iptab[1] = IP_ADDR2;
+	iptab[2] = IP_ADDR1;
+	iptab[3] = IP_ADDR0;
 
-		printf("Static IP Address: %d.%d.%d.%d\n\r", iptab[3], iptab[2], iptab[1], iptab[0]);
+	printf("Static IP Address: %d.%d.%d.%d\n\r", iptab[3], iptab[2], iptab[1], iptab[0]);
 #endif /* DEBUG */
-#endif /* USE_DHCP */
-	} else {
-		/*  When the netif link is down this function must be called.*/
-		netif_set_down(&gnetif);
-#ifdef USE_DHCP
-		DHCP_state = DHCP_LINK_DOWN;
-#endif
-#ifdef DEBUG
-		printf("Network cable is not connected.\n\r");
-#endif
-	}
+#endif  /* USE_DHCP */
+
 
 	/* Set the link callback function, this function is called on change of link status*/
 	netif_set_link_callback(&gnetif, ETH_link_callback);
@@ -193,23 +183,24 @@ void LwIP_Periodic_Handle(__IO uint64_t localtime) {
 	if (time - DHCPfineTimer >= DHCP_FINE_TIMER_MSECS) {
 		DHCPfineTimer = time;
 		dhcp_fine_tmr();
-		//check ethernet cable connection only if tekdaqc is not connected via telnet
+
 		if (!TelnetIsConnected()) {
 			if ((ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1) == 0) { //detect status link off
 				statusLinkOff++; //status link went off
 			}
-			//detect status link on after it was off first
-			else if ((statusLinkOff>=11) && (ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1)) {
-				//off for 5 seconds => reassign tekdaqc a new ip because connection changed, else keep ip
+			else if ((statusLinkOff>=11) && (ETH_ReadPHYRegister(DP83848_PHY_ADDRESS, PHY_SR) & 1)) { //detect status link on after it was off first
+				//off for 5 seconds
+				//=> reassign tekdaqc a new ip because connection changed, else keep ip
 				DHCP_state = DHCP_START; //reset state to detect router or direct device connection
-				gnetif.ip_addr.addr = 0U; //reset only tekdaqc ip_address
+				gnetif.ip_addr.addr = 0U; //reset tekdaqc ip_address
 				//^will allow switching connections while still keeping past commands on the tekdaqc
 				statusLinkOff = 0; //status link went on
 			}
-			else { //status link went back on
+			else {
 				statusLinkOff = 0;
 			}
 		}
+
 		if ((DHCP_state != DHCP_ADDRESS_ASSIGNED) && (DHCP_state != DHCP_TIMEOUT) && (DHCP_state != DHCP_LINK_DOWN)) {
 			/* process DHCP state machine */
 			LwIP_DHCP_Process_Handle();
@@ -288,7 +279,7 @@ void LwIP_DHCP_Process_Handle() {
 				IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1, NETMASK_ADDR2, NETMASK_ADDR3);
 				IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
 				netif_set_addr(&gnetif, &ipaddr, &netmask, &gw);
-				//save tekdaqc ip address
+
 				IPaddress = gnetif.ip_addr.addr;
 				Tekdaqc_LocatorClientIPSet((uint32_t) IPaddress);
 
