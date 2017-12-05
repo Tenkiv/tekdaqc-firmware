@@ -87,7 +87,7 @@ static inline const char* GPIToString(GPI_TypeDef gpi);
  * @internal
  * @brief Read the current logic level of the specified GPI pin
  */
-static DigitalLevel_t ReadGPI_Pin(GPI_TypeDef gpi);
+DigitalLevel_t ReadGPI_Pin(GPI_TypeDef gpi);
 
 /**
  * @internal
@@ -121,8 +121,9 @@ void InitDigitalSamplesBuffer(void)
 	iDigiTail=0;
 }
 
+//lfao-writes a new sample and updates the iDigiHead
 volatile slowNet_t slowNetwork;
-extern uint64_t TCPTimer; //time to next telnetpoll (+5ms / +10ms)
+uint8_t adjust = 0;
 
 //initialize slow network parameters
 void initializeSlowNet (void) {
@@ -146,32 +147,35 @@ void rstMessRate (void) {
 	slowNetwork.digiRate = 0;
 	slowNetwork.serverTrack = 0;
 }
-//lfao-writes a new sample and updates the iDigiHead
+
+int64_t overFlowTime = 0;
+
 int WriteDigiSampleToBuffer(Digital_Samples_t *Data)
 {
-
 	//full or empty
 	if((iDigiHead+2)%DIGITAL_SAMPLES_BUFFER_SIZE ==  iDigiTail%DIGITAL_SAMPLES_BUFFER_SIZE)
-	{
-		if (slowNetwork.sentMessage) {
+	{	//data overflow -> recalculate digital sampling rate
+
+		if (numSamplesTaken) { //sample could not be saved => no sample was taken
+			numSamplesTaken--;
+		}
+
+		if (overFlowTime && adjust) {
+			adjust = 0;
 			u8_t error = 3;
-			if (numSamplesTaken) { //sample could not be saved => no sample was taken
-				numSamplesTaken--;
-			}
-			//telnet sends data every 10ms
-			//approx. time of data overflow before 10ms
-			int64_t overFlowTime = ((TCPTimer + 5)*1000) - GetLocalTime();
+			overFlowTime = (10*(slowNetwork.serverTrack+1)*1000) - (GetLocalTime() - overFlowTime);
 			if (overFlowTime < 0) {
-				overFlowTime += 5000;
+				overFlowTime = 10*(slowNetwork.serverTrack+1)*1000;
 			}
 			//scale and add overflow time to digital sampling rate
-			overFlowTime = overFlowTime/slowNetwork.bufScale*slowNetwork.serverTrack*slowNetwork.digiInput;
+			overFlowTime = overFlowTime/slowNetwork.bufScale*(slowNetwork.serverTrack+1)*slowNetwork.digiInput;
 			slowNetwork.digiRate += overFlowTime*error;
 		}
 		return 1;
 	}
 	else
 	{
+		adjust = 1; //?
 		iDigiHead=iDigiHead%DIGITAL_SAMPLES_BUFFER_SIZE;
 		DigitalSampleBuffer[iDigiHead].iChannel = Data->iChannel;
 		DigitalSampleBuffer[iDigiHead].iLevel = Data->iLevel;
@@ -180,6 +184,7 @@ int WriteDigiSampleToBuffer(Digital_Samples_t *Data)
 	    return 0;
 	}
 }
+
 //lfao-reads sample from buffer and updates iDigiTail
 int ReadDigitalSampleFromBuffer(Digital_Samples_t *Data)
 {
@@ -209,6 +214,7 @@ void WriteToTelnet_Digital(void)
 	{
 		if(ReadDigitalSampleFromBuffer(&tempData)==0)
 		{
+
 			if(tempData.iLevel==LOGIC_HIGH)
 			{
 		       snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?D%i\r\n%" PRIu64 ",L%c\r\n", tempData.iChannel, tempData.ui64TimeStamp, 0x1e);
@@ -218,9 +224,10 @@ void WriteToTelnet_Digital(void)
 			   snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?D%i\r\n%" PRIu64 ",H%c\r\n", tempData.iChannel, tempData.ui64TimeStamp, 0x1e);
 		    }
 		    TelnetWriteString(TOSTRING_BUFFER);
-			
-		    //decrement iDigiTail to prevent the loss of the sample that could not be moved to
-		    //the telnet buffer to be printed via telnet
+		    /**
+		     * decrement iDigiTail to prevent the loss of the sample that could not be moved to
+		     * the telnet buffer to be printed via telnet
+		     */
 		    if (!slowNetwork.bufferFree) {
 		    	iDigiTail--;
 		    	break;
@@ -249,10 +256,14 @@ void ReadDigitalInputs(void)
 				if(numDigitalSamples)
 				{
 					numSamplesTaken++;
-					if(numSamplesTaken > numDigitalSamples*numOfDigitalInputs)
+					if(numSamplesTaken > numDigitalSamples*numOfDigitalInputs) {
+						DigitalInputHalt(); //reset digital sample values
 						break;
+					}
 				}
-
+				if (!slowNetwork.slowDigi) {
+					slowNetwork.slowDigi = TRUE;
+				}
 				tempDigitalSample.iChannel = dInputs[i]->input;
 				tempDigitalSample.iLevel = ReadGPI_Pin(dInputs[i]->input);
 				tempDigitalSample.ui64TimeStamp = currentDTime;
@@ -546,8 +557,7 @@ Tekdaqc_Function_Error_t CreateDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 						if (!Ext_PInputs[in].average) {
 							input = in;
 							slowNetwork.digiInput++; //new input added
-						}
-						else {
+						} else {
 							return ERR_DIN_INPUT_EXISTS;
 						}
 					} else {
@@ -682,6 +692,11 @@ Tekdaqc_Function_Error_t RemoveDigitalInput(char keys[][MAX_COMMANDPART_LENGTH],
 			retval = ERR_DIN_PARSE_MISSING_KEY; /* Failed to locate a key */
 		}
 	}
+	if (retval == ERR_FUNCTION_OK && !slowNetwork.digiInput) {
+		for (uint_fast8_t i = 0U; i < NUM_DIGITAL_INPUTS; ++i) {
+			dInputs[i] = NULL; /* NULL them all*/
+		}
+	}
 	return retval;
 }
 
@@ -799,7 +814,7 @@ void initializePwmInput (void) {
 	}
 }
 
-//reset pwm input parameters
+
 static void resetPwmInput(int8_t number) {
 	pInputs[number]->totalTimeOn = 0;
 	pInputs[number]->totalTimeOff = 0;
@@ -823,7 +838,68 @@ pwmInput_t* GetPwmInputByNumber(uint8_t number) {
 	}
 }
 
-stm32f0-Discovery_Tools
+Tekdaqc_Function_Error_t CreatePwmInput(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
+	Tekdaqc_Function_Error_t retval = ERR_COMMAND_OK;
+	char *param;			//store value
+	int8_t indx = -1;		//store key index
+	u32_t indexPwm = 0;		//store user input pwm input
+	uint64_t averagePwm = 0; 	//store user input average
+	char* testPtr = NULL;	//for a to i conversion
+	char name[MAX_DIGITAL_INPUT_NAME_LENGTH]; /* The name */
+
+	for (int i = 0; i < NUM_ADD_PWM_INPUT_PARAMS; i++) {
+		indx = GetIndexOfArgument(keys, ADD_PWM_INPUT_PARAMS[i], count);
+
+		if (indx >= 0) { //valid key
+			param = values[indx];
+			switch (i) {
+				case 0U: //input
+					indexPwm = (uint32_t) strtol(param, &testPtr, 10); //cvt char to int
+					if (testPtr == param) { //confirm valid int number
+						return ERR_DIN_PARSE_ERROR;
+					}
+					if ((indexPwm < 0) | (indexPwm >= NUM_DIGITAL_INPUTS)) { //confirm input is b/w 0->23
+						return ERR_DIN_INPUT_OUTOFRANGE;
+					}
+
+					//confirm input does not already exist as a digital input
+					Digital_Input_t* dig_input = GetDigitalInputByNumber(indexPwm);
+					if (dig_input->added == CHANNEL_ADDED) {
+						return ERR_DIN_INPUT_EXISTS;
+					}
+					break;
+				case 1U:  //average in us
+					averagePwm = (uint64_t) strtol(param, &testPtr, 10); //cvt char to int
+					//valid if is int, > 1ms, and increment of 50 us
+					if ((testPtr == param) | (averagePwm < 1000) | ((averagePwm%50) != 0)) {
+							return ERR_DIN_PARSE_ERROR;
+					}
+					break;
+				case 2U:
+					strcpy(name, param);
+					break;
+				default:
+					retval = ERR_DIN_PARSE_MISSING_KEY;
+			}
+		}
+		else {
+			if (i == 1) {
+				averagePwm = 1000;
+			}
+			else if (i == 2) {
+				strcpy(name, "NONE");
+			}
+			else {
+				return ERR_DIN_PARSE_MISSING_KEY;
+			}
+		}
+
+	}
+	Ext_PInputs[indexPwm].average = averagePwm;
+	strcpy(Ext_PInputs[indexPwm].name, name);
+	return retval;
+}
 
 Tekdaqc_Function_Error_t removePwmInput(char keys[][MAX_COMMANDPART_LENGTH],
 		char values[][MAX_COMMANDPART_LENGTH], uint8_t count) {
@@ -932,14 +1008,13 @@ void readPwmInput(void) {
 		if ((pInputs[i] != NULL) && pInputs[i]->average) { //input exist as pwm
 			pinPwm = i;
 			if (ReadGPI_Pin(pinPwm) != pInputs[i]->level) { //detect transition
-				currentTime = GetLocalTime(); //record time of transition
+				currentTime = currentDTime; //record time of transition
 
 				if (pInputs[i]->totalTransitions) {
 					//detect if prev time to current time is '1' or '0'
-					if (pInputs[i]->level == LOGIC_LOW) {
+					if (pInputs[i]->level == LOGIC_HIGH) {
 						pInputs[i]->totalTimeOn += (currentTime - pInputs[i]->prevTime);
-					}
-					else {
+					} else {
 						pInputs[i]->totalTimeOff += (currentTime - pInputs[i]->prevTime);
 					}
 				}
@@ -974,10 +1049,9 @@ void WriteToTelnet_PwmInput (void) {
 				if (pInputs[i]->totalTransitions > 1) {
 					float on = pInputs[i]->totalTimeOn;
 					float off = pInputs[i]->totalTimeOff;
-
 					if (pInputs[i]->level == pInputs[i]->startLevel) {
 						int32_t transitions = pInputs[i]->totalTransitions;
-						if (pInputs[i]->level == LOGIC_LOW) {
+						if (pInputs[i]->level == LOGIC_HIGH) {
 							on /= (transitions - 1);
 							off /= transitions;
 						}
@@ -986,15 +1060,12 @@ void WriteToTelnet_PwmInput (void) {
 							off /= (transitions - 1);
 						}
 					}
-
 					float period = on + off; //average period
 					dutycycle = (on / period) * 100; //dutycycle
-				}
-				else {
-					if (pInputs[i]->level == LOGIC_LOW) {
+				} else {
+					if (pInputs[i]->level == LOGIC_HIGH) {
 						dutycycle = 100;
-					}
-					else {
+					} else {
 						dutycycle = 0;
 					}
 				}
@@ -1004,7 +1075,7 @@ void WriteToTelnet_PwmInput (void) {
 					pwmInputBuffer[iPwmHead].channel = i;
 					pwmInputBuffer[iPwmHead].dutycycle = dutycycle;
 					pwmInputBuffer[iPwmHead].totalTransitions = pInputs[i]->totalTransitions;
-					pwmInputBuffer[iPwmHead].timeStamp = pInputs[i]->stopTime;
+					pwmInputBuffer[iPwmHead].timeStamp = currentDTime;
 					iPwmHead++;
 					iPwmHead %= DIGITAL_SAMPLES_BUFFER_SIZE;
 				}
