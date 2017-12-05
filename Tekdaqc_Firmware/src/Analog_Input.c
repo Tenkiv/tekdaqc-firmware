@@ -58,7 +58,7 @@
 //lfao-these variables are used by the DRDY interrupt handler for it to know which channel is sampling and
 //the number of samples to take...
 volatile int viCurrentChannel;
-volatile uint64_t viSamplesToTake;
+volatile int64_t viSamplesToTake = 0; 
 //lfao-circular buffer details...
 Analog_Samples_t AnalogSampleBuffer[ANALOG_SAMPLES_BUFFER_SIZE];
 volatile int iHead;
@@ -66,7 +66,7 @@ volatile int iTail;
 
 extern Analog_Input_t* aInputs[];
 extern volatile uint64_t numAnalogSamples;
-extern volatile int numOfInputs;
+volatile int numOfInputs = 0;
 extern void ApplyCalibrationParameters(Analog_Input_t* input);
 extern void updateBoardTemperature(Analog_Input_t* input, int32_t code);
 extern float Tekdaqc_GetGainCorrectionFactor(ADS1256_SPS_t rate, ADS1256_PGA_t gain, ADS1256_BUFFER_t buffer, float temperature);
@@ -126,12 +126,9 @@ int WriteSampleToBuffer(Analog_Samples_t *Data)
 {
 
 	//full or empty
-	if((iHead+2)%ANALOG_SAMPLES_BUFFER_SIZE ==  iTail%ANALOG_SAMPLES_BUFFER_SIZE)
-	{
+	if((iHead+2)%ANALOG_SAMPLES_BUFFER_SIZE ==  iTail%ANALOG_SAMPLES_BUFFER_SIZE) {
 		return 1;
-	}
-	else
-	{
+	} else {
 		iHead=iHead%ANALOG_SAMPLES_BUFFER_SIZE;
 		AnalogSampleBuffer[iHead].iChannel = Data->iChannel;
 		AnalogSampleBuffer[iHead].iReading = Data->iReading;
@@ -145,12 +142,10 @@ int ReadSampleFromBuffer(Analog_Samples_t *Data)
 {
 
 	//full/empty
-	if(iTail%ANALOG_SAMPLES_BUFFER_SIZE ==  iHead%ANALOG_SAMPLES_BUFFER_SIZE)
-	{
+	if(iTail%ANALOG_SAMPLES_BUFFER_SIZE ==  iHead%ANALOG_SAMPLES_BUFFER_SIZE) {
 		return 1;
 	}
-	else
-	{
+	else {
 		iTail=iTail%ANALOG_SAMPLES_BUFFER_SIZE;
 		Data->iChannel = AnalogSampleBuffer[iTail].iChannel;
 		Data->iReading = AnalogSampleBuffer[iTail].iReading;
@@ -162,7 +157,6 @@ int ReadSampleFromBuffer(Analog_Samples_t *Data)
 
 //lfao-converts the gathered data into ASCII and writes it to Telnet...
 volatile slowNet_t slowNetwork;
-
 void WriteToTelnet_Analog(void)
 {
 	Analog_Samples_t tempData;
@@ -170,16 +164,13 @@ void WriteToTelnet_Analog(void)
 	float factor;
 	int32_t corrected;
 	int32_t reading;
-	while(1)
-	{
-		if(ReadSampleFromBuffer(&tempData)==0)
-		{
+	while(1) {
+		if(ReadSampleFromBuffer(&tempData)==0) {
 			input = GetAnalogInputByNumber(tempData.iChannel);
 			reading = ADS1256_ConvertRawValue(tempData.iReading);
 			//lfao_todo: Need to apply gain correction factor, the code below complains of Out Of Range Temperature,
 			//probably due to the "temperature" is not updated...
-			if(tempData.iChannel == 36)
-			{
+			if(tempData.iChannel == 36) {
 				//cold junction...
 				input = GetAnalogInputByNumber(36);
 			    updateBoardTemperature(input, reading);
@@ -192,16 +183,16 @@ void WriteToTelnet_Analog(void)
 
 		    snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "?A%i\r\n%" PRIu64 ",%" PRIi32 "%c\r\n", tempData.iChannel, tempData.ui64TimeStamp, corrected, 0x1e);
 		    TelnetWriteString(TOSTRING_BUFFER);
-			
-		    //decrement iTail to prevent the loss of the sample that could not be moved to
-		    //the telnet buffer to be printed via telnet
+
+		    /*
+		     * decrement iTail to prevent the loss of the sample that could not be moved to
+		     * the telnet buffer to be printed via telnet
+		     */
 		    if (!slowNetwork.bufferFree) {
 		    	iTail--;
 		    	break;
 		    }
-		}
-		else
-		{
+		} else {
 			break;
 		}
 	}
@@ -218,57 +209,29 @@ void AnalogChannelHandler(void)
 {
 	int i;
 	ExternalMuxedInput_t exmuxedinput;
-	Analog_Input_t* coldJunctionInput;
 	readColdJunction++;
 	//switching channels
-	if(currentAnHandlerState==1)
-	{
-        for(i=0; ; i++)
-        {
+	if(currentAnHandlerState==1) {
+        for(i=0; ; i++)  {
 
-        	if(readColdJunction > COLD_JUNCTION_READ_INTERVAL && numOfInputs > 1)
-        	{
+        	if(readColdJunction > COLD_JUNCTION_READ_INTERVAL && numOfInputs) {
         		break;
         	}
 			currentAnalogChannel = currentAnalogChannel%NUM_ANALOG_INPUTS;
 			if(i > NUM_ANALOG_INPUTS)
 				break;
-			if(aInputs[currentAnalogChannel] != NULL)
-			{
+			if(aInputs[currentAnalogChannel] != NULL) {
 				if(aInputs[currentAnalogChannel]->added==CHANNEL_ADDED)
 				  break;
 			}
 			currentAnalogChannel++;
 		}
-        if(readColdJunction > COLD_JUNCTION_READ_INTERVAL && numOfInputs > 1)
+        if(readColdJunction > COLD_JUNCTION_READ_INTERVAL && numOfInputs)
         {
-        	totalDelay = 0;
-			//do input switching here...
-        	SelectColdJunctionInput();
-
-			viCurrentChannel = 36;
-			viSamplesToTake = 1;
-			coldJunctionInput = GetAnalogInputByNumber(IN_COLD_JUNCTION);
-
-			/* Set sampling parameters */
-			ADS1256_SetDataRate(coldJunctionInput->rate);
-			ADS1256_SetPGASetting(coldJunctionInput->gain);
-			ADS1256_SetInputBufferSetting(coldJunctionInput->buffer);
-			ApplyCalibrationParameters(coldJunctionInput);
-			/* Begin sampling */
-			ADS1256_Sync(true);
-			ADS1256_Wakeup(); /* Start Sampling */
-	        //Enable DRDY interrupt...
-			ADS1256_EXTI_Enable();
-			currentAnHandlerState=3;
-
-        }
-        else
-        {
-			if(aInputs[currentAnalogChannel] != NULL)
-			{
-				if(aInputs[currentAnalogChannel]->added==CHANNEL_ADDED)
-				{
+        	SampleColdJunction(numAnalogSamples); 
+        }  else {
+			if(aInputs[currentAnalogChannel] != NULL) {
+				if(aInputs[currentAnalogChannel]->added==CHANNEL_ADDED) {
 	#if 0
 					if(aInputs[currentAnalogChannel]->physicalInput == IN_COLD_JUNCTION)
 					{
@@ -302,12 +265,9 @@ void AnalogChannelHandler(void)
 	#endif
 					//else
 					//{
-						if(aInputs[currentAnalogChannel]->physicalInput == IN_COLD_JUNCTION)
-						{
+						if(aInputs[currentAnalogChannel]->physicalInput == IN_COLD_JUNCTION) {
 							SelectColdJunctionInput();
-						}
-						else
-						{
+						} else {
 							//do input switching here...
 							ADS1256_SetInputChannels(EXTERNAL_ANALOG_IN_AINP, EXTERNAL_ANALOG_IN_AINN);
 							GPIO_WriteBit(OCAL_CONTROL_GPIO_PORT, OCAL_CONTROL_PIN, EXT_ANALOG_SELECT);
@@ -315,27 +275,18 @@ void AnalogChannelHandler(void)
 							GPIO_Write(EXT_ANALOG_IN_MUX_PORT, (exmuxedinput | (GPIO_ReadOutputData(EXT_ANALOG_IN_MUX_PORT) & EXT_ANALOG_IN_BITMASK)));
 						}
 						viCurrentChannel = aInputs[currentAnalogChannel]->physicalInput;
-						if(numAnalogSamples)
-						{
-							if(numOfInputs == 1)
-							{
+						if(numAnalogSamples) {
+							if(numOfInputs == 1) {
 							   viSamplesToTake = numAnalogSamples;
-							}
-							else
-							{
+							} else {
 								viSamplesToTake = 1;
 							}
-						}
-						else
-						{
+						} else {
 							//for single channel, putting viSamplesToTake to -1, tells the DRDY handler that
 							//we want to sample continuously...
-							if(numOfInputs == 1)
-							{
+							if(numOfInputs == 1) {
 							   viSamplesToTake = -1;
-							}
-							else
-							{
+							} else {
 								viSamplesToTake = 1;
 							}
 						}
@@ -346,8 +297,7 @@ void AnalogChannelHandler(void)
         }
 	}
 	//add another state for the 1ms delay????????
-	else if(currentAnHandlerState==2)
-	{
+	else if(currentAnHandlerState==2) {
 		/* Set sampling parameters */
 		ADS1256_SetDataRate(aInputs[currentAnalogChannel]->rate);
 		ADS1256_SetPGASetting(aInputs[currentAnalogChannel]->gain);
@@ -360,26 +310,19 @@ void AnalogChannelHandler(void)
 		ADS1256_EXTI_Enable();
 		currentAnHandlerState=3;
 
-	}
-	else if(currentAnHandlerState==3)
-	{
+	} else if(currentAnHandlerState==3) {
 		//flag slow network for analog to print slow analog message
 		if (!slowNetwork.slowAnalog) {
 			slowNetwork.slowAnalog = TRUE;
 		}
-		
-		if(viSamplesToTake==0)
-		{
+		if(viSamplesToTake==0) {
 			currentAnHandlerState=1;
-			if(viCurrentChannel == 36 && numOfInputs > 1)
-			{
+			if(viCurrentChannel == 36 && numOfInputs) {
 				readColdJunction = 0;
-			}
-			else
-			{
+			} else {
 				//end of sampling for a single channel...
-				if(numOfInputs==1)
-				{
+				if(numOfInputs==1) {
+					AnalogHalt(); //reset analog sample values
 					aInputs[currentAnalogChannel]=NULL;
 					currentAnHandlerState = 0;
 				}
@@ -388,24 +331,54 @@ void AnalogChannelHandler(void)
 				else
 				{
 					//multichannel infinite sampling...turn the sample count to zero each time...
-					if(numAnalogSamples)
-					{
+					if(numAnalogSamples) {
 						multipleChannelSamples++;
-						if(numOfInputs*numAnalogSamples==multipleChannelSamples)
-						{
+						if(numOfInputs*numAnalogSamples==multipleChannelSamples) {
+							AnalogHalt(); //reset analog sample values
 							//empty the aInputs array...
-							for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i)
-							{
+							for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i) {
 								aInputs[i] = NULL;
 							}
 							readColdJunction = 0;
 							currentAnHandlerState = 0;
 						}
 					}
+					currentAnalogChannel++;
 				}
 			}
-			currentAnalogChannel++;
 		}
+		//here for when single channel sampling > 1 sec
+		if(readColdJunction > COLD_JUNCTION_READ_INTERVAL && numOfInputs && viSamplesToTake) {
+			SampleColdJunction(viSamplesToTake);
+		}
+	}
+}
+
+void SampleColdJunction (uint64_t sample) {
+	readColdJunction = 0;
+	Analog_Input_t* coldJunctionInput = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+	if (coldJunctionInput->added == CHANNEL_ADDED) {
+		currentAnHandlerState=3;
+		totalDelay = 0;
+		//do input switching here...
+		SelectColdJunctionInput();
+
+		viCurrentChannel = 36;
+		if (numOfInputs == 1)
+			numAnalogSamples = sample;
+
+		viSamplesToTake = 1;
+
+		/* Set sampling parameters */
+		ADS1256_SetDataRate(coldJunctionInput->rate);
+		ADS1256_SetPGASetting(coldJunctionInput->gain);
+		ADS1256_SetInputBufferSetting(coldJunctionInput->buffer);
+		ApplyCalibrationParameters(coldJunctionInput);
+		/* Begin sampling */
+		ADS1256_Sync(true);
+		ADS1256_Wakeup(); /* Start Sampling */
+		//Enable DRDY interrupt...
+		ADS1256_EXTI_Enable();
 	}
 }
 
@@ -415,7 +388,6 @@ void AnalogHalt(void)
 	currentAnHandlerState=0;
 	multipleChannelSamples=0;
 	numAnalogSamples = 0;
-	numOfInputs = 0;
 	readColdJunction=0;
 }
 /**
@@ -447,17 +419,33 @@ static void InitializeInput(Analog_Input_t* input) {
  * @retval none
  */
 static void RemoveAnalogInputByID(uint8_t id) {
+	if (id <= 32) {
+		Analog_Input_t* input = GetAnalogInputByNumber(id);
+		if(input->added == CHANNEL_ADDED) {
+			numOfInputs--;
+		}
+	}
+
 	if (isExternalInput(id)) {
 		InitializeInput(&Ext_AInputs[id]);
 	} else if (isInternalInput(id)) {
 		if (id == IN_COLD_JUNCTION) {
-			/* We don't want to allow removal of this, so we return immediately. */
-			return;
-		}
-		InitializeInput(&Int_AInputs[id - (NUM_EXT_ANALOG_INPUTS + NUM_CAL_ANALOG_INPUTS)]);
+			Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
+			cold->added = CHANNEL_NOTADDED;
+			cold->buffer = ADS1256_BUFFER_ENABLED;
+			cold->rate = ADS1256_SPS_3750;
+			cold->gain = ADS1256_PGAx4;
+			cold->bufferReadIdx = 0U;
+			cold->bufferWriteIdx = 0U;
+			cold->min = 0;
+			cold->max = 0;
+			strcpy(cold->name, "COLD JUNCTION");
+		} else
+			InitializeInput(&Int_AInputs[id - (NUM_EXT_ANALOG_INPUTS + NUM_CAL_ANALOG_INPUTS)]);
 	} else if (id == EXTERNAL_OFFSET_CAL) {
 		/* Do nothing, we don't want to remove this input. */
 	} else {
+		numOfInputs++; 
 		/* This is out of range */
 #ifdef ANALOGINPUT_DEBUG
 		printf("[Analog Input] Cannot find the requested analog input. Input does not exist on the board.\n\r");
@@ -493,7 +481,7 @@ void AnalogInputsInit(void) {
 	Analog_Input_t* cold = GetAnalogInputByNumber(IN_COLD_JUNCTION);
 	cold->physicalInput = IN_COLD_JUNCTION;
 	cold->buffer = ADS1256_BUFFER_ENABLED;
-	cold->rate = ADS1256_SPS_2_5;
+	cold->rate = ADS1256_SPS_3750;
 	cold->gain = ADS1256_PGAx4;
 	strcpy(cold->name, "COLD JUNCTION");
 	cold->bufferReadIdx = 0U;
@@ -652,7 +640,7 @@ Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 			}
 		} else if (i != 0U) {
 			Analog_Input_t* an_input = GetAnalogInputByNumber(input);
-			if (an_input->added == CHANNEL_ADDED) {
+			if (an_input->added == CHANNEL_ADDED || an_input->physicalInput == IN_COLD_JUNCTION) {
 				if (i == 1U) { //buffer
 					buffer = an_input->buffer;
 				}
@@ -688,10 +676,15 @@ Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 				an_input->rate = rate;
 				an_input->gain = gain;
 				strcpy(an_input->name, name);
-				an_input->bufferReadIdx = 0U;
-				an_input->bufferWriteIdx = 0U;
-				an_input->min = 0;
-				an_input->max = 0;
+				if (an_input->added == CHANNEL_NOTADDED) {
+					if (input <= 32) {
+						numOfInputs++;
+					}
+					an_input->bufferReadIdx = 0U;
+					an_input->bufferWriteIdx = 0U;
+					an_input->min = 0;
+					an_input->max = 0;
+				}
 				retval = AddAnalogInput(an_input);
 			} else {
 				/* The input could not be found */
@@ -701,6 +694,9 @@ Tekdaqc_Function_Error_t CreateAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 			/* A valid input was never specified */
 			retval = ERR_AIN_INPUT_UNSPECIFIED;
 		}
+	}
+	if (retval == !ERR_FUNCTION_OK) {
+		numOfInputs--;
 	}
 	return retval; /* Return the status */
 }
@@ -762,6 +758,7 @@ Tekdaqc_Function_Error_t RemoveAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 	char* param;
 	int8_t index = -1;
 	uint_fast8_t i = 0U;
+	uint8_t in = NULL_CHANNEL;
 	for (; i < NUM_REMOVE_ANALOG_INPUT_PARAMS; ++i) {
 		index = GetIndexOfArgument(keys, REMOVE_ANALOG_INPUT_PARAMS[i], count);
 		if (index >= 0) { /* We found the key in the list */
@@ -769,7 +766,7 @@ Tekdaqc_Function_Error_t RemoveAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 			switch (i) { /* Switch on the key not position in arguments list */
 				case 0U: { /* INPUT key */
 					printf("Processing INPUT key\n\r");
-					uint8_t in = (uint8_t) strtol(param, NULL, 10);
+					in = (uint8_t) strtol(param, NULL, 10);
 					if (in >= 0U && in <= NUM_ANALOG_INPUTS) {
 						/* A valid input number */
 						RemoveAnalogInputByID(in);
@@ -792,6 +789,19 @@ Tekdaqc_Function_Error_t RemoveAnalogInput(char keys[][MAX_COMMANDPART_LENGTH], 
 #endif
 			retval = ERR_AIN_PARSE_MISSING_KEY; /* Failed to locate a key */
 		}
+	}
+	if (retval != ERR_FUNCTION_OK) {
+		numOfInputs++;
+	} else if (numOfInputs == 0) {
+		currentAnHandlerState = 1;
+		viSamplesToTake = 0;
+		numAnalogSamples = 0;
+		slowNetwork.slowAnalog = FALSE; 
+		ADS1256_EXTI_Disable();
+	} else if (numOfInputs == 1) {
+		currentAnHandlerState = 1;
+		viSamplesToTake = 0;
+		numAnalogSamples = 0;
 	}
 	return retval;
 }
