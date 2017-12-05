@@ -42,6 +42,7 @@
 #include "lwip/stats.h"
 #include "lwip/tcp.h"
 #include "netconf.h"
+#include "Digital_Input.h"
 #include <stdio.h>
 #include <inttypes.h>
 
@@ -184,7 +185,7 @@ static err_t TelnetAccept(void *arg, struct tcp_pcb *pcb, err_t err) {
 	tcp_nagle_enable(pcb);
 	telnet_server.pcb = pcb;
 	telnet_server.pcb->so_options |= SOF_KEEPALIVE;
-	telnet_server.pcb->keep_idle = 60000UL; // 1 minute
+	telnet_server.pcb->keep_idle = 60000UL; // 2 seconds
 	telnet_server.pcb->keep_intvl = 1000UL; // 1 Second
 	telnet_server.pcb->keep_cnt = 9; // 9 Consecutive failures terminate
 
@@ -481,6 +482,7 @@ err_t TelnetPoll(void *arg, struct tcp_pcb *tpcb) {
 	err_t ret_err;
 	TelnetServer_t* server;
 	server = (TelnetServer_t*) arg;
+	err_t err = ERR_OK;
 
 	if (server != NULL) {
 		unsigned long length = server->length;
@@ -498,7 +500,7 @@ err_t TelnetPoll(void *arg, struct tcp_pcb *tpcb) {
 					/* Reset the size of the data in the transmit buffer. */
 					server->length = 0;
 					//slow network status message
-					if (slowNetwork.serverTrack && !slowNetwork.sentMessage) {
+					if (slowNetwork.serverTrack && !slowNetwork.sentMessage && (slowNetwork.slowDigi | slowNetwork.slowAnalog)) {
 						snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[NETWORK] Slow Network detected.\n\r");
 						TelnetWriteErrorMessage(TOSTRING_BUFFER);
 						if (slowNetwork.slowDigi) { //send status message only if there are active digital sampling
@@ -514,6 +516,7 @@ err_t TelnetPoll(void *arg, struct tcp_pcb *tpcb) {
 							snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\t[NETWORK] Reduce analog sampling rate to prevent loss of samples.\n\r");
 							TelnetWriteString(TOSTRING_BUFFER);
 						}
+
 						slowNetwork.sentMessage = TRUE;
 					}
 				}
@@ -523,7 +526,7 @@ err_t TelnetPoll(void *arg, struct tcp_pcb *tpcb) {
 			}
 			/*Sampling ended in slow network. Reset slow network values to enter fast network mode*/
 			//halt indicate end of sample
-			else if (slowNetwork.sentMessage && (dInputs[0] == NULL) && !numOfInputs) {
+			if (slowNetwork.sentMessage && (dInputs[0] == NULL)) {
 				rstMessRate();
 				snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "[NETWORK] All digital inputs are set to the original sampling rate.\n\r"
 						"\t[NETWORK] All analog inputs can be set to the original sampling rate.\n\r");
