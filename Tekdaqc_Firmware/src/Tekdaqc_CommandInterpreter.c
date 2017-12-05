@@ -135,7 +135,7 @@ static const char* COMMAND_STRINGS[NUM_COMMANDS] = {"LIST_ANALOG_INPUTS", "READ_
 		"SET_PWM_OUTPUT_TIMER", "DISCONNECT", "REBOOT", "UPGRADE", "IDENTIFY", "SAMPLE", "HALT", "SET_DEFAULT_TIME",
 		"CHECK_DEFAULT_TIME", "SET_USER_MAC", "CLEAR_USER_MAC", "SET_STATIC_IP", "GET_CALIBRATION_STATUS",
 		"ENTER_CALIBRATION_MODE", "WRITE_GAIN_CALIBRATION_VALUE", "WRITE_CALIBRATION_TEMP", "WRITE_CALIBRATION_VALID",
-		"EXIT_CALIBRATION_MODE", "SET_FACTORY_MAC_ADDR", "SET_BOARD_SERIAL_NUM", "NONE"};
+		"EXIT_CALIBRATION_MODE", "SET_FACTORY_MAC_ADDR", "SET_BOARD_SERIAL_NUM", "UPDATE_FIRMWARE", "NONE"};
 
 /**
  * List of all parameters for the LIST_ANALOG_INPUTS command.
@@ -316,11 +316,6 @@ const char* SET_DEFAULT_TIME_PARAMS[NUM_SET_DEFAULT_TIME_PARAMS] = {PARAMETER_DA
 const char* CHECK_DEFAULT_TIME_PARAMS[NUM_CHECK_DEFAULT_TIME_PARAMS] = {};
 
 /**
- * List of all parameters for the SET_RTC command.
- */
-const char* SET_RTC_PARAMS[NUM_SET_RTC_PARAMS] = {PARAMETER_VALUE};
-
-/**
  * List of all parameters for the SET_USER_MAC command.
  */
 const char* SET_USER_MAC_PARAMS[NUM_SET_USER_MAC_PARAMS] = {PARAMETER_VALUE};
@@ -377,6 +372,11 @@ const char* SET_FACTORY_MAC_ADDR_PARAMS[NUM_SET_FACTORY_MAC_ADDR_PARAMS] = {PARA
 const char* SET_BOARD_SERIAL_NUM_PARAMS[NUM_SET_BOARD_SERIAL_NUM_PARAMS] = {PARAMETER_VALUE};
 
 /**
+ * List of all parameters for the UPDATE_FIRMWARE command.
+ */
+const char* UPDATE_FIRMWARE_PARAMS[NUM_UPDATE_FIRMWARE_PARAMS] = {};
+
+/**
  * List of all parameters for the NONE command.
  */
 const char* NONE_PARAMS[NUM_NONE_PARAMS] = {};
@@ -385,15 +385,16 @@ const char* NONE_PARAMS[NUM_NONE_PARAMS] = {};
  * The command interpreter data structure instance.
  */
 static Tekdaqc_CommandInterpreter_t interpreter;
-
 /**
  * List of analog inputs referenced for use by a command.
  */
 Analog_Input_t* aInputs[NUM_ANALOG_INPUTS];
+
 volatile uint64_t numAnalogSamples, numDigitalSamples;
 extern volatile uint64_t numSamplesTaken;
-volatile int numOfInputs=0, numOfDigitalInputs=0;
+volatile int numOfDigitalInputs=0;
 volatile int infiniteSampling=0;
+
 /**
  * List of digital inputs referenced for use by a command.
  */
@@ -499,8 +500,7 @@ static Channel_List_t GetChannelListType(char* arg);
  * @internal
  * @brief Build the list of analog inputs to sample.
  */
-static void 
-logInputList(Channel_List_t list_type, char* param);
+static void BuildAnalogInputList(Channel_List_t list_type, char* param);
 
 /**
  * @internal
@@ -789,13 +789,6 @@ static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_L
 
 /**
  * @internal
- * @brief Execute the SET_RTC command with the provided parameters.
- */
-static Tekdaqc_Command_Error_t Ex_SetRTC(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
-		uint8_t count);
-
-/**
- * @internal
  * @brief Execute the SET_USER_MAC command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_SetUserMac(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
@@ -873,6 +866,14 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 
 /**
  * @internal
+ * @brief Execute the UPDATE_FIRMWARE command with the provided parameters.
+ */
+
+static Tekdaqc_Command_Error_t Ex_UpdateFirmware(char keys[][MAX_COMMANDPART_LENGTH],
+		char values[][MAX_COMMANDPART_LENGTH], uint8_t count);
+
+/**
+ * @internal
  * @brief Execute the NONE command with the provided parameters.
  */
 static Tekdaqc_Command_Error_t Ex_None(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
@@ -891,7 +892,7 @@ static Ex_Command_Function ExecutionFunctions[NUM_COMMANDS] = {Ex_ListAnalogInpu
 		Ex_SetPwmOutput, Ex_SetPwmOutputTimer, Ex_Disconnect, Ex_Reboot, Ex_Upgrade, Ex_Identify, Ex_Sample, Ex_Halt,
 		Ex_SetDefaultTime, Ex_CheckDefaultTime, Ex_SetUserMac, Ex_ClearUserMac, Ex_SetStaticIP, Ex_GetCalibrationStatus,
 		Ex_EnterCalibrationMode, Ex_WriteGainCalibrationValue, Ex_WriteCalibrationTemp, Ex_WriteCalibrationValid,
-		Ex_ExitCalibrationMode, Ex_SetFactoryMACAddr, Ex_SetBoardSerialNum, Ex_None};
+		Ex_ExitCalibrationMode, Ex_SetFactoryMACAddr, Ex_SetBoardSerialNum, Ex_UpdateFirmware, Ex_None};
 
 /*--------------------------------------------------------------------------------------------------------*/
 /* PRIVATE FUNCTIONS */
@@ -1262,7 +1263,7 @@ static void BuildAnalogInputList(Channel_List_t list_type, char* param) {
 			}
 			break; /* END INPUT RANGE */
 		case ALL_CHANNELS: /* ALL_CHANNELS */
-			//include the cold junction here...
+			//lfao-not including the cold junction here...
 			count = NUM_ANALOG_INPUTS - 1;
 			for (int i = 0; i < count; ++i) {
 				aInputs[i] = GetAnalogInputByNumber(i); /* Some of these may be NULL, this is OK. */
@@ -1768,7 +1769,7 @@ static Tekdaqc_Command_Error_t Ex_ReadAnalogInputVer2(char keys[][MAX_COMMANDPAR
 	AnalogHalt();
 	if (InputArgsCheck(keys, values, count, NUM_READ_ANALOG_INPUT_PARAMS, READ_ANALOG_INPUT_PARAMS)) {
 		numAnalogSamples = 0;
-		numOfInputs = 0;
+
 		Channel_List_t list_type = ALL_CHANNELS;
 		int8_t index = -1;
 		for (int i = 0; i < NUM_READ_ANALOG_INPUT_PARAMS; ++i) {
@@ -1781,17 +1782,6 @@ static Tekdaqc_Command_Error_t Ex_ReadAnalogInputVer2(char keys[][MAX_COMMANDPAR
 #endif
 						list_type = GetChannelListType(values[index]);
 						BuildAnalogInputList(list_type, values[index]);
-						//get count of all channels to sample...
-						for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i)
-						{
-							if (aInputs[i] != NULL)
-							{
-								if(aInputs[i]->added == CHANNEL_ADDED)
-								{
-								   numOfInputs++;
-								}
-							}
-						}
 						break;
 					case 1: /* NUMBER key */
 #ifdef COMMAND_DEBUG
@@ -2041,8 +2031,7 @@ static Tekdaqc_Command_Error_t Ex_SystemCalVer2(char keys[][MAX_COMMANDPART_LENG
 	/* Select the calibration input */
 	SelectCalibrationInput();
 	Delay_us(EXTERNAL_MUX_DELAY);
-	//---------------------------------//////
-
+	//---------------------------------
 	//---ADC_Machine_Service_Calibrating();----------//////////////
 	while(1)
 	{
@@ -2054,11 +2043,7 @@ static Tekdaqc_Command_Error_t Ex_SystemCalVer2(char keys[][MAX_COMMANDPART_LENG
 			break;
 		}
 	}
-	//---------------------------------//////
-	/*if (status != ERR_FUNCTION_OK) {
-		lastFunctionError = status;
-		retval = ERR_COMMAND_FUNCTION_ERROR;
-	}*/
+	//---------------------------------
 	return retval;
 }
 
@@ -2451,10 +2436,12 @@ static Tekdaqc_Command_Error_t Ex_SetDigitalOutput(char keys[][MAX_COMMANDPART_L
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	if (InputArgsCheck(keys, values, count, NUM_SET_DIGITAL_OUTPUT_PARAMS, SET_DIGITAL_OUTPUT_PARAMS))
 	{
-
 		/* Set digital output */
-		retval = SetDigitalOutput(keys, values, count);
-
+		Tekdaqc_Function_Error_t status = SetDigitalOutput(keys, values, count);
+		if (status != ERR_FUNCTION_OK) {
+			lastFunctionError = status;
+			retval = ERR_COMMAND_FUNCTION_ERROR;
+		}
 	}
 	else
 	{
@@ -2567,8 +2554,8 @@ static Tekdaqc_Command_Error_t Ex_SetPwmOutput(char keys[][MAX_COMMANDPART_LENGT
 
 	//check for valid keys
 	if (InputArgsCheck(keys, values, count, NUM_SET_PWM_PARAMS, SET_PWM_PARAMS)) {
-		Tekdaqc_Function_Error_t status = SetPwmOutput(keys, values, count);
-		if (status != ERR_FUNCTION_OK) {
+		Tekdaqc_Command_Error_t status = SetPwmOutput(keys, values, count);
+		if (status != ERR_COMMAND_OK) {
 			lastFunctionError = status;
 			retval = ERR_COMMAND_FUNCTION_ERROR;
 		}
@@ -2578,6 +2565,7 @@ static Tekdaqc_Command_Error_t Ex_SetPwmOutput(char keys[][MAX_COMMANDPART_LENGT
 	}
 	return retval;
 }
+
 
 /**
  * Execute the SET_PWM_OUTPUT_TIMER command.
@@ -2740,10 +2728,13 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 		uint8_t count) {
 	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
 	uint64_t numPwmSamples = 0;
+	numAnalogSamples = 0;
+
 	//halt analog...
 	AnalogHalt();
 	DigitalInputHalt();
 	PwmInputHalt();
+
 	if (InputArgsCheck(keys, values, count, NUM_SAMPLE_PARAMS, SAMPLE_PARAMS)) {
 
 		int8_t index = -1;
@@ -2770,17 +2761,6 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 		}
 		if (retval == ERR_COMMAND_OK) { /* If an error occurred, don't bother continuing */
 			BuildAnalogInputList(ALL_CHANNELS, NULL);
-			//get count of all channels to sample...
-			for (uint_fast8_t i = 0; i < NUM_ANALOG_INPUTS; ++i)
-			{
-				if (aInputs[i] != NULL)
-				{
-					if(aInputs[i]->added == CHANNEL_ADDED)
-					{
-					   numOfInputs++;
-					}
-				}
-			}
 			BuildDigitalInputList(ALL_CHANNELS, NULL);
 			//get count of all channels to sample...
 			for (uint_fast8_t i = 0; i < NUM_DIGITAL_INPUTS; ++i)
@@ -2793,9 +2773,9 @@ static Tekdaqc_Command_Error_t Ex_Sample(char keys[][MAX_COMMANDPART_LENGTH], ch
 					}
 				}
 			}
+			BuildPwmInputList(ALL_CHANNELS, NULL);
+			startPwmInput(numPwmSamples);
 		}
-		BuildPwmInputList(ALL_CHANNELS, NULL);
-		startPwmInput(numPwmSamples);
 	} else {
 		/* We can't sample */
 #ifdef COMMAND_DEBUG
@@ -2825,6 +2805,7 @@ static Tekdaqc_Command_Error_t Ex_Halt(char keys[][MAX_COMMANDPART_LENGTH], char
 		//disable analog sampling...
 		AnalogHalt();
 		DigitalInputHalt();
+		PwmInputHalt();
 	} else {
 		/* We received some params we weren't expecting */
 #ifdef COMMAND_DEBUG
@@ -3032,7 +3013,6 @@ static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_L
 		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\n\r----------\n\rTekdaqc Default Time\n\r----------\n\r");
 		TelnetWriteString(TOSTRING_BUFFER);
 		uint64_t seconds = currentDTime/1000000;
-		uint64_t d_seconds = seconds; //?
 		//year
 		uint32_t year = seconds / SECONDS_Y;
 		uint32_t leap = ((float)year)/4 - ((float)year)/100 + ((float)year)/400;
@@ -3040,7 +3020,7 @@ static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_L
 		uint32_t temp_year = year + DEFAULT_YEAR;
 		if (temp_sec > seconds) { //recalculate year / leap year
 			if (!(((temp_year%400) == 0) || (((temp_year%4) == 0) & ((temp_year%100) != 0)))) {
-				leap+=1; //?
+				leap+=1;
 			}
 
 			leap -= 1;
@@ -3095,30 +3075,13 @@ static Tekdaqc_Command_Error_t Ex_CheckDefaultTime(char keys[][MAX_COMMANDPART_L
 		}
 
 		snprintf(TOSTRING_BUFFER, SIZE_TOSTRING_BUFFER, "\tDate: %" PRIu32 "/%" PRIi32 "/%" PRIu32
-				"\n\r\tTime: %02" PRIu32 ":%02" PRIu32 ":%02" PRIu64 "\n\r\tSeconds: %02" PRIu64 "\n\r",
-				month, day, year, hours, minutes, seconds, d_seconds); //?
+				"\n\r\tTime: %02" PRIu32 ":%02" PRIu32 ":%02" PRIu64 "\n\r",
+				month, day, year, hours, minutes, seconds);
 		TelnetWriteString(TOSTRING_BUFFER);
 	}
 	else {
 		retval = ERR_COMMAND_BAD_PARAM;
 	}
-	return retval;
-}
-
-/**
- * Execute the SET_RTC command.
- *
- * @param keys char[][] C-String of the command parameter keys.
- * @param values char[][] C-String of the command parameter values.
- * @param count uint8_t The number of command parameters.
- * @retval Tekdaqc_Command_Error_t The command error status.
- */
-static Tekdaqc_Command_Error_t Ex_SetRTC(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
-		uint8_t count) {
-	Tekdaqc_Command_Error_t retval = ERR_COMMAND_OK;
-
-	/* TODO: Set RTC */
-
 	return retval;
 }
 
@@ -3568,6 +3531,23 @@ static Tekdaqc_Command_Error_t Ex_SetBoardSerialNum(char keys[][MAX_COMMANDPART_
 		retval = ERR_COMMAND_BAD_PARAM;
 	}
 	return retval;
+}
+
+/**
+ * Execute the UPDATE_FIRMWARE command.
+ *
+ * @param keys char[][] C-String of the command parameter keys.
+ * @param values char[][] C-String of the command parameter values.
+ * @param count uint8_t The number of command parameters.
+ * @retval Tekdaqc_Command_Error_t The command error status.
+ */
+__attribute__((section(".Boot_Check"))) uint32_t updateFirmware = 0;
+static Tekdaqc_Command_Error_t Ex_UpdateFirmware(char keys[][MAX_COMMANDPART_LENGTH], char values[][MAX_COMMANDPART_LENGTH],
+		uint8_t count) {
+	updateFirmware = 1;
+	TelnetClose();
+	NVIC_SystemReset();
+	return ERR_COMMAND_OK;
 }
 
 /**
