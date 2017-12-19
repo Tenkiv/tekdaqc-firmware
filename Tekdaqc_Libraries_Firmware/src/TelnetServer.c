@@ -882,7 +882,8 @@ void TelnetProcessCharacter(char character) {
 			/* Write this character to the receive buffer. */
 			TelnetRecvBufferWrite(character);
 			/* Echo this character */
-			TelnetWrite(character);                    //Echo the character back
+			char* character_ = &character;
+			TelnetWriteString(character_);                    //Echo the character back
 		}
 		break;
 	}
