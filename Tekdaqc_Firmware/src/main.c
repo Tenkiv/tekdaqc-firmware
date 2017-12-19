@@ -166,13 +166,16 @@ static void program_loop(void) {
 		}
 		/* Handle periodic timers for LwIP */
 		LwIP_Periodic_Handle(GetLocalTime());
-		if (TelnetIsConnected() == true) { /* We have an active Telnet connection to service */
+		while (TelnetIsConnected() == true) { /* We have an active Telnet connection to service */
 			/* Do server stuff */
 			character = TelnetRead();
 			if (character != '\0') {
 				Command_AddChar(character);
 			}
-		}
+			if (character == '\0' || character == 0x0A || character == 0x0D) {
+				break;
+			}
+		} 
 		//lfao - write to telnet the analog samples data...
 		WriteToTelnet_Analog();
 
