@@ -169,7 +169,7 @@ int WriteDigiSampleToBuffer(Digital_Samples_t *Data)
 			//scale and add overflow time to digital sampling rate
 			overFlowTime = overFlowTime/slowNetwork.bufScale*(slowNetwork.serverTrack+1)*slowNetwork.digiInput;
 			if (!slowNetwork.digiRate) {
-				slowNetwork.digiRate = 10000/slowNetwork.bufScale;
+				slowNetwork.digiRate = 10000/slowNetwork.bufScale*(slowNetwork.serverTrack+1)*slowNetwork.digiInput;
 			}		
 			slowNetwork.digiRate += overFlowTime;
 			slowNetwork.sentMessage = FALSE;
