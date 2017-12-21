@@ -397,8 +397,8 @@ tcp_write(struct tcp_pcb *pcb, const void *arg, u16_t len, u8_t apiflags)
 		//recalculate digital sampling rate
 		if (slowNetwork.serverFull > slowNetwork.serverTrack) {
 			slowNetwork.serverTrack = slowNetwork.serverFull;
-			//10000 / bufScale => 200 samples can be sent every 10ms
-			uint32_t temp = 10000/slowNetwork.bufScale*slowNetwork.serverTrack*slowNetwork.digiInput;
+			//10000 / bufScale => 150 (estimate) samples can be sent every 10ms
+			uint32_t temp = 10000/slowNetwork.bufScale*(slowNetwork.serverTrack+1)*slowNetwork.digiInput;
 			if (temp > slowNetwork.digiRate) {
 				slowNetwork.digiRate = temp;
 				slowNetwork.sentMessage = FALSE;
