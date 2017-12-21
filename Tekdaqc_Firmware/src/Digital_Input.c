@@ -170,12 +170,13 @@ int WriteDigiSampleToBuffer(Digital_Samples_t *Data)
 			//scale and add overflow time to digital sampling rate
 			overFlowTime = overFlowTime/slowNetwork.bufScale*(slowNetwork.serverTrack+1)*slowNetwork.digiInput;
 			slowNetwork.digiRate += overFlowTime*error;
+			slowNetwork.sentMessage = FALSE;
 		}
 		return 1;
 	}
 	else
 	{
-		adjust = 1; //?
+		adjust = 1;
 		iDigiHead=iDigiHead%DIGITAL_SAMPLES_BUFFER_SIZE;
 		DigitalSampleBuffer[iDigiHead].iChannel = Data->iChannel;
 		DigitalSampleBuffer[iDigiHead].iLevel = Data->iLevel;
