@@ -162,14 +162,13 @@ int WriteDigiSampleToBuffer(Digital_Samples_t *Data)
 
 		if (overFlowTime && adjust) {
 			adjust = 0;
-			u8_t error = 3;
 			overFlowTime = (10*(slowNetwork.serverTrack+1)*1000) - (GetLocalTime() - overFlowTime);
 			if (overFlowTime < 0) {
 				overFlowTime = 10*(slowNetwork.serverTrack+1)*1000;
 			}
 			//scale and add overflow time to digital sampling rate
 			overFlowTime = overFlowTime/slowNetwork.bufScale*(slowNetwork.serverTrack+1)*slowNetwork.digiInput;
-			slowNetwork.digiRate += overFlowTime*error;
+			slowNetwork.digiRate += overFlowTime;
 			slowNetwork.sentMessage = FALSE;
 		}
 		return 1;
