@@ -245,8 +245,6 @@ void WriteToTelnet_Digital(void)
 
 
 //lfao - read the ADDED inputs
-extern uint64_t currentDTime;
-
 void ReadDigitalInputs(void)
 {
 	Digital_Samples_t tempDigitalSample;
@@ -269,7 +267,7 @@ void ReadDigitalInputs(void)
 				}
 				tempDigitalSample.iChannel = dInputs[i]->input;
 				tempDigitalSample.iLevel = ReadGPI_Pin(dInputs[i]->input);
-				tempDigitalSample.ui64TimeStamp = currentDTime;
+				tempDigitalSample.ui64TimeStamp = GetLocalTime();
 				WriteDigiSampleToBuffer(&tempDigitalSample);
 			}
 		}
@@ -728,7 +726,7 @@ Digital_Input_t* GetDigitalInputByNumber(uint8_t number) {
  * @retval none
  */
 void SampleDigitalInput(Digital_Input_t* input) {
-	input->timestamp = currentDTime;
+	input->timestamp = GetLocalTime();
 	input->level = ReadGPI_Pin(input->input);
 }
 
@@ -1011,7 +1009,7 @@ void readPwmInput(void) {
 		if ((pInputs[i] != NULL) && pInputs[i]->average) { //input exist as pwm
 			pinPwm = i;
 			if (ReadGPI_Pin(pinPwm) != pInputs[i]->level) { //detect transition
-				currentTime = currentDTime; //record time of transition
+				currentTime = GetLocalTime(); //record time of transition
 
 				if (pInputs[i]->totalTransitions) {
 					//detect if prev time to current time is '1' or '0'
@@ -1078,7 +1076,7 @@ void WriteToTelnet_PwmInput (void) {
 					pwmInputBuffer[iPwmHead].channel = i;
 					pwmInputBuffer[iPwmHead].dutycycle = dutycycle;
 					pwmInputBuffer[iPwmHead].totalTransitions = pInputs[i]->totalTransitions;
-					pwmInputBuffer[iPwmHead].timeStamp = currentDTime;
+					pwmInputBuffer[iPwmHead].timeStamp = GetLocalTime();
 					iPwmHead++;
 					iPwmHead %= DIGITAL_SAMPLES_BUFFER_SIZE;
 				}
