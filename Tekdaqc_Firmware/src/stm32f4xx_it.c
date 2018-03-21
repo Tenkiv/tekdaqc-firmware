@@ -197,11 +197,6 @@ void SysTick_Handler(void) {
 #endif
 	Time_Update();
 	pwmTimer += 100;
-
-	if (update_DTime) {
-		currentDTime += SYSTEMTICK_PERIOD;
-	}
-
 #if 0
 	//TestPin_Off(PIN2);
 
