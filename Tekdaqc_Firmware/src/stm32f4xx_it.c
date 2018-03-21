@@ -186,9 +186,6 @@ void DebugMon_Handler(void) {
 volatile uint64_t pwmTimer = 0; 	//50us increment for pwm input
 extern volatile pwmInput_t* pInputs[NUM_DIGITAL_INPUTS];
 
-extern uint64_t currentDTime;
-extern uint8_t update_DTime;
-
 void SysTick_Handler(void) {
 #if 0
 	/* Update the LocalTime by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
